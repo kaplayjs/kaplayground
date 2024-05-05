@@ -20,9 +20,10 @@ const wrapGame = (code: string) => `
 			width: 100%;
 			height: 100vh;
 		}
-		body {
-			background: var(--color-bg2);
-		}
+
+        body {
+            overflow: hidden;
+        }
 	</style>
 </head>
 <body>
