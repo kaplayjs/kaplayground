@@ -1,4 +1,5 @@
 import { type FC, useRef } from "react";
+import kaplayLogo from "../assets/kaplay.png";
 import runIcon from "../assets/run.png";
 import ThemeToggler from "./ThemeToggler";
 
@@ -34,8 +35,8 @@ const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
         <header>
             <nav className="navbar justify-between bg-base-300">
                 <a className="btn btn-ghost text-lg">
-                    {/* <img alt="Logo" src="/logo.svg" className="w-4" /> */}
-                    <p className="">ka.play</p>
+                    <img alt="Logo" src={kaplayLogo.src} className="h-10" />
+                    <h1 className="sr-only">KAPLAY</h1>
                 </a>
 
                 <div className="dropdown dropdown-end sm:hidden">
