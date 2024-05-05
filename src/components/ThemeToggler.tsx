@@ -1,17 +1,33 @@
-const ThemeToggler = () => {
-    const themes = [
-        "forest",
-        "cupcake",
-    ];
+import type { FC } from "react";
+import themeIcon from "../assets/theme.png";
 
+const themes = [
+    "forest",
+    "cupcake",
+];
+
+export const lightThemes = [
+    "cupcake",
+];
+
+export const darkThemes = [
+    "forest",
+];
+
+type Props = {
+    onThemeChange?: (theme: string) => void;
+};
+
+const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
     return (
-        <div className="dropdown dropdown-hover dropdown-end flex-grow-0 flex-shrink-0 basis-24">
+        <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24">
             <div
                 tabIndex={0}
                 role="button"
                 className="btn btn-sm m-1 btn-secondary"
             >
                 Theme
+                <img src={themeIcon.src} alt="Theme" className="w-4" />
             </div>
             <ul
                 tabIndex={0}
@@ -22,6 +38,7 @@ const ThemeToggler = () => {
                         <button
                             data-set-theme={theme}
                             data-act-class="ACTIVECLASS"
+                            onClick={() => onThemeChange?.(theme)}
                         >
                             {theme}
                         </button>

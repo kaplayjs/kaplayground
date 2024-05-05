@@ -1,13 +1,33 @@
-import type { FC } from "react";
+import { type FC, useRef } from "react";
+import runIcon from "../assets/run.png";
 import ThemeToggler from "./ThemeToggler";
 
 type Props = {
     run: () => void;
+    onShare?: () => void;
+    onThemeChange?: (theme: string) => void;
 };
 
-const Header: FC<Props> = ({ run }) => {
+const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
+    const shareButton = useRef<HTMLButtonElement>(null);
+
     const handleRun = () => {
         run();
+    };
+
+    const handleShare = () => {
+        onShare?.();
+
+        if (shareButton.current) {
+            const shareText = shareButton.current.querySelector(".share-text");
+
+            if (shareText) {
+                shareText.textContent = "Copied!";
+                setTimeout(() => {
+                    shareText.textContent = "Share";
+                }, 1000);
+            }
+        }
     };
 
     return (
@@ -38,10 +58,23 @@ const Header: FC<Props> = ({ run }) => {
                             onClick={handleRun}
                         >
                             Run
+                            <img src={runIcon.src} alt="Run" className="w-4" />
                         </button>
                     </li>
                     <li>
-                        <ThemeToggler />
+                        <button
+                            className="btn btn-sm btn-primary"
+                            onClick={handleShare}
+                            ref={shareButton}
+                        >
+                            <span className="share-text">Share</span>
+                            <img src={runIcon.src} alt="Run" className="w-4" />
+                        </button>
+                    </li>
+                    <li>
+                        <ThemeToggler
+                            onThemeChange={onThemeChange}
+                        />
                     </li>
                 </ul>
             </nav>

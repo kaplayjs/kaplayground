@@ -74,6 +74,7 @@ const GameView = React.forwardRef<GameViewRef, GameViewProps>(({
                 width: "100%",
             }}
             srcDoc={wrapGame(code ?? "")}
+            sandbox="allow-scripts"
         />
     );
 });
