@@ -8,7 +8,7 @@ export default {
         extend: {},
     },
     daisyui: {
-        themes: ["light", "forest", "dark", "cupcake"],
+        themes: ["forest", "cupcake"],
         darkTheme: "forest",
     },
 };
