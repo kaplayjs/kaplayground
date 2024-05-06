@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { compressCode, decompressCode } from "../util/compressCode";
+import AssetWindow from "./AssetsWindow/AssetWindow";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
 import Header from "./Header";
@@ -50,6 +51,7 @@ function Playground() {
                         onRun={handleRun}
                         onMount={handleRun}
                     />
+                    <AssetWindow />
                 </div>
 
                 <GameView code={code} ref={gameViewRef} />
