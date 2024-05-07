@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 import { compressCode, decompressCode } from "../util/compressCode";
-import AssetWindow from "./AssetsWindow/AssetWindow";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
 import Header from "./Header";
+import Tabs from "./Tabs/Tabs";
 import { darkThemes } from "./ThemeToggler";
 
 function Playground() {
@@ -44,17 +44,19 @@ function Playground() {
                 onThemeChange={handleThemeChange}
                 onShare={handleShare}
             />
-            <main className="flex flex-row h-full">
-                <div>
+            <main className="flex flex-col-reverse md:flex-row">
+                <div className="flex-1 flex flex-col max-h-[50%] md:max-h-none md:max-w-[50%]">
                     <Editor
                         ref={editorRef}
                         onRun={handleRun}
                         onMount={handleRun}
                     />
-                    <AssetWindow />
+                    <Tabs />
                 </div>
 
-                <GameView code={code} ref={gameViewRef} />
+                <div className="flex-1 flex max-h-[50%] md:max-h-none md:max-w-[50%] ">
+                    <GameView code={code} ref={gameViewRef} />
+                </div>
             </main>
         </div>
     );

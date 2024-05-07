@@ -72,8 +72,6 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
 
     return (
         <Editor
-            height="75%"
-            width={800}
             defaultLanguage="javascript"
             value={defaultCode!}
             beforeMount={handleEditorBeforeMount}
