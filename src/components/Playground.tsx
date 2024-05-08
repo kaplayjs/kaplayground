@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { Resplit, ResplitPane } from "react-resplit";
-import { Pane, ResizablePanes } from "resizable-panes-react";
+import { Resplit } from "react-resplit";
 import { compressCode, decompressCode } from "../util/compressCode";
+import AboutDialog from "./About/AboutDialog";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
 import Header from "./Header";
@@ -46,14 +46,14 @@ const Playground = () => {
                 onThemeChange={handleThemeChange}
                 onShare={handleShare}
             />
-            <main className="h-[94%]">
+            <main className="h-[94%] overflow-hidden">
                 <Resplit.Root direction="horizontal" className="h-full">
                     <Resplit.Pane order={1} initialSize="1fr" minSize="0.5fr">
                         <Resplit.Root
                             direction="vertical"
                             className="h-full"
                         >
-                            <ResplitPane
+                            <Resplit.Pane
                                 order={0}
                                 initialSize="1fr"
                                 minSize="0.5fr"
@@ -65,7 +65,7 @@ const Playground = () => {
                                     path="playground"
                                     ref={editorRef}
                                 />
-                            </ResplitPane>
+                            </Resplit.Pane>
 
                             <Resplit.Splitter order={1} size="10px" />
 
@@ -86,6 +86,7 @@ const Playground = () => {
                         <GameView code={code} ref={gameViewRef} />
                     </Resplit.Pane>
                 </Resplit.Root>
+                <AboutDialog />
             </main>
         </div>
     );

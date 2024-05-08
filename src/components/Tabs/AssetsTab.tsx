@@ -34,11 +34,14 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
         HTMLUListElement,
         Asset
     >([
-        ...assets.filter((asset) => asset.kind === props.kind),
-    ]);
+        ...Array.from(assets).filter(([, asset]) => asset.kind === props.kind),
+    ].map(([_, asset]) => asset));
 
     useEffect(() => {
-        setVisibles(assets.filter((asset) => asset.kind === props.kind));
+        setVisibles(
+            Array.from(assets).filter(([, asset]) => asset.kind === props.kind)
+                .map(([_, asset]) => asset),
+        );
     }, [assets]);
 
     const handleAssetUpload = async (

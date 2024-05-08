@@ -1,6 +1,7 @@
 import { type FC, useRef } from "react";
 import kaplayLogo from "../assets/kaplay.png";
 import runIcon from "../assets/run.png";
+import AboutButton from "./About/AboutButton";
 import ProjectMenu from "./Projects/ProjectMenu";
 import ThemeToggler from "./ThemeToggler";
 
@@ -34,7 +35,7 @@ const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
 
     return (
         <header className="flex h-[6%]">
-            <nav className="flex flex-1 py-2 justify-between items-center bg-base-300">
+            <nav className="flex flex-1 py-2 justify-between items-center bg-base-300 px-4">
                 <a className="btn btn-xs btn-ghost text-lg">
                     <img alt="Logo" src={kaplayLogo.src} className="h-6" />
                     <h1 className="sr-only">KAPLAY</h1>
@@ -67,6 +68,9 @@ const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
                     </li>
                     <li>
                         <ProjectMenu />
+                    </li>
+                    <li>
+                        <AboutButton />
                     </li>
                 </ul>
             </nav>
