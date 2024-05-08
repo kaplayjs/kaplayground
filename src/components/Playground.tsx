@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { Resplit, ResplitPane } from "react-resplit";
+import { Pane, ResizablePanes } from "resizable-panes-react";
 import { compressCode, decompressCode } from "../util/compressCode";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
@@ -6,7 +8,7 @@ import Header from "./Header";
 import Tabs from "./Tabs/Tabs";
 import { darkThemes } from "./ThemeToggler";
 
-function Playground() {
+const Playground = () => {
     const [code, setCode] = useState<string>("");
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
@@ -38,28 +40,55 @@ function Playground() {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="h-full">
             <Header
                 run={handleRun}
                 onThemeChange={handleThemeChange}
                 onShare={handleShare}
             />
-            <main className="flex flex-col-reverse md:flex-row">
-                <div className="flex-1 flex flex-col max-h-[50%] md:max-h-none md:max-w-[50%]">
-                    <Editor
-                        ref={editorRef}
-                        onRun={handleRun}
-                        onMount={handleRun}
-                    />
-                    <Tabs />
-                </div>
+            <main className="h-[94%]">
+                <Resplit.Root direction="horizontal" className="h-full">
+                    <Resplit.Pane order={1} initialSize="1fr" minSize="0.5fr">
+                        <Resplit.Root
+                            direction="vertical"
+                            className="h-full"
+                        >
+                            <ResplitPane
+                                order={0}
+                                initialSize="1fr"
+                                minSize="0.5fr"
+                                className="h-full w-full overflow-auto"
+                            >
+                                <Editor
+                                    onRun={handleRun}
+                                    onMount={handleRun}
+                                    path="playground"
+                                    ref={editorRef}
+                                />
+                            </ResplitPane>
 
-                <div className="flex-1 flex max-h-[50%] md:max-h-none md:max-w-[50%] ">
-                    <GameView code={code} ref={gameViewRef} />
-                </div>
+                            <Resplit.Splitter order={1} size="10px" />
+
+                            <Resplit.Pane
+                                order={2}
+                                initialSize="0.5fr"
+                                minSize="0.25fr"
+                                collapsible
+                            >
+                                <Tabs />
+                            </Resplit.Pane>
+                        </Resplit.Root>
+                    </Resplit.Pane>
+
+                    <Resplit.Splitter order={2} size="10px" />
+
+                    <Resplit.Pane order={3} initialSize="1fr" minSize="0.5fr">
+                        <GameView code={code} ref={gameViewRef} />
+                    </Resplit.Pane>
+                </Resplit.Root>
             </main>
         </div>
     );
-}
+};
 
 export default Playground;

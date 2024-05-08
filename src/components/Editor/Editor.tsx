@@ -7,6 +7,7 @@ import { configMonaco } from "./monacoConfig";
 type Props = {
     onRun: () => void;
     onMount?: (editor: editor.IStandaloneCodeEditor) => void;
+    path: string;
 };
 
 export type EditorRef = {
@@ -81,6 +82,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
             options={{
                 fontSize: 20,
             }}
+            path={props.path}
         />
     );
 });

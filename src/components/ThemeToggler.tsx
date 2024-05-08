@@ -24,7 +24,7 @@ const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
             <div
                 tabIndex={0}
                 role="button"
-                className="btn btn-sm m-1 btn-secondary"
+                className="btn btn-xs btn-secondary"
             >
                 Theme
                 <img src={themeIcon.src} alt="Theme" className="w-4" />

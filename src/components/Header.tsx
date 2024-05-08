@@ -1,6 +1,7 @@
 import { type FC, useRef } from "react";
 import kaplayLogo from "../assets/kaplay.png";
 import runIcon from "../assets/run.png";
+import ProjectMenu from "./Projects/ProjectMenu";
 import ThemeToggler from "./ThemeToggler";
 
 type Props = {
@@ -32,30 +33,17 @@ const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
     };
 
     return (
-        <header>
-            <nav className="navbar justify-between bg-base-300">
-                <a className="btn btn-ghost text-lg">
-                    <img alt="Logo" src={kaplayLogo.src} className="h-10" />
+        <header className="flex h-[6%]">
+            <nav className="flex flex-1 py-2 justify-between items-center bg-base-300">
+                <a className="btn btn-xs btn-ghost text-lg">
+                    <img alt="Logo" src={kaplayLogo.src} className="h-6" />
                     <h1 className="sr-only">KAPLAY</h1>
                 </a>
 
-                <div className="dropdown dropdown-end sm:hidden">
-                    <button className="btn btn-ghost">
-                        <i className="fa-solid fa-bars text-lg"></i>
-                    </button>
-
-                    <ul
-                        tabIndex={0}
-                        className="dropdown-content menu z-[1] bg-base-200 p-6 rounded-box shadow w-56 gap-2"
-                    >
-                        <button className="btn btn-sm btn-primary">Run</button>
-                    </ul>
-                </div>
-
-                <ul className="flex flex-row gap-2">
+                <ul className="flex flex-row items-center gap-2">
                     <li>
                         <button
-                            className="btn btn-sm btn-primary"
+                            className="btn btn-xs btn-primary"
                             onClick={handleRun}
                         >
                             Run
@@ -64,7 +52,7 @@ const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
                     </li>
                     <li>
                         <button
-                            className="btn btn-sm btn-primary"
+                            className="btn btn-xs btn-primary"
                             onClick={handleShare}
                             ref={shareButton}
                         >
@@ -76,6 +64,9 @@ const Header: FC<Props> = ({ run, onThemeChange, onShare }) => {
                         <ThemeToggler
                             onThemeChange={onThemeChange}
                         />
+                    </li>
+                    <li>
+                        <ProjectMenu />
                     </li>
                 </ul>
             </nav>
