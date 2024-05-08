@@ -1,5 +1,5 @@
 import kaplayLogo from "@/assets/kaplay.png";
-import { CHANGELOG, VERSION } from "@/config/common";
+import { CHANGELOG, REPO, VERSION } from "@/config/common";
 
 const AboutDialog = () => {
     return (
@@ -30,16 +30,24 @@ const AboutDialog = () => {
                         >
                             Changelog
                         </a>
+                        <br />
+                        <a
+                            className="font-medium link link-primary"
+                            href={REPO}
+                            target="_blank"
+                        >
+                            Give a star
+                        </a>
                     </p>
                 </main>
 
-                <div className="modal-action">
+                <footer className="modal-action">
                     <form method="dialog">
                         <button className="btn">
                             Continue making! (or press ESC)
                         </button>
                     </form>
-                </div>
+                </footer>
             </section>
         </dialog>
     );

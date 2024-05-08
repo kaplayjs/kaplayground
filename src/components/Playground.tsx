@@ -1,3 +1,4 @@
+import { useFiles } from "@/hooks/useFiles";
 import { useRef, useState } from "react";
 import { Resplit } from "react-resplit";
 import { compressCode, decompressCode } from "../util/compressCode";
@@ -10,6 +11,10 @@ import { darkThemes } from "./ThemeToggler";
 
 const Playground = () => {
     const [code, setCode] = useState<string>("");
+    const [files, setFiles] = useFiles((state) => [
+        state.files,
+        state.addFile,
+    ]);
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
 

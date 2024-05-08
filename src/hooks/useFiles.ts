@@ -19,7 +19,7 @@ export const useFiles = create<FilesStore>((set) => ({
         name: "kaboom.js",
         language: "javascript",
         value:
-            "kaboom()\n\nloadSprite(\"bean\", \"bean.png\")\n\nscene(\"main\", () => {\n\n})",
+            "kaboom()\n\nloadSprite(\"abean\", \"bean.png\")\n\nscene(\"main\", () => {\n\n})",
         kind: "kaboom",
         isEncoded: false,
     }],
