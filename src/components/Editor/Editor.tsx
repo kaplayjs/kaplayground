@@ -1,13 +1,21 @@
+import { type File, useFiles } from "@/hooks/useFiles";
+import { decompressCode } from "@/util/compressCode";
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { decompressCode } from "../../util/compressCode";
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
     onRun: () => void;
     onMount?: (editor: editor.IStandaloneCodeEditor) => void;
     path: string;
+    file?: File;
 };
 
 export type EditorRef = {
@@ -18,6 +26,11 @@ export type EditorRef = {
 
 const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+    const [files, getCurrentFile, updateFile] = useFiles((state) => [
+        state.files,
+        state.getCurrentFile,
+        state.updateFile,
+    ]);
     let [defaultCode, setDefaultCode] = useState<string | null>(null);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
@@ -63,6 +76,10 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         });
     };
 
+    const handleEditorChange = (value: string | undefined) => {
+        updateFile(props.file?.name!, value ?? "");
+    };
+
     useImperativeHandle(ref, () => ({
         getValue: () => editorRef.current?.getValue(),
         focus: () => editorRef.current?.focus(),
@@ -71,18 +88,25 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         },
     }));
 
+    useEffect(() => {
+        if (editorRef.current?.getValue() !== getCurrentFile().value) {
+            editorRef.current?.setValue(getCurrentFile().value);
+        }
+    }, [files]);
+
     return (
         <Editor
             defaultLanguage="javascript"
-            value={defaultCode!}
+            defaultValue={props.file?.value || defaultCode!}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
+            onChange={handleEditorChange}
             theme="vs-dark"
             language="javascript"
             options={{
                 fontSize: 20,
             }}
-            path={props.path}
+            path={props.file?.name}
         />
     );
 });

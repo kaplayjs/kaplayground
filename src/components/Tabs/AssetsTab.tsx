@@ -31,18 +31,16 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
         state.assets,
         state.addAsset,
     ]);
+
     const [parent, visibles, setVisibles] = useDragAndDrop<
         HTMLUListElement,
         Asset
     >([
-        ...Array.from(assets).filter(([, asset]) => asset.kind === props.kind),
-    ].map(([_, asset]) => asset));
+        ...assets.filter((asset) => asset.kind === props.kind),
+    ]);
 
     useEffect(() => {
-        setVisibles(
-            Array.from(assets).filter(([, asset]) => asset.kind === props.kind)
-                .map(([_, asset]) => asset),
-        );
+        setVisibles(assets.filter((asset) => asset.kind === props.kind));
     }, [assets]);
 
     const handleAssetUpload = async (

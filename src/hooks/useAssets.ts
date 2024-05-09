@@ -8,24 +8,30 @@ export type Asset = {
 };
 
 type AssetsStore = {
-    assets: Map<string, Asset>;
+    assets: Asset[];
     addAsset: (asset: Asset) => void;
     removeAsset: (name: string) => void;
-    loadDefaultAssets: () => void;
 };
 
-export const useAssets = create<AssetsStore>((set) => ({
-    assets: new Map(),
-    addAsset: (asset) =>
-        set((state) => ({
-            assets: new Map(state.assets).set(asset.name, asset),
-        })),
-    removeAsset: (name) =>
-        set((state) => {
-            const assets = new Map(state.assets);
-            assets.delete(name);
+export const useAssets = create<AssetsStore>((set, get) => ({
+    assets: [
+        ...defaultAssets,
+    ],
+    addAsset: (asset) => {
+        const foundAsset = get().assets.find((a) => a.name === asset.name);
 
-            return { assets };
-        }),
-    loadDefaultAssets: () => set(() => ({})),
+        if (foundAsset) {
+            set((state) => ({
+                assets: state.assets.map((oldAsset) =>
+                    oldAsset.name === asset.name ? { ...asset } : oldAsset
+                ),
+            }));
+        } else {
+            set((state) => ({ assets: [...state.assets, asset] }));
+        }
+    },
+    removeAsset: (name) =>
+        set((state) => ({
+            assets: state.assets.filter((asset) => asset.name !== name),
+        })),
 }));

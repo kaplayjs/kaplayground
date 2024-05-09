@@ -12,8 +12,8 @@ import "allotment/dist/style.css";
 
 const Playground = () => {
     const [code, setCode] = useState<string>("");
-    const [files, setFiles] = useFiles((state) => [
-        state.files,
+    const [currentFile, setFiles] = useFiles((state) => [
+        state.getCurrentFile,
         state.addFile,
     ]);
     const editorRef = useRef<EditorRef>(null);
@@ -62,9 +62,10 @@ const Playground = () => {
                                     onMount={handleRun}
                                     path="playground"
                                     ref={editorRef}
+                                    file={currentFile()}
                                 />
                             </Allotment.Pane>
-                            <Allotment.Pane snap>
+                            <Allotment.Pane snap preferredSize={300}>
                                 <Tabs />
                             </Allotment.Pane>
                         </Allotment>

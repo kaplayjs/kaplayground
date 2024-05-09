@@ -1,16 +1,21 @@
 import projectIcon from "../../assets/project_icon.png";
-import { useAssets } from "../../hooks/useAssets";
-import { useFiles } from "../../hooks/useFiles";
+import { type Asset, useAssets } from "../../hooks/useAssets";
+import { type File, useFiles } from "../../hooks/useFiles";
 
 const ProjectMenu = () => {
     const [assets, addAsset] = useAssets((state) => [
         state.assets,
         state.addAsset,
     ]);
+    const [files, addFile] = useFiles((state) => [
+        state.files,
+        state.addFile,
+    ]);
 
     const handleDownload = () => {
         const project = {
             assets,
+            files,
         };
 
         const blob = new Blob([JSON.stringify(project)], {
@@ -28,21 +33,24 @@ const ProjectMenu = () => {
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
+        if (!file) return;
 
-        if (file) {
-            const reader = new FileReader();
+        const reader = new FileReader();
 
-            reader.onload = (e) => {
-                const project = JSON.parse(e.target?.result as string);
-                const { assets } = project;
+        reader.onload = (e) => {
+            const project = JSON.parse(e.target?.result as string);
+            const { assets, files } = project;
 
-                assets.forEach((asset: any) => {
-                    addAsset(asset);
-                });
-            };
+            assets.forEach((asset: Asset) => {
+                addAsset(asset);
+            });
 
-            reader.readAsText(file);
-        }
+            files.forEach((file: File) => {
+                addFile(file);
+            });
+        };
+
+        reader.readAsText(file);
     };
 
     return (

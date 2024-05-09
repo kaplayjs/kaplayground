@@ -10,6 +10,7 @@ The initial release!
 
 ### Bug Fixes
 - fixed duplied assets
+- fixed (doubtful) a bug of editor writing
 
 ### Misc
 - added about the project window
