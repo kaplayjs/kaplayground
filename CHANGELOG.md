@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+Format: Major.Minor.Patch (D/M/Y)
+
+## 0.1.0 (9/5/2024)
 The initial release!
 
 ### Features
