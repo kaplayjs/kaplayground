@@ -63,9 +63,9 @@ const Playground = () => {
             </header>
             <main className="h-[94%] overflow-hidden">
                 <Allotment>
-                    <Allotment.Pane minSize={200}>
+                    <Allotment.Pane snap>
                         <Allotment vertical>
-                            <Allotment.Pane minSize={100}>
+                            <Allotment.Pane>
                                 <Editor
                                     onRun={handleRun}
                                     onMount={handleRun}
@@ -74,7 +74,7 @@ const Playground = () => {
                                     file={currentFile()}
                                 />
                             </Allotment.Pane>
-                            <Allotment.Pane snap preferredSize={300}>
+                            <Allotment.Pane snap>
                                 <Tabs />
                             </Allotment.Pane>
                         </Allotment>
