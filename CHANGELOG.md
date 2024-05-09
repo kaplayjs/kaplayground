@@ -3,7 +3,13 @@
 Format: Major.Minor.Patch (D/M/Y)
 
 ## 0.2.0 (unreleased)
+
+### Features
+- added a loading screen
 - now editor is snapable at all
+
+### Misc
+- new logo, hi dino!
 
 ## 0.1.1 (9/5/2024)
 - fixed code url not loading

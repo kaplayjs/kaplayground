@@ -1,4 +1,4 @@
-import kaplayLogo from "@/assets/kaplay.png";
+import kaplayBigLogo from "@/assets/kaplay_big.gif";
 import { CHANGELOG, REPO, VERSION } from "@/config/common";
 
 const AboutDialog = () => {
@@ -8,8 +8,8 @@ const AboutDialog = () => {
                 <header className="flex items-center justify-center">
                     <img
                         alt="KAPLAY"
-                        src={kaplayLogo.src}
-                        className="h-16"
+                        src={kaplayBigLogo.src}
+                        className="h-32"
                     >
                     </img>
                 </header>
@@ -47,6 +47,12 @@ const AboutDialog = () => {
                             Report an issue
                         </a>
                     </p>
+                    <div className="divider"></div>
+                    <div>
+                        <kbd className="kbd">ctrl</kbd>
+                        +
+                        <kbd className="kbd">s</kbd> Run Game
+                    </div>
                 </main>
 
                 <footer className="modal-action">

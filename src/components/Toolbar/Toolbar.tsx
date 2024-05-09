@@ -37,10 +37,15 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare }) => {
 
     return (
         <nav className="flex flex-1 py-2 justify-between items-center bg-base-300 px-4">
-            <a className="btn btn-xs btn-ghost text-lg">
-                <img alt="Logo" src={kaplayLogo.src} className="h-6" />
+            <figure>
+                <img
+                    alt="Logo"
+                    src={kaplayLogo.src}
+                    className="h-8"
+                    draggable={false}
+                />
                 <h1 className="sr-only">KAPLAY</h1>
-            </a>
+            </figure>
 
             <ul className="flex flex-row items-center gap-2">
                 <li>

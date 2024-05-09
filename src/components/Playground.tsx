@@ -9,9 +9,12 @@ import Tabs from "./Tabs/Tabs";
 import Toolbar from "./Toolbar";
 import { darkThemes } from "./Toolbar/ThemeToggler";
 import "allotment/dist/style.css";
+import { cn } from "@/util/cn";
+import clsx from "clsx";
 
 const Playground = () => {
     const [code, setCode] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(true);
     const [currentFile, setFiles] = useFiles((state) => [
         state.getCurrentFile,
         state.addFile,
@@ -29,6 +32,13 @@ const Playground = () => {
                 editorRef.current?.focus();
             }, 1000);
         }
+    };
+
+    const handleMount = () => {
+        handleRun();
+        setLoading(false);
+
+        console.log("editor mounted");
     };
 
     const handleShare = () => {
@@ -53,39 +63,53 @@ const Playground = () => {
     };
 
     return (
-        <div className="h-full">
-            <header className="h-[6%] flex">
-                <Toolbar
-                    run={handleRun}
-                    onThemeChange={handleThemeChange}
-                    onShare={handleShare}
-                />
-            </header>
-            <main className="h-[94%] overflow-hidden">
-                <Allotment>
-                    <Allotment.Pane snap>
-                        <Allotment vertical>
-                            <Allotment.Pane>
-                                <Editor
-                                    onRun={handleRun}
-                                    onMount={handleRun}
-                                    path="playground"
-                                    ref={editorRef}
-                                    file={currentFile()}
-                                />
-                            </Allotment.Pane>
-                            <Allotment.Pane snap>
-                                <Tabs />
-                            </Allotment.Pane>
-                        </Allotment>
-                    </Allotment.Pane>
-                    <Allotment.Pane snap>
-                        <GameView code={code} ref={gameViewRef} />
-                    </Allotment.Pane>
-                </Allotment>
-            </main>
-            <AboutDialog />
-        </div>
+        <>
+            <div
+                className={cn("h-full", {
+                    "hidden": loading,
+                })}
+            >
+                <header className="h-[6%] flex">
+                    <Toolbar
+                        run={handleRun}
+                        onThemeChange={handleThemeChange}
+                        onShare={handleShare}
+                    />
+                </header>
+                <main className="h-[94%] overflow-hidden">
+                    <Allotment>
+                        <Allotment.Pane snap>
+                            <Allotment vertical>
+                                <Allotment.Pane>
+                                    <Editor
+                                        onRun={handleRun}
+                                        onMount={handleMount}
+                                        path="playground"
+                                        ref={editorRef}
+                                        file={currentFile()}
+                                    />
+                                </Allotment.Pane>
+                                <Allotment.Pane snap>
+                                    <Tabs />
+                                </Allotment.Pane>
+                            </Allotment>
+                        </Allotment.Pane>
+                        <Allotment.Pane snap>
+                            <GameView code={code} ref={gameViewRef} />
+                        </Allotment.Pane>
+                    </Allotment>
+                </main>
+                <AboutDialog />
+            </div>
+            <div
+                className={clsx("h-full flex items-center justify-center", {
+                    "hidden": !loading,
+                })}
+            >
+                <span className="loading loading-dots loading-lg text-primary">
+                </span>
+            </div>
+        </>
     );
 };
 
