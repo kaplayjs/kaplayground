@@ -1,7 +1,7 @@
 import { useFiles } from "@/hooks/useFiles";
 import { useRef, useState } from "react";
 import { Resplit } from "react-resplit";
-import { compressCode, decompressCode } from "../util/compressCode";
+import { compressCode } from "../util/compressCode";
 import AboutDialog from "./About/AboutDialog";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
@@ -78,7 +78,6 @@ const Playground = () => {
                                 order={2}
                                 initialSize="0.5fr"
                                 minSize="0.25fr"
-                                collapsible
                             >
                                 <Tabs />
                             </Resplit.Pane>
