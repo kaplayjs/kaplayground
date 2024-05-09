@@ -75,6 +75,7 @@ const Playground = () => {
                     </Allotment.Pane>
                 </Allotment>
             </main>
+            <AboutDialog />
         </div>
     );
 };
