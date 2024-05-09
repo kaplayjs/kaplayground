@@ -2,6 +2,9 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
+## 0.1.1 (9/5/2024)
+- fixed code url not loading
+
 ## 0.1.0 (9/5/2024)
 The initial release!
 

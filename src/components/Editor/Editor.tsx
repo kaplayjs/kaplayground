@@ -45,9 +45,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
                 );
             }
 
-            setDefaultCode(
-                decompressCode(codeUrl),
-            );
+            updateFile(getCurrentFile().name, decompressCode(codeUrl));
         } catch {
             setDefaultCode("kaboom()\n\ndebug.log(\"ohhi\");");
         }
@@ -60,8 +58,9 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         editorRef.current = editor;
         props.onMount?.(editorRef.current);
 
-        // Editor Shortcuts
+        editor.setValue(getCurrentFile().value);
 
+        // Editor Shortcuts
         editor.addAction({
             id: "run-game",
             label: "Run Game",
@@ -97,7 +96,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     return (
         <Editor
             defaultLanguage="javascript"
-            defaultValue={props.file?.value || defaultCode!}
+            defaultValue={getCurrentFile().value}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
             onChange={handleEditorChange}
