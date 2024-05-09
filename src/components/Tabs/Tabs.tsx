@@ -27,26 +27,26 @@ const TTab: FC<TabProps> = ({ label, icon }) => {
 
 const Tabs = () => {
     return (
-        <TabGroup className="hidden md:flex flex-col h-[30%]">
+        <TabGroup className="flex flex-col h-full">
             <div className="bg-base-200">
                 <TabList className="tabs tabs-boxed w-min">
                     <TTab label="Sprites" icon={spritesIcon.src} />
                     <TTab label="Sounds" icon={soundsIcon.src} />
                 </TabList>
             </div>
-            <TabPanels className="flex-1">
-                <TabPanel className="h-full">
+            <TabPanels className="flex-1 flex">
+                <TabPanel>
                     <AssetsTab
                         kind="sprite"
                         onDragData={(name, url) =>
-                            `loadSprite("${name}", "${url}")`}
+                            `\nloadSprite("${name}", "${url}")`}
                     />
                 </TabPanel>
                 <TabPanel>
                     <AssetsTab
                         kind="sound"
                         onDragData={(name, url) =>
-                            `loadSound("${name}", "${url}")`}
+                            `\nloadSound("${name}", "${url}")`}
                         visibleIcon={soundIcon.src}
                     />
                 </TabPanel>

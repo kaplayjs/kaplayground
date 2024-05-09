@@ -2,6 +2,7 @@ import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
 import addSriteIcon from "../../assets/add_sprite_icon.png";
 import { type Asset, useAssets } from "../../hooks/useAssets";
+import AboutDialog from "../About/AboutDialog";
 
 const removeExtension = (filename: string) => {
     return filename.split(".").slice(0, -1).join(".");
@@ -76,9 +77,9 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
     };
 
     return (
-        <div className="flex justify-between items-center h-full px-8">
+        <div className="flex flex-col justify-between p-4 w-full h-full">
             <ul
-                className="flex flex-row gap-6 overflow-x-auto max-w-[80%] h-full py-8"
+                className="flex-1 | flex flex-row gap-6 overflow-y-auto flex-wrap h-[80%] content-start"
                 ref={parent}
             >
                 {visibles.map((asset, i) => (
@@ -87,21 +88,17 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                         data-label={asset.name}
                         data-url={asset.url}
                         onDragStartCapture={handleDrag}
+                        className="h-12"
                     >
-                        <div>
+                        <div className="h-12 w-12">
                             <img
                                 draggable={false}
                                 src={props.visibleIcon ?? asset.url}
                                 alt={`Asset ${i}`}
                                 className="h-12 w-12 object-scale-down"
-                                style={{
-                                    userSelect: "none",
-                                    WebkitUserSelect: "none",
-                                    MozWindowDragging: "no-drag",
-                                }}
                             />
-                            <p className="text-sm text-center text-gray-500">
-                                {removeExtension(asset.name)}
+                            <p className="text-xs text-center text-gray-500">
+                                {removeExtension(asset.name).slice(0, 10)}
                             </p>
                         </div>
                     </li>
@@ -126,6 +123,7 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                     multiple
                 />
             </label>
+            <AboutDialog />
         </div>
     );
 };
