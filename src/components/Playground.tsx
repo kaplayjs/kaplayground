@@ -5,9 +5,9 @@ import { compressCode } from "../util/compressCode";
 import AboutDialog from "./About/AboutDialog";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
-import Header from "./Header";
 import Tabs from "./Tabs/Tabs";
 import { darkThemes } from "./ThemeToggler";
+import Toolbar from "./Toolbar";
 import "allotment/dist/style.css";
 
 const Playground = () => {
@@ -35,6 +35,13 @@ const Playground = () => {
         const code = editorRef.current?.getValue();
         const url = new URL(window.location.href);
         url.searchParams.set("code", compressCode(code ?? "") || "");
+
+        if (url.toString().length > 3000) {
+            alert(
+                "The URL is too lengthy; it has been copied, but using the new project import/export feature is recommended.",
+            );
+        }
+
         navigator.clipboard.writeText(url.toString());
     };
 
@@ -47,11 +54,13 @@ const Playground = () => {
 
     return (
         <div className="h-full">
-            <Header
-                run={handleRun}
-                onThemeChange={handleThemeChange}
-                onShare={handleShare}
-            />
+            <header className="h-[6%] flex">
+                <Toolbar
+                    run={handleRun}
+                    onThemeChange={handleThemeChange}
+                    onShare={handleShare}
+                />
+            </header>
             <main className="h-[94%] overflow-hidden">
                 <Allotment>
                     <Allotment.Pane minSize={200}>

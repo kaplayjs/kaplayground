@@ -38,6 +38,14 @@ const AboutDialog = () => {
                         >
                             Give a star
                         </a>
+                        <br />
+                        <a
+                            className="font-medium link link-primary"
+                            href={REPO + "/issues"}
+                            target="_blank"
+                        >
+                            Report an issue
+                        </a>
                     </p>
                 </main>
 
