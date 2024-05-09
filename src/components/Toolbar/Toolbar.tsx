@@ -1,9 +1,11 @@
+import runIcon from "@/assets/icons/run_btn_icon.png";
+import shareIcon from "@/assets/icons/share_btn_icon.png";
+import kaplayLogo from "@/assets/kaplay.png";
+import AboutButton from "@/components/About/AboutButton";
+import ProjectMenu from "@/components/Projects/ProjectMenu";
+import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { type FC, useRef } from "react";
-import kaplayLogo from "../assets/kaplay.png";
-import runIcon from "../assets/run.png";
-import AboutButton from "./About/AboutButton";
-import ProjectMenu from "./Projects/ProjectMenu";
-import ThemeToggler from "./ThemeToggler";
+import GenericButton from "./GenericButton";
 
 type Props = {
     run: () => void;
@@ -22,7 +24,7 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare }) => {
         onShare?.();
 
         if (shareButton.current) {
-            const shareText = shareButton.current.querySelector(".share-text");
+            const shareText = shareButton.current.querySelector(".text");
 
             if (shareText) {
                 shareText.textContent = "Copied!";
@@ -42,23 +44,19 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare }) => {
 
             <ul className="flex flex-row items-center gap-2">
                 <li>
-                    <button
-                        className="btn btn-xs btn-primary"
+                    <GenericButton
+                        icon={runIcon.src}
+                        text="Run"
                         onClick={handleRun}
-                    >
-                        Run
-                        <img src={runIcon.src} alt="Run" className="w-4" />
-                    </button>
+                    />
                 </li>
                 <li>
-                    <button
-                        className="btn btn-xs btn-primary"
+                    <GenericButton
+                        icon={shareIcon.src}
+                        text="Share"
                         onClick={handleShare}
                         ref={shareButton}
-                    >
-                        <span className="share-text">Share</span>
-                        <img src={runIcon.src} alt="Run" className="w-4" />
-                    </button>
+                    />
                 </li>
                 <li>
                     <ThemeToggler

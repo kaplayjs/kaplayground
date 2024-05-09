@@ -6,8 +6,8 @@ import AboutDialog from "./About/AboutDialog";
 import Editor, { type EditorRef } from "./Editor/Editor";
 import GameView, { type GameViewRef } from "./GameView";
 import Tabs from "./Tabs/Tabs";
-import { darkThemes } from "./ThemeToggler";
 import Toolbar from "./Toolbar";
+import { darkThemes } from "./Toolbar/ThemeToggler";
 import "allotment/dist/style.css";
 
 const Playground = () => {

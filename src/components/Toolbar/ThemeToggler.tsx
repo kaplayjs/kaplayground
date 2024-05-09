@@ -1,5 +1,5 @@
+import themeIcon from "@/assets/theme.png";
 import type { FC } from "react";
-import themeIcon from "../assets/theme.png";
 
 const themes = [
     "forest",
