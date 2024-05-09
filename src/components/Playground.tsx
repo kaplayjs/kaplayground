@@ -1,7 +1,6 @@
 import { useFiles } from "@/hooks/useFiles";
 import { Allotment } from "allotment";
-import { useEffect, useRef, useState } from "react";
-import { Resplit } from "react-resplit";
+import { useRef, useState } from "react";
 import { compressCode } from "../util/compressCode";
 import AboutDialog from "./About/AboutDialog";
 import Editor, { type EditorRef } from "./Editor/Editor";
