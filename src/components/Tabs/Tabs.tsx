@@ -12,7 +12,7 @@ type TabProps = {
 
 const TTab: FC<TabProps> = ({ label, icon }) => {
     return (
-        <Tab className="tab px-12 data-[selected]:tab-active ">
+        <Tab className="tab px-12 data-[selected]:tab-active">
             <div className="flex gap-2">
                 <p className="inline font-medium">{label}</p>
                 <img
@@ -29,7 +29,7 @@ const Tabs = () => {
     return (
         <TabGroup className="flex flex-col h-full">
             <div className="bg-base-200">
-                <TabList className="tabs tabs-boxed w-min">
+                <TabList className="tabs tabs-bordered w-min">
                     <TTab label="Sprites" icon={spritesIcon.src} />
                     <TTab label="Sounds" icon={soundsIcon.src} />
                 </TabList>

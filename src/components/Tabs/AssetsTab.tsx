@@ -102,25 +102,30 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                     </li>
                 ))}
             </ul>
-            <label className="">
-                <p className="sr-only">Add sprite</p>
-                <div className="btn btn-primary px-2">
-                    <img
-                        src={addSriteIcon.src}
-                        alt="Add sprite"
-                        className="w-8 h-8"
+            <div
+                className="tooltip tooltip-right"
+                data-tip={`Add ${props.kind}`}
+            >
+                <label>
+                    <p className="sr-only">Add {props.kind}</p>
+                    <div className="btn btn-primary px-2">
+                        <img
+                            src={addSriteIcon.src}
+                            alt="Add sprite"
+                            className="w-8 h-8"
+                        />
+                    </div>
+                    <input
+                        className="hidden"
+                        type="file"
+                        accept={props.kind === "sprite"
+                            ? "image/*"
+                            : "audio/*"}
+                        onChange={handleAssetUpload}
+                        multiple
                     />
-                </div>
-                <input
-                    className="hidden"
-                    type="file"
-                    accept={props.kind === "sprite"
-                        ? "image/*"
-                        : "audio/*"}
-                    onChange={handleAssetUpload}
-                    multiple
-                />
-            </label>
+                </label>
+            </div>
             <AboutDialog />
         </div>
     );
