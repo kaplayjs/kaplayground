@@ -64,7 +64,7 @@ const Playground = () => {
     return (
         <>
             <div
-                className={cn("h-full", {
+                className={cn("h-full w-screen", {
                     "hidden": loading,
                 })}
             >
