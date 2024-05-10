@@ -32,9 +32,22 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         configMonaco(monaco);
 
         const codeUrl = new URL(window.location.href).searchParams.get("code");
-
         if (!codeUrl) return;
-        updateFile(getCurrentFile()!.name, decompressCode(codeUrl));
+
+        // TODO: May this only work if there's any progress
+
+        // say user if proceed, all other project will be lost, so let the option
+        // of not load codeUrl
+
+        // const selection = confirm(
+        //     "Do you want to load the code? It will lost your local code. You can first export the project",
+        // );
+
+        // if (selection) {
+        //     updateFile(getCurrentFile()!.name, decompressCode(codeUrl));
+        // } else {
+        //     window.history.replaceState({}, document.title, "/");
+        // }
     };
 
     const handleEditorMount = (

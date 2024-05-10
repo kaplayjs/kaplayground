@@ -37,6 +37,7 @@ const Playground = () => {
 
     const handleProjectReplace = () => {
         editorRef.current?.setValue(getKaboomFile()?.value ?? "");
+        handleRun();
     };
 
     const handleShare = () => {
