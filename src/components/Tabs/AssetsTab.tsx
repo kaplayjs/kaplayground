@@ -1,8 +1,9 @@
+import addSriteIcon from "@/assets/add_sprite_icon.png";
+import AboutDialog from "@/components/About/AboutDialog";
+import { useProject } from "@/hooks/useProject";
+import { type Asset } from "@/hooks/useProject";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
-import addSriteIcon from "../../assets/add_sprite_icon.png";
-import { type Asset, useAssets } from "../../hooks/useAssets";
-import AboutDialog from "../About/AboutDialog";
 
 const removeExtension = (filename: string) => {
     return filename.split(".").slice(0, -1).join(".");
@@ -27,8 +28,8 @@ type AssetsTabProps = {
 };
 
 const AssetsTab: FC<AssetsTabProps> = (props) => {
-    const [assets, addAsset] = useAssets((state) => [
-        state.assets,
+    const [assets, addAsset] = useProject((state) => [
+        state.project.assets,
         state.addAsset,
     ]);
 
@@ -75,7 +76,7 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
     };
 
     return (
-        <div className="flex flex-col justify-between p-4 w-full h-full">
+        <div className="flex flex-col justify-between p-4 w-full h-full items-start">
             <ul
                 className="flex-1 | flex flex-row gap-6 overflow-y-auto flex-wrap h-[80%] content-start"
                 ref={parent}

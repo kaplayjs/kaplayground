@@ -1,4 +1,3 @@
-import { useFiles } from "@/hooks/useFiles";
 import { Allotment } from "allotment";
 import { useRef, useState } from "react";
 import { compressCode } from "../util/compressCode";
@@ -9,36 +8,35 @@ import Tabs from "./Tabs/Tabs";
 import Toolbar from "./Toolbar";
 import { darkThemes } from "./Toolbar/ThemeToggler";
 import "allotment/dist/style.css";
+import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
 import clsx from "clsx";
 
 const Playground = () => {
+    const [getKaboomFile] = useProject((state) => [
+        state.getCurrentFile,
+    ]);
     const [code, setCode] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true);
-    const [currentFile, setFiles] = useFiles((state) => [
-        state.getCurrentFile,
-        state.addFile,
-    ]);
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
 
     const handleRun = () => {
-        const code = editorRef.current?.getValue();
+        const code = getKaboomFile()?.value;
 
         if (code) {
             setCode(code);
             gameViewRef.current?.run(code);
-            setTimeout(() => {
-                editorRef.current?.focus();
-            }, 1000);
         }
     };
 
     const handleMount = () => {
         handleRun();
         setLoading(false);
+    };
 
-        console.log("editor mounted");
+    const handleProjectReplace = () => {
+        editorRef.current?.setValue(getKaboomFile()?.value ?? "");
     };
 
     const handleShare = () => {
@@ -74,6 +72,7 @@ const Playground = () => {
                         run={handleRun}
                         onThemeChange={handleThemeChange}
                         onShare={handleShare}
+                        onProjectReplace={handleProjectReplace}
                     />
                 </header>
                 <main className="h-[94%] overflow-hidden">
@@ -86,7 +85,6 @@ const Playground = () => {
                                         onMount={handleMount}
                                         path="playground"
                                         ref={editorRef}
-                                        file={currentFile()}
                                     />
                                 </Allotment.Pane>
                                 <Allotment.Pane snap>

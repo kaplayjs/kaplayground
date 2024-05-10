@@ -1,54 +1,40 @@
-import { type File, useFiles } from "@/hooks/useFiles";
+import { useProject } from "@/hooks/useProject";
 import { decompressCode } from "@/util/compressCode";
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import {
-    forwardRef,
-    useEffect,
-    useImperativeHandle,
-    useRef,
-    useState,
-} from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
     onRun: () => void;
     onMount?: (editor: editor.IStandaloneCodeEditor) => void;
     path: string;
-    file?: File;
 };
 
 export type EditorRef = {
     getValue: () => string | undefined;
+    setValue: (value: string) => void;
     focus: () => void;
     setTheme: (theme: string) => void;
 };
 
 const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
-    const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-    const [files, getCurrentFile, updateFile] = useFiles((state) => [
-        state.files,
+    const [
+        getCurrentFile,
+        updateFile,
+    ] = useProject((state) => [
         state.getCurrentFile,
         state.updateFile,
     ]);
-    let [defaultCode, setDefaultCode] = useState<string | null>(null);
+    const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
 
         const codeUrl = new URL(window.location.href).searchParams.get("code");
 
-        try {
-            if (!codeUrl) {
-                return setDefaultCode(
-                    "kaboom();\nloadBean();\n\nadd([\n    sprite(\"bean\")\n]);\n\ndebug.log(\"ohhi\");",
-                );
-            }
-
-            updateFile(getCurrentFile().name, decompressCode(codeUrl));
-        } catch {
-            setDefaultCode("kaboom()\n\ndebug.log(\"ohhi\");");
-        }
+        if (!codeUrl) return;
+        updateFile(getCurrentFile()!.name, decompressCode(codeUrl));
     };
 
     const handleEditorMount = (
@@ -58,7 +44,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         editorRef.current = editor;
         props.onMount?.(editorRef.current);
 
-        editor.setValue(getCurrentFile().value);
+        editor.setValue(getCurrentFile()?.value ?? "");
 
         // Editor Shortcuts
         editor.addAction({
@@ -76,27 +62,22 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     };
 
     const handleEditorChange = (value: string | undefined) => {
-        updateFile(props.file?.name!, value ?? "");
+        updateFile(getCurrentFile()!.name, value ?? "");
     };
 
     useImperativeHandle(ref, () => ({
         getValue: () => editorRef.current?.getValue(),
+        setValue: (value: string) => editorRef.current?.setValue(value),
         focus: () => editorRef.current?.focus(),
         setTheme: (theme: string) => {
             editorRef.current?.updateOptions({ theme });
         },
     }));
 
-    useEffect(() => {
-        if (editorRef.current?.getValue() !== getCurrentFile().value) {
-            editorRef.current?.setValue(getCurrentFile().value);
-        }
-    }, [files]);
-
     return (
         <Editor
             defaultLanguage="javascript"
-            defaultValue={getCurrentFile().value}
+            defaultValue={""}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
             onChange={handleEditorChange}
@@ -105,7 +86,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
             options={{
                 fontSize: 20,
             }}
-            path={props.file?.name}
+            path={getCurrentFile()?.name ?? "kaboom.js"}
         />
     );
 });

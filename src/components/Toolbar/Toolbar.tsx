@@ -2,7 +2,7 @@ import runIcon from "@/assets/icons/run_btn_icon.png";
 import shareIcon from "@/assets/icons/share_btn_icon.png";
 import kaplayLogo from "@/assets/kaplay.png";
 import AboutButton from "@/components/About/AboutButton";
-import ProjectMenu from "@/components/Projects/ProjectMenu";
+import Projects from "@/components/Toolbar/Projects";
 import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { type FC, useRef } from "react";
 import GenericButton from "./GenericButton";
@@ -11,9 +11,10 @@ type Props = {
     run: () => void;
     onShare?: () => void;
     onThemeChange?: (theme: string) => void;
+    onProjectReplace?: () => void;
 };
 
-const Toolbar: FC<Props> = ({ run, onThemeChange, onShare }) => {
+const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
     const shareButton = useRef<HTMLButtonElement>(null);
 
     const handleRun = () => {
@@ -69,7 +70,9 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare }) => {
                     />
                 </li>
                 <li>
-                    <ProjectMenu />
+                    <Projects
+                        onProjectReplace={props.onProjectReplace}
+                    />
                 </li>
                 <li>
                     <AboutButton />

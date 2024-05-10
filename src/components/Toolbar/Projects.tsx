@@ -1,23 +1,20 @@
+import { type Project, useProject } from "@/hooks/useProject";
+import type { FC } from "react";
 import projectIcon from "../../assets/project_icon.png";
-import { type Asset, useAssets } from "../../hooks/useAssets";
-import { type File, useFiles } from "../../hooks/useFiles";
 
-const ProjectMenu = () => {
-    const [assets, addAsset] = useAssets((state) => [
-        state.assets,
-        state.addAsset,
-    ]);
-    const [files, addFile] = useFiles((state) => [
-        state.files,
-        state.addFile,
+type Props = {
+    onProjectReplace?(): void;
+};
+
+const Projects: FC<Props> = ({ onProjectReplace }) => {
+    const [project, replaceProject] = useProject((
+        state,
+    ) => [
+        state.project,
+        state.replaceProject,
     ]);
 
     const handleDownload = () => {
-        const project = {
-            assets,
-            files,
-        };
-
         const blob = new Blob([JSON.stringify(project)], {
             type: "application/json",
         });
@@ -28,6 +25,7 @@ const ProjectMenu = () => {
         a.href = url;
         a.download = "project.kaplay";
         a.click();
+
         URL.revokeObjectURL(url);
     };
 
@@ -38,16 +36,9 @@ const ProjectMenu = () => {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            const project = JSON.parse(e.target?.result as string);
-            const { assets, files } = project;
-
-            assets.forEach((asset: Asset) => {
-                addAsset(asset);
-            });
-
-            files.forEach((file: File) => {
-                addFile(file);
-            });
+            const project = JSON.parse(e.target?.result as string) as Project;
+            replaceProject(project);
+            onProjectReplace?.();
         };
 
         reader.readAsText(file);
@@ -93,4 +84,4 @@ const ProjectMenu = () => {
     );
 };
 
-export default ProjectMenu;
+export default Projects;
