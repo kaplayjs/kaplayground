@@ -1,18 +1,18 @@
 import { Allotment } from "allotment";
 import { useEffect, useRef, useState } from "react";
-import { compressCode } from "../util/compressCode";
-import AboutDialog from "./About/AboutDialog";
-import Editor, { type EditorRef } from "./Editor/Editor";
+import { compressCode } from "../../util/compressCode";
+import AboutDialog from "../About/AboutDialog";
+import Editor, { type EditorRef } from "../Editor/Editor";
+import Tabs from "../Tabs/Tabs";
+import Toolbar from "../Toolbar";
+import { darkThemes } from "../Toolbar/ThemeToggler";
 import GameView, { type GameViewRef } from "./GameView";
-import Tabs from "./Tabs/Tabs";
-import Toolbar from "./Toolbar";
-import { darkThemes } from "./Toolbar/ThemeToggler";
 import "allotment/dist/style.css";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
 import clsx from "clsx";
-import FileTree from "./FileTree/FileTree";
-import LoadingPlayground from "./Playground/LoadingPlayground";
+import FileTree from "../FileTree/FileTree";
+import LoadingPlayground from "./LoadingPlayground";
 
 const Playground = () => {
     const [project, getKaboomFile] = useProject((state) => [

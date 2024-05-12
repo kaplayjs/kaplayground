@@ -4,6 +4,7 @@ import kaplayLogo from "@/assets/kaplay.png";
 import AboutButton from "@/components/About/AboutButton";
 import Projects from "@/components/Toolbar/Projects";
 import ThemeToggler from "@/components/Toolbar/ThemeToggler";
+import { useProject } from "@/hooks/useProject";
 import { type FC, useRef } from "react";
 import GenericButton from "./GenericButton";
 
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
+    const [getKaboomFile] = useProject((state) => [state.getKaboomFile]);
     const shareButton = useRef<HTMLButtonElement>(null);
 
     const handleRun = () => {
@@ -24,6 +26,9 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
     const handleShare = () => {
         onShare?.();
 
+        const codeToShare = getKaboomFile()?.value;
+
+        // Animate
         if (shareButton.current) {
             const shareText = shareButton.current.querySelector(".text");
 

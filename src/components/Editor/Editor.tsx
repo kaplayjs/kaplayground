@@ -18,13 +18,18 @@ export type EditorRef = {
     setTheme: (theme: string) => void;
 };
 
+const IMPORT_CODE_ALERT =
+    "Are you sure you want to open this example? This will permanently replace your current project. You can export your current project to save it.";
+
 const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     const [
         getCurrentFile,
         updateFile,
+        replaceProject,
     ] = useProject((state) => [
         state.getCurrentFile,
         state.updateFile,
+        state.replaceProject,
     ]);
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
@@ -34,20 +39,19 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         const codeUrl = new URL(window.location.href).searchParams.get("code");
         if (!codeUrl) return;
 
-        // TODO: May this only work if there's any progress
-
-        // say user if proceed, all other project will be lost, so let the option
-        // of not load codeUrl
-
-        // const selection = confirm(
-        //     "Do you want to load the code? It will lost your local code. You can first export the project",
-        // );
-
-        // if (selection) {
-        //     updateFile(getCurrentFile()!.name, decompressCode(codeUrl));
-        // } else {
-        //     window.history.replaceState({}, document.title, "/");
-        // }
+        if (confirm(IMPORT_CODE_ALERT)) {
+            replaceProject({
+                files: [{
+                    isCurrent: true,
+                    isEncoded: false,
+                    kind: "kaboom",
+                    language: "javascript",
+                    name: "kaboom.js",
+                    value: decompressCode(codeUrl),
+                }],
+                assets: [],
+            });
+        }
     };
 
     const handleEditorMount = (
