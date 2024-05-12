@@ -5,7 +5,9 @@ Format: Major.Minor.Patch (D/M/Y)
 ## 0.2.0 (unreleased)
 
 ### Features
+- ⭐ Multi-file editing support (with scenes)
 - added a loading screen
+- added reset project option
 - now editor is snapable at all
 
 ### Misc

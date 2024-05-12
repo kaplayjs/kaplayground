@@ -1,3 +1,4 @@
+import { defaultProj } from "@/config/defaultProj";
 import { type Project, useProject } from "@/hooks/useProject";
 import type { FC } from "react";
 import projectIcon from "../../assets/project_icon.png";
@@ -44,6 +45,15 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
         reader.readAsText(file);
     };
 
+    const handleProjectReset = () => {
+        replaceProject({
+            assets: [...defaultProj.assets],
+            files: [...defaultProj.files],
+        });
+
+        onProjectReplace?.();
+    };
+
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24">
             <div
@@ -78,6 +88,13 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
                         />
                         <span>Import project</span>
                     </label>
+                </li>
+                <li>
+                    <button
+                        onClick={handleProjectReset}
+                    >
+                        Reset project
+                    </button>
                 </li>
             </ul>
         </div>

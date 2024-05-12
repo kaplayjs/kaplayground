@@ -1,36 +1,31 @@
-import * as React from "react";
-import { useUpdateEffect } from "../hooks/useUpdateEffect";
-
-export type GameViewRef = {
-    run: (code: string) => void;
-    send: (msg: any, origin?: string) => void;
-};
+import { useProject } from "@/hooks/useProject";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 
 const wrapGame = (code: string) => `
 <!DOCTYPE html>
 <head>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-		body,
-		html {
-			width: 100%;
-			height: 100vh;
-		}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body,
+html {
+    width: 100%;
+    height: 100vh;
+}
 
-        body {
+body {
             overflow: hidden;
         }
-	</style>
+        </style>
 </head>
 <body>
-	<script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
-	<script type="module">
-		${code}
-	</script>
+<script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+<script>
+    ${code}
+</script>
 </body>
 `;
 
@@ -39,31 +34,39 @@ type GameViewProps = {
     onLoad?: () => void;
 };
 
-const GameView = React.forwardRef<GameViewRef, GameViewProps>(({
+export type GameViewRef = {
+    run: () => void;
+};
+
+const GameView = forwardRef<GameViewRef, GameViewProps>(({
     code,
     onLoad,
-    ...args
 }, ref) => {
-    const iframeRef = React.useRef<HTMLIFrameElement>(null);
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const [files] = useProject((state) => [
+        state.project.files,
+    ]);
 
-    React.useImperativeHandle(ref, () => ({
-        run(code: string, msg?: any) {
+    useImperativeHandle(ref, () => ({
+        run() {
             if (!iframeRef.current) return;
             const iframe = iframeRef.current;
-            iframe.srcdoc = wrapGame(code);
-        },
-        send(msg: any, origin: string = "*") {
-            if (!iframeRef.current) return;
-            const iframe = iframeRef.current;
-            iframe.contentWindow?.postMessage(JSON.stringify(msg), origin);
+
+            let kaboomFile = "";
+            let sceneFiles = "";
+
+            files.forEach((file) => {
+                if (file.kind === "kaboom") {
+                    kaboomFile = file.value;
+                } else if (file.kind === "scene") {
+                    sceneFiles += `\n${file.value}\n`;
+                }
+            });
+
+            iframe.srcdoc = wrapGame(kaboomFile + sceneFiles);
+            console.log(wrapGame(kaboomFile + sceneFiles));
         },
     }));
-
-    useUpdateEffect(() => {
-        if (!iframeRef.current) return;
-        const iframe = iframeRef.current;
-        iframe.srcdoc = wrapGame(code);
-    }, [code]);
 
     return (
         <iframe

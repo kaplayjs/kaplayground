@@ -1,4 +1,6 @@
-const defaultProj = {
+import type { Project } from "@/hooks/useProject";
+
+export const defaultProj = {
     assets: [
         {
             name: "kat.png",
@@ -22,4 +24,4 @@ const defaultProj = {
             isCurrent: true,
         },
     ],
-};
+} satisfies Project;

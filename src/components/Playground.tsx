@@ -1,5 +1,5 @@
 import { Allotment } from "allotment";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { compressCode } from "../util/compressCode";
 import AboutDialog from "./About/AboutDialog";
 import Editor, { type EditorRef } from "./Editor/Editor";
@@ -11,28 +11,30 @@ import "allotment/dist/style.css";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
 import clsx from "clsx";
+import FileTree from "./FileTree/FileTree";
+import LoadingPlayground from "./Playground/LoadingPlayground";
 
 const Playground = () => {
-    const [getKaboomFile] = useProject((state) => [
-        state.getCurrentFile,
+    const [project, getKaboomFile] = useProject((state) => [
+        state.project,
+        state.getKaboomFile,
     ]);
     const [code, setCode] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(true);
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
+    // Loading states
+    const [loadingProject, setLoadingProject] = useState<boolean>(true);
+    const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
 
     const handleRun = () => {
-        const code = getKaboomFile()?.value;
-
-        if (code) {
-            setCode(code);
-            gameViewRef.current?.run(code);
-        }
+        const code = editorRef.current?.getValue();
+        setCode(code ?? "");
+        gameViewRef.current?.run();
     };
 
     const handleMount = () => {
         handleRun();
-        setLoading(false);
+        setLoadingEditor(false);
     };
 
     const handleProjectReplace = () => {
@@ -61,53 +63,57 @@ const Playground = () => {
         editorRef.current?.setTheme(newTheme);
     };
 
+    useEffect(() => {
+        if (project.files.length > 0) setLoadingProject(false);
+    }, [project]);
+
     return (
         <>
-            <div
-                className={cn("h-full w-screen", {
-                    "hidden": loading,
-                })}
-            >
-                <header className="h-[6%] flex">
-                    <Toolbar
-                        run={handleRun}
-                        onThemeChange={handleThemeChange}
-                        onShare={handleShare}
-                        onProjectReplace={handleProjectReplace}
-                    />
-                </header>
-                <main className="h-[94%] overflow-hidden">
-                    <Allotment>
-                        <Allotment.Pane snap>
-                            <Allotment vertical>
+            {loadingProject ? <LoadingPlayground isLoading /> : (
+                <>
+                    <div
+                        className={cn("h-full w-screen", {
+                            "hidden": loadingEditor,
+                        })}
+                    >
+                        <header className="h-[6%] flex">
+                            <Toolbar
+                                run={handleRun}
+                                onThemeChange={handleThemeChange}
+                                onShare={handleShare}
+                                onProjectReplace={handleProjectReplace}
+                            />
+                        </header>
+                        <main className="h-[94%] overflow-hidden">
+                            <Allotment defaultSizes={[0.5, 2, 2]}>
                                 <Allotment.Pane>
-                                    <Editor
-                                        onRun={handleRun}
-                                        onMount={handleMount}
-                                        path="playground"
-                                        ref={editorRef}
-                                    />
+                                    <FileTree />
                                 </Allotment.Pane>
                                 <Allotment.Pane snap>
-                                    <Tabs />
+                                    <Allotment vertical defaultSizes={[2, 1]}>
+                                        <Allotment.Pane>
+                                            <Editor
+                                                onRun={handleRun}
+                                                onMount={handleMount}
+                                                path="playground"
+                                                ref={editorRef}
+                                            />
+                                        </Allotment.Pane>
+                                        <Allotment.Pane snap>
+                                            <Tabs />
+                                        </Allotment.Pane>
+                                    </Allotment>
+                                </Allotment.Pane>
+                                <Allotment.Pane snap>
+                                    <GameView code={code} ref={gameViewRef} />
                                 </Allotment.Pane>
                             </Allotment>
-                        </Allotment.Pane>
-                        <Allotment.Pane snap>
-                            <GameView code={code} ref={gameViewRef} />
-                        </Allotment.Pane>
-                    </Allotment>
-                </main>
-                <AboutDialog />
-            </div>
-            <div
-                className={clsx("h-full flex items-center justify-center", {
-                    "hidden": !loading,
-                })}
-            >
-                <span className="loading loading-dots loading-lg text-primary">
-                </span>
-            </div>
+                        </main>
+                        <AboutDialog />
+                    </div>
+                    <LoadingPlayground isLoading={loadingEditor} />
+                </>
+            )}
         </>
     );
 };

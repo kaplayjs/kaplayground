@@ -1,3 +1,4 @@
+import { defaultProj } from "@/config/defaultProj";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -29,18 +30,22 @@ type ProjectStore = {
     addAsset: (asset: Asset) => void;
     /** Add a file */
     addFile: (file: File) => void;
+    /** Remove a file */
+    removeFile: (name: string) => void;
     /** Update a file */
     updateFile: (name: string, value: string) => void;
     /** Get current file */
     getCurrentFile: () => File | null;
     /** Get the main (kaboom) file */
     getKaboomFile: () => File | null;
+    /** Set the current file */
+    setCurrentFile: (name: string) => void;
 };
 
 export const useProject = create<ProjectStore>()(persist((set, get) => ({
     project: {
-        assets: [],
-        files: [],
+        assets: [...defaultProj.assets],
+        files: [...defaultProj.files],
     },
 
     replaceProject: (project) => {
@@ -95,6 +100,15 @@ export const useProject = create<ProjectStore>()(persist((set, get) => ({
         }
     },
 
+    removeFile(name) {
+        set((state) => ({
+            project: {
+                ...state.project,
+                files: state.project.files.filter((file) => file.name !== name),
+            },
+        }));
+    },
+
     updateFile(name, value) {
         const file = get().project.files.find((file) => file.name === name);
 
@@ -117,6 +131,18 @@ export const useProject = create<ProjectStore>()(persist((set, get) => ({
     getKaboomFile() {
         return get().project.files.find((file) => file.kind === "kaboom")
             ?? null;
+    },
+
+    setCurrentFile(name) {
+        set((state) => ({
+            project: {
+                ...state.project,
+                files: state.project.files.map((file) => ({
+                    ...file,
+                    isCurrent: file.name === name,
+                })),
+            },
+        }));
     },
 }), {
     name: "kaplay_project",
