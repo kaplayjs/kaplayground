@@ -2,10 +2,12 @@ import { defaultProj } from "@/config/defaultProj";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export type AssetKind = "sprite" | "sound" | "font";
+
 export type Asset = {
     name: string;
     url: string;
-    kind: "sprite" | "sound";
+    kind: AssetKind;
 };
 
 export type File = {

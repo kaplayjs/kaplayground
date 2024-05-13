@@ -1,6 +1,6 @@
 import addSriteIcon from "@/assets/add_sprite_icon.png";
 import AboutDialog from "@/components/About/AboutDialog";
-import { useProject } from "@/hooks/useProject";
+import { type AssetKind, useProject } from "@/hooks/useProject";
 import { type Asset } from "@/hooks/useProject";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
@@ -22,7 +22,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 type AssetsTabProps = {
-    kind: "sprite" | "sound";
+    kind: AssetKind;
     visibleIcon?: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
