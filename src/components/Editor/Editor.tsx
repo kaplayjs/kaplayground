@@ -94,7 +94,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     return (
         <Editor
             defaultLanguage="javascript"
-            defaultValue={""}
+            defaultValue={getCurrentFile()?.value ?? ""}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
             onChange={handleEditorChange}

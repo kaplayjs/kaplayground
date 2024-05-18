@@ -19,8 +19,6 @@ const FileTree = () => {
     );
 
     useEffect(() => {
-        console.log(files);
-
         setScenes(files.filter((file) => file.kind === "scene"));
         setKaboom(files.filter((file) => file.kind === "kaboom")[0]);
     }, [files]);

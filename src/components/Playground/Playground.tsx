@@ -115,7 +115,7 @@ const Playground = () => {
                                     </Allotment>
                                 </Allotment.Pane>
                                 <Allotment.Pane snap>
-                                    <GameView code={code} ref={gameViewRef} />
+                                    <GameView ref={gameViewRef} />
                                 </Allotment.Pane>
                             </Allotment>
                         </main>

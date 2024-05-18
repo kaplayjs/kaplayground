@@ -54,7 +54,7 @@ const AboutDialog = () => {
                         <kbd className="kbd">s</kbd> Run Game
                     </div>
                     <p>
-                        Disable Kaboom using<br></br>
+                        Disable Kaboom auto-focus using<br></br>
                         <code>
                             {"kaboom({ focus: false })"}
                         </code>
