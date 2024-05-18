@@ -1,10 +1,9 @@
 import addSriteIcon from "@/assets/add_sprite_icon.png";
-import Dropzone from "react-dropzone";
-
 import { type AssetKind, useProject } from "@/hooks/useProject";
 import { type Asset } from "@/hooks/useProject";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
+import Dropzone from "react-dropzone";
 
 const removeExtension = (filename: string) => {
     return filename.split(".").slice(0, -1).join(".");

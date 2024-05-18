@@ -5,6 +5,7 @@
 Kaplay is a enhanced playground for Kaboom.js
 
 ## Features
+
 - Autocomplete
 - Drag and drop sprites/sounds to the code
 - Export & Improt projects
