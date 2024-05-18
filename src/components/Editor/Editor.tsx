@@ -103,7 +103,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
             options={{
                 fontSize: 20,
             }}
-            path={getCurrentFile()?.name ?? "kaboom.js"}
+            path={getCurrentFile()?.name ?? "main.js"}
         />
     );
 });

@@ -41,9 +41,10 @@ const GameView = forwardRef<GameViewRef, GameViewProps>(({
     onLoad,
 }, ref) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    const [files, getKaboomFile] = useProject((state) => [
+    const [files, getKaboomFile, getMainFile] = useProject((state) => [
         state.project.files,
         state.getKaboomFile,
+        state.getMainFile,
     ]);
 
     useImperativeHandle(ref, () => ({
@@ -52,9 +53,11 @@ const GameView = forwardRef<GameViewRef, GameViewProps>(({
             const iframe = iframeRef.current;
 
             let kaboomFile = "";
+            let mainFile = "";
             let sceneFiles = "";
 
             kaboomFile = getKaboomFile()?.value ?? "";
+            mainFile = getMainFile()?.value ?? "";
 
             files.forEach((file) => {
                 if (file.kind !== "scene") return;
@@ -62,7 +65,7 @@ const GameView = forwardRef<GameViewRef, GameViewProps>(({
                 sceneFiles += `\n${file.value}\n`;
             });
 
-            iframe.srcdoc = wrapGame(kaboomFile + sceneFiles);
+            iframe.srcdoc = wrapGame(kaboomFile + sceneFiles + mainFile);
         },
     }));
 

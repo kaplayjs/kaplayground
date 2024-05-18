@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type AssetKind = "sprite" | "sound" | "font";
+export type FileKind = "kaboom" | "main" | "scene";
 
 export type Asset = {
     name: string;
@@ -14,7 +15,7 @@ export type File = {
     name: string;
     language: string;
     value: string;
-    kind: "kaboom" | "scene";
+    kind: FileKind;
     isEncoded: boolean;
     isCurrent: boolean;
 };
@@ -40,6 +41,8 @@ type ProjectStore = {
     getCurrentFile: () => File | null;
     /** Get the main (kaboom) file */
     getKaboomFile: () => File | null;
+    /** Get the main file */
+    getMainFile: () => File | null;
     /** Set the current file */
     setCurrentFile: (name: string) => void;
 };
@@ -132,6 +135,11 @@ export const useProject = create<ProjectStore>()(persist((set, get) => ({
 
     getKaboomFile() {
         return get().project.files.find((file) => file.kind === "kaboom")
+            ?? null;
+    },
+
+    getMainFile() {
+        return get().project.files.find((file) => file.kind === "main")
             ?? null;
     },
 

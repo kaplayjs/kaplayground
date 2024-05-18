@@ -17,9 +17,17 @@ export const defaultProj = {
         {
             name: "kaboom.js",
             language: "javascript",
-            value:
-                "kaboom();\nloadBean();\n\nadd([\n    sprite(\"bean\"),\n    pos(40, 30),\n]);\n",
+            value: "kaboom();",
             kind: "kaboom",
+            isEncoded: false,
+            isCurrent: false,
+        },
+        {
+            name: "main.js",
+            language: "javascript",
+            value:
+                "loadBean();\n\nadd([\n    sprite(\"bean\"),\n    pos(40, 30),\n]);\n",
+            kind: "main",
             isEncoded: false,
             isCurrent: true,
         },

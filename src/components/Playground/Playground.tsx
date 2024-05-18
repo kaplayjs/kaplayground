@@ -19,22 +19,13 @@ const Playground = () => {
         state.project,
         state.getKaboomFile,
     ]);
-    const [code, setCode] = useState<string>("");
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
-    const isDesktopOrLaptop = useMediaQuery({
-        query: "(min-width: 1224px)",
-    });
-    const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
-    const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
 
     const handleRun = () => {
-        const code = editorRef.current?.getValue();
-        setCode(code ?? "");
         gameViewRef.current?.run();
     };
 
@@ -44,7 +35,6 @@ const Playground = () => {
     };
 
     const handleProjectReplace = () => {
-        editorRef.current?.setValue(getKaboomFile()?.value ?? "");
         handleRun();
     };
 

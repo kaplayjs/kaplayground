@@ -12,6 +12,7 @@ type Props = {
 const logoByKind = {
     kaboom: kLogo.src,
     scene: sceneIcon.src,
+    main: kLogo.src,
 };
 
 const FileEntry: FC<Props> = ({ file }) => {

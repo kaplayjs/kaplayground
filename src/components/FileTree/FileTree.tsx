@@ -12,10 +12,14 @@ const FileTree = () => {
     const [kaboom, setKaboom] = useState(
         files.filter((file) => file.kind === "kaboom")[0],
     );
+    const [main, setMain] = useState(
+        files.filter((file) => file.kind === "main")[0],
+    );
 
     useEffect(() => {
         setScenes(files.filter((file) => file.kind === "scene"));
         setKaboom(files.filter((file) => file.kind === "kaboom")[0]);
+        setMain(files.filter((file) => file.kind === "main")[0]);
     }, [files]);
 
     return (
@@ -37,6 +41,7 @@ const FileTree = () => {
             </FileFolder>
             <FileFolder level={0} noClose>
                 <li>
+                    <FileEntry file={main} />
                     <FileEntry file={kaboom} />
                 </li>
             </FileFolder>
