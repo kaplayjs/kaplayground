@@ -1,12 +1,12 @@
-import runIcon from "@/assets/icons/run_btn_icon.png";
-import shareIcon from "@/assets/icons/share_btn_icon.png";
-import kaplayLogo from "@/assets/kaplay.png";
+import kaplayLogo from "@/assets/kaplay_big.gif";
+import runIcon from "@/assets/toolbar/run.png";
+import shareIcon from "@/assets/toolbar/share.png";
 import AboutButton from "@/components/About/AboutButton";
 import Projects from "@/components/Toolbar/Projects";
 import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
 import { type FC, useRef } from "react";
-import GenericButton from "./GenericButton";
+import ToolbarButton from "./ToolbarButton";
 
 type Props = {
     run: () => void;
@@ -42,7 +42,7 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
     };
 
     return (
-        <nav className="flex flex-1 py-2 justify-between items-center bg-base-300 px-4">
+        <nav className="flex flex-1 justify-between items-center bg-base-300 px-2">
             <figure>
                 <img
                     alt="Logo"
@@ -53,33 +53,35 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
                 <h1 className="sr-only">KAPLAY</h1>
             </figure>
 
-            <ul className="flex flex-row items-center gap-2">
-                <li>
-                    <GenericButton
+            <ul className="flex flex-row items-center justify-center h-full">
+                <li className="h-full">
+                    <ToolbarButton
                         icon={runIcon.src}
                         text="Run"
                         onClick={handleRun}
+                        tooltip="Run Project"
                     />
                 </li>
-                <li>
-                    <GenericButton
+                <li className="h-full">
+                    <ToolbarButton
                         icon={shareIcon.src}
                         text="Share"
                         onClick={handleShare}
                         ref={shareButton}
+                        tooltip="Share Project"
                     />
                 </li>
-                <li>
+                <li className="h-full">
                     <ThemeToggler
                         onThemeChange={onThemeChange}
                     />
                 </li>
-                <li>
+                <li className="h-full">
                     <Projects
                         onProjectReplace={props.onProjectReplace}
                     />
                 </li>
-                <li>
+                <li className="h-full">
                     <AboutButton />
                 </li>
             </ul>

@@ -1,5 +1,6 @@
-import themeIcon from "@/assets/theme.png";
+import themeIcon from "@/assets/toolbar/theme.png";
 import type { FC, MouseEventHandler } from "react";
+import ToolbarButton from "./ToolbarButton";
 
 const themes = [
     "forest",
@@ -30,15 +31,12 @@ const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
         }
     };
     return (
-        <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24">
-            <div
+        <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
+            <ToolbarButton
+                icon={themeIcon.src}
+                text="Theme"
                 tabIndex={0}
-                role="button"
-                className="btn btn-xs btn-secondary"
-            >
-                Theme
-                <img src={themeIcon.src} alt="Theme" className="w-4" />
-            </div>
+            />
             <ul
                 tabIndex={0}
                 className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"

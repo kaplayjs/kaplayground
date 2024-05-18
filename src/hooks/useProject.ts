@@ -21,6 +21,7 @@ export type File = {
 };
 
 export type Project = {
+    version: string;
     assets: Asset[];
     files: File[];
 };
@@ -28,7 +29,7 @@ export type Project = {
 type ProjectStore = {
     project: Project;
     /** Replace the project with a new project */
-    replaceProject: (project: Project) => void;
+    replaceProject: (project: Partial<Project>) => void;
     /** Add an asset */
     addAsset: (asset: Asset) => void;
     /** Add a file */
@@ -49,13 +50,17 @@ type ProjectStore = {
 
 export const useProject = create<ProjectStore>()(persist((set, get) => ({
     project: {
+        version: defaultProj.version,
         assets: [...defaultProj.assets],
         files: [...defaultProj.files],
     },
 
     replaceProject: (project) => {
         set(() => ({
-            project,
+            project: {
+                ...get().project,
+                ...project,
+            },
         }));
     },
 

@@ -1,4 +1,5 @@
-import aboutIcon from "@/assets/about_icon.png";
+import aboutIcon from "@/assets/toolbar/about.png";
+import ToolbarButton from "../Toolbar/ToolbarButton";
 
 const AboutButton = () => {
     const handleModalOpenClick = () => {
@@ -8,9 +9,10 @@ const AboutButton = () => {
 
     return (
         <>
-            <button
-                className="btn btn-xs btn-info"
+            <ToolbarButton
                 onClick={handleModalOpenClick}
+                icon={aboutIcon.src}
+                text={"About"}
             >
                 <span>About</span>
                 <img
@@ -18,7 +20,7 @@ const AboutButton = () => {
                     alt="About's Icon"
                     className="w-4"
                 />
-            </button>
+            </ToolbarButton>
         </>
     );
 };

@@ -1,7 +1,8 @@
-import projectIcon from "@/assets/project_icon.png";
+import projectIcon from "@/assets/toolbar/project.png";
 import { defaultProj } from "@/config/defaultProj";
 import { type Project, useProject } from "@/hooks/useProject";
 import type { FC } from "react";
+import ToolbarButton from "./ToolbarButton";
 
 type Props = {
     onProjectReplace?(): void;
@@ -55,19 +56,12 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
     };
 
     return (
-        <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24">
-            <div
+        <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
+            <ToolbarButton
+                icon={projectIcon.src}
+                text="Project"
                 tabIndex={0}
-                role="button"
-                className="btn btn-xs btn-secondary"
-            >
-                <span>Project</span>
-                <img
-                    src={projectIcon.src}
-                    alt="Project's Icon"
-                    className="w-4"
-                />
-            </div>
+            />
             <ul
                 tabIndex={0}
                 className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
