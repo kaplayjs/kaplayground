@@ -36,6 +36,7 @@ const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
                 icon={themeIcon.src}
                 text="Theme"
                 tabIndex={0}
+                tooltip="Change Theme"
             />
             <ul
                 tabIndex={0}

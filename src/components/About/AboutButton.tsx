@@ -13,6 +13,7 @@ const AboutButton = () => {
                 onClick={handleModalOpenClick}
                 icon={aboutIcon.src}
                 text={"About"}
+                tooltip="About"
             >
                 <span>About</span>
                 <img
