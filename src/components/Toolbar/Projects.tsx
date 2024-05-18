@@ -1,7 +1,7 @@
+import projectIcon from "@/assets/project_icon.png";
 import { defaultProj } from "@/config/defaultProj";
 import { type Project, useProject } from "@/hooks/useProject";
 import type { FC } from "react";
-import projectIcon from "../../assets/project_icon.png";
 
 type Props = {
     onProjectReplace?(): void;

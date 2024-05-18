@@ -1,5 +1,6 @@
 import addSriteIcon from "@/assets/add_sprite_icon.png";
-import AboutDialog from "@/components/About/AboutDialog";
+import Dropzone from "react-dropzone";
+
 import { type AssetKind, useProject } from "@/hooks/useProject";
 import { type Asset } from "@/hooks/useProject";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
@@ -44,15 +45,7 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
         setVisibles(assets.filter((asset) => asset.kind === props.kind));
     }, [assets]);
 
-    const handleAssetUpload = async (
-        e: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const files = e.target.files;
-
-        if (!files) {
-            return;
-        }
-
+    const handleAssetDrop = async (files: any[]) => {
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const base64 = await fileToBase64(file);
@@ -63,6 +56,18 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                 kind: props.kind,
             });
         }
+    };
+
+    const handleAssetUpload = async (
+        e: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const files = e.target.files;
+
+        if (!files) {
+            return;
+        }
+
+        await handleAssetDrop(Array.from(files));
     };
 
     const handleDrag = (e: React.DragEvent<HTMLLIElement>) => {
@@ -76,59 +81,69 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
     };
 
     return (
-        <div className="flex flex-col justify-between p-4 w-full h-full items-start">
-            <ul
-                className="flex-1 | flex flex-row gap-6 overflow-y-auto flex-wrap h-[80%] content-start"
-                ref={parent}
-            >
-                {visibles.map((asset, i) => (
-                    <li
-                        key={asset.name}
-                        data-label={asset.name}
-                        data-url={asset.url}
-                        onDragStartCapture={handleDrag}
-                        className="h-12"
-                    >
-                        <div className="h-12 w-12">
-                            <img
-                                draggable={false}
-                                src={props.visibleIcon ?? asset.url}
-                                alt={`Asset ${i}`}
-                                className="h-12 w-12 object-scale-down"
-                            />
-                            <p className="text-xs text-center text-gray-500">
-                                {removeExtension(asset.name).slice(0, 10)}
-                            </p>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            <div
-                className="tooltip tooltip-right"
-                data-tip={`Add ${props.kind}`}
-            >
-                <label>
-                    <p className="sr-only">Add {props.kind}</p>
-                    <div className="btn btn-primary px-2">
-                        <img
-                            src={addSriteIcon.src}
-                            alt="Add sprite"
-                            className="w-8 h-8"
-                        />
+        <Dropzone onDrop={handleAssetDrop}>
+            {({ getRootProps, getInputProps }) => (
+                <div
+                    className="h-full p-2"
+                    {...getRootProps()}
+                >
+                    <div className="max-h-full">
+                        <ul
+                            className="flex flex-row gap-6 flex-wrap content-start max-h-fi h-full overflow-auto"
+                            ref={parent}
+                        >
+                            {visibles.map((asset, i) => (
+                                <li
+                                    key={asset.name}
+                                    data-label={asset.name}
+                                    data-url={asset.url}
+                                    onDragStartCapture={handleDrag}
+                                    className="h-12"
+                                >
+                                    <div className="h-12 w-12">
+                                        <img
+                                            draggable={false}
+                                            src={props.visibleIcon ?? asset.url}
+                                            alt={`Asset ${i}`}
+                                            className="h-12 w-12 object-scale-down"
+                                        />
+                                        <p className="text-xs text-center text-gray-500">
+                                            {removeExtension(asset.name).slice(
+                                                0,
+                                                10,
+                                            )}
+                                        </p>
+                                    </div>
+                                </li>
+                            ))}
+                            <li>
+                                <div>
+                                    <label>
+                                        <div className="btn btn-primary px-2">
+                                            <img
+                                                src={addSriteIcon.src}
+                                                alt="Add sprite"
+                                                className="w-8 h-8"
+                                            />
+                                        </div>
+                                        <input
+                                            {...getInputProps()}
+                                            className="hidden"
+                                            type="file"
+                                            accept={props.kind === "sprite"
+                                                ? "image/*"
+                                                : "audio/*"}
+                                            onChange={handleAssetUpload}
+                                            multiple
+                                        />
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <input
-                        className="hidden"
-                        type="file"
-                        accept={props.kind === "sprite"
-                            ? "image/*"
-                            : "audio/*"}
-                        onChange={handleAssetUpload}
-                        multiple
-                    />
-                </label>
-            </div>
-            <AboutDialog />
-        </div>
+                </div>
+            )}
+        </Dropzone>
     );
 };
 

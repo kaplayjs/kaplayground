@@ -1,18 +1,17 @@
-import { Allotment } from "allotment";
+import AboutDialog from "@/components/About/AboutDialog";
+import Editor, { type EditorRef } from "@/components/Editor/Editor";
+import GameView, { type GameViewRef } from "@/components/Playground/GameView";
+import Tabs from "@/components/Tabs/Tabs";
+import Toolbar from "@/components/Toolbar";
+import { darkThemes } from "@/components/Toolbar/ThemeToggler";
+import { compressCode } from "@/util/compressCode";
+import { Allotment, LayoutPriority } from "allotment";
 import { useEffect, useRef, useState } from "react";
-import { compressCode } from "../../util/compressCode";
-import AboutDialog from "../About/AboutDialog";
-import Editor, { type EditorRef } from "../Editor/Editor";
-import Tabs from "../Tabs/Tabs";
-import Toolbar from "../Toolbar";
-import { darkThemes } from "../Toolbar/ThemeToggler";
-import GameView, { type GameViewRef } from "./GameView";
 import "allotment/dist/style.css";
+import FileTree from "@/components/FileTree/FileTree";
+import LoadingPlayground from "@/components/Playground/LoadingPlayground";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
-import clsx from "clsx";
-import FileTree from "../FileTree/FileTree";
-import LoadingPlayground from "./LoadingPlayground";
 
 const Playground = () => {
     const [project, getKaboomFile] = useProject((state) => [
@@ -99,7 +98,10 @@ const Playground = () => {
                                                 ref={editorRef}
                                             />
                                         </Allotment.Pane>
-                                        <Allotment.Pane snap>
+                                        <Allotment.Pane
+                                            priority={LayoutPriority.High}
+                                            minSize={0}
+                                        >
                                             <Tabs />
                                         </Allotment.Pane>
                                     </Allotment>

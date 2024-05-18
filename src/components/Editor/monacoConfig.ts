@@ -1,6 +1,6 @@
+import kaboomGlobal from "@/../node_modules/kaboom/dist/global.d.ts?raw";
+import kaboomModule from "@/../node_modules/kaboom/dist/kaboom.d.ts?raw";
 import type { Monaco } from "@monaco-editor/react";
-import kaboomGlobal from "../../../node_modules/kaboom/dist/global.d.ts?raw";
-import kaboomModule from "../../../node_modules/kaboom/dist/kaboom.d.ts?raw";
 
 const kaboomFunctionImports = `
 import { PluginList, MergePlugins, KaboomOpt } from "./kaboom"

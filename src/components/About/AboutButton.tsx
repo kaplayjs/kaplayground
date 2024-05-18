@@ -1,4 +1,4 @@
-import aboutIcon from "../../assets/about_icon.png";
+import aboutIcon from "@/assets/about_icon.png";
 
 const AboutButton = () => {
     const handleModalOpenClick = () => {

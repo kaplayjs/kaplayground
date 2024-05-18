@@ -37,14 +37,14 @@ const Tabs = () => {
                 </TabList>
             </div>
             <TabPanels className="flex-1 flex">
-                <TabPanel>
+                <TabPanel className="w-full h-full">
                     <AssetsTab
                         kind="sprite"
                         onDragData={(name, url) =>
                             `\nloadSprite("${name}", "${url}")`}
                     />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel className="w-full">
                     <AssetsTab
                         kind="sound"
                         onDragData={(name, url) =>
@@ -52,7 +52,7 @@ const Tabs = () => {
                         visibleIcon={soundIcon.src}
                     />
                 </TabPanel>
-                <TabPanel>
+                <TabPanel className="w-full">
                     <AssetsTab
                         kind="font"
                         onDragData={(name, url) =>
