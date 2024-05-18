@@ -1,4 +1,4 @@
-import type { Project } from "@/hooks/useProject";
+import type { Project } from "@/stores/project";
 import { VERSION } from "./common";
 
 export const defaultProj = {
@@ -35,4 +35,5 @@ export const defaultProj = {
             isCurrent: true,
         },
     ],
+    kaboomConfig: {},
 } satisfies Project;

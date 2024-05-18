@@ -15,9 +15,10 @@ import { cn } from "@/util/cn";
 import { useMediaQuery } from "react-responsive";
 
 const Playground = () => {
-    const [project, getKaboomFile] = useProject((state) => [
+    const [project, updateKaboomFile, kaboomConfig] = useProject((state) => [
         state.project,
-        state.getKaboomFile,
+        state.updateKaboomFile,
+        state.project.kaboomConfig,
     ]);
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
@@ -63,6 +64,10 @@ const Playground = () => {
     useEffect(() => {
         if (project.files.length > 0) setLoadingProject(false);
     }, [project]);
+
+    useEffect(() => {
+        updateKaboomFile();
+    }, [kaboomConfig]);
 
     return (
         <>

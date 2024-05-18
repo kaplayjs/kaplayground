@@ -1,4 +1,5 @@
 import { defaultProj } from "@/config/defaultProj";
+import type { KaboomOpt } from "kaboom";
 import type { StateCreator } from "zustand";
 import type { Asset } from "./assets";
 import type { File } from "./files";
@@ -7,6 +8,7 @@ export type Project = {
     version: string;
     assets: Asset[];
     files: File[];
+    kaboomConfig: KaboomOpt;
 };
 
 export interface ProjectSlice {
