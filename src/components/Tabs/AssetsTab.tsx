@@ -1,6 +1,6 @@
 import addSriteIcon from "@/assets/add_sprite_icon.png";
-import { type AssetKind, useProject } from "@/hooks/useProject";
-import { type Asset } from "@/hooks/useProject";
+import { useProject } from "@/hooks/useProject";
+import type { Asset, AssetKind } from "@/stores/assets";
 import { removeExtension } from "@/util/removeExtensions";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";

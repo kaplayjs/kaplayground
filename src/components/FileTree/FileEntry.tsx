@@ -1,6 +1,7 @@
 import sceneIcon from "@/assets/filetree/scene.png";
 import kLogo from "@/assets/k.png";
-import { type File, useProject } from "@/hooks/useProject";
+import { useProject } from "@/hooks/useProject";
+import type { File } from "@/stores/files";
 import { cn } from "@/util/cn";
 import { removeExtension } from "@/util/removeExtensions";
 import type { FC } from "react";

@@ -1,4 +1,4 @@
-import { type File, useProject } from "@/hooks/useProject";
+import { useProject } from "@/hooks/useProject";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { useEffect, useState } from "react";
 import FileEntry from "./FileEntry";

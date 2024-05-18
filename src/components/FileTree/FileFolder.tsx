@@ -3,7 +3,6 @@ import openFolderIcon from "@/assets/filetree/open_folder.png";
 import { cn } from "@/util/cn";
 import { type FC, type PropsWithChildren, useState } from "react";
 import FileToolbar from "./FileToolbar";
-import FileTree from "./FileTree";
 
 type Props = PropsWithChildren<{
     level: 0 | 1 | 2;

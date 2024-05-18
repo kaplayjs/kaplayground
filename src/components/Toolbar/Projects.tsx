@@ -1,6 +1,7 @@
 import projectIcon from "@/assets/toolbar/project.png";
 import { defaultProj } from "@/config/defaultProj";
-import { type Project, useProject } from "@/hooks/useProject";
+import { useProject } from "@/hooks/useProject";
+import type { Project } from "@/stores/project";
 import type { FC } from "react";
 import ToolbarButton from "./ToolbarButton";
 
