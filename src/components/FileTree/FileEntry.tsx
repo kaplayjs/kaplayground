@@ -1,5 +1,5 @@
+import kaboomIcon from "@/assets/filetree/kaboom.png";
 import sceneIcon from "@/assets/filetree/scene.png";
-import kLogo from "@/assets/k.png";
 import { useProject } from "@/hooks/useProject";
 import type { File } from "@/stores/files";
 import { cn } from "@/util/cn";
@@ -11,9 +11,9 @@ type Props = {
 };
 
 const logoByKind = {
-    kaboom: kLogo.src,
+    kaboom: kaboomIcon.src,
     scene: sceneIcon.src,
-    main: kLogo.src,
+    main: kaboomIcon.src,
 };
 
 const FileEntry: FC<Props> = ({ file }) => {

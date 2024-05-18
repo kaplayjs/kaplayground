@@ -1,7 +1,6 @@
-import fontsTabIcon from "@/assets/icons/tabs/fonts_tab_icon.png";
-import soundIcon from "@/assets/sound_icon.png";
-import soundsIcon from "@/assets/sounds_icon.png";
-import spritesIcon from "@/assets/sprites_icon.png";
+import fontsTabIcon from "@/assets/tabs/fonts.png";
+import soundsTabIcon from "@/assets/tabs/sounds.png";
+import spritesTabIcon from "@/assets/tabs/sprites.png";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import type { FC } from "react";
 import AssetsTab from "./AssetsTab";
@@ -31,8 +30,8 @@ const Tabs = () => {
         <TabGroup className="flex flex-col h-full">
             <div className="bg-base-200">
                 <TabList className="tabs tabs-bordered w-min">
-                    <TTab label="Sprites" icon={spritesIcon.src} />
-                    <TTab label="Sounds" icon={soundsIcon.src} />
+                    <TTab label="Sprites" icon={spritesTabIcon.src} />
+                    <TTab label="Sounds" icon={soundsTabIcon.src} />
                     <TTab label="Fonts" icon={fontsTabIcon.src} />
                 </TabList>
             </div>
@@ -50,7 +49,7 @@ const Tabs = () => {
                         kind="sound"
                         onDragData={(name, url) =>
                             `\nloadSound("${name}", "${url}")`}
-                        visibleIcon={soundIcon.src}
+                        visibleIcon={soundsTabIcon.src}
                         accept="audio/*"
                     />
                 </TabPanel>
