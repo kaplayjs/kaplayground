@@ -1,13 +1,10 @@
 import addSriteIcon from "@/assets/add_sprite_icon.png";
 import { type AssetKind, useProject } from "@/hooks/useProject";
 import { type Asset } from "@/hooks/useProject";
+import { removeExtension } from "@/util/removeExtensions";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
 import Dropzone from "react-dropzone";
-
-const removeExtension = (filename: string) => {
-    return filename.split(".").slice(0, -1).join(".");
-};
 
 const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve) => {

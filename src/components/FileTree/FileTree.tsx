@@ -2,15 +2,10 @@ import { type File, useProject } from "@/hooks/useProject";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { useEffect, useState } from "react";
 import FileEntry from "./FileEntry";
-import FileToolbar from "./FileToolbar";
-import IndentedSection from "./IndentedSection";
+import FileFolder from "./FileFolder";
 
 const FileTree = () => {
-    const [files, addFile, setCurrentFile] = useProject((state) => [
-        state.project.files,
-        state.addFile,
-        state.setCurrentFile,
-    ]);
+    const files = useProject((state) => state.project.files);
     const [scenes, setScenes] = useState(
         files.filter((file) => file.kind === "scene"),
     );
@@ -23,35 +18,28 @@ const FileTree = () => {
         setKaboom(files.filter((file) => file.kind === "kaboom")[0]);
     }, [files]);
 
-    const handleFileClick = (file: File) => {
-        setCurrentFile(file.name);
-    };
-
     return (
-        <div className="flex flex-col p-2">
-            <FileToolbar />
-
-            <IndentedSection level={1} title="Scenes">
+        <div className="flex flex-col p-2 gap-2">
+            <FileFolder level={1} title="Scenes">
                 {scenes.length === 0
-                    ? <li className="text-gray-500">No scenes yet</li>
+                    ? <li className="text-gray-500 text-xs">No scenes yet</li>
                     : (
                         scenes.map((file) => {
                             return (
-                                <li key={file.value}>
+                                <li key={file.name}>
                                     <FileEntry
                                         file={file}
-                                        onClick={handleFileClick}
                                     />
                                 </li>
                             );
                         })
                     )}
-            </IndentedSection>
-            <IndentedSection level={0}>
+            </FileFolder>
+            <FileFolder level={0} noClose>
                 <li>
-                    <FileEntry file={kaboom} onClick={handleFileClick} />
+                    <FileEntry file={kaboom} />
                 </li>
-            </IndentedSection>
+            </FileFolder>
         </div>
     );
 };

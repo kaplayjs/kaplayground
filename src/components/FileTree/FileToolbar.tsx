@@ -1,9 +1,9 @@
-import addSceneImage from "@/assets/add_scene.png";
-import removeSceneIcon from "@/assets/icons/remove_scene_icon.png";
+import addFileIcon from "@/assets/filetree/add_file.png";
+import removeFileIcon from "@/assets/filetree/remove_file.png";
 import { useProject } from "@/hooks/useProject";
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
 
-const FileToolbar = () => {
+const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
     const [addFile, removeFile, getCurrentFile, setCurrentFile] = useProject((
         state,
     ) => [
@@ -42,24 +42,26 @@ const FileToolbar = () => {
     };
 
     return (
-        <div className="flex gap-2">
-            <button className="btn btn-primary btn-xs rounded-sm">
+        <div className="flex">
+            <button className="btn btn-ghost btn-xs rounded-sm px-1">
                 <img
-                    src={addSceneImage.src}
+                    src={addFileIcon.src}
                     alt="Add Scene"
-                    className="h-6"
+                    className="h-4"
                     onClick={handleAddScene}
                 />
             </button>
 
-            <button className="btn btn-error btn-xs rounded-sm">
+            <button className="btn btn-ghost btn-xs rounded-sm px-1">
                 <img
-                    src={removeSceneIcon.src}
+                    src={removeFileIcon.src}
                     alt="Remove Scene"
-                    className="h-6"
+                    className="h-4"
                     onClick={handleRemoveScene}
                 />
             </button>
+
+            {children}
         </div>
     );
 };

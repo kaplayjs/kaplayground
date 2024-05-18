@@ -1,21 +1,29 @@
+import sceneIcon from "@/assets/filetree/scene.png";
 import kLogo from "@/assets/k.png";
 import { type File, useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
+import { removeExtension } from "@/util/removeExtensions";
 import type { FC } from "react";
 
 type Props = {
     file: File;
-    onClick?: (file: File) => void;
 };
 
 const logoByKind = {
     kaboom: kLogo.src,
-    scene: kLogo.src,
+    scene: sceneIcon.src,
 };
 
-const FileEntry: FC<Props> = ({ file, onClick }) => {
-    const [getCurrentFile] = useProject((state) => [state.getCurrentFile]);
+const FileEntry: FC<Props> = ({ file }) => {
+    const [getCurrentFile, setCurrentFile] = useProject((state) => [
+        state.getCurrentFile,
+        state.setCurrentFile,
+    ]);
     const { name, kind } = file;
+
+    const handleClick = () => {
+        setCurrentFile(name);
+    };
 
     return (
         <button
@@ -23,12 +31,10 @@ const FileEntry: FC<Props> = ({ file, onClick }) => {
                 "btn-primary": getCurrentFile()?.name === name,
                 "btn-ghost": getCurrentFile()?.name !== name,
             })}
-            onClick={() => {
-                onClick?.(file);
-            }}
+            onClick={handleClick}
         >
             <span className="truncate max-w-[80%]">
-                {file.name}
+                {removeExtension(name)}
             </span>
             <img
                 src={logoByKind[kind]}
