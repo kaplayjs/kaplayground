@@ -1,4 +1,7 @@
 import { defaultProj } from "@/config/defaultProj";
+import { type AssetSlice, createAssetSlice } from "@/stores/assets";
+import { createFilesSlice, type FilesSlice } from "@/stores/files";
+import { createProjectSlice, type ProjectSlice } from "@/stores/project";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -48,117 +51,12 @@ type ProjectStore = {
     setCurrentFile: (name: string) => void;
 };
 
-export const useProject = create<ProjectStore>()(persist((set, get) => ({
-    project: {
-        version: defaultProj.version,
-        assets: [...defaultProj.assets],
-        files: [...defaultProj.files],
-    },
+type Store = ProjectSlice & FilesSlice & AssetSlice;
 
-    replaceProject: (project) => {
-        set(() => ({
-            project: {
-                ...get().project,
-                ...project,
-            },
-        }));
-    },
-
-    addAsset(asset) {
-        const foundAsset = get().project.assets.find((a) =>
-            a.name === asset.name
-        );
-
-        if (foundAsset) {
-            set((state) => ({
-                project: {
-                    ...state.project,
-                    assets: state.project.assets.map((oldAsset) =>
-                        oldAsset.name === asset.name ? { ...asset } : oldAsset
-                    ),
-                },
-            }));
-        } else {
-            set((state) => ({
-                project: {
-                    ...state.project,
-                    assets: [...state.project.assets, asset],
-                },
-            }));
-        }
-    },
-
-    addFile(file) {
-        const foundFile = get().project.files.find((f) => f.name === file.name);
-
-        if (foundFile) {
-            set((state) => ({
-                project: {
-                    ...state.project,
-                    files: state.project.files.map((oldFile) =>
-                        oldFile.name === file.name ? { ...file } : oldFile
-                    ),
-                },
-            }));
-        } else {
-            set((state) => ({
-                project: {
-                    ...state.project,
-                    files: [...state.project.files, file],
-                },
-            }));
-        }
-    },
-
-    removeFile(name) {
-        set((state) => ({
-            project: {
-                ...state.project,
-                files: state.project.files.filter((file) => file.name !== name),
-            },
-        }));
-    },
-
-    updateFile(name, value) {
-        const file = get().project.files.find((file) => file.name === name);
-
-        if (file) {
-            set((state) => ({
-                project: {
-                    ...state.project,
-                    files: state.project.files.map((file) =>
-                        file.name === name ? { ...file, value } : file
-                    ),
-                },
-            }));
-        }
-    },
-
-    getCurrentFile() {
-        return get().project.files.find((file) => file.isCurrent) ?? null;
-    },
-
-    getKaboomFile() {
-        return get().project.files.find((file) => file.kind === "kaboom")
-            ?? null;
-    },
-
-    getMainFile() {
-        return get().project.files.find((file) => file.kind === "main")
-            ?? null;
-    },
-
-    setCurrentFile(name) {
-        set((state) => ({
-            project: {
-                ...state.project,
-                files: state.project.files.map((file) => ({
-                    ...file,
-                    isCurrent: file.name === name,
-                })),
-            },
-        }));
-    },
+export const useProject = create<Store>()(persist((...a) => ({
+    ...createProjectSlice(...a),
+    ...createFilesSlice(...a),
+    ...createAssetSlice(...a),
 }), {
     name: "kaplay_project",
 }));
