@@ -42,6 +42,7 @@ const Tabs = () => {
                         kind="sprite"
                         onDragData={(name, url) =>
                             `\nloadSprite("${name}", "${url}")`}
+                        accept="image/*"
                     />
                 </TabPanel>
                 <TabPanel className="w-full">
@@ -50,6 +51,7 @@ const Tabs = () => {
                         onDragData={(name, url) =>
                             `\nloadSound("${name}", "${url}")`}
                         visibleIcon={soundIcon.src}
+                        accept="audio/*"
                     />
                 </TabPanel>
                 <TabPanel className="w-full">
@@ -57,7 +59,8 @@ const Tabs = () => {
                         kind="font"
                         onDragData={(name, url) =>
                             `\nloadSound("${name}", "${url}")`}
-                        visibleIcon={soundIcon.src}
+                        visibleIcon={fontsTabIcon.src}
+                        accept=".ttf,.otf"
                     />
                 </TabPanel>
             </TabPanels>

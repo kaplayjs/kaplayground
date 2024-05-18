@@ -1,5 +1,5 @@
 import themeIcon from "@/assets/theme.png";
-import type { FC } from "react";
+import type { FC, MouseEventHandler } from "react";
 
 const themes = [
     "forest",
@@ -19,6 +19,16 @@ type Props = {
 };
 
 const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
+    const handleThemeChange: MouseEventHandler = (ev) => {
+        const target = ev.target as HTMLElement;
+        const theme = target.getAttribute("data-set-theme");
+
+        localStorage.setItem("theme", theme || "");
+
+        if (theme) {
+            onThemeChange?.(theme);
+        }
+    };
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24">
             <div
@@ -38,7 +48,7 @@ const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
                         <button
                             data-set-theme={theme}
                             data-act-class="ACTIVECLASS"
-                            onClick={() => onThemeChange?.(theme)}
+                            onClick={handleThemeChange}
                         >
                             {theme}
                         </button>

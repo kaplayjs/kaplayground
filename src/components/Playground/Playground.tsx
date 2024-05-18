@@ -67,6 +67,7 @@ const Playground = () => {
         let newTheme = isDarkTheme ? "vs-dark" : "vs-light";
 
         editorRef.current?.setTheme(newTheme);
+        document.documentElement.setAttribute("data-theme", theme);
     };
 
     useEffect(() => {

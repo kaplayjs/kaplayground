@@ -24,6 +24,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 type AssetsTabProps = {
     kind: AssetKind;
     visibleIcon?: string;
+    accept: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
 
@@ -80,7 +81,7 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
     };
 
     return (
-        <Dropzone onDrop={handleAssetDrop}>
+        <Dropzone onDrop={handleAssetDrop} noClick>
             {({ getRootProps, getInputProps }) => (
                 <div
                     className="h-full p-2"
@@ -128,9 +129,7 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                                     {...getInputProps()}
                                     className="hidden"
                                     type="file"
-                                    accept={props.kind === "sprite"
-                                        ? "image/*"
-                                        : "audio/*"}
+                                    accept={props.accept}
                                     onChange={handleAssetUpload}
                                     multiple
                                 />
