@@ -12,6 +12,7 @@ import FileTree from "@/components/FileTree/FileTree";
 import LoadingPlayground from "@/components/Playground/LoadingPlayground";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
+import { useMediaQuery } from "react-responsive";
 
 const Playground = () => {
     const [project, getKaboomFile] = useProject((state) => [
@@ -21,9 +22,15 @@ const Playground = () => {
     const [code, setCode] = useState<string>("");
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
-    // Loading states
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
+    const isDesktopOrLaptop = useMediaQuery({
+        query: "(min-width: 1224px)",
+    });
+    const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+    const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+    const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
 
     const handleRun = () => {
         const code = editorRef.current?.getValue();
@@ -84,7 +91,10 @@ const Playground = () => {
                             />
                         </header>
                         <main className="h-[94%] overflow-hidden">
-                            <Allotment defaultSizes={[0.5, 2, 2]}>
+                            <Allotment
+                                defaultSizes={[0.5, 2, 2]}
+                                vertical={isPortrait}
+                            >
                                 <Allotment.Pane>
                                     <FileTree />
                                 </Allotment.Pane>
@@ -98,10 +108,7 @@ const Playground = () => {
                                                 ref={editorRef}
                                             />
                                         </Allotment.Pane>
-                                        <Allotment.Pane
-                                            priority={LayoutPriority.High}
-                                            minSize={0}
-                                        >
+                                        <Allotment.Pane>
                                             <Tabs />
                                         </Allotment.Pane>
                                     </Allotment>

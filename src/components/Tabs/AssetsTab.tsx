@@ -86,9 +86,9 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                     className="h-full p-2"
                     {...getRootProps()}
                 >
-                    <div className="max-h-full">
+                    <div className="h-full flex flex-col justify-between">
                         <ul
-                            className="flex flex-row gap-6 flex-wrap content-start max-h-fi h-full overflow-auto"
+                            className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44"
                             ref={parent}
                         >
                             {visibles.map((asset, i) => (
@@ -97,9 +97,8 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                                     data-label={asset.name}
                                     data-url={asset.url}
                                     onDragStartCapture={handleDrag}
-                                    className="h-12"
                                 >
-                                    <div className="h-12 w-12">
+                                    <div>
                                         <img
                                             draggable={false}
                                             src={props.visibleIcon ?? asset.url}
@@ -115,30 +114,28 @@ const AssetsTab: FC<AssetsTabProps> = (props) => {
                                     </div>
                                 </li>
                             ))}
-                            <li>
-                                <div>
-                                    <label>
-                                        <div className="btn btn-primary px-2">
-                                            <img
-                                                src={addSriteIcon.src}
-                                                alt="Add sprite"
-                                                className="w-8 h-8"
-                                            />
-                                        </div>
-                                        <input
-                                            {...getInputProps()}
-                                            className="hidden"
-                                            type="file"
-                                            accept={props.kind === "sprite"
-                                                ? "image/*"
-                                                : "audio/*"}
-                                            onChange={handleAssetUpload}
-                                            multiple
-                                        />
-                                    </label>
-                                </div>
-                            </li>
                         </ul>
+                        <div className="flex justify-end items-center min-h-10">
+                            <label>
+                                <div className="btn btn-primary px-2">
+                                    <img
+                                        src={addSriteIcon.src}
+                                        alt="Add sprite"
+                                        className="w-8 h-8"
+                                    />
+                                </div>
+                                <input
+                                    {...getInputProps()}
+                                    className="hidden"
+                                    type="file"
+                                    accept={props.kind === "sprite"
+                                        ? "image/*"
+                                        : "audio/*"}
+                                    onChange={handleAssetUpload}
+                                    multiple
+                                />
+                            </label>
+                        </div>
                     </div>
                 </div>
             )}
