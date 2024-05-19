@@ -1,4 +1,4 @@
-import type { Project } from "@/stores/project";
+import type { Project } from "@/stores/project/project";
 import { VERSION } from "./common";
 
 export const defaultProj = {

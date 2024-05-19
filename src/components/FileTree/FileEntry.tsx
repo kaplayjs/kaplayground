@@ -1,7 +1,7 @@
 import kaboomIcon from "@/assets/filetree/kaboom.png";
 import sceneIcon from "@/assets/filetree/scene.png";
 import { useProject } from "@/hooks/useProject";
-import type { File } from "@/stores/files";
+import type { File } from "@/stores/project/files";
 import { cn } from "@/util/cn";
 import { removeExtension } from "@/util/removeExtensions";
 import type { FC } from "react";

@@ -4,7 +4,7 @@ type Props = PropsWithChildren<{
     title: string;
 }>;
 
-const ConfigGruop: FC<Props> = ({ children, title }) => {
+const ConfigGroup: FC<Props> = ({ children, title }) => {
     return (
         <>
             <div className="divider">{title.toUpperCase()}</div>
@@ -15,4 +15,4 @@ const ConfigGruop: FC<Props> = ({ children, title }) => {
     );
 };
 
-export default ConfigGruop;
+export default ConfigGroup;

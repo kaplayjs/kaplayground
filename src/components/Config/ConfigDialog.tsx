@@ -4,7 +4,7 @@ import type { KaboomOpt } from "kaboom";
 import { useEffect } from "react";
 import { Tooltip } from "react-tooltip";
 import ConfigCheckbox from "./ConfigCheckbox";
-import ConfigGruop from "./ConfigGruop";
+import ConfigGroup from "./ConfigGroup";
 import ConfigInput from "./ConfigInput";
 
 const ConfigDialog = () => {
@@ -73,7 +73,7 @@ const ConfigDialog = () => {
                         <h2 className="text-xl">Kaboom Configuration</h2>
                     </header>
                     <main>
-                        <ConfigGruop title="screen & perf">
+                        <ConfigGroup title="screen & perf">
                             <ConfigCheckbox
                                 configKey="letterbox"
                                 label="Letterbox?"
@@ -111,9 +111,9 @@ const ConfigDialog = () => {
                                 placeholder="1"
                                 tip="High pixel density will hurt performance"
                             />
-                        </ConfigGruop>
+                        </ConfigGroup>
 
-                        <ConfigGruop title="debug">
+                        <ConfigGroup title="debug">
                             <ConfigCheckbox
                                 configKey="debug"
                                 label="Debug Mode?"
@@ -137,9 +137,9 @@ const ConfigDialog = () => {
                                 defaultValue={4}
                                 tip="How many seconds log messages stay on screen."
                             />
-                        </ConfigGruop>
+                        </ConfigGroup>
 
-                        <ConfigGruop title="misc">
+                        <ConfigGroup title="misc">
                             <ConfigCheckbox
                                 configKey="backgroundAudio"
                                 label="Pause audio when tab is not active?"
@@ -154,7 +154,7 @@ const ConfigDialog = () => {
                                 configKey="burp"
                                 label="Burp mode?"
                             />
-                        </ConfigGruop>
+                        </ConfigGroup>
                     </main>
                 </section>
                 <footer className="p-4 bg-base-200">
