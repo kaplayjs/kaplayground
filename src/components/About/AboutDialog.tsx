@@ -47,18 +47,6 @@ const AboutDialog = () => {
                             Report an issue
                         </a>
                     </p>
-                    <div className="divider"></div>
-                    <div>
-                        <kbd className="kbd">ctrl</kbd>
-                        +
-                        <kbd className="kbd">s</kbd> Run Game
-                    </div>
-                    <p>
-                        Disable Kaboom auto-focus using<br></br>
-                        <code>
-                            {"kaboom({ focus: false })"}
-                        </code>
-                    </p>
                 </main>
 
                 <footer>

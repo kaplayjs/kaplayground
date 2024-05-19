@@ -1,15 +1,19 @@
 import { useProject } from "@/hooks/useProject";
 import type { KaboomOpt } from "kaboom";
 import { type FC, useRef, useState } from "react";
+import { Tooltip } from "react-tooltip";
 
 type Props = {
     label: string;
     configKey: keyof KaboomOpt;
     type: "text" | "number";
     placeholder: string;
+    tip?: string;
 };
 
-const ConfigInput: FC<Props> = ({ label, configKey, type, placeholder }) => {
+const ConfigInput: FC<Props> = (
+    { label, configKey, type, placeholder, tip },
+) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [setValue, setSetValue] = useState<string | number>("");
     const [
@@ -26,10 +30,16 @@ const ConfigInput: FC<Props> = ({ label, configKey, type, placeholder }) => {
     };
 
     return (
-        <label className="form-control w-full max-w-xs">
+        <label
+            className="form-control w-full max-w-xs"
+            data-tooltip-id="config-dialog"
+            data-tooltip-content={tip}
+            data-tooltip-place="bottom-end"
+        >
             <div className="label">
                 <span className="label-text">{label}</span>
             </div>
+
             <input
                 type={type}
                 placeholder={placeholder}

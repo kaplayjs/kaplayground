@@ -62,7 +62,7 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
                 icon={projectIcon.src}
                 text="Project"
                 tabIndex={0}
-                tooltip="Project Export/Import"
+                tip="Project Export/Import"
             />
             <ul
                 tabIndex={0}

@@ -56,6 +56,9 @@ importers:
       react-responsive:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
+      react-tooltip:
+        specifier: ^5.26.4
+        version: 5.26.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-use-precision-timer:
         specifier: ^3.5.5
         version: 3.5.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2076,6 +2079,12 @@ packages:
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0
+
+  react-tooltip@5.26.4:
+    resolution: {integrity: sha512-5WyDrsfw1+6qNVSr3IjqElqJ+cCwE8+44b+HpJ8qRLv7v0a3mcKf8wvv+NfgALFS6QpksGFqTLV2JQ60c+okZQ==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
 
   react-use-precision-timer@3.5.5:
     resolution: {integrity: sha512-fPf9d1fAb4CCJrJCnErvvB/GFVDm+bzb07WilkiW3hcJUjqS3ep6pCLKUguT76gpPvyOuKp9KSD8z06uM3LzAA==}
@@ -4798,6 +4807,13 @@ snapshots:
 
   react-sub-unsub@2.2.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  react-tooltip@5.26.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@floating-ui/dom': 1.6.5
+      classnames: 2.5.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 

@@ -13,7 +13,7 @@ const AboutButton = () => {
                 onClick={handleModalOpenClick}
                 icon={aboutIcon.src}
                 text={"About"}
-                tooltip="About"
+                tip="About"
             />
         </>
     );

@@ -13,6 +13,7 @@ import LoadingPlayground from "@/components/Playground/LoadingPlayground";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
 import { useMediaQuery } from "react-responsive";
+import { Tooltip } from "react-tooltip";
 import ConfigDialog from "../Config/ConfigDialog";
 
 const Playground = () => {
@@ -135,6 +136,7 @@ const Playground = () => {
                         </main>
                         <AboutDialog />
                         <ConfigDialog />
+                        <Tooltip id="global" />
                     </div>
                     <LoadingPlayground isLoading={loadingEditor} />
                 </>

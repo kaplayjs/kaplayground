@@ -13,7 +13,7 @@ const ConfigOpenDialog = () => {
                 onClick={handleModalOpenClick}
                 icon={icon.src}
                 text={"Config"}
-                tooltip="Config"
+                tip="Config"
             />
         </>
     );

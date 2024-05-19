@@ -2,6 +2,7 @@ import { useProject } from "@/hooks/useProject";
 import { stringToType, type Type } from "@/util/stringToType";
 import type { KaboomOpt } from "kaboom";
 import React from "react";
+import { Tooltip } from "react-tooltip";
 import ConfigCheckbox from "./ConfigCheckbox";
 import ConfigInput from "./ConfigInput";
 
@@ -28,31 +29,60 @@ const ConfigDialog = () => {
 
     return (
         <dialog id="config" className="modal">
-            <main className="modal-box">
+            <main className="modal-box overflow-hidden">
+                <Tooltip id="config-dialog" />
                 <section>
                     <header className="flex items-center font-bold">
                         <h2 className="text-xl">Kaboom Configuration</h2>
                     </header>
-                    <div className="divider"></div>
-                    <main>
-                        <form>
+                    <main className=" overflow-y-auto">
+                        <div className="divider">SCREEN</div>
+                        <div className="grid grid-cols-2 gap-4">
                             <ConfigCheckbox
-                                configKey="burp"
-                                label="Burp mode?"
+                                configKey="letterbox"
+                                label="Letterbox?"
+                                tip={"Only works with defined\nwidth and height"}
                             />
+                            <ConfigCheckbox
+                                configKey="stretch"
+                                label="Stretch?"
+                                tip="Only works with defined width and height"
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
                             <ConfigInput
                                 configKey="width"
                                 label="Width"
                                 type="number"
-                                placeholder="Left empty for full screen"
+                                placeholder="1080"
+                                tip="Leave empty for full screen"
                             />
                             <ConfigInput
                                 configKey="height"
                                 label="Height"
                                 type="number"
-                                placeholder="Left empty for full screen"
+                                placeholder="720"
+                                tip="Leave empty for full screen"
                             />
-                        </form>
+                            <ConfigInput
+                                configKey="pixelDensity"
+                                label="Pixel Density"
+                                type="number"
+                                placeholder="1"
+                                tip="High pixel density will hurt performance"
+                            />
+                        </div>
+
+                        <div className="divider">MISC</div>
+                        <ConfigCheckbox
+                            configKey="focus"
+                            label="Autofocus?"
+                            defaultValue={true}
+                        />
+                        <ConfigCheckbox
+                            configKey="burp"
+                            label="Burp mode?"
+                        />
                     </main>
                     <footer>
                         <div className="modal-action">

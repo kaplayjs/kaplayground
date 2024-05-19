@@ -60,7 +60,8 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
                         icon={runIcon.src}
                         text="Run"
                         onClick={handleRun}
-                        tooltip="Run Project"
+                        tip="Run Project"
+                        keys={["ctrl", "s"]}
                     />
                 </li>
                 <li className="h-full">
@@ -69,7 +70,7 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
                         text="Share"
                         onClick={handleShare}
                         ref={shareButton}
-                        tooltip="Share Project"
+                        tip="Share Project"
                     />
                 </li>
                 <li className="h-full">

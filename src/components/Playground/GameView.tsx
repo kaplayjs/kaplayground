@@ -18,6 +18,7 @@ html {
 
 body {
             overflow: hidden;
+            background: #171212;
         }
         </style>
 </head>
