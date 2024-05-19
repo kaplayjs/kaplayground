@@ -8,11 +8,12 @@ type Props = {
     configKey: keyof KaboomOpt;
     type: "text" | "number";
     placeholder: string;
+    defaultValue?: string | number;
     tip?: string;
 };
 
 const ConfigInput: FC<Props> = (
-    { label, configKey, type, placeholder, tip },
+    { label, configKey, type, placeholder, tip, defaultValue },
 ) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [setValue, setSetValue] = useState<string | number>("");
@@ -45,7 +46,7 @@ const ConfigInput: FC<Props> = (
                 placeholder={placeholder}
                 className="input input-bordered w-full max-w-xs config-input"
                 ref={inputRef}
-                defaultValue={kaboomConfig[configKey] ?? ""}
+                defaultValue={kaboomConfig[configKey] ?? defaultValue}
                 onChange={handleChange}
                 min={0}
                 data-set-value={setValue}

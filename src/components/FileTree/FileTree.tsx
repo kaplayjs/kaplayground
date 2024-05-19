@@ -1,5 +1,4 @@
 import { useProject } from "@/hooks/useProject";
-import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { useEffect, useState } from "react";
 import FileEntry from "./FileEntry";
 import FileFolder from "./FileFolder";
@@ -39,7 +38,7 @@ const FileTree = () => {
                         })
                     )}
             </FileFolder>
-            <FileFolder level={0} noClose>
+            <FileFolder level={0} toolbar={false}>
                 <li>
                     <FileEntry file={main} />
                     <FileEntry file={kaboom} />
