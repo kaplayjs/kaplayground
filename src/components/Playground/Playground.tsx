@@ -13,12 +13,23 @@ import LoadingPlayground from "@/components/Playground/LoadingPlayground";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
 import { useMediaQuery } from "react-responsive";
+import ConfigDialog from "../Config/ConfigDialog";
 
 const Playground = () => {
-    const [project, updateKaboomFile, kaboomConfig] = useProject((state) => [
+    const [
+        project,
+        updateKaboomFile,
+        kaboomConfig,
+        getCurrentFile,
+        setCurrentFile,
+        replaceKaboomConfig,
+    ] = useProject((state) => [
         state.project,
         state.updateKaboomFile,
         state.project.kaboomConfig,
+        state.getCurrentFile,
+        state.setCurrentFile,
+        state.replaceKaboomConfig,
     ]);
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
@@ -40,17 +51,17 @@ const Playground = () => {
     };
 
     const handleShare = () => {
-        const code = editorRef.current?.getValue();
-        const url = new URL(window.location.href);
-        url.searchParams.set("code", compressCode(code ?? "") || "");
+        // const code = editorRef.current?.getValue();
+        // const url = new URL(window.location.href);
+        // url.searchParams.set("code", compressCode(code ?? "") || "");
 
-        if (url.toString().length > 3000) {
-            alert(
-                "The URL is too lengthy; it has been copied, but using the new project import/export feature is recommended.",
-            );
-        }
+        // if (url.toString().length > 3000) {
+        //     alert(
+        //         "The URL is too lengthy; it has been copied, but using the new project import/export feature is recommended.",
+        //     );
+        // }
 
-        navigator.clipboard.writeText(url.toString());
+        // navigator.clipboard.writeText(url.toString());
     };
 
     const handleThemeChange = (theme: string) => {
@@ -65,8 +76,16 @@ const Playground = () => {
         if (project.files.length > 0) setLoadingProject(false);
     }, [project]);
 
+    // Update kaboom file in real time with configuration
     useEffect(() => {
         updateKaboomFile();
+        handleRun();
+        const currentFileName = getCurrentFile()?.name;
+
+        if (currentFileName === "kaboom.js") {
+            setCurrentFile("kaboom.js");
+            editorRef.current?.update();
+        }
     }, [kaboomConfig]);
 
     return (
@@ -115,6 +134,7 @@ const Playground = () => {
                             </Allotment>
                         </main>
                         <AboutDialog />
+                        <ConfigDialog />
                     </div>
                     <LoadingPlayground isLoading={loadingEditor} />
                 </>

@@ -14,14 +14,7 @@ const AboutButton = () => {
                 icon={aboutIcon.src}
                 text={"About"}
                 tooltip="About"
-            >
-                <span>About</span>
-                <img
-                    src={aboutIcon.src}
-                    alt="About's Icon"
-                    className="w-4"
-                />
-            </ToolbarButton>
+            />
         </>
     );
 };

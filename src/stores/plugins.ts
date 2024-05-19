@@ -11,6 +11,9 @@ export type Plugin = {
      *
      * @example
      * kaboomPlugin: "kaplugin"
+     *
+     * or if your plugin accepts options:
+     * kaboomPlugin: "kaplugin({ option: value })"
      */
     kaboomPlugin: string;
     /** The script of the plugin to be imported */

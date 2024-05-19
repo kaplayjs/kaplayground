@@ -61,14 +61,20 @@ const AboutDialog = () => {
                     </p>
                 </main>
 
-                <footer className="modal-action">
-                    <form method="dialog">
-                        <button className="btn">
-                            Continue making! (or press ESC)
-                        </button>
-                    </form>
+                <footer>
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn">
+                                Continue making!
+                            </button>
+                        </form>
+                    </div>
                 </footer>
             </section>
+
+            <form method="dialog" className="modal-backdrop">
+                <button>close</button>
+            </form>
         </dialog>
     );
 };

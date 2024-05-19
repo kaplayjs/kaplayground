@@ -2,7 +2,13 @@ import { useProject } from "@/hooks/useProject";
 import { decompressCode } from "@/util/compressCode";
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -12,9 +18,8 @@ type Props = {
 };
 
 export type EditorRef = {
-    getValue: () => string | undefined;
-    setValue: (value: string) => void;
     focus: () => void;
+    update: () => void;
     setTheme: (theme: string) => void;
 };
 
@@ -32,6 +37,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         state.replaceProject,
     ]);
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+    const editingTime = useRef<number>(0);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -83,13 +89,23 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     };
 
     useImperativeHandle(ref, () => ({
-        getValue: () => editorRef.current?.getValue(),
-        setValue: (value: string) => editorRef.current?.setValue(value),
+        update: () => {
+            editorRef.current?.setValue(getCurrentFile()?.value ?? "");
+        },
         focus: () => editorRef.current?.focus(),
         setTheme: (theme: string) => {
             editorRef.current?.updateOptions({ theme });
         },
     }));
+
+    useEffect(() => {
+        const editorValue = editorRef.current?.getValue();
+        const fileStoredValue = getCurrentFile()?.value;
+
+        if (editorValue !== fileStoredValue) {
+            editorRef.current?.setValue(fileStoredValue ?? "");
+        }
+    }, [editorRef.current?.getValue()]);
 
     return (
         <Editor

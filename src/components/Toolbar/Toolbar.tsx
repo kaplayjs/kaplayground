@@ -6,6 +6,7 @@ import Projects from "@/components/Toolbar/Projects";
 import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
 import { type FC, useRef } from "react";
+import ConfigOpenDialog from "../Config/ConfigOpenDialog";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
@@ -83,6 +84,9 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
                 </li>
                 <li className="h-full">
                     <AboutButton />
+                </li>
+                <li className="h-full">
+                    <ConfigOpenDialog />
                 </li>
             </ul>
         </nav>

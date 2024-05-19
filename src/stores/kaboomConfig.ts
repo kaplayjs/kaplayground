@@ -4,7 +4,7 @@ import type { ProjectSlice } from "./project";
 
 export interface KaboomConfigSlice {
     /** Replace the Kaboom configuration with a new one */
-    replaceKaboomConfig: (config: Partial<KaboomOpt>) => void;
+    replaceKaboomConfig: (config: KaboomOpt) => void;
     /** Update a config key */
     updateKaboomConfig: (key: keyof KaboomOpt, value: any) => void;
 }
@@ -20,7 +20,6 @@ export const createKaboomConfigSlice: StateCreator<
             project: {
                 ...state.project,
                 kaboomConfig: {
-                    ...state.project.kaboomConfig,
                     ...config,
                 },
             },

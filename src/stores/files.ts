@@ -37,6 +37,10 @@ const wrapKaboomConfig = (config: string) =>
 // here's loaded configuration, plugins
 // and kaboom stuff
 
+// If you edit this file, the configuration
+// is only changed temporarily, if you want
+// to save it, use the configuration panel
+
 kaboom(${config});
 `;
 
