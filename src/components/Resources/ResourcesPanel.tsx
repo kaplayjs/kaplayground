@@ -8,6 +8,7 @@ import { type FC, useEffect } from "react";
 import Dropzone from "react-dropzone";
 import Resource from "./Resource";
 import ResourceAddButton from "./ResourceAddButton";
+import ResourcesList from "./ResourcesList";
 
 type Props = {
     kind: AssetKind;
@@ -17,19 +18,7 @@ type Props = {
 };
 
 const ResourcesPanel: FC<Props> = (props) => {
-    const { assets, addAssetsToQueue } = useAssets({ kind: props.kind });
-    const [
-        parent,
-        draggableAssets,
-        setDraggableAssets,
-    ] = useDragAndDrop<HTMLUListElement, Asset>(assets);
-
-    useEffect(() => {
-        setDraggableAssets([
-            ...draggableAssets,
-            ...assets.filter((asset) => !draggableAssets.includes(asset)),
-        ]);
-    }, [assets]);
+    const { addAssetsToQueue } = useAssets({ kind: props.kind });
 
     const handleAssetDrop = async (acceptedFiles: File[]) => {
         addAssetsToQueue(acceptedFiles, props.kind);
@@ -44,20 +33,11 @@ const ResourcesPanel: FC<Props> = (props) => {
                         {...getRootProps()}
                     >
                         <div className="h-full flex flex-col justify-between">
-                            <ul
-                                ref={parent}
-                                className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44"
-                            >
-                                {draggableAssets.map((asset, i) => (
-                                    <Resource
-                                        key={i}
-                                        asset={asset}
-                                        onDragData={props.onDragData}
-                                        visibleIcon={props.visibleIcon
-                                            ?? asset.url}
-                                    />
-                                ))}
-                            </ul>
+                            <ResourcesList
+                                kind={props.kind}
+                                onDragData={props.onDragData}
+                                visibleIcon={props.visibleIcon}
+                            />
                             <ResourceAddButton
                                 accept={props.accept}
                                 kind={props.kind}

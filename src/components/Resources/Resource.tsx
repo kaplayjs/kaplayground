@@ -2,13 +2,13 @@ import type { Asset } from "@/stores/project/assets";
 import { removeExtension } from "@/util/removeExtensions";
 import React, { type FC } from "react";
 
-type Props = {
+export type ResourceProps = {
     asset: Asset;
     visibleIcon?: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
 
-const Resource: FC<Props> = ({ asset, visibleIcon, onDragData }) => {
+const Resource: FC<ResourceProps> = ({ asset, visibleIcon, onDragData }) => {
     const handleAssetDrag = (e: React.DragEvent<HTMLLIElement>) => {
         const assetName = removeExtension(e.currentTarget.dataset.label!);
         const assetUrl = e.currentTarget.dataset.url;
