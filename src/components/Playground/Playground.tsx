@@ -1,7 +1,7 @@
 import AboutDialog from "@/components/About/AboutDialog";
 import Editor, { type EditorRef } from "@/components/Editor/Editor";
 import GameView, { type GameViewRef } from "@/components/Playground/GameView";
-import Tabs from "@/components/Tabs/Tabs";
+import Resources from "@/components/Resources/Resources";
 import Toolbar from "@/components/Toolbar";
 import { darkThemes } from "@/components/Toolbar/ThemeToggler";
 import { compressCode } from "@/util/compressCode";
@@ -125,7 +125,7 @@ const Playground = () => {
                                             />
                                         </Allotment.Pane>
                                         <Allotment.Pane>
-                                            <Tabs />
+                                            <Resources />
                                         </Allotment.Pane>
                                     </Allotment>
                                 </Allotment.Pane>
