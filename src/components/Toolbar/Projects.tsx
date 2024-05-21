@@ -3,6 +3,7 @@ import { defaultProj } from "@/config/defaultProj";
 import { useProject } from "@/hooks/useProject";
 import type { Project } from "@/stores/project/project";
 import type { FC } from "react";
+import { toast } from "react-toastify";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
@@ -28,6 +29,8 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
         a.href = url;
         a.download = "project.kaplay";
         a.click();
+
+        toast("Project exporting, check downloads");
 
         URL.revokeObjectURL(url);
     };

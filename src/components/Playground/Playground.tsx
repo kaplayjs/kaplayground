@@ -1,18 +1,17 @@
 import AboutDialog from "@/components/About/AboutDialog";
 import Editor, { type EditorRef } from "@/components/Editor/Editor";
+import FileTree from "@/components/FileTree/FileTree";
 import GameView, { type GameViewRef } from "@/components/Playground/GameView";
+import LoadingPlayground from "@/components/Playground/LoadingPlayground";
 import Resources from "@/components/Resources/Resources";
 import Toolbar from "@/components/Toolbar";
 import { darkThemes } from "@/components/Toolbar/ThemeToggler";
-import { compressCode } from "@/util/compressCode";
-import { Allotment, LayoutPriority } from "allotment";
-import { useEffect, useRef, useState } from "react";
-import "allotment/dist/style.css";
-import FileTree from "@/components/FileTree/FileTree";
-import LoadingPlayground from "@/components/Playground/LoadingPlayground";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
+import { Allotment, LayoutPriority } from "allotment";
+import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import ConfigDialog from "../Config/ConfigDialog";
 
@@ -136,6 +135,10 @@ const Playground = () => {
                         </main>
                         <AboutDialog />
                         <ConfigDialog />
+                        <ToastContainer
+                            position="bottom-right"
+                            transition={Slide}
+                        />
                         <Tooltip id="global" />
                     </div>
                     <LoadingPlayground isLoading={loadingEditor} />
