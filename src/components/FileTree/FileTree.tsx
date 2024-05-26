@@ -41,7 +41,7 @@ const FileTree = () => {
             <FileFolder level={0} toolbar={false}>
                 <li>
                     <FileEntry file={main} />
-                    <FileEntry file={kaboom} />
+                    {kaboom && <FileEntry file={kaboom} />}
                 </li>
             </FileFolder>
         </div>

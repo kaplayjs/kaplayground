@@ -8,7 +8,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "fmt": "dprint fmt"
+    "fmt": "dprint fmt",
+    "copy": "cp -r kaplay/assets/sprites public/sprites"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",

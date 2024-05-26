@@ -7,6 +7,7 @@ import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
 import { type FC, useRef } from "react";
 import ConfigOpenDialog from "../Config/ConfigOpenDialog";
+import ExampleList from "./ExampleList";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
@@ -53,6 +54,8 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
                 />
                 <h1 className="sr-only">KAPLAY</h1>
             </figure>
+
+            <ExampleList />
 
             <ul className="flex flex-row items-center justify-center h-full">
                 <li className="h-full">
