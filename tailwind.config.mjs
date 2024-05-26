@@ -8,8 +8,16 @@ export default {
         extend: {},
     },
     daisyui: {
-        themes: ["forest", "cupcake"],
-        darkTheme: "forest",
+        themes: [
+            {
+                "kaplay": {
+                    ...require("daisyui/src/theming/themes")["dim"],
+                    primary: "#6ba672",
+                },
+            },
+            "emerald",
+        ],
+        darkTheme: "kaplay",
         logs: false,
     },
 };

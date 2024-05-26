@@ -3,16 +3,16 @@ import type { FC, MouseEventHandler } from "react";
 import ToolbarButton from "./ToolbarButton";
 
 const themes = [
-    "forest",
-    "cupcake",
+    "kaplay",
+    "emerald",
 ];
 
 export const lightThemes = [
-    "cupcake",
+    "emerald",
 ];
 
 export const darkThemes = [
-    "forest",
+    "kaplay",
 ];
 
 type Props = {

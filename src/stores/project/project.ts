@@ -9,6 +9,13 @@ export type Project = {
     assets: Asset[];
     files: File[];
     kaboomConfig: KaboomOpt;
+    /**
+     * The mode of the project
+     *
+     * classic: kaboom() is in the main file
+     * new: kaboom() is in a separate file
+     */
+    mode?: "classic" | "new";
 };
 
 export interface ProjectSlice {
