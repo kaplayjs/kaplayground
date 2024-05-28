@@ -23,7 +23,7 @@ body {
         </style>
 </head>
 <body>
-<script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+<script src="/kaboom.js"></script>
 <script>
     ${code}
 </script>
@@ -66,7 +66,11 @@ const GameView = forwardRef<GameViewRef, GameViewProps>(({
                 sceneFiles += `\n${file.value}\n`;
             });
 
-            iframe.srcdoc = wrapGame(kaboomFile + sceneFiles + mainFile);
+            const finalFiles = kaboomFile
+                ? kaboomFile + sceneFiles + mainFile
+                : mainFile + sceneFiles;
+
+            iframe.srcdoc = wrapGame(finalFiles);
         },
     }));
 

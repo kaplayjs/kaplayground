@@ -37,7 +37,6 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
         state.replaceProject,
     ]);
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
-    const editingTime = useRef<number>(0);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -50,9 +49,9 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
                 files: [{
                     isCurrent: true,
                     isEncoded: false,
-                    kind: "kaboom",
+                    kind: "main",
                     language: "javascript",
-                    name: "kaboom.js",
+                    name: "main.js",
                     value: decompressCode(codeUrl),
                 }],
                 assets: [],

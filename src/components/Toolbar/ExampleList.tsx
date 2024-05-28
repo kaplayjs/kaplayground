@@ -1,8 +1,12 @@
 import { useProject } from "@/hooks/useProject";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, FC } from "react";
 import { exampleList } from "./examples";
 
-const ExampleList = () => {
+type Props = {
+    onProjectReplace?: () => void;
+};
+
+const ExampleList: FC<Props> = ({ onProjectReplace }) => {
     const [
         project,
         replaceProject,
@@ -29,6 +33,8 @@ const ExampleList = () => {
             mode: "classic",
             version: project.version,
         });
+
+        onProjectReplace?.();
     };
 
     return (

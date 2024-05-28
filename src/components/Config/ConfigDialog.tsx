@@ -9,9 +9,11 @@ import ConfigInput from "./ConfigInput";
 
 const ConfigDialog = () => {
     const [
+        getKaboomFile,
         kaboomConfig,
         updateKaboomConfig,
     ] = useProject((state) => [
+        state.getKaboomFile,
         state.project.kaboomConfig,
         state.updateKaboomConfig,
     ]);
@@ -73,88 +75,99 @@ const ConfigDialog = () => {
                         <h2 className="text-xl">Kaboom Configuration</h2>
                     </header>
                     <main>
-                        <ConfigGroup title="screen & perf">
-                            <ConfigCheckbox
-                                configKey="letterbox"
-                                label="Letterbox?"
-                                tip={"Only works with defined\nwidth and height"}
-                            />
-                            <ConfigCheckbox
-                                configKey="stretch"
-                                label="Stretch?"
-                                tip="Only works with defined width and height"
-                            />
-                            <ConfigCheckbox
-                                configKey="crisp"
-                                label="Sharp Pixel Display?"
-                                tip={"Disable antialias and enable sharp pixel display."}
-                            />
-                            <div></div>
-                            <ConfigInput
-                                configKey="width"
-                                label="Width"
-                                type="number"
-                                placeholder="1080"
-                                tip="Leave empty for full screen"
-                            />
-                            <ConfigInput
-                                configKey="height"
-                                label="Height"
-                                type="number"
-                                placeholder="720"
-                                tip="Leave empty for full screen"
-                            />
-                            <ConfigInput
-                                configKey="pixelDensity"
-                                label="Pixel Density"
-                                type="number"
-                                placeholder="1"
-                                tip="High pixel density will hurt performance"
-                            />
-                        </ConfigGroup>
+                        {getKaboomFile()
+                            ? (
+                                <>
+                                    <ConfigGroup title="screen & perf">
+                                        <ConfigCheckbox
+                                            configKey="letterbox"
+                                            label="Letterbox?"
+                                            tip={"Only works with defined\nwidth and height"}
+                                        />
+                                        <ConfigCheckbox
+                                            configKey="stretch"
+                                            label="Stretch?"
+                                            tip="Only works with defined width and height"
+                                        />
+                                        <ConfigCheckbox
+                                            configKey="crisp"
+                                            label="Sharp Pixel Display?"
+                                            tip={"Disable antialias and enable sharp pixel display."}
+                                        />
+                                        <div></div>
+                                        <ConfigInput
+                                            configKey="width"
+                                            label="Width"
+                                            type="number"
+                                            placeholder="1080"
+                                            tip="Leave empty for full screen"
+                                        />
+                                        <ConfigInput
+                                            configKey="height"
+                                            label="Height"
+                                            type="number"
+                                            placeholder="720"
+                                            tip="Leave empty for full screen"
+                                        />
+                                        <ConfigInput
+                                            configKey="pixelDensity"
+                                            label="Pixel Density"
+                                            type="number"
+                                            placeholder="1"
+                                            tip="High pixel density will hurt performance"
+                                        />
+                                    </ConfigGroup>
 
-                        <ConfigGroup title="debug">
-                            <ConfigCheckbox
-                                configKey="debug"
-                                label="Debug Mode?"
-                                tip="Enable debug mode"
-                                defaultValue={true}
-                            />
-                            <div></div>
-                            <ConfigInput
-                                label="Log Max"
-                                configKey="logMax"
-                                type="number"
-                                placeholder="10"
-                                defaultValue={8}
-                                tip="How many debug.log() messages can there be on the screen"
-                            />
-                            <ConfigInput
-                                label="Log Time"
-                                configKey="logTime"
-                                type="number"
-                                placeholder="5"
-                                defaultValue={4}
-                                tip="How many seconds log messages stay on screen."
-                            />
-                        </ConfigGroup>
+                                    <ConfigGroup title="debug">
+                                        <ConfigCheckbox
+                                            configKey="debug"
+                                            label="Debug Mode?"
+                                            tip="Enable debug mode"
+                                            defaultValue={true}
+                                        />
+                                        <div></div>
+                                        <ConfigInput
+                                            label="Log Max"
+                                            configKey="logMax"
+                                            type="number"
+                                            placeholder="10"
+                                            defaultValue={8}
+                                            tip="How many debug.log() messages can there be on the screen"
+                                        />
+                                        <ConfigInput
+                                            label="Log Time"
+                                            configKey="logTime"
+                                            type="number"
+                                            placeholder="5"
+                                            defaultValue={4}
+                                            tip="How many seconds log messages stay on screen."
+                                        />
+                                    </ConfigGroup>
 
-                        <ConfigGroup title="misc">
-                            <ConfigCheckbox
-                                configKey="backgroundAudio"
-                                label="Pause audio when tab is not active?"
-                                tip="Useful for games with background music"
-                            />
-                            <ConfigCheckbox
-                                configKey="focus"
-                                label="Autofocus?"
-                                defaultValue={true}
-                            />
-                            <ConfigCheckbox
-                                configKey="burp"
-                                label="Burp mode?"
-                            />
-                        </ConfigGroup>
+                                    <ConfigGroup title="misc">
+                                        <ConfigCheckbox
+                                            configKey="backgroundAudio"
+                                            label="Pause audio when tab is not active?"
+                                            tip="Useful for games with background music"
+                                        />
+                                        <ConfigCheckbox
+                                            configKey="focus"
+                                            label="Autofocus?"
+                                            defaultValue={true}
+                                        />
+                                        <ConfigCheckbox
+                                            configKey="burp"
+                                            label="Burp mode?"
+                                        />
+                                    </ConfigGroup>
+                                </>
+                            )
+                            : (
+                                <>
+                                    Kaboom Configuration are disabled in
+                                    examples and links
+                                </>
+                            )}
                     </main>
                 </section>
                 <footer className="p-4 bg-base-200">

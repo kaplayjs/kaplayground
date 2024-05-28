@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "fmt": "dprint fmt",
-    "copy": "cp -r kaplay/assets/sprites public/sprites"
+    "copy": "cp -r kaplay/assets/sprites kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",

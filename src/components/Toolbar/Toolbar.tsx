@@ -5,20 +5,21 @@ import AboutButton from "@/components/About/AboutButton";
 import Projects from "@/components/Toolbar/Projects";
 import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
+import { compressCode } from "@/util/compressCode";
 import { type FC, useRef } from "react";
+import { toast } from "react-toastify";
 import ConfigOpenDialog from "../Config/ConfigOpenDialog";
 import ExampleList from "./ExampleList";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
     run: () => void;
-    onShare?: () => void;
     onThemeChange?: (theme: string) => void;
     onProjectReplace?: () => void;
 };
 
-const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
-    const [getKaboomFile] = useProject((state) => [state.getKaboomFile]);
+const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
+    const [getMainFile] = useProject((state) => [state.getMainFile]);
     const shareButton = useRef<HTMLButtonElement>(null);
 
     const handleRun = () => {
@@ -26,21 +27,21 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
     };
 
     const handleShare = () => {
-        onShare?.();
+        const codeToShare = getMainFile()?.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set("code", compressCode(codeToShare ?? "") || "");
 
-        const codeToShare = getKaboomFile()?.value;
-
-        // Animate
-        if (shareButton.current) {
-            const shareText = shareButton.current.querySelector(".text");
-
-            if (shareText) {
-                shareText.textContent = "Copied!";
-                setTimeout(() => {
-                    shareText.textContent = "Share";
-                }, 1000);
-            }
+        if (url.toString().length > 3000) {
+            alert(
+                "The URL is too lengthy; it has been copied, but using the new project import/export feature is recommended.",
+            );
         }
+
+        navigator.clipboard.writeText(url.toString());
+
+        toast(
+            "Link copied to clipboard! Remember it is only the main file and not the whole project.",
+        );
     };
 
     return (
@@ -55,7 +56,9 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, onShare, ...props }) => {
                 <h1 className="sr-only">KAPLAY</h1>
             </figure>
 
-            <ExampleList />
+            <ExampleList
+                onProjectReplace={props.onProjectReplace}
+            />
 
             <ul className="flex flex-row items-center justify-center h-full">
                 <li className="h-full">

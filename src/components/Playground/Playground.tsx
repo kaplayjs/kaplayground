@@ -8,7 +8,8 @@ import Toolbar from "@/components/Toolbar";
 import { darkThemes } from "@/components/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
 import { cn } from "@/util/cn";
-import { Allotment, LayoutPriority } from "allotment";
+import { compressCode } from "@/util/compressCode";
+import { Allotment } from "allotment";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
@@ -22,14 +23,12 @@ const Playground = () => {
         kaboomConfig,
         getCurrentFile,
         setCurrentFile,
-        replaceKaboomConfig,
     ] = useProject((state) => [
         state.project,
         state.updateKaboomFile,
         state.project.kaboomConfig,
         state.getCurrentFile,
         state.setCurrentFile,
-        state.replaceKaboomConfig,
     ]);
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
@@ -48,20 +47,7 @@ const Playground = () => {
 
     const handleProjectReplace = () => {
         handleRun();
-    };
-
-    const handleShare = () => {
-        // const code = editorRef.current?.getValue();
-        // const url = new URL(window.location.href);
-        // url.searchParams.set("code", compressCode(code ?? "") || "");
-
-        // if (url.toString().length > 3000) {
-        //     alert(
-        //         "The URL is too lengthy; it has been copied, but using the new project import/export feature is recommended.",
-        //     );
-        // }
-
-        // navigator.clipboard.writeText(url.toString());
+        editorRef.current?.update();
     };
 
     const handleThemeChange = (theme: string) => {
@@ -101,7 +87,6 @@ const Playground = () => {
                             <Toolbar
                                 run={handleRun}
                                 onThemeChange={handleThemeChange}
-                                onShare={handleShare}
                                 onProjectReplace={handleProjectReplace}
                             />
                         </header>
