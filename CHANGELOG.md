@@ -2,11 +2,18 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
-## 0.2.0 (unreleased)
+## 1.0.0-beta (27/5/2024)
+
+Project renamed to **KAPLAYGROUND**, due to the name **KAPLAY** is now used
+by [KAPLAY](https://kaplayjs.com), a game engine.
 
 ### Features
 
 - ⭐ Multi-file editing support (with scenes)
+- ⭐ KAPLAY examples support
+- ⭐ Tooltip, toasts and much feedback!
+- ⭐ Now Kaboom configuration is supported in the editor (no in  share links/examples)
+- added fonts support
 - added a loading screen
 - added reset project option
 - now editor is snapable at all
@@ -14,6 +21,7 @@ Format: Major.Minor.Patch (D/M/Y)
 ### Misc
 
 - new logo, hi dino!
+- now kaplay is used instead kaboom
 
 ## 0.1.1 (9/5/2024)
 
