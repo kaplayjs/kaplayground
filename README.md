@@ -1,13 +1,11 @@
-# Kaplay
+# KAPLAYGROUND
 
-![Kaplay](src/assets/kaplay_big.gif)
-
-Kaplay is a enhanced playground for Kaboom.js
+KAPLAYGROUND is a web based editor to create, edit and export KAPLAY projects.
 
 ## Features
 
-- Autocomplete
-- Drag and drop sprites/sounds to the code
+- Autocomplete thanks to Monaco Editor
+- Drag and drop assets to the code
 - Export & Improt projects
 - Autosaved project in local
 - Snapable editor
