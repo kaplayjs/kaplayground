@@ -1,14 +1,9 @@
+import { exampleList } from "@/components/Toolbar/examples";
 import { useProject } from "@/hooks/useProject";
 import { decompressCode } from "@/util/compressCode";
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import {
-    forwardRef,
-    useEffect,
-    useImperativeHandle,
-    useRef,
-    useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -28,10 +23,12 @@ const IMPORT_CODE_ALERT =
 
 const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
     const [
+        project,
         getCurrentFile,
         updateFile,
         replaceProject,
     ] = useProject((state) => [
+        state.project,
         state.getCurrentFile,
         state.updateFile,
         state.replaceProject,

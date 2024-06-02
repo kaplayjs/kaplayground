@@ -16,12 +16,20 @@ const AboutDialog = () => {
 
                 <main>
                     <p className="py-4">
-                        Kaplay is a web editor designed for creating Kaboom.js
+                        KAPLAY is the web editor designed for creating KAPLAY
                         games.
                     </p>
 
                     <p>
                         <span className="font-medium">Version:</span> {VERSION}
+                        <br />
+                        <a
+                            className="font-medium link link-primary"
+                            href={"https://kaplayjs.com"}
+                            target="_blank"
+                        >
+                            KAPLAY Docs
+                        </a>
                         <br />
                         <a
                             className="font-medium link link-primary"

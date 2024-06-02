@@ -45,16 +45,24 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
     };
 
     return (
-        <nav className="flex flex-1 justify-between items-center bg-base-300 px-2">
-            <figure>
-                <img
-                    alt="Logo"
-                    src={kaplayLogo.src}
-                    className="h-8"
-                    draggable={false}
-                />
-                <h1 className="sr-only">KAPLAY</h1>
-            </figure>
+        <div
+            className="flex flex-1 justify-between items-center bg-base-300 px-2"
+            role="toolbar"
+        >
+            <a
+                className="btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+                href="/"
+            >
+                <figure>
+                    <img
+                        alt="Logo"
+                        src={kaplayLogo.src}
+                        className="h-8"
+                        draggable={false}
+                    />
+                    <h1 className="sr-only">KAPLAY</h1>
+                </figure>
+            </a>
 
             <ExampleList
                 onProjectReplace={props.onProjectReplace}
@@ -96,7 +104,7 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
                     <ConfigOpenDialog />
                 </li>
             </ul>
-        </nav>
+        </div>
     );
 };
 

@@ -165,7 +165,9 @@ const ConfigDialog = () => {
                             : (
                                 <>
                                     Kaboom Configuration are disabled in
-                                    examples and links
+                                    examples and links. Try Projects (toolbox)
+                                    {" "}
+                                    {"->"} Reset Project
                                 </>
                             )}
                     </main>

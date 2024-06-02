@@ -1,4 +1,6 @@
-export const VERSION = "1.0.0";
+import packageJson from "../../package.json";
+
+export const VERSION = packageJson.version;
 export const CHANGELOG =
-    "https://github.com/lajbel/kaplay/blob/master/CHANGELOG.md";
-export const REPO = "https://github.com/lajbel/kaplay";
+    "https://github.com/lajbel/kaplayground/blob/master/CHANGELOG.md";
+export const REPO = "https://github.com/lajbel/kaplayground";
