@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "fmt": "dprint fmt",
-    "copy": "cp -r kaplay/assets/sprites kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/"
+    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
@@ -23,6 +23,7 @@
     "allotment": "^1.20.1",
     "astro": "^4.8.6",
     "clsx": "^2.1.1",
+    "magic-string": "^0.30.10",
     "pako": "^2.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
