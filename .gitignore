@@ -24,3 +24,5 @@ pnpm-debug.log*
 .idea/
 
 .wrangler
+public/kaboom.js
+public/kaboom.js.map

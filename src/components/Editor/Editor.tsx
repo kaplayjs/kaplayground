@@ -1,4 +1,3 @@
-import { exampleList } from "@/components/Toolbar/examples";
 import { useProject } from "@/hooks/useProject";
 import { decompressCode } from "@/util/compressCode";
 import { Editor, type Monaco } from "@monaco-editor/react";

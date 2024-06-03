@@ -28,7 +28,7 @@ export const configMonaco = (monaco: Monaco) => {
 
     // Hover dataUrl images
     monaco.languages.registerHoverProvider("javascript", {
-        provideHover(model, position, token) {
+        provideHover(model, position) {
             const line = model.getLineContent(position.lineNumber);
             const dataUrisInLine = line.match(dataUrlRegex);
 
