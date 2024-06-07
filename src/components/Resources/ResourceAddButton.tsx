@@ -19,8 +19,6 @@ const ResourceAddButton: FC<Props> = ({ accept, kind, inputProps }) => {
         addAssetsToQueue(files, kind);
     };
 
-    console.log(accept);
-
     return (
         <div className="flex justify-end items-center min-h-10">
             <label>

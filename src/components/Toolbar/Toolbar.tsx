@@ -1,4 +1,4 @@
-import kaplayLogo from "@/assets/kaplay_big.gif";
+import kaplaygroundLogo from "@/assets/logo/kaplayground-o.webp";
 import runIcon from "@/assets/toolbar/run.png";
 import shareIcon from "@/assets/toolbar/share.png";
 import AboutButton from "@/components/About/AboutButton";
@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import ConfigOpenDialog from "../Config/ConfigOpenDialog";
 import ExampleList from "./ExampleList";
 import ToolbarButton from "./ToolbarButton";
+import ToolbarToolsMenu from "./ToolbarToolsMenu";
 
 type Props = {
     run: () => void;
@@ -20,7 +21,6 @@ type Props = {
 
 const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
     const [getMainFile] = useProject((state) => [state.getMainFile]);
-    const shareButton = useRef<HTMLButtonElement>(null);
 
     const handleRun = () => {
         run();
@@ -50,13 +50,13 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
             role="toolbar"
         >
             <a
-                className="btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+                className="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
                 href="/"
             >
                 <figure>
                     <img
                         alt="Logo"
-                        src={kaplayLogo.src}
+                        src={kaplaygroundLogo.src}
                         className="h-8"
                         draggable={false}
                     />
@@ -68,42 +68,12 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
                 onProjectReplace={props.onProjectReplace}
             />
 
-            <ul className="flex flex-row items-center justify-center h-full">
-                <li className="h-full">
-                    <ToolbarButton
-                        icon={runIcon.src}
-                        text="Run"
-                        onClick={handleRun}
-                        tip="Run Project"
-                        keys={["ctrl", "s"]}
-                    />
-                </li>
-                <li className="h-full">
-                    <ToolbarButton
-                        icon={shareIcon.src}
-                        text="Share"
-                        onClick={handleShare}
-                        ref={shareButton}
-                        tip="Share Project"
-                    />
-                </li>
-                <li className="h-full">
-                    <ThemeToggler
-                        onThemeChange={onThemeChange}
-                    />
-                </li>
-                <li className="h-full">
-                    <Projects
-                        onProjectReplace={props.onProjectReplace}
-                    />
-                </li>
-                <li className="h-full">
-                    <AboutButton />
-                </li>
-                <li className="h-full">
-                    <ConfigOpenDialog />
-                </li>
-            </ul>
+            <ToolbarToolsMenu
+                onRun={handleRun}
+                onShare={handleShare}
+                onThemeChange={onThemeChange}
+                onProjectReplace={props.onProjectReplace}
+            />
         </div>
     );
 };
