@@ -31,8 +31,8 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
         const currentFile = getCurrentFile();
         if (!currentFile) return;
 
-        if (currentFile.kind === "kaboom") {
-            return alert("Cannot remove the kaboom file");
+        if (currentFile.kind === "kaboom" || currentFile.kind === "main") {
+            return alert("You cannot remove this file");
         }
 
         if (confirm("Are you sure you want to remove this scene?")) {
@@ -42,22 +42,26 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
     };
 
     return (
-        <div className="flex">
-            <button className="btn btn-ghost btn-xs rounded-sm px-1">
+        <div className="flex" role="toolbar">
+            <button
+                className="btn btn-ghost btn-xs rounded-sm px-1"
+                onClick={handleAddScene}
+            >
                 <img
                     src={addFileIcon.src}
                     alt="Add Scene"
                     className="h-4"
-                    onClick={handleAddScene}
                 />
             </button>
 
-            <button className="btn btn-ghost btn-xs rounded-sm px-1">
+            <button
+                className="btn btn-ghost btn-xs rounded-sm px-1"
+                onClick={handleRemoveScene}
+            >
                 <img
                     src={removeFileIcon.src}
                     alt="Remove Scene"
                     className="h-4"
-                    onClick={handleRemoveScene}
                 />
             </button>
 
