@@ -1,0 +1,53 @@
+---
+import Playground from "@/components2/Playground/Playground.astro";
+
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="KAPLAYGROUND - The KAPLAY Playground">
+    <Playground />
+</Layout>
+
+<script>
+import { examples } from "@/components2/Toolbar/examples";
+import {
+    editorInstance,
+    gameViewElement,
+    playgroundCode,
+} from "@/stores/playground";
+import { decompressCode } from "@/util/compressCode";
+
+// get examples from url
+const urlExample = new URLSearchParams(window.location.search).get("example");
+const example = examples.find((e) => e?.name === urlExample);
+
+// get code from url
+const urlCode = new URLSearchParams(window.location.search).get("code");
+const code = decompressCode(urlCode ?? "");
+
+// prefer code over example
+if (example && !urlCode) {
+    playgroundCode.set(example.content);
+    editorInstance.get()?.setValue(example.content);
+}
+
+if (code) {
+    playgroundCode.set(code);
+    editorInstance.get()?.setValue(code);
+}
+
+// disable keys
+document.addEventListener("keydown", function(event) {
+    if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+
+        gameViewElement.get()?.run();
+    }
+});
+
+document.addEventListener("keypress", function(event) {
+    if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+    }
+});
+</script>

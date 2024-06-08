@@ -1,0 +1,35 @@
+---
+type Props = {
+    id: string;
+    icon: ImageMetadata;
+    tooltip?: string;
+};
+
+const { icon, id, tooltip } = Astro.props;
+---
+
+<toolbar-button
+    id={id}
+    class="btn btn-ghost px-2 rounded-sm items-center justify-center h-full"
+    role="button"
+    data-tooltip={tooltip}
+    tabindex="0"
+>
+    <img src={icon.src} alt="Run" class="h-8" />
+</toolbar-button>
+
+<script>
+import tippy from "tippy.js";
+
+class ToolbarButtonElement extends HTMLElement {
+    constructor() {
+        super();
+
+        tippy(`#${this.id}`, {
+            content: this.dataset.tooltip,
+        });
+    }
+}
+
+customElements.define("toolbar-button", ToolbarButtonElement);
+</script>

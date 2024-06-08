@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "vite": "latest"
+  },
+  "scripts": {
+    "dev": "vite"
+  }
+}

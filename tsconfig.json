@@ -11,6 +11,8 @@
     }
   },
   "exclude": [
-    "./kaplay/**"
+    "./kaplay/**",
+    "./dist/**",
+    "./node_modules/**"
   ]
 }

@@ -1,0 +1,72 @@
+---
+import AssetBrew from "@/components2/AssetBrew/AssetBrew.astro";
+import GameView from "@/components2/GameView/GameView.astro";
+import MonacoEditor from "@/components2/MonacoEditor/MonacoEditor.tsx";
+import Toolbar from "@/components2/Toolbar/Toolbar.astro";
+import Toasty from "@/components2/UI/Toasty.astro";
+---
+
+<main class="flex flex-col h-screen">
+    <Toolbar />
+
+    <div class="flex flex-col lg:flex-row flex-1">
+        <div id="split-0">
+            <MonacoEditor client:load />
+        </div>
+        <div id="split-1">
+            <GameView />
+        </div>
+    </div>
+
+    <Toasty />
+    <AssetBrew />
+</main>
+
+<script>
+import { editorInstance } from "@/stores/playground";
+import Split from "split.js";
+
+let isMobile = window.innerWidth < 1024;
+let currentSplit = Split(["#split-0", "#split-1"], {
+    direction: isMobile ? "vertical" : "horizontal",
+});
+
+window.addEventListener("resize", () => {
+    let newIsMobile = window.innerWidth < 1024;
+
+    if (newIsMobile !== isMobile) {
+        isMobile = newIsMobile;
+        currentSplit.destroy();
+
+        currentSplit = Split(["#split-0", "#split-1"], {
+            direction: isMobile ? "vertical" : "horizontal",
+        });
+        editorInstance.get()?.updateOptions({
+            fontSize: isMobile ? 18 : 20,
+        });
+    }
+});
+</script>
+
+<style is:global>
+.split {
+    display: flex;
+    flex-direction: row;
+}
+
+.gutter {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+    cursor: row-resize;
+}
+</style>

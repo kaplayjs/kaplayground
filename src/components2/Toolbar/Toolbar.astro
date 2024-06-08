@@ -1,0 +1,27 @@
+---
+import kaplaygroundLogo from "@/assets/logo/kaplayground-o.webp";
+import ToolbarExamples from "./ToolbarExamples.astro";
+import ToolbarMenu from "./ToolbarMenu.astro";
+---
+
+<div
+    class="flex justify-between items-center bg-base-300 flex-shrink-0"
+    role="toolbar"
+>
+    <a
+        class="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+        href="/"
+    >
+        <figure>
+            <img
+                alt="Logo"
+                src={kaplaygroundLogo.src}
+                class="h-8"
+                draggable={false}
+            />
+            <h1 class="sr-only">KAPLAY</h1>
+        </figure>
+    </a>
+    <ToolbarExamples />
+    <ToolbarMenu />
+</div>

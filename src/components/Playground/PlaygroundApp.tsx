@@ -7,7 +7,7 @@ import "@/styles/toast.css";
 const PlaygroundApp = () => {
     return (
         <StrictMode>
-            <Playground />
+            <Playground mode="playground" />
         </StrictMode>
     );
 };

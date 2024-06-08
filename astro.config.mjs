@@ -9,4 +9,10 @@ export default defineConfig({
     devToolbar: {
         enabled: false,
     },
+    server: {
+        headers: {
+            "Cross-Origin-Opener-Policy": "same-origin",
+            "Cross-Origin-Embedder-Policy": "require-corp",
+        },
+    },
 });
