@@ -1,10 +1,34 @@
 ---
-import EditorApp from "@/components-old/Playground/EditorApp";
-import Layout from "@/layouts/Layout.astro";
+import Playground from "@/components/Playground/Playground.astro";
 
-export const assets = "KAPLAYGROUND - The KAPLAY Playground";
+import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout title="KAPLAYGROUND - The KAPLAY Playground">
-    <EditorApp client:load />
+<Layout title="KAPLAY Editor">
+    <Playground mode="editor" />
 </Layout>
+
+<script>
+import { examples } from "@/components/Toolbar/examples";
+import { editorInstance, playgroundCode } from "@/stores/playground";
+import { decompressCode } from "@/util/compressCode";
+
+// get examples from url
+const urlExample = new URLSearchParams(window.location.search).get("example");
+const example = examples.find((e) => e?.name === urlExample);
+
+// get code from url
+const urlCode = new URLSearchParams(window.location.search).get("code");
+const code = decompressCode(urlCode ?? "");
+
+// prefer code over example
+if (example && !urlCode) {
+    playgroundCode.set(example.content);
+    editorInstance.get()?.setValue(example.content);
+}
+
+if (code) {
+    playgroundCode.set(code);
+    editorInstance.get()?.setValue(code);
+}
+</script>

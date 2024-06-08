@@ -2,7 +2,7 @@ import fontIcon from "@/assets/tabs/fonts.png";
 import soundIcon from "@/assets/tabs/sounds.png";
 import { fileToBase64 } from "@/util/fileToBase64";
 
-type AssetBrew = {
+export type AssetBrew = {
     name: string;
     url: string;
     type: string;

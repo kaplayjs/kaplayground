@@ -13,8 +13,8 @@
     "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples"
   },
   "dependencies": {
-    "@astrojs/check": "^0.5.10",
-    "@astrojs/react": "^3.3.2",
+    "@astrojs/check": "^0.7.0",
+    "@astrojs/react": "^3.5.0",
     "@astrojs/tailwind": "^5.1.0",
     "@formkit/drag-and-drop": "^0.0.38",
     "@headlessui/react": "^2.0.1",
@@ -23,7 +23,7 @@
     "@nanostores/react": "^0.7.2",
     "@webcontainer/api": "^1.1.9",
     "allotment": "^1.20.1",
-    "astro": "^4.8.6",
+    "astro": "^4.10.1",
     "clsx": "^2.1.1",
     "magic-string": "^0.30.10",
     "nanostores": "^0.10.3",

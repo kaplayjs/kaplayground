@@ -4,16 +4,27 @@ import GameView from "@/components/GameView/GameView.astro";
 import MonacoEditor from "@/components/MonacoEditor/MonacoEditor.tsx";
 import Toolbar from "@/components/Toolbar/Toolbar.astro";
 import Toasty from "@/components/UI/Toasty.astro";
+import { isEditor, isPlayground } from "@/stores/playground";
+
+type Props = {
+    mode?: "playground" | "editor";
+};
+
+const { mode } = Astro.props;
+
+// server side
+isPlayground.set(mode === "playground");
+isEditor.set(mode === "editor");
 ---
 
-<main class="flex flex-col h-screen">
+<main class="flex flex-col h-screen" id="kaplayground" data-mode={mode}>
     <Toolbar />
 
     <div class="flex flex-col lg:flex-row flex-1">
         <div id="split-0" class="w-1/2">
             <MonacoEditor client:load />
         </div>
-        <div id="split-1" class="w-1/2">
+        <div id="split-1">
             <GameView />
         </div>
     </div>
@@ -23,8 +34,16 @@ import Toasty from "@/components/UI/Toasty.astro";
 </main>
 
 <script>
-import { editorInstance } from "@/stores/playground";
+import { editorInstance, isEditor, isPlayground } from "@/stores/playground";
 import Split from "split.js";
+import "./hotKeys";
+
+const kaplaygroundEl = document.getElementById("kaplayground");
+const mode = kaplaygroundEl?.dataset.mode;
+
+// client side
+isPlayground.set(mode === "playground");
+isEditor.set(mode === "editor");
 
 let isMobile = window.innerWidth < 1024;
 let currentSplit = Split(["#split-0", "#split-1"], {

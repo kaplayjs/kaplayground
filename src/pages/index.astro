@@ -5,16 +5,12 @@ import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout title="KAPLAYGROUND - The KAPLAY Playground">
-    <Playground />
+    <Playground mode="playground" />
 </Layout>
 
 <script>
 import { examples } from "@/components/Toolbar/examples";
-import {
-    editorInstance,
-    gameViewElement,
-    playgroundCode,
-} from "@/stores/playground";
+import { editorInstance, playgroundCode } from "@/stores/playground";
 import { decompressCode } from "@/util/compressCode";
 
 // get examples from url
@@ -35,19 +31,4 @@ if (code) {
     playgroundCode.set(code);
     editorInstance.get()?.setValue(code);
 }
-
-// disable keys
-document.addEventListener("keydown", function(event) {
-    if (event.ctrlKey && event.key === "s") {
-        event.preventDefault();
-
-        gameViewElement.get()?.run();
-    }
-});
-
-document.addEventListener("keypress", function(event) {
-    if (event.ctrlKey && event.key === "s") {
-        event.preventDefault();
-    }
-});
 </script>

@@ -16,3 +16,7 @@ export const playgroundCode = persistentAtom("kaplayground_code", defaultCode, {
 export const gameViewElement = atom<GameViewElement | null>(null);
 export const toastyElement = atom<Toasty | null>(null);
 export const editorInstance = atom<null | editor.IStandaloneCodeEditor>(null);
+
+// Editor vs Playground
+export const isPlayground = atom(true);
+export const isEditor = atom(false);
