@@ -12,7 +12,7 @@ by [KAPLAY](https://kaplayjs.com), a game engine.
 - ⭐ Multi-file editing support (with scenes)
 - ⭐ KAPLAY examples support
 - ⭐ Tooltip, toasts and much feedback!
-- ⭐ Now Kaboom configuration is supported in the editor (no in  share links/examples)
+- ⭐ Now Kaboom configuration is supported in the editor (no in share links/examples)
 - added fonts support
 - added a loading screen
 - added reset project option

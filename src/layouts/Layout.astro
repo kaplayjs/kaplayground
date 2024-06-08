@@ -12,18 +12,18 @@ import "tippy.js/dist/tippy.css";
 <html lang="en">
     <head>
         <script is:inline>
-        if (localStorage.getItem("theme") === null) {
-            document.documentElement.setAttribute("data-theme", "light");
-        } else {
-            document.documentElement.setAttribute(
-                "data-theme",
-                localStorage.getItem("theme"),
-            );
-        }
+            if (localStorage.getItem("theme") === null) {
+                document.documentElement.setAttribute("data-theme", "light");
+            } else {
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    localStorage.getItem("theme"),
+                );
+            }
         </script>
         <script>
-        import { themeChange } from "theme-change";
-        themeChange();
+            import { themeChange } from "theme-change";
+            themeChange();
         </script>
         <script
             src="https://unpkg.com/split-me@1.3.0/dist/split-me/split-me.esm.js"

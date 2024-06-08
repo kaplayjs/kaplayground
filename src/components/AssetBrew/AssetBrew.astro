@@ -44,24 +44,24 @@ import { assets } from "./assets";
 </dialog>
 
 <script>
-import { editorInstance } from "../../stores/playground";
+    import { editorInstance } from "../../stores/playground";
 
-const assets = document.querySelectorAll<HTMLElement>(".asset");
-const assetbrewModal = document.querySelector<HTMLDialogElement>(
-    "#assetbrew-modal",
-);
+    const assets = document.querySelectorAll<HTMLElement>(".asset");
+    const assetbrewModal = document.querySelector<HTMLDialogElement>(
+        "#assetbrew-modal",
+    );
 
-assets.forEach((asset) => {
-    asset.addEventListener("click", () => {
-        assetbrewModal?.close();
+    assets.forEach((asset) => {
+        asset.addEventListener("click", () => {
+            assetbrewModal?.close();
 
-        editorInstance.get()?.executeEdits("", [
-            {
-                range: editorInstance.get()?.getSelection()!,
-                text: asset.dataset.import ?? "",
-                forceMoveMarkers: true,
-            },
-        ]);
+            editorInstance.get()?.executeEdits("", [
+                {
+                    range: editorInstance.get()?.getSelection()!,
+                    text: asset.dataset.import ?? "",
+                    forceMoveMarkers: true,
+                },
+            ]);
+        });
     });
-});
 </script>

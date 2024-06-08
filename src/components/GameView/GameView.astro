@@ -11,33 +11,33 @@ export interface GameViewElement extends HTMLElement {
 </game-view>
 
 <script>
-import { gameViewElement, playgroundCode } from "../../stores/playground";
-import { wrapCode } from "./wrapCode";
+    import { gameViewElement, playgroundCode } from "../../stores/playground";
+    import { wrapCode } from "./wrapCode";
 
-class GameViewElement extends HTMLElement {
-    constructor() {
-        super();
-        const iframe = this.querySelector("iframe");
-        if (!iframe) return;
+    class GameViewElement extends HTMLElement {
+        constructor() {
+            super();
+            const iframe = this.querySelector("iframe");
+            if (!iframe) return;
 
-        gameViewElement.set(this);
+            gameViewElement.set(this);
+        }
+
+        runCode(code: string) {
+            const iframe = this.querySelector("iframe");
+            if (!iframe) return;
+
+            iframe.srcdoc = wrapCode(code);
+        }
+
+        run() {
+            this.runCode(playgroundCode.get());
+        }
+
+        get iframe() {
+            return this.querySelector("iframe");
+        }
     }
 
-    runCode(code: string) {
-        const iframe = this.querySelector("iframe");
-        if (!iframe) return;
-
-        iframe.srcdoc = wrapCode(code);
-    }
-
-    run() {
-        this.runCode(playgroundCode.get());
-    }
-
-    get iframe() {
-        return this.querySelector("iframe");
-    }
-}
-
-customElements.define("game-view", GameViewElement);
+    customElements.define("game-view", GameViewElement);
 </script>

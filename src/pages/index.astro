@@ -8,26 +8,28 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 
 <script>
-import { examples } from "../components/Toolbar/examples";
-import { editorInstance, playgroundCode } from "../stores/playground";
-import { decompressCode } from "../util/compressCode";
+    import { examples } from "../components/Toolbar/examples";
+    import { editorInstance, playgroundCode } from "../stores/playground";
+    import { decompressCode } from "../util/compressCode";
 
-// get examples from url
-const urlExample = new URLSearchParams(window.location.search).get("example");
-const example = examples.find((e: any) => e?.name === urlExample);
+    // get examples from url
+    const urlExample = new URLSearchParams(window.location.search).get(
+        "example",
+    );
+    const example = examples.find((e: any) => e?.name === urlExample);
 
-// get code from url
-const urlCode = new URLSearchParams(window.location.search).get("code");
-const code = decompressCode(urlCode ?? "");
+    // get code from url
+    const urlCode = new URLSearchParams(window.location.search).get("code");
+    const code = decompressCode(urlCode ?? "");
 
-// prefer code over example
-if (example && !urlCode) {
-    playgroundCode.set(example.content);
-    editorInstance.get()?.setValue(example.content);
-}
+    // prefer code over example
+    if (example && !urlCode) {
+        playgroundCode.set(example.content);
+        editorInstance.get()?.setValue(example.content);
+    }
 
-if (code) {
-    playgroundCode.set(code);
-    editorInstance.get()?.setValue(code);
-}
+    if (code) {
+        playgroundCode.set(code);
+        editorInstance.get()?.setValue(code);
+    }
 </script>

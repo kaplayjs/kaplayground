@@ -10,9 +10,12 @@
   },
   "excludes": [
     "**/node_modules",
-    "**/*-lock.json"
+    "**/*-lock.json",
+    "**/dist",
+    "**/kaplay"
   ],
   "markup": {
+    "astro.scriptIndent": true
   },
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.90.4.wasm",

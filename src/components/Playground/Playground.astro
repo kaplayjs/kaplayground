@@ -34,42 +34,42 @@ isEditor.set(mode === "editor");
 </main>
 
 <script>
-import Split from "split.js";
-import {
-    editorInstance,
-    isEditor,
-    isPlayground,
-} from "../../stores/playground";
-import "./hotKeys";
+    import Split from "split.js";
+    import {
+        editorInstance,
+        isEditor,
+        isPlayground,
+    } from "../../stores/playground";
+    import "./hotKeys";
 
-const kaplaygroundEl = document.getElementById("kaplayground");
-const mode = kaplaygroundEl?.dataset.mode;
+    const kaplaygroundEl = document.getElementById("kaplayground");
+    const mode = kaplaygroundEl?.dataset.mode;
 
-// client side
-isPlayground.set(mode === "playground");
-isEditor.set(mode === "editor");
+    // client side
+    isPlayground.set(mode === "playground");
+    isEditor.set(mode === "editor");
 
-let isMobile = window.innerWidth < 1024;
-let currentSplit = Split(["#split-0", "#split-1"], {
-    direction: isMobile ? "vertical" : "horizontal",
-    sizes: [50, 50],
-});
+    let isMobile = window.innerWidth < 1024;
+    let currentSplit = Split(["#split-0", "#split-1"], {
+        direction: isMobile ? "vertical" : "horizontal",
+        sizes: [50, 50],
+    });
 
-window.addEventListener("resize", () => {
-    let newIsMobile = window.innerWidth < 1024;
+    window.addEventListener("resize", () => {
+        let newIsMobile = window.innerWidth < 1024;
 
-    if (newIsMobile !== isMobile) {
-        isMobile = newIsMobile;
-        currentSplit.destroy();
+        if (newIsMobile !== isMobile) {
+            isMobile = newIsMobile;
+            currentSplit.destroy();
 
-        currentSplit = Split(["#split-0", "#split-1"], {
-            direction: isMobile ? "vertical" : "horizontal",
-        });
-        editorInstance.get()?.updateOptions({
-            fontSize: isMobile ? 18 : 20,
-        });
-    }
-});
+            currentSplit = Split(["#split-0", "#split-1"], {
+                direction: isMobile ? "vertical" : "horizontal",
+            });
+            editorInstance.get()?.updateOptions({
+                fontSize: isMobile ? 18 : 20,
+            });
+        }
+    });
 </script>
 
 <style is:global>

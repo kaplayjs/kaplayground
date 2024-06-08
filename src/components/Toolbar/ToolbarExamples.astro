@@ -18,28 +18,28 @@ import { examples } from "./examples";
 </select>
 
 <script>
-import {
-    editorInstance,
-    gameViewElement,
-    playgroundCode,
-} from "../../stores/playground";
+    import {
+        editorInstance,
+        gameViewElement,
+        playgroundCode,
+    } from "../../stores/playground";
 
-const select = document.querySelector<HTMLSelectElement>("#example-select");
-const options = select?.querySelectorAll<HTMLOptionElement>("option");
+    const select = document.querySelector<HTMLSelectElement>("#example-select");
+    const options = select?.querySelectorAll<HTMLOptionElement>("option");
 
-select?.addEventListener("change", () => {
-    const option = options?.[select.selectedIndex];
-    const example = option?.dataset.example;
-    const exampleCode = option?.dataset.code;
+    select?.addEventListener("change", () => {
+        const option = options?.[select.selectedIndex];
+        const example = option?.dataset.example;
+        const exampleCode = option?.dataset.code;
 
-    if (example) {
-        history.pushState({}, "", `?example=${example}`);
-    }
+        if (example) {
+            history.pushState({}, "", `?example=${example}`);
+        }
 
-    if (exampleCode) {
-        playgroundCode.set(exampleCode);
-        editorInstance.get()?.setValue(exampleCode);
-        gameViewElement.get()?.run();
-    }
-});
+        if (exampleCode) {
+            playgroundCode.set(exampleCode);
+            editorInstance.get()?.setValue(exampleCode);
+            gameViewElement.get()?.run();
+        }
+    });
 </script>
