@@ -15,7 +15,8 @@
     "**/kaplay"
   ],
   "markup": {
-    "astro.scriptIndent": true
+    "astro.scriptIndent": true,
+    "indentWidth": 4
   },
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.90.4.wasm",

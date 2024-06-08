@@ -7,34 +7,34 @@ export interface Toasty extends HTMLElement {
 <toast-y class="toast"> </toast-y>
 
 <script>
-  import { toastyElement } from "../../stores/playground";
+    import { toastyElement } from "../../stores/playground";
 
-  class Toasty extends HTMLElement {
-      constructor() {
-          super();
-          toastyElement.set(this);
-      }
+    class Toasty extends HTMLElement {
+        constructor() {
+            super();
+            toastyElement.set(this);
+        }
 
-      addToast(message: string) {
-          const toast = document.createElement("div");
-          toast.classList.add(
-              "alert",
-              "alert-primary",
-              "border-t-4",
-              "border-t-primary",
-              "rounded-sm",
-              "border-0",
-          );
+        addToast(message: string) {
+            const toast = document.createElement("div");
+            toast.classList.add(
+                "alert",
+                "alert-primary",
+                "border-t-4",
+                "border-t-primary",
+                "rounded-sm",
+                "border-0",
+            );
 
-          toast.innerHTML = `<span>${message}</span>`;
+            toast.innerHTML = `<span>${message}</span>`;
 
-          this.appendChild(toast);
+            this.appendChild(toast);
 
-          setTimeout(() => {
-              toast.remove();
-          }, 3000);
-      }
-  }
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    }
 
-  customElements.define("toast-y", Toasty);
+    customElements.define("toast-y", Toasty);
 </script>

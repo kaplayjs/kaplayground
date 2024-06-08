@@ -17,28 +17,28 @@ export const darkThemes = [
 ---
 
 <div class="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
-  <ToolbarButton
-    id="theme-selector"
-    icon={themeIcon}
-    tooltip="Change Theme"
-  />
+    <ToolbarButton
+        id="theme-selector"
+        icon={themeIcon}
+        tooltip="Change Theme"
+    />
 
-  <ul
-    tabindex="0"
-    class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
-  >
-    {
-      themes.map((theme) => (
-        <li>
-          <button
-            class="btn btn-sm"
-            data-set-theme={theme}
-            data-act-class="ACTIVECLASS"
-          >
-            {theme.toUpperCase()}
-          </button>
-        </li>
-      ))
-    }
-  </ul>
+    <ul
+        tabindex="0"
+        class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
+    >
+        {
+            themes.map((theme) => (
+                <li>
+                    <button
+                        class="btn btn-sm"
+                        data-set-theme={theme}
+                        data-act-class="ACTIVECLASS"
+                    >
+                        {theme.toUpperCase()}
+                    </button>
+                </li>
+            ))
+        }
+    </ul>
 </div>

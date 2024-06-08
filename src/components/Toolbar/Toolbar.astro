@@ -6,25 +6,25 @@ import ToolbarMenu from "./ToolbarMenu.astro";
 ---
 
 <div
-  class="flex justify-between items-center bg-base-300 flex-shrink-0"
-  role="toolbar"
+    class="flex justify-between items-center bg-base-300 flex-shrink-0"
+    role="toolbar"
 >
-  <a
-    class="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
-    href="/"
-  >
-    <figure>
-      <img
-        alt="Logo"
-        src={kaplaygroundLogo.src}
-        class="h-8"
-        draggable={false}
-      />
-      <h1 class="sr-only">KAPLAY</h1>
-    </figure>
-  </a>
+    <a
+        class="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+        href="/"
+    >
+        <figure>
+            <img
+                alt="Logo"
+                src={kaplaygroundLogo.src}
+                class="h-8"
+                draggable={false}
+            />
+            <h1 class="sr-only">KAPLAY</h1>
+        </figure>
+    </a>
 
-  {isPlayground.get() && <ToolbarExamples />}
+    {isPlayground.get() && <ToolbarExamples />}
 
-  <ToolbarMenu />
+    <ToolbarMenu />
 </div>
