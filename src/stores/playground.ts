@@ -1,8 +1,8 @@
-import type { GameViewElement } from "@/components/GameView/GameView.astro";
-import type { Toasty } from "@/components/UI/Toasty.astro";
 import { persistentAtom } from "@nanostores/persistent";
 import type { editor } from "monaco-editor";
 import { atom } from "nanostores";
+import type { GameViewElement } from "../components/GameView/GameView.astro";
+import type { Toasty } from "../components/UI/Toasty.astro";
 
 const defaultCode = `const k = kaplay();
     
