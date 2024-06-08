@@ -1,10 +1,10 @@
 ---
-import AssetBrew from "@/components/AssetBrew/AssetBrew.astro";
-import GameView from "@/components/GameView/GameView.astro";
-import MonacoEditor from "@/components/MonacoEditor/MonacoEditor.tsx";
-import Toolbar from "@/components/Toolbar/Toolbar.astro";
-import Toasty from "@/components/UI/Toasty.astro";
-import { isEditor, isPlayground } from "@/stores/playground";
+import AssetBrew from "../../components/AssetBrew/AssetBrew.astro";
+import GameView from "../../components/GameView/GameView.astro";
+import MonacoEditor from "../../components/MonacoEditor/MonacoEditor.tsx";
+import Toolbar from "../../components/Toolbar/Toolbar.astro";
+import Toasty from "../../components/UI/Toasty.astro";
+import { isEditor, isPlayground } from "../../stores/playground";
 
 type Props = {
     mode?: "playground" | "editor";
@@ -12,7 +12,7 @@ type Props = {
 
 const { mode } = Astro.props;
 
-// server side
+// server side / ssg
 isPlayground.set(mode === "playground");
 isEditor.set(mode === "editor");
 ---
@@ -34,8 +34,12 @@ isEditor.set(mode === "editor");
 </main>
 
 <script>
-import { editorInstance, isEditor, isPlayground } from "@/stores/playground";
 import Split from "split.js";
+import {
+    editorInstance,
+    isEditor,
+    isPlayground,
+} from "../../stores/playground";
 import "./hotKeys";
 
 const kaplaygroundEl = document.getElementById("kaplayground");

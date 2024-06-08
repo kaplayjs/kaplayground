@@ -1,6 +1,6 @@
-import fontIcon from "@/assets/tabs/fonts.png";
-import soundIcon from "@/assets/tabs/sounds.png";
-import { fileToBase64 } from "@/util/fileToBase64";
+import fontIcon from "../../assets/tabs/fonts.png";
+import soundIcon from "../../assets/tabs/sounds.png";
+import { fileToBase64 } from "../../util/fileToBase64";
 
 export type AssetBrew = {
     name: string;

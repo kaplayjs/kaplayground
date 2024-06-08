@@ -1,4 +1,4 @@
-import kaboomJsFile from "@/../kaplay/dist/kaboom.js?raw";
+import kaboomJsFile from "../../../kaplay/dist/kaboom.js?raw";
 
 export const wrapCode = (code: any) => {
     return `

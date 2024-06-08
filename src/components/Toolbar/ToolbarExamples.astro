@@ -9,7 +9,7 @@ import { examples } from "./examples";
 >
     <option selected disabled>Choose an example</option>
     {
-        examples.map((example) => (
+        examples.map((example: any) => (
             <option data-example={example?.name} data-code={example?.content}>
                 {example?.name}
             </option>
@@ -22,7 +22,7 @@ import {
     editorInstance,
     gameViewElement,
     playgroundCode,
-} from "@/stores/playground";
+} from "../../stores/playground";
 
 const select = document.querySelector<HTMLSelectElement>("#example-select");
 const options = select?.querySelectorAll<HTMLOptionElement>("option");
