@@ -1,9 +1,9 @@
 import kaplaygroundLogo from "@/assets/logo/kaplayground-o.webp";
 import runIcon from "@/assets/toolbar/run.png";
 import shareIcon from "@/assets/toolbar/share.png";
-import AboutButton from "@/components/About/AboutButton";
-import Projects from "@/components/Toolbar/Projects";
-import ThemeToggler from "@/components/Toolbar/ThemeToggler";
+import AboutButton from "@/components-old/About/AboutButton";
+import Projects from "@/components-old/Toolbar/Projects";
+import ThemeToggler from "@/components-old/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
 import { compressCode } from "@/util/compressCode";
 import { type FC, useRef } from "react";

@@ -1,5 +1,5 @@
-import type { GameViewElement } from "@/components2/GameView/GameView.astro";
-import type { Toasty } from "@/components2/UI/Toasty.astro";
+import type { GameViewElement } from "@/components/GameView/GameView.astro";
+import type { Toasty } from "@/components/UI/Toasty.astro";
 import { persistentAtom } from "@nanostores/persistent";
 import type { editor } from "monaco-editor";
 import { atom } from "nanostores";

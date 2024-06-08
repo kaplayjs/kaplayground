@@ -1,19 +1,19 @@
 ---
-import AssetBrew from "@/components2/AssetBrew/AssetBrew.astro";
-import GameView from "@/components2/GameView/GameView.astro";
-import MonacoEditor from "@/components2/MonacoEditor/MonacoEditor.tsx";
-import Toolbar from "@/components2/Toolbar/Toolbar.astro";
-import Toasty from "@/components2/UI/Toasty.astro";
+import AssetBrew from "@/components/AssetBrew/AssetBrew.astro";
+import GameView from "@/components/GameView/GameView.astro";
+import MonacoEditor from "@/components/MonacoEditor/MonacoEditor.tsx";
+import Toolbar from "@/components/Toolbar/Toolbar.astro";
+import Toasty from "@/components/UI/Toasty.astro";
 ---
 
 <main class="flex flex-col h-screen">
     <Toolbar />
 
     <div class="flex flex-col lg:flex-row flex-1">
-        <div id="split-0">
+        <div id="split-0" class="w-1/2">
             <MonacoEditor client:load />
         </div>
-        <div id="split-1">
+        <div id="split-1" class="w-1/2">
             <GameView />
         </div>
     </div>
@@ -29,6 +29,7 @@ import Split from "split.js";
 let isMobile = window.innerWidth < 1024;
 let currentSplit = Split(["#split-0", "#split-1"], {
     direction: isMobile ? "vertical" : "horizontal",
+    sizes: [50, 50],
 });
 
 window.addEventListener("resize", () => {

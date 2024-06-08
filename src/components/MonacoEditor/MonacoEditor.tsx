@@ -7,6 +7,7 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import type { FC } from "react";
 import { configMonaco } from "./configMonaco";
+import EditorLoading from "./EditorLoading";
 
 const MonacoEditor: FC<{}> = () => {
     const handleChange = (value: string | undefined) => {
@@ -32,6 +33,7 @@ const MonacoEditor: FC<{}> = () => {
             onChange={handleChange}
             beforeMount={configMonaco}
             onMount={handleMount}
+            loading={<EditorLoading />}
         />
     );
 };

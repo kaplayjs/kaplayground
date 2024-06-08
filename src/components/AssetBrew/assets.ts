@@ -9,7 +9,7 @@ type AssetBrew = {
     subtype?: string;
 };
 
-const assets = [
+const assetNames = [
     {
         name: "apple",
         url: "sprites/apple.png",
@@ -275,9 +275,9 @@ const assets = [
 export const getImportStatement = (asset: AssetBrew) => {
     switch (asset.type) {
         case "sprite":
-            return `loadSprite("${asset.name}", "${asset.url}")`;
+            return `\nloadSprite("${asset.name}", "${asset.url}")`;
         case "sound":
-            return `loadSound("${asset.name}", "${asset.url}")`;
+            return `\nloadSound("${asset.name}", "${asset.url}")`;
         default:
             return "";
     }
@@ -297,7 +297,7 @@ export const getAssetPreview = (assetType: string) => {
 // server-side
 async function imageUrlToBase64(url: string) {
     try {
-        const response = await fetch(url);
+        const response = await fetch("http://localhost:4321/" + url);
 
         const blob = await response.arrayBuffer();
 
@@ -317,7 +317,7 @@ async function imageUrlToBase64(url: string) {
 
 export async function getAssets() {
     const toReturnAssets = await Promise.all(
-        assets.map(async (asset, index) => {
+        assetNames.map(async (asset, index) => {
             try {
                 const assetLoaded = await imageUrlToBase64(asset.url);
 
@@ -326,6 +326,11 @@ export async function getAssets() {
                     url: assetLoaded,
                     type: asset.type,
                     preview: getAssetPreview(asset.type),
+                    import: getImportStatement({
+                        type: asset.type,
+                        url: assetLoaded ?? "",
+                        name: asset.name,
+                    }),
                 };
             } catch (e) {
                 console.error(e);
@@ -335,3 +340,5 @@ export async function getAssets() {
 
     return toReturnAssets;
 }
+
+export const assets = await getAssets();

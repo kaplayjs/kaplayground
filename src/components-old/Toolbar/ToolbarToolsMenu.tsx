@@ -1,7 +1,7 @@
 import runIcon from "@/assets/toolbar/run.png";
 import shareIcon from "@/assets/toolbar/share.png";
-import AboutButton from "@/components/About/AboutButton";
-import ConfigOpenDialog from "@/components/Config/ConfigOpenDialog";
+import AboutButton from "@/components-old/About/AboutButton";
+import ConfigOpenDialog from "@/components-old/Config/ConfigOpenDialog";
 import type { FC } from "react";
 import Projects from "./Projects";
 import ThemeToggler from "./ThemeToggler";
