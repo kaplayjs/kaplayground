@@ -10,43 +10,43 @@ import "tippy.js/dist/tippy.css";
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <script is:inline>
-            if (localStorage.getItem("theme") === null) {
-                document.documentElement.setAttribute("data-theme", "light");
-            } else {
-                document.documentElement.setAttribute(
-                    "data-theme",
-                    localStorage.getItem("theme"),
-                );
-            }
-        </script>
-        <script>
-            import { themeChange } from "theme-change";
-            themeChange();
-        </script>
-        <script
-            src="https://unpkg.com/split-me@1.3.0/dist/split-me/split-me.esm.js"
-        ></script>
-        <meta charset="UTF-8" />
-        <meta
-            name="description"
-            content="KAPLAYGROUND is an editor for KAPLAY game library"
-        />
-        <meta
-            name="keywords"
-            content="KAPLAY, KAPLAYGROUND, KAPLAYGROUND editor, KAPLAYGROUND game editor, KAPLAYGROUND game library"
-        />
-        <meta name="author" content="KAPLAYGROUND" />
-        <meta name="theme-color" content="#f5f5f5" />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="icon" href="/dino.png" />
-        <meta name="generator" content={Astro.generator} />
-        <title>{title}</title>
-    </head>
-    <body>
-        <slot />
-    </body>
+  <head>
+    <script is:inline>
+      if (localStorage.getItem("theme") === null) {
+          document.documentElement.setAttribute("data-theme", "light");
+      } else {
+          document.documentElement.setAttribute(
+              "data-theme",
+              localStorage.getItem("theme"),
+          );
+      }
+    </script>
+    <script>
+      import { themeChange } from "theme-change";
+      themeChange();
+    </script>
+    <script
+      src="https://unpkg.com/split-me@1.3.0/dist/split-me/split-me.esm.js"
+    ></script>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="KAPLAYGROUND is an editor for KAPLAY game library"
+    />
+    <meta
+      name="keywords"
+      content="KAPLAY, KAPLAYGROUND, KAPLAYGROUND editor, KAPLAYGROUND game editor, KAPLAYGROUND game library"
+    />
+    <meta name="author" content="KAPLAYGROUND" />
+    <meta name="theme-color" content="#f5f5f5" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="/dino.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 <style is:global>
 html, body {

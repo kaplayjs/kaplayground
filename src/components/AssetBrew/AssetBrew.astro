@@ -3,65 +3,63 @@ import { assets } from "./assets";
 ---
 
 <dialog id="assetbrew-modal" class="modal">
-    <section class="modal-box flex flex-col gap-4">
-        <label class="btn" id="assetbrew-upload">
-            <input type="file" accept="image/*" hidden />
-            <span>Upload</span>
-        </label>
-        <div
-            class="assets | flex flex-wrap gap-4 max-h-96 overflow-y-auto items-center justify-start"
-        >
-            {
-                assets.map((asset) => (
-                    <div
-                        class="asset | flex flex-col items-center justify-center cursor-pointer btn w-32 h-32"
-                        data-import={asset?.import}
-                    >
-                        <figure>
-                            <img
-                                src={asset?.preview ?? asset?.url}
-                                alt={asset?.name}
-                                class="w-16 h-16 object-scale-down"
-                            />
-                        </figure>
-                        <div>
-                            <p>
-                                <span class="badge badge-neutral">{
-                                    asset?.type
-                                }</span>
-                                {asset?.name}
-                            </p>
-                        </div>
-                    </div>
-                ))
-            }
-        </div>
-    </section>
+  <section class="modal-box flex flex-col gap-4">
+    <label class="btn" id="assetbrew-upload">
+      <input type="file" accept="image/*" hidden />
+      <span>Upload</span>
+    </label>
+    <div
+      class="assets | flex flex-wrap gap-4 max-h-96 overflow-y-auto items-center justify-start"
+    >
+      {
+        assets.map((asset) => (
+          <div
+            class="asset | flex flex-col items-center justify-center cursor-pointer btn w-32 h-32"
+            data-import={asset?.import}
+          >
+            <figure>
+              <img
+                src={asset?.preview ?? asset?.url}
+                alt={asset?.name}
+                class="w-16 h-16 object-scale-down"
+              />
+            </figure>
+            <div>
+              <p>
+                <span class="badge badge-neutral">{asset?.type}</span>
+                {asset?.name}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
 
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
 </dialog>
 
 <script>
-    import { editorInstance } from "../../stores/playground";
+  import { editorInstance } from "../../stores/playground";
 
-    const assets = document.querySelectorAll<HTMLElement>(".asset");
-    const assetbrewModal = document.querySelector<HTMLDialogElement>(
-        "#assetbrew-modal",
-    );
+  const assets = document.querySelectorAll<HTMLElement>(".asset");
+  const assetbrewModal = document.querySelector<HTMLDialogElement>(
+      "#assetbrew-modal",
+  );
 
-    assets.forEach((asset) => {
-        asset.addEventListener("click", () => {
-            assetbrewModal?.close();
+  assets.forEach((asset) => {
+      asset.addEventListener("click", () => {
+          assetbrewModal?.close();
 
-            editorInstance.get()?.executeEdits("", [
-                {
-                    range: editorInstance.get()?.getSelection()!,
-                    text: asset.dataset.import ?? "",
-                    forceMoveMarkers: true,
-                },
-            ]);
-        });
-    });
+          editorInstance.get()?.executeEdits("", [
+              {
+                  range: editorInstance.get()?.getSelection()!,
+                  text: asset.dataset.import ?? "",
+                  forceMoveMarkers: true,
+              },
+          ]);
+      });
+  });
 </script>

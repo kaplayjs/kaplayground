@@ -5,20 +5,20 @@ const { asset } = Astro.props;
 ---
 
 <div
-    class="asset | flex flex-col items-center justify-center cursor-pointer btn w-32 h-32"
-    data-import={asset?.import}
+  class="asset | flex flex-col items-center justify-center cursor-pointer btn w-32 h-32"
+  data-import={asset?.import}
 >
-    <figure>
-        <img
-            src={asset?.preview ?? asset?.url}
-            alt={asset?.name}
-            class="w-16 h-16 object-scale-down"
-        />
-    </figure>
-    <div>
-        <p>
-            <span class="badge badge-neutral">{asset?.type}</span>
-            {asset?.name}
-        </p>
-    </div>
+  <figure>
+    <img
+      src={asset?.preview ?? asset?.url}
+      alt={asset?.name}
+      class="w-16 h-16 object-scale-down"
+    />
+  </figure>
+  <div>
+    <p>
+      <span class="badge badge-neutral">{asset?.type}</span>
+      {asset?.name}
+    </p>
+  </div>
 </div>

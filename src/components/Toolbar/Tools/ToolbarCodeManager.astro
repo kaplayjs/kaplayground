@@ -4,85 +4,85 @@ import ToolbarButton from "../ToolbarButton.astro";
 ---
 
 <div class="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
-    <ToolbarButton
-        id="code-manager"
-        icon={projectIcon}
-        tooltip="Manage code"
-    />
+  <ToolbarButton
+    id="code-manager"
+    icon={projectIcon}
+    tooltip="Manage code"
+  />
 
-    <ul
-        tabindex="0"
-        class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
-    >
-        <li>
-            <button class="btn btn-sm" id="pj-export-html">
-                Export as HTML
-            </button>
-            <button class="btn btn-sm" id="pj-export-code">
-                Export Code
-            </button>
-            <label class="btn btn-sm" id="pj-import-code">
-                Import Code
+  <ul
+    tabindex="0"
+    class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
+  >
+    <li>
+      <button class="btn btn-sm" id="pj-export-html">
+        Export as HTML
+      </button>
+      <button class="btn btn-sm" id="pj-export-code">
+        Export Code
+      </button>
+      <label class="btn btn-sm" id="pj-import-code">
+        Import Code
 
-                <input
-                    type="file"
-                    class="hidden"
-                    accept=".js"
-                />
-            </label>
-        </li>
-    </ul>
+        <input
+          type="file"
+          class="hidden"
+          accept=".js"
+        />
+      </label>
+    </li>
+  </ul>
 </div>
 
 <script>
-    import {
-        editorInstance,
-        gameViewElement,
-        playgroundCode,
-    } from "../../../stores/playground";
+  import {
+      editorInstance,
+      gameViewElement,
+      playgroundCode,
+  } from "../../../stores/playground";
 
-    const projectExportHTML = document.getElementById("pj-export-html");
-    const projectExportCode = document.getElementById("pj-export-code");
-    const projectImportCode = document.getElementById("pj-import-code");
-    const projectImportCodeInput = projectImportCode?.querySelector<
-        HTMLInputElement
-    >("input");
+  const projectExportHTML = document.getElementById("pj-export-html");
+  const projectExportCode = document.getElementById("pj-export-code");
+  const projectImportCode = document.getElementById("pj-import-code");
+  const projectImportCodeInput = projectImportCode?.querySelector<
+      HTMLInputElement
+  >("input");
 
-    projectExportHTML?.addEventListener("click", () => {
-        const iframeContent = gameViewElement.get()?.iframe?.contentDocument
-            ?.documentElement.outerHTML;
+  projectExportHTML?.addEventListener("click", () => {
+      const iframeContent = gameViewElement.get()?.iframe?.contentDocument
+          ?.documentElement.outerHTML;
 
-        const blob = new Blob([iframeContent ?? ""], { type: "text/html" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "index.html";
-        a.click();
-        URL.revokeObjectURL(url);
-    });
+      const blob = new Blob([iframeContent ?? ""], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.html";
+      a.click();
+      URL.revokeObjectURL(url);
+  });
 
-    projectExportCode?.addEventListener("click", () => {
-        const blob = new Blob([playgroundCode.get()], {
-            type: "text/javascript",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "index.kaplayground.js";
-        a.click();
-        URL.revokeObjectURL(url);
-    });
+  projectExportCode?.addEventListener("click", () => {
+      const blob = new Blob([playgroundCode.get()], {
+          type: "text/javascript",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.kaplayground.js";
+      a.click();
+      URL.revokeObjectURL(url);
+  });
 
-    projectImportCodeInput?.addEventListener("change", (e) => {
-        const file = (e?.target as any)?.["files"][0];
-        if (!file) return;
+  projectImportCodeInput?.addEventListener("change", (e) => {
+      const file = (e?.target as any)?.["files"][0];
+      if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            playgroundCode.set(e.target!.result);
-            editorInstance.get()?.setValue(playgroundCode.get());
-            gameViewElement.get()?.run();
-        };
-        reader.readAsText(file);
-    });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+          playgroundCode.set(e.target!.result);
+          editorInstance.get()?.setValue(playgroundCode.get());
+          gameViewElement.get()?.run();
+      };
+      reader.readAsText(file);
+  });
 </script>
