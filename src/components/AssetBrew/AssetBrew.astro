@@ -44,7 +44,7 @@ import { assets } from "./assets";
 </dialog>
 
 <script>
-    import { editorInstance } from "../../stores/playground";
+    import { $editorInstance } from "../../stores/playground";
 
     const assets = document.querySelectorAll<HTMLElement>(".asset");
     const assetbrewModal = document.querySelector<HTMLDialogElement>(
@@ -55,9 +55,9 @@ import { assets } from "./assets";
         asset.addEventListener("click", () => {
             assetbrewModal?.close();
 
-            editorInstance.get()?.executeEdits("", [
+            $editorInstance.get()?.executeEdits("", [
                 {
-                    range: editorInstance.get()?.getSelection()!,
+                    range: $editorInstance.get()?.getSelection()!,
                     text: asset.dataset.import ?? "",
                     forceMoveMarkers: true,
                 },

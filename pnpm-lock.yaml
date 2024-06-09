@@ -35,6 +35,9 @@ importers:
       astro:
         specifier: ^4.10.1
         version: 4.10.1(@types/node@20.14.2)(typescript@5.4.5)
+      aurelia-split-pane:
+        specifier: ^1.0.7
+        version: 1.0.7
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -96,9 +99,15 @@ importers:
       kaboom:
         specifier: ^3000.1.17
         version: 3000.1.17
+      kaplay:
+        specifier: ^3000.1.17
+        version: 3000.1.17
       monaco-editor:
         specifier: ^0.48.0
         version: 0.48.0
+      vite:
+        specifier: ^5.2.13
+        version: 5.2.13(@types/node@20.14.2)
 
 packages:
 
@@ -1103,6 +1112,9 @@ packages:
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
+  aurelia-split-pane@1.0.7:
+    resolution: {integrity: sha512-II9I3oo7waQm7YAziuAC/zXFHea44Pa5O75VlELfb+cDXQPpdD/Y9btSRgsZ+tPZTItk/RGRHZ75NrVCKvM+6w==}
+
   autoprefixer@10.4.19:
     resolution: {integrity: sha512-BaENR2+zBZ8xXhM4pUaKUxlVdxZ0EZhjvbopwnXmxRUfqDmwSpC2lAi/QXvx7NRdPCo1WKEcEF6mV64si1z4Ew==}
     engines: {node: ^10 || ^12 || >=14}
@@ -1624,6 +1636,9 @@ packages:
 
   kaboom@3000.1.17:
     resolution: {integrity: sha512-npAtjGxj9Oj9vLpXfURck9eUPHR2ac1Lhc1bNcZ0NWcs+Lgs40Ty+wjujv1C2DwjWvxaX+3r2G64M35BS/Ry2g==}
+
+  kaplay@3000.1.17:
+    resolution: {integrity: sha512-h2dwFuxGS7jrTTQafRLzxbBbG/M6yvV3kT4DvmbefWzwYr//68cNKl1Rz4l61bTDjEZTXcOzNwtsS2mwEJl5FQ==}
 
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
@@ -3535,6 +3550,8 @@ snapshots:
       - terser
       - typescript
 
+  aurelia-split-pane@1.0.7: {}
+
   autoprefixer@10.4.19(postcss@8.4.38):
     dependencies:
       browserslist: 4.23.1
@@ -4100,6 +4117,8 @@ snapshots:
   jsonc-parser@2.3.1: {}
 
   kaboom@3000.1.17: {}
+
+  kaplay@3000.1.17: {}
 
   kind-of@6.0.3: {}
 

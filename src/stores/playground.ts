@@ -22,5 +22,8 @@ export const $toastyElement = atom<Toasty | null>(null);
 export const $editorInstance = atom<null | editor.IStandaloneCodeEditor>(null);
 
 // Editor vs Playground
-export const $isPlayground = atom(true);
+export const $isPlayground = atom(false);
 export const $isEditor = atom(false);
+
+// Editor
+export const $isContainerLoading = atom(true);

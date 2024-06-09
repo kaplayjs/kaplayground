@@ -1,10 +1,10 @@
-import { $gameViewElement } from "../../stores/playground";
+import { save } from "../../actions/save";
 
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.key === "s") {
         event.preventDefault();
 
-        $gameViewElement.get()?.run();
+        save();
     }
 });
 

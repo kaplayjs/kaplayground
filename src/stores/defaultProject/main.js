@@ -1,4 +1,4 @@
-import { kaplay } from "kaplay";
+import kaplay from "kaplay";
 
 kaplay();
 

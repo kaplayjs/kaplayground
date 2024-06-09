@@ -43,7 +43,9 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
 </ul>
 
 <script>
+    import { save } from "../../actions/save";
     import { $playgroundCode, $toastyElement } from "../../stores/playground";
+
     import { compressCode } from "../../util/compressCode";
     import type { GameViewElement } from "../GameView/GameView.astro";
 
@@ -55,9 +57,7 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
         "#assetbrew-modal",
     );
 
-    runButton?.addEventListener("click", () => {
-        gameView?.runCode($playgroundCode.get());
-    });
+    runButton?.addEventListener("click", save);
 
     shareButton?.addEventListener("click", () => {
         const url = new URL(window.location.href);

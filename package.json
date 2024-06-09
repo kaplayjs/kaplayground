@@ -23,6 +23,7 @@
     "@nanostores/react": "^0.7.2",
     "@webcontainer/api": "^1.1.9",
     "astro": "^4.10.1",
+    "aurelia-split-pane": "^1.0.7",
     "clsx": "^2.1.1",
     "daisyui": "^4.12.2",
     "magic-string": "^0.30.10",
@@ -45,6 +46,8 @@
     "@types/toastify-js": "^1.12.3",
     "dprint": "^0.45.1",
     "kaboom": "^3000.1.17",
-    "monaco-editor": "^0.48.0"
+    "kaplay": "^3000.1.17",
+    "monaco-editor": "^0.48.0",
+    "vite": "^5.2.13"
   }
 }

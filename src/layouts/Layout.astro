@@ -6,6 +6,7 @@ type Props = {
 const { title } = Astro.props;
 
 import "tippy.js/dist/tippy.css";
+import "aurelia-split-pane/style.scss";
 ---
 
 <!DOCTYPE html>
@@ -48,6 +49,7 @@ import "tippy.js/dist/tippy.css";
         <slot />
     </body>
 </html>
+
 <style is:global>
 html, body {
 	height: 100vh;
@@ -55,5 +57,9 @@ html, body {
 	padding: 0;
     overflow: hidden;
     scrollbar-width: none;
+}
+
+.gutter {
+    background-color: var(--fallback-n ,oklch(var(--n)/var(--tw-bg-opacity)));
 }
 </style>

@@ -36,9 +36,9 @@ import ToolbarButton from "../ToolbarButton.astro";
 
 <script>
     import {
-        editorInstance,
-        gameViewElement,
-        playgroundCode,
+        $editorInstance,
+        $gameViewElement,
+        $playgroundCode,
     } from "../../../stores/playground";
 
     const projectExportHTML = document.getElementById("pj-export-html");
@@ -49,7 +49,7 @@ import ToolbarButton from "../ToolbarButton.astro";
     >("input");
 
     projectExportHTML?.addEventListener("click", () => {
-        const iframeContent = gameViewElement.get()?.iframe?.contentDocument
+        const iframeContent = $gameViewElement.get()?.iframe?.contentDocument
             ?.documentElement.outerHTML;
 
         const blob = new Blob([iframeContent ?? ""], { type: "text/html" });
@@ -62,7 +62,7 @@ import ToolbarButton from "../ToolbarButton.astro";
     });
 
     projectExportCode?.addEventListener("click", () => {
-        const blob = new Blob([playgroundCode.get()], {
+        const blob = new Blob([$playgroundCode.get()], {
             type: "text/javascript",
         });
         const url = URL.createObjectURL(blob);
@@ -79,9 +79,9 @@ import ToolbarButton from "../ToolbarButton.astro";
 
         const reader = new FileReader();
         reader.onload = (e) => {
-            playgroundCode.set(e.target!.result);
-            editorInstance.get()?.setValue(playgroundCode.get());
-            gameViewElement.get()?.run();
+            $playgroundCode.set(e.target!.result);
+            $editorInstance.get()?.setValue($playgroundCode.get());
+            $gameViewElement.get()?.run();
         };
         reader.readAsText(file);
     });

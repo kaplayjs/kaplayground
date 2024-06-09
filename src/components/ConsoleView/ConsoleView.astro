@@ -1,0 +1,42 @@
+---
+export interface Console {
+    addLog(log: string): void;
+}
+---
+
+<console-view>
+    <div id="console__content"></div>
+</console-view>
+
+<script>
+    import { $consoleEl } from "../../stores/project";
+
+    class Console extends HTMLElement {
+        _content: HTMLElement;
+
+        constructor() {
+            super();
+
+            const content = this.querySelector<HTMLElement>(
+                "#console__content",
+            );
+
+            if (!content) {
+                throw new Error(
+                    "Console element must have a child element with id 'console__content'",
+                );
+            }
+
+            this._content = content;
+            $consoleEl.set(this);
+        }
+
+        addLog(log: string) {
+            const logElement = document.createElement("div");
+            logElement.textContent = log;
+            this._content.appendChild(logElement);
+        }
+    }
+
+    customElements.define("console-view", Console);
+</script>

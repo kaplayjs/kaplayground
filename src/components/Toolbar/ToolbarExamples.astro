@@ -19,9 +19,9 @@ import { examples } from "./examples";
 
 <script>
     import {
-        editorInstance,
-        gameViewElement,
-        playgroundCode,
+        $editorInstance,
+        $gameViewElement,
+        $playgroundCode,
     } from "../../stores/playground";
 
     const select = document.querySelector<HTMLSelectElement>("#example-select");
@@ -37,9 +37,9 @@ import { examples } from "./examples";
         }
 
         if (exampleCode) {
-            playgroundCode.set(exampleCode);
-            editorInstance.get()?.setValue(exampleCode);
-            gameViewElement.get()?.run();
+            $playgroundCode.set(exampleCode);
+            $editorInstance.get()?.setValue(exampleCode);
+            $gameViewElement.get()?.run();
         }
     });
 </script>

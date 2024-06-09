@@ -5,6 +5,7 @@ import MonacoEditor from "../../components/MonacoEditor/MonacoEditor.tsx";
 import Toolbar from "../../components/Toolbar/Toolbar.astro";
 import Toasty from "../../components/UI/Toasty.astro";
 import { $isEditor, $isPlayground } from "../../stores/playground";
+import ConsoleView from "../ConsoleView/ConsoleView.astro";
 
 type Props = {
     mode?: "playground" | "editor";
@@ -25,7 +26,18 @@ $isEditor.set(mode === "editor");
             <MonacoEditor client:load />
         </div>
         <div id="split-1">
-            <GameView />
+            {$isPlayground.get() && <GameView />}
+            {
+                $isEditor.get() && (
+                    <>
+                        <split-pane direction="horizontal">
+                            <GameView />
+
+                            <ConsoleView />
+                        </split-pane>
+                    </>
+                )
+            }
         </div>
     </div>
 
@@ -54,6 +66,10 @@ $isEditor.set(mode === "editor");
         direction: isMobile ? "vertical" : "horizontal",
         sizes: [50, 50],
     });
+
+    document.getElementsByClassName("gutter")[0].classList.add(
+        "bg-neutral",
+    );
 
     window.addEventListener("resize", () => {
         let newIsMobile = window.innerWidth < 1024;

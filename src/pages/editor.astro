@@ -1,8 +1,66 @@
 ---
 import Playground from "../components/Playground/Playground.astro";
+import WebContainerLoading from "../components/WebContainer/WebContainerLoading.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="KAPLAY Editor">
     <Playground mode="editor" />
 </Layout>
+
+<script>
+    import { WebContainer } from "@webcontainer/api";
+    import {
+        $gameViewElement,
+        $isContainerLoading,
+    } from "../stores/playground";
+    import { $project, $webContainer } from "../stores/project";
+
+    const webcontainerInstance = await WebContainer.boot();
+    $webContainer.set(webcontainerInstance);
+
+    await webcontainerInstance.mount($project.get().files);
+
+    $isContainerLoading.set(true);
+
+    async function startDevServer() {
+        const installProcess = await webcontainerInstance.spawn("npm", [
+            "install",
+        ]);
+
+        installProcess.output.pipeTo(
+            new WritableStream({
+                write(data) {
+                    console.log(data);
+                },
+            }),
+        );
+
+        const installExitCode = await installProcess.exit;
+
+        if (installExitCode !== 0) {
+            throw new Error("Unable to run npm install");
+        }
+
+        // `npm run dev`
+        const devProcess = await webcontainerInstance.spawn("npm", [
+            "run",
+            "start",
+        ]);
+
+        devProcess.output.pipeTo(
+            new WritableStream({
+                write(data) {
+                    console.log(data);
+                },
+            }),
+        );
+    }
+
+    startDevServer();
+
+    webcontainerInstance.on("server-ready", (port, url) => {
+        $isContainerLoading.set(false);
+        $gameViewElement.get()?.connect(url);
+    });
+</script>
