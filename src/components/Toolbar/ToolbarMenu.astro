@@ -2,33 +2,38 @@
 import assetBrewIcon from "../../assets/toolbar/assetbrew.png";
 import runIcon from "../../assets/toolbar/run.png";
 import shareIcon from "../../assets/toolbar/share.png";
+import { $isPlayground } from "../../stores/playground";
 import ToolbarButton from "./ToolbarButton.astro";
 import ToolbarProjectManager from "./Tools/ToolbarCodeManager.astro";
 import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
 ---
 
 <ul class="flex flex-row items-center justify-center h-full">
-    <li class="h-full">
+    <li>
         <ToolbarButton
             id="run"
             icon={runIcon}
             tooltip="Run Project"
         />
     </li>
-    <li class="h-full">
-        <ToolbarButton
-            id="share"
-            icon={shareIcon}
-            tooltip="Share Project"
-        />
-    </li>
+    {
+        $isPlayground.get() && (
+            <li>
+                <ToolbarButton
+                    id="share"
+                    icon={shareIcon}
+                    tooltip="Share Project"
+                />
+            </li>
+        )
+    }
     <li>
         <ToolbarThemeSelector />
     </li>
     <li>
         <ToolbarProjectManager />
     </li>
-    <li class="h-full">
+    <li>
         <ToolbarButton
             id="assetbrew"
             icon={assetBrewIcon}
@@ -38,7 +43,7 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
 </ul>
 
 <script>
-    import { playgroundCode, toastyElement } from "../../stores/playground";
+    import { $playgroundCode, $toastyElement } from "../../stores/playground";
     import { compressCode } from "../../util/compressCode";
     import type { GameViewElement } from "../GameView/GameView.astro";
 
@@ -51,15 +56,15 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
     );
 
     runButton?.addEventListener("click", () => {
-        gameView?.runCode(playgroundCode.get());
+        gameView?.runCode($playgroundCode.get());
     });
 
     shareButton?.addEventListener("click", () => {
         const url = new URL(window.location.href);
-        url.searchParams.set("code", compressCode(playgroundCode.get()));
+        url.searchParams.set("code", compressCode($playgroundCode.get()));
 
         navigator.clipboard.writeText(url.href);
-        toastyElement.get()?.addToast("Link copied to clipboard!");
+        $toastyElement.get()?.addToast("Link copied to clipboard!");
     });
 
     assetbrewButton?.addEventListener("click", () => {

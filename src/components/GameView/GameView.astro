@@ -11,7 +11,7 @@ export interface GameViewElement extends HTMLElement {
 </game-view>
 
 <script>
-    import { gameViewElement, playgroundCode } from "../../stores/playground";
+    import { $gameViewElement, $playgroundCode } from "../../stores/playground";
     import { wrapCode } from "./wrapCode";
 
     class GameViewElement extends HTMLElement {
@@ -20,7 +20,7 @@ export interface GameViewElement extends HTMLElement {
             const iframe = this.querySelector("iframe");
             if (!iframe) return;
 
-            gameViewElement.set(this);
+            $gameViewElement.set(this);
         }
 
         runCode(code: string) {
@@ -31,7 +31,7 @@ export interface GameViewElement extends HTMLElement {
         }
 
         run() {
-            this.runCode(playgroundCode.get());
+            this.runCode($playgroundCode.get());
         }
 
         get iframe() {

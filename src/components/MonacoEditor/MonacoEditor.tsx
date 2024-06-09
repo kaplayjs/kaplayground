@@ -2,22 +2,22 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import type { FC } from "react";
 import {
-    editorInstance,
-    gameViewElement,
-    playgroundCode,
+    $editorInstance,
+    $gameViewElement,
+    $playgroundCode,
 } from "../../stores/playground";
 import { configMonaco } from "./configMonaco";
 import EditorLoading from "./EditorLoading";
 
 const MonacoEditor: FC<{}> = () => {
     const handleChange = (value: string | undefined) => {
-        playgroundCode.set(value ?? "");
+        $playgroundCode.set(value ?? "");
     };
 
     const handleMount = (editor: editor.IStandaloneCodeEditor) => {
-        editor.setValue(playgroundCode.get());
-        editorInstance.set(editor);
-        gameViewElement.get()?.runCode(playgroundCode.get());
+        editor.setValue($playgroundCode.get());
+        $editorInstance.set(editor);
+        $gameViewElement.get()?.runCode($playgroundCode.get());
     };
 
     return (

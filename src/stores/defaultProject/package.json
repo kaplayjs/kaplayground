@@ -1,0 +1,11 @@
+{
+  "name": "default-project",
+  "version": "1.0.0",
+  "description": "Default project",
+  "scripts": {
+    "start": "vite"
+  },
+  "devDependencies": {
+    "vite": "latest"
+  }
+}

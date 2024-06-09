@@ -7,12 +7,12 @@ export interface Toasty extends HTMLElement {
 <toast-y class="toast"> </toast-y>
 
 <script>
-    import { toastyElement } from "../../stores/playground";
+    import { $toastyElement } from "../../stores/playground";
 
     class Toasty extends HTMLElement {
         constructor() {
             super();
-            toastyElement.set(this);
+            $toastyElement.set(this);
         }
 
         addToast(message: string) {

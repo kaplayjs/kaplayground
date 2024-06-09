@@ -4,7 +4,7 @@ import GameView from "../../components/GameView/GameView.astro";
 import MonacoEditor from "../../components/MonacoEditor/MonacoEditor.tsx";
 import Toolbar from "../../components/Toolbar/Toolbar.astro";
 import Toasty from "../../components/UI/Toasty.astro";
-import { isEditor, isPlayground } from "../../stores/playground";
+import { $isEditor, $isPlayground } from "../../stores/playground";
 
 type Props = {
     mode?: "playground" | "editor";
@@ -13,8 +13,8 @@ type Props = {
 const { mode } = Astro.props;
 
 // server side / ssg
-isPlayground.set(mode === "playground");
-isEditor.set(mode === "editor");
+$isPlayground.set(mode === "playground");
+$isEditor.set(mode === "editor");
 ---
 
 <main class="flex flex-col h-screen" id="kaplayground" data-mode={mode}>
@@ -36,9 +36,9 @@ isEditor.set(mode === "editor");
 <script>
     import Split from "split.js";
     import {
-        editorInstance,
-        isEditor,
-        isPlayground,
+        $editorInstance,
+        $isEditor,
+        $isPlayground,
     } from "../../stores/playground";
     import "./hotKeys";
 
@@ -46,8 +46,8 @@ isEditor.set(mode === "editor");
     const mode = kaplaygroundEl?.dataset.mode;
 
     // client side
-    isPlayground.set(mode === "playground");
-    isEditor.set(mode === "editor");
+    $isPlayground.set(mode === "playground");
+    $isEditor.set(mode === "editor");
 
     let isMobile = window.innerWidth < 1024;
     let currentSplit = Split(["#split-0", "#split-1"], {
@@ -65,7 +65,7 @@ isEditor.set(mode === "editor");
             currentSplit = Split(["#split-0", "#split-1"], {
                 direction: isMobile ? "vertical" : "horizontal",
             });
-            editorInstance.get()?.updateOptions({
+            $editorInstance.get()?.updateOptions({
                 fontSize: isMobile ? 18 : 20,
             });
         }
