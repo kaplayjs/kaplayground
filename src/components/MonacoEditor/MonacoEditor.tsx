@@ -10,11 +10,7 @@ import {
     $isPlayground,
     $playgroundCode,
 } from "../../stores/playground";
-import {
-    $currentEditingFile,
-    $project,
-    $webContainer,
-} from "../../stores/project";
+import { $currentEditingFile, $project } from "../../stores/project";
 import { configMonaco } from "./configMonaco";
 import EditorLoading from "./EditorLoading";
 

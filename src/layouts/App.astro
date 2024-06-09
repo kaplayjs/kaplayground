@@ -6,7 +6,8 @@ type Props = {
 const { title } = Astro.props;
 
 import "tippy.js/dist/tippy.css";
-import "aurelia-split-pane/style.scss";
+import "flex-splitter-directive/styles.min.css";
+import "xterm/css/xterm.css";
 ---
 
 <!DOCTYPE html>
@@ -24,6 +25,7 @@ import "aurelia-split-pane/style.scss";
         </script>
         <script>
             import { themeChange } from "theme-change";
+            import "flex-splitter-directive";
             themeChange();
         </script>
         <script

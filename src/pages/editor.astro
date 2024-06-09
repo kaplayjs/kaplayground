@@ -1,11 +1,10 @@
 ---
-import Playground from "../components/Playground/Playground.astro";
-import WebContainerLoading from "../components/WebContainer/WebContainerLoading.astro";
-import Layout from "../layouts/Layout.astro";
+import App from "../components/Playground/Playground.astro";
+import Layout from "../layouts/App.astro";
 ---
 
 <Layout title="KAPLAY Editor">
-    <Playground mode="editor" />
+    <App mode="editor" />
 </Layout>
 
 <script>
@@ -14,7 +13,7 @@ import Layout from "../layouts/Layout.astro";
         $gameViewElement,
         $isContainerLoading,
     } from "../stores/playground";
-    import { $project, $webContainer } from "../stores/project";
+    import { $project, $terminal, $webContainer } from "../stores/project";
 
     const webcontainerInstance = await WebContainer.boot();
     $webContainer.set(webcontainerInstance);
@@ -28,13 +27,13 @@ import Layout from "../layouts/Layout.astro";
             "install",
         ]);
 
-        installProcess.output.pipeTo(
-            new WritableStream({
-                write(data) {
-                    console.log(data);
-                },
-            }),
-        );
+        // installProcess.output.pipeTo(
+        //     new WritableStream({
+        //         write(data) {
+        //             $terminal.get()?.write(data);
+        //         },
+        //     }),
+        // );
 
         const installExitCode = await installProcess.exit;
 
@@ -48,13 +47,13 @@ import Layout from "../layouts/Layout.astro";
             "start",
         ]);
 
-        devProcess.output.pipeTo(
-            new WritableStream({
-                write(data) {
-                    console.log(data);
-                },
-            }),
-        );
+        // devProcess.output.pipeTo(
+        //     new WritableStream({
+        //         write(data) {
+        //             $terminal.get()?.write(data);
+        //         },
+        //     }),
+        // );
     }
 
     startDevServer();

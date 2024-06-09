@@ -1,11 +1,10 @@
 ---
-import AssetBrew from "../../components/AssetBrew/AssetBrew.astro";
-import GameView from "../../components/GameView/GameView.astro";
-import MonacoEditor from "../../components/MonacoEditor/MonacoEditor.tsx";
-import Toolbar from "../../components/Toolbar/Toolbar.astro";
-import Toasty from "../../components/UI/Toasty.astro";
 import { $isEditor, $isPlayground } from "../../stores/playground";
-import ConsoleView from "../ConsoleView/ConsoleView.astro";
+import AssetBrew from "../AssetBrew/AssetBrew.astro";
+import GameView from "../GameView/GameView.astro";
+import MonacoEditor from "../MonacoEditor/MonacoEditor.tsx";
+import Toolbar from "../Toolbar/Toolbar.astro";
+import Toasty from "../UI/Toasty.astro";
 
 type Props = {
     mode?: "playground" | "editor";
@@ -21,23 +20,15 @@ $isEditor.set(mode === "editor");
 <main class="flex flex-col h-screen" id="kaplayground" data-mode={mode}>
     <Toolbar />
 
-    <div class="flex flex-col lg:flex-row flex-1">
-        <div id="split-0" class="w-1/2">
+    <div data-flex-splitter-horizontal>
+        <div class="w-1/2">
             <MonacoEditor client:load />
         </div>
-        <div id="split-1">
-            {$isPlayground.get() && <GameView />}
-            {
-                $isEditor.get() && (
-                    <>
-                        <split-pane direction="horizontal">
-                            <GameView />
 
-                            <ConsoleView />
-                        </split-pane>
-                    </>
-                )
-            }
+        <div role="separator" tabindex="1" />
+
+        <div class="w-1/2">
+            <GameView />
         </div>
     </div>
 
@@ -46,67 +37,17 @@ $isEditor.set(mode === "editor");
 </main>
 
 <script>
-    import Split from "split.js";
-    import {
-        $editorInstance,
-        $isEditor,
-        $isPlayground,
-    } from "../../stores/playground";
-    import "./hotKeys";
+    // import { Terminal } from "@altronix/xterm";
+    // import { $terminal } from "../../stores/project";
 
-    const kaplaygroundEl = document.getElementById("kaplayground");
-    const mode = kaplaygroundEl?.dataset.mode;
+    // const terminalEl = document.getElementById("terminal");
 
-    // client side
-    $isPlayground.set(mode === "playground");
-    $isEditor.set(mode === "editor");
+    // if (terminalEl) {
+    //     const terminal = new Terminal({
+    //         convertEol: true,
+    //     });
 
-    let isMobile = window.innerWidth < 1024;
-    let currentSplit = Split(["#split-0", "#split-1"], {
-        direction: isMobile ? "vertical" : "horizontal",
-        sizes: [50, 50],
-    });
-
-    document.getElementsByClassName("gutter")[0].classList.add(
-        "bg-neutral",
-    );
-
-    window.addEventListener("resize", () => {
-        let newIsMobile = window.innerWidth < 1024;
-
-        if (newIsMobile !== isMobile) {
-            isMobile = newIsMobile;
-            currentSplit.destroy();
-
-            currentSplit = Split(["#split-0", "#split-1"], {
-                direction: isMobile ? "vertical" : "horizontal",
-            });
-            $editorInstance.get()?.updateOptions({
-                fontSize: isMobile ? 18 : 20,
-            });
-        }
-    });
+    //     terminal.open(terminalEl);
+    //     $terminal.set(terminal);
+    // }
 </script>
-
-<style is:global>
-.split {
-    display: flex;
-    flex-direction: row;
-}
-
-.gutter {
-    background-color: #eee;
-    background-repeat: no-repeat;
-    background-position: 50%;
-}
-
-.gutter.gutter-horizontal {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-    cursor: col-resize;
-}
-
-.gutter.gutter-vertical {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
-    cursor: row-resize;
-}
-</style>

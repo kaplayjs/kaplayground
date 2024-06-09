@@ -1,7 +1,7 @@
+import type { Terminal } from "@altronix/xterm";
 import { persistentMap } from "@nanostores/persistent";
 import { type FileSystemTree, WebContainer } from "@webcontainer/api";
 import { atom } from "nanostores";
-import type { Console } from "../components/ConsoleView/ConsoleView.astro";
 import indexHTML from "./defaultProject/index.html?raw";
 import mainJS from "./defaultProject/main.js?raw";
 import packageJSON from "./defaultProject/package.json?raw";
@@ -41,4 +41,4 @@ export const $project = persistentMap<Project>("project:", {
 
 export const $webContainer = atom<WebContainer | null>(null);
 export const $currentEditingFile = atom<string>("main.js");
-export const $consoleEl = atom<Console | null>(null);
+export const $terminal = atom<Terminal | null>(null);

@@ -14,18 +14,22 @@
     "win:copy": "xcopy /s /e /i /q /y kaplay\\assets\\sprites public\\ && xcopy /s /e /i /q /y kaplay\\examples\\sprites kaplay\\examples\\fonts kaplay\\examples\\sounds kaplay\\examples\\shaders public\\examples"
   },
   "dependencies": {
+    "@altronix/xterm": "4.11.0-es6.5",
     "@astrojs/check": "^0.7.0",
     "@astrojs/react": "^3.5.0",
     "@astrojs/tailwind": "^5.1.0",
     "@formkit/drag-and-drop": "^0.0.38",
+    "@liudonghua123/xterm": "^5.5.0",
     "@monaco-editor/react": "^4.6.0",
     "@nanostores/persistent": "^0.10.1",
     "@nanostores/react": "^0.7.2",
     "@webcontainer/api": "^1.1.9",
+    "@xterm/xterm": "^5.5.0",
     "astro": "^4.10.1",
     "aurelia-split-pane": "^1.0.7",
     "clsx": "^2.1.1",
     "daisyui": "^4.12.2",
+    "flex-splitter-directive": "^0.5.1",
     "magic-string": "^0.30.10",
     "nanostores": "^0.10.3",
     "pako": "^2.1.0",
@@ -35,7 +39,8 @@
     "tailwindcss": "^3.4.4",
     "theme-change": "^2.5.0",
     "tippy.js": "^6.3.7",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "xterm": "^5.3.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.14",
@@ -48,6 +53,7 @@
     "kaboom": "^3000.1.17",
     "kaplay": "^3000.1.17",
     "monaco-editor": "^0.48.0",
+    "sass": "^1.77.4",
     "vite": "^5.2.13"
   }
 }
