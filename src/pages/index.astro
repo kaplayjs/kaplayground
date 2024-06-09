@@ -9,7 +9,7 @@ import Layout from "../layouts/Layout.astro";
 
 <script>
     import { examples } from "../components/Toolbar/examples";
-    import { editorInstance, playgroundCode } from "../stores/playground";
+    import { $editorInstance, $playgroundCode } from "../stores/playground";
     import { decompressCode } from "../util/compressCode";
 
     // get examples from url
@@ -24,12 +24,12 @@ import Layout from "../layouts/Layout.astro";
 
     // prefer code over example
     if (example && !urlCode) {
-        playgroundCode.set(example.content);
-        editorInstance.get()?.setValue(example.content);
+        $playgroundCode.set(example.content);
+        $editorInstance.get()?.setValue(example.content);
     }
 
     if (code) {
-        playgroundCode.set(code);
-        editorInstance.get()?.setValue(code);
+        $playgroundCode.set(code);
+        $editorInstance.get()?.setValue(code);
     }
 </script>
