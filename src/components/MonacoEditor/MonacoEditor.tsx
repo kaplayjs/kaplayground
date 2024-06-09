@@ -1,11 +1,11 @@
+import { Editor, type Monaco } from "@monaco-editor/react";
+import type { editor } from "monaco-editor";
+import type { FC } from "react";
 import {
     editorInstance,
     gameViewElement,
     playgroundCode,
-} from "@/stores/playground";
-import { Editor, type Monaco } from "@monaco-editor/react";
-import type { editor } from "monaco-editor";
-import type { FC } from "react";
+} from "../../stores/playground";
 import { configMonaco } from "./configMonaco";
 import EditorLoading from "./EditorLoading";
 

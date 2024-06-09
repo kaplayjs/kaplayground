@@ -1,4 +1,4 @@
-import { gameViewElement } from "@/stores/playground";
+import { gameViewElement } from "../../stores/playground";
 
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.key === "s") {

@@ -1,4 +1,4 @@
-import loadingIcon from "@/../kaplay/assets/sprites/bag.png";
+import loadingIcon from "../../../kaplay/assets/sprites/bag.png";
 
 const EditorLoading = () => {
     return (

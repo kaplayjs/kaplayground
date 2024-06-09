@@ -2,6 +2,7 @@
   "type": "module",
   "version": "1.0.0-beta.2",
   "scripts": {
+    "setup": "pnpm fk && pnpm copy",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
@@ -9,7 +10,8 @@
     "astro": "astro",
     "fmt": "dprint fmt",
     "fk": "cd kaplay && pnpm i && pnpm build && cd .. && pnpm copy",
-    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples"
+    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
+    "win:copy": "xcopy /s /e /i /q /y kaplay\\assets\\sprites public\\ && xcopy /s /e /i /q /y kaplay\\examples\\sprites kaplay\\examples\\fonts kaplay\\examples\\sounds kaplay\\examples\\shaders public\\examples"
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
