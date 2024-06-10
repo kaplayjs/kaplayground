@@ -1,3 +1,4 @@
+// client side only
 export const fileToBase64 = (file: File | Blob): Promise<string> => {
     return new Promise((resolve) => {
         const reader = new FileReader();
