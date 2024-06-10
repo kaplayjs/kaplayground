@@ -1,11 +1,11 @@
 ---
-import App from "../components/Playground/Playground.astro";
-import Layout from "../layouts/App.astro";
+import Playground from "../components/Playground/Playground.astro";
+import App from "../layouts/App.astro";
 ---
 
-<Layout title="KAPLAY Editor">
-    <App mode="editor" />
-</Layout>
+<App title="KAPLAY Editor">
+    <Playground mode="editor" />
+</App>
 
 <script>
     import { WebContainer } from "@webcontainer/api";

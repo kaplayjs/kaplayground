@@ -1,6 +1,7 @@
 import { persistentAtom, persistentMap } from "@nanostores/persistent";
 import type { editor } from "monaco-editor";
 import { atom } from "nanostores";
+import type { FileExplorer } from "../components/FileExplorer/fileExplorer";
 import type { GameView } from "../components/GameView/gameView";
 import type { Toasty } from "../components/UI/Toasty.astro";
 
@@ -27,3 +28,4 @@ export const $isEditor = atom(false);
 
 // Editor
 export const $isContainerLoading = atom(true);
+export const $fileExplorer = atom<FileExplorer | null>(null);

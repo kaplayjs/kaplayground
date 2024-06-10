@@ -1,6 +1,7 @@
 ---
 import { $isEditor, $isPlayground } from "../../stores/playground";
 import AssetBrew from "../AssetBrew/AssetBrew.astro";
+import FileExplorer from "../FileExplorer/FileExplorer.astro";
 import GameView from "../GameView/GameView.astro";
 import MonacoEditor from "../MonacoEditor/MonacoEditor.tsx";
 import Toolbar from "../Toolbar/Toolbar.astro";
@@ -21,7 +22,13 @@ $isEditor.set(mode === "editor");
     <Toolbar />
 
     <div data-flex-splitter-horizontal>
-        <div class="w-1/2">
+        <div class="w-[10%]">
+            <FileExplorer />
+        </div>
+
+        <div role="separator" tabindex="1" />
+
+        <div class="w-[40%]">
             <MonacoEditor client:load />
         </div>
 
@@ -37,17 +44,6 @@ $isEditor.set(mode === "editor");
 </main>
 
 <script>
-    // import { Terminal } from "@altronix/xterm";
-    // import { $terminal } from "../../stores/project";
-
-    // const terminalEl = document.getElementById("terminal");
-
-    // if (terminalEl) {
-    //     const terminal = new Terminal({
-    //         convertEol: true,
-    //     });
-
-    //     terminal.open(terminalEl);
-    //     $terminal.set(terminal);
-    // }
+    import "./setMode";
+    import "./hotKeys";
 </script>

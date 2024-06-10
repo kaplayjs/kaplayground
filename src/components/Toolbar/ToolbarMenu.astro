@@ -45,11 +45,8 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
 <script>
     import { save } from "../../actions/save";
     import { $playgroundCode, $toastyElement } from "../../stores/playground";
-
     import { compressCode } from "../../util/compressCode";
-    import type { GameViewElement } from "../GameView/GameView.astro";
 
-    const gameView = document.querySelector<GameViewElement>("game-view");
     const runButton = document.getElementById("run");
     const shareButton = document.getElementById("share");
     const assetbrewButton = document.getElementById("assetbrew");

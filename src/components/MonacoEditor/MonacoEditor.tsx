@@ -5,6 +5,7 @@ import type { editor } from "monaco-editor";
 import { type FC, useEffect } from "react";
 import {
     $editorInstance,
+    $fileExplorer,
     $gameViewElement,
     $isEditor,
     $isPlayground,
@@ -13,6 +14,22 @@ import {
 import { $currentEditingFile, $project } from "../../stores/project";
 import { configMonaco } from "./configMonaco";
 import EditorLoading from "./EditorLoading";
+
+const langByExt = {
+    ".html": "html",
+    ".css": "css",
+    ".js": "javascript",
+    ".mjs": "javascript",
+    ".cjs": "javascript",
+    ".ts": "typescript",
+    ".json": "json",
+    ".jsx": "javascript",
+};
+
+const getLanguage = (path: string) => {
+    const ext = path.split(".").pop();
+    return langByExt[`.${ext}` as keyof typeof langByExt] ?? "plaintext";
+};
 
 const MonacoEditor: FC<{}> = () => {
     const currentEditingFile = useStore($currentEditingFile);
@@ -28,8 +45,11 @@ const MonacoEditor: FC<{}> = () => {
                     file: {
                         contents: value ?? "",
                     },
+                    saved: false,
                 },
             });
+
+            $fileExplorer.get()?.syncFile(currentEditingFile);
         }
     };
 
@@ -51,15 +71,14 @@ const MonacoEditor: FC<{}> = () => {
 
     return (
         <Editor
-            defaultLanguage="javascript"
             defaultValue={(project.files[currentEditingFile] as FileNode)?.file
                 .contents.toString() ?? ""}
             theme="vs-dark"
-            language="javascript"
+            language={getLanguage(currentEditingFile) ?? "javascript"}
             options={{
                 fontSize: 20,
             }}
-            path={currentEditingFile}
+            path={currentEditingFile ?? "main.js"}
             onChange={handleChange}
             beforeMount={configMonaco}
             onMount={handleMount}

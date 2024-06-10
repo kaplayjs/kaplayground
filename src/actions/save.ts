@@ -1,5 +1,5 @@
-import type { FileNode } from "@webcontainer/api";
 import {
+    $fileExplorer,
     $gameViewElement,
     $isEditor,
     $playgroundCode,
@@ -8,15 +8,23 @@ import {
     $currentEditingFile,
     $project,
     $webContainer,
+    type ProjectFile,
 } from "../stores/project";
 
 export const save = () => {
     if ($isEditor) {
+        const currentEditingFile = $currentEditingFile.get();
+        const project = $project.get();
+        const projectFile = project.files[currentEditingFile] as ProjectFile;
+
+        projectFile.saved = true;
+
         $webContainer.get()?.fs.writeFile(
-            $currentEditingFile.get(),
-            (($project.get().files[$currentEditingFile.get()]) as FileNode)
-                .file.contents.toString(),
+            currentEditingFile,
+            projectFile.file.contents.toString(),
         );
+
+        $fileExplorer.get()?.syncFile(currentEditingFile);
     } // run code
     else {
         $gameViewElement.get()?.runCode($playgroundCode.get());

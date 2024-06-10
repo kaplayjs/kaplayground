@@ -1,6 +1,7 @@
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,6 +16,9 @@ export default defineConfig({
         },
     },
     vite: {
+        plugins: [
+            VitePWA(),
+        ],
         cacheDir: ".vite",
         // prevent vite from obscuring rust errors
         clearScreen: false,
