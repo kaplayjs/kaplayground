@@ -1,24 +1,33 @@
 ---
 import type { AssetBrew } from "./assets";
 
+type Props = {
+    asset: AssetBrew;
+};
+
 const { asset } = Astro.props;
 ---
 
-<div
-    class="asset | flex flex-col items-center justify-center cursor-pointer btn w-32 h-32"
-    data-import={asset?.import}
+<tooltip-with
+    id={`asset-${asset.name}-${asset.type}`}
+    data-tooltip={asset.description}
 >
-    <figure>
-        <img
-            src={asset?.preview ?? asset?.url}
-            alt={asset?.name}
-            class="w-16 h-16 object-scale-down"
-        />
-    </figure>
-    <div>
-        <p>
-            <span class="badge badge-neutral">{asset?.type}</span>
-            {asset?.name}
-        </p>
+    <div
+        class="asset | flex flex-col items-center justify-center cursor-pointer btn w-32 h-32"
+        data-import={asset?.import}
+    >
+        <figure>
+            <img
+                src={asset?.preview ?? asset?.url}
+                alt={asset?.name}
+                class="w-16 h-16 object-scale-down"
+            />
+        </figure>
+        <div>
+            <p>
+                <span class="badge badge-neutral">{asset?.type}</span>
+                {asset?.name}
+            </p>
+        </div>
     </div>
-</div>
+</tooltip-with>

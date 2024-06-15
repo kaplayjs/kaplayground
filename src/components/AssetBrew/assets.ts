@@ -2,133 +2,171 @@ import fontIcon from "../../assets/tabs/fonts.png";
 import soundIcon from "../../assets/tabs/sounds.png";
 import { fileToBase64 } from "../../util/fileToBase64";
 
+export type AssetDef = {
+    name: string;
+    url: string;
+    type: string;
+    description?: string;
+    subtype?: string;
+};
+
 export type AssetBrew = {
     name: string;
     url: string;
     type: string;
-    subtype?: string;
+    description?: string;
+    preview: string;
+    import: string;
 };
 
-const assetNames = [
+const assetNames: AssetDef[] = [
+    {
+        name: "bean",
+        url: "sprites/bean.png",
+        type: "sprite",
+        description:
+            "Bean, the friend you never knew you needed. He's the foundator of the KAPLAY Crew.",
+    },
     {
         name: "apple",
         url: "sprites/apple.png",
         type: "sprite",
+        description:
+            "Apple, the one who keeps the doctor away. The favorite fruit of the KAPLAY Crew.",
     },
     {
         name: "bag",
         url: "sprites/bag.png",
         type: "sprite",
-    },
-    {
-        name: "bean",
-        url: "sprites/bean.png",
-        type: "sprite",
+        description:
+            "Bag, the one who carries all the stuff. The most useful member of the KAPLAY Crew.",
     },
     {
         name: "bobo",
         url: "sprites/bobo.png",
         type: "sprite",
+        description:
+            "Bobo, the one who's always happy. The most positive member of the KAPLAY Crew.",
     },
     {
         name: "btfly",
         url: "sprites/btfly.png",
         type: "sprite",
+        description: "Butterfly, the one who's always flying",
     },
     {
         name: "cloud",
         url: "sprites/cloud.png",
         type: "sprite",
+        description: "A cloud, a fluffy thing in the sky",
     },
     {
         name: "coin",
         url: "sprites/coin.png",
         type: "sprite",
+        description: "A coin, a shiny thing, but don't eat it",
     },
     {
-        name: "cursor_default",
+        name: "cursy",
         url: "sprites/cursor_default.png",
         type: "sprite",
+        description: "A cursor, a pointer to the future",
     },
     {
-        name: "cursor_pointer",
+        name: "pointer",
         url: "sprites/cursor_pointer.png",
         type: "sprite",
+        description: "She's the girlfriend of Cursy",
     },
     {
         name: "tga",
         url: "sprites/dino.png",
         type: "sprite",
+        description: "Someones says it's a dinosaur, others say it's a deity",
     },
     {
         name: "egg",
         url: "sprites/egg.png",
         type: "sprite",
+        description: "An egg, a potential life for a new Bean",
     },
     {
         name: "ghosty",
         url: "sprites/ghosty.png",
         type: "sprite",
+        description: "A ghost, a spooky thing",
     },
     {
         name: "gigagantrum",
         url: "sprites/gigagantrum.png",
         type: "sprite",
+        description: "A big tree or big thing",
     },
     {
         name: "grape",
         url: "sprites/grape.png",
         type: "sprite",
+        description: "Best friend of the apple",
     },
     {
         name: "grass",
         url: "sprites/grass.png",
         type: "sprite",
+        description: "A grass, a green thing",
     },
     {
         name: "gun",
         url: "sprites/gun.png",
         type: "sprite",
+        description: "Don't play with it, it's dangerous",
     },
     {
         name: "heart",
         url: "sprites/heart.png",
         type: "sprite",
+        description: "A heart, you know what it is",
     },
     {
         name: "jumpy",
         url: "sprites/jumpy.png",
         type: "sprite",
+        description: "A jumpy thing",
     },
     {
         name: "k",
         url: "sprites/k.png",
         type: "sprite",
+        description: "A letter, the 11th letter of the alphabet",
     },
     {
         name: "kaboom",
         url: "sprites/kaboom.png",
         type: "sprite",
+        description: "A big explosion, a big revolution",
     },
     {
         name: "key",
         url: "sprites/key.png",
         type: "sprite",
+        description: "The key to enter to the KAPLAY World",
     },
     {
         name: "lightening",
         url: "sprites/lightening.png",
         type: "sprite",
+        description: "A lightening, a big spark",
     },
     {
         name: "mark",
         url: "sprites/mark.png",
         type: "sprite",
+        description: "ohhi",
     },
     {
         name: "meat",
         url: "sprites/meat.png",
         type: "sprite",
+        description: "It's Bean meat, don't eat it, it's a friend",
     },
     {
         name: "moon",
@@ -139,26 +177,31 @@ const assetNames = [
         name: "mushroom",
         url: "sprites/mushroom.png",
         type: "sprite",
+        description: "A mushroom, a fungi",
     },
     {
         name: "note",
         url: "sprites/note.png",
         type: "sprite",
+        description: "A note, a musical thing",
     },
     {
         name: "pineapple",
         url: "sprites/pineapple.png",
         type: "sprite",
+        description: "Comes from an old world, is the enemy of the pizza",
     },
     {
         name: "portal",
         url: "sprites/portal.png",
         type: "sprite",
+        description: "A portal, a gateway to another world",
     },
     {
         name: "spike",
         url: "sprites/spike.png",
         type: "sprite",
+        description: "A spike, a sharp thing, don't touch it",
     },
     {
         name: "bell",
@@ -272,7 +315,7 @@ const assetNames = [
     },
 ];
 
-export const getImportStatement = (asset: AssetBrew) => {
+export const getImportStatement = (asset: AssetDef) => {
     switch (asset.type) {
         case "sprite":
             return `\nloadSprite("${asset.name}", "${asset.url}")`;
@@ -315,7 +358,7 @@ async function imageUrlToBase64(url: string) {
     }
 }
 
-export async function getAssets() {
+export async function getAssets(): Promise<AssetBrew[]> {
     const toReturnAssets = await Promise.all(
         assetNames.map(async (asset, index) => {
             try {
@@ -331,14 +374,16 @@ export async function getAssets() {
                         url: assetLoaded ?? "",
                         name: asset.name,
                     }),
-                };
+                    description: asset.description
+                        ?? "Another KAPLAY Crew member.",
+                } as AssetBrew;
             } catch (e) {
                 console.error(e);
             }
         }),
     );
 
-    return toReturnAssets;
+    return toReturnAssets as AssetBrew[];
 }
 
 export const assets = await getAssets();

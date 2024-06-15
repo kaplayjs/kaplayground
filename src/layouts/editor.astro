@@ -1,6 +1,6 @@
 ---
 import Playground from "../components/Playground/Playground.astro";
-import App from "../layouts/App.astro";
+import App from "./App.astro";
 ---
 
 <App title="KAPLAY Editor">
@@ -13,7 +13,7 @@ import App from "../layouts/App.astro";
         $gameViewElement,
         $isContainerLoading,
     } from "../stores/playground";
-    import { $project, $terminal, $webContainer } from "../stores/project";
+    import { $project, $webContainer } from "../stores/project";
 
     const webcontainerInstance = await WebContainer.boot();
     $webContainer.set(webcontainerInstance);
