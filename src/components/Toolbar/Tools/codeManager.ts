@@ -42,5 +42,6 @@ projectImportCodeInput?.addEventListener("change", (e) => {
         $editorInstance.get()?.setValue($playgroundCode.get());
         $gameViewElement.get()?.run();
     };
+
     reader.readAsText(file);
 });

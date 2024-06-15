@@ -1,17 +1,21 @@
 ---
 type Props = {
     title: string;
+    mode?: "playground" | "editor";
 };
 
-const { title } = Astro.props;
+const { title, mode } = Astro.props;
 
 import "tippy.js/dist/tippy.css";
 import "flex-splitter-directive/styles.min.css";
-import "xterm/css/xterm.css";
+import { $isEditor, $isPlayground } from "../stores/playground";
+
+$isPlayground.set(mode === "playground");
+$isEditor.set(mode === "editor");
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode={mode}>
     <head>
         <script is:inline>
             if (localStorage.getItem("theme") === null) {
@@ -49,6 +53,7 @@ import "xterm/css/xterm.css";
     </head>
     <body>
         <slot />
+        <script src="./setMode.ts"></script>
     </body>
 </html>
 
@@ -65,6 +70,8 @@ html, body {
     background-color: var(--fallback-n ,oklch(var(--n)/var(--tw-bg-opacity)));
 }
 </style>
+
+<script src="./setMode.ts"></script>
 
 <script>
     import "../components/UI/tooltip";

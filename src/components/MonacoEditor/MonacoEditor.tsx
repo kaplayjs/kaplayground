@@ -54,11 +54,11 @@ const MonacoEditor: FC<{}> = () => {
     };
 
     const handleMount = (editor: editor.IStandaloneCodeEditor) => {
-        if (!$isPlayground.get()) return;
-
-        editor.setValue($playgroundCode.get());
         $editorInstance.set(editor);
         $gameViewElement.get()?.run();
+
+        if (!$isPlayground.get()) return;
+        editor.setValue($playgroundCode.get());
     };
 
     useEffect(() => {

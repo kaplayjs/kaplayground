@@ -6,19 +6,9 @@ import GameView from "../GameView/GameView.astro";
 import MonacoEditor from "../MonacoEditor/MonacoEditor.tsx";
 import Toolbar from "../Toolbar/Toolbar.astro";
 import Toasty from "../UI/Toasty.astro";
-
-type Props = {
-    mode?: "playground" | "editor";
-};
-
-const { mode } = Astro.props;
-
-// server side / ssg
-$isPlayground.set(mode === "playground");
-$isEditor.set(mode === "editor");
 ---
 
-<main class="flex flex-col h-screen" id="kaplayground" data-mode={mode}>
+<main class="flex flex-col h-screen" id="kaplayground">
     <Toolbar />
 
     <div data-flex-splitter-horizontal id="wrapper">
@@ -52,7 +42,4 @@ $isEditor.set(mode === "editor");
     <AssetBrew />
 </main>
 
-<script>
-    import "./setMode";
-    import "./hotKeys";
-</script>
+<script src="./hotKeys.ts"></script>

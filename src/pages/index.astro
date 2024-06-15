@@ -3,8 +3,8 @@ import Playground from "../components/Playground/Playground.astro";
 import App from "../layouts/App.astro";
 ---
 
-<App title="KAPLAYGROUND - The KAPLAY Playground">
-    <Playground mode="playground" />
+<App title="KAPLAYGROUND - The KAPLAY Playground" mode="playground">
+    <Playground />
 </App>
 
 <script>
@@ -24,8 +24,8 @@ import App from "../layouts/App.astro";
 
     // prefer code over example
     if (example && !urlCode) {
-        $playgroundCode.set(example.content);
         $editorInstance.get()?.setValue(example.content);
+        $playgroundCode.set(example.content);
     }
 
     if (code) {

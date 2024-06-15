@@ -1,7 +1,7 @@
 import fs from "fs";
 import fontIcon from "../../assets/tabs/fonts.png";
 import soundIcon from "../../assets/tabs/sounds.png";
-import { getImportStatement } from "./assetBrew";
+import { getImportStatement } from "./assetBrewUtil";
 
 export type AssetDef = {
     name: string;
