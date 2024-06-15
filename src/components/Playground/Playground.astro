@@ -22,13 +22,22 @@ $isEditor.set(mode === "editor");
     <Toolbar />
 
     <div data-flex-splitter-horizontal>
-        <div class="w-[10%]">
-            <FileExplorer />
-        </div>
+        {
+            $isEditor.get() && (
+                <div class="w-[10%]">
+                    <FileExplorer />
+                </div>
 
-        <div role="separator" tabindex="1" />
+                <div role="separator" tabindex="1" />
+            )
+        }
 
-        <div class="w-[40%]">
+        <div
+            class:list={{
+                "w-1/2": $isPlayground.get(),
+                "w-[40%]": $isEditor.get(),
+            }}
+        >
             <MonacoEditor client:load />
         </div>
 
