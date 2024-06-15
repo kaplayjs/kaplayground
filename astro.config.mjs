@@ -17,7 +17,7 @@ export default defineConfig({
     },
     vite: {
         plugins: [
-            VitePWA(),
+            // VitePWA(),
         ],
         cacheDir: ".vite",
         // prevent vite from obscuring rust errors

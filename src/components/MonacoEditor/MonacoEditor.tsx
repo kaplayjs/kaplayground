@@ -58,7 +58,7 @@ const MonacoEditor: FC<{}> = () => {
 
         editor.setValue($playgroundCode.get());
         $editorInstance.set(editor);
-        $gameViewElement.get()?.runCode($playgroundCode.get());
+        $gameViewElement.get()?.run();
     };
 
     useEffect(() => {
@@ -73,7 +73,7 @@ const MonacoEditor: FC<{}> = () => {
 
     return (
         <Editor
-            defaultValue={""}
+            defaultValue={$playgroundCode.get()}
             theme="vs-dark"
             language={getLanguage(currentEditingFile) ?? "javascript"}
             options={{
