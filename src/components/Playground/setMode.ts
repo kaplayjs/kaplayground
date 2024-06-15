@@ -11,8 +11,6 @@ $isPlayground.set(playgroundMode === "playground");
 window.addEventListener("resize", () => {
     const mode = document.getElementById("kaplayground")?.dataset.mode;
 
-    console.log(mode);
-
     if (mode === "playground") {
         const isLg = window.innerWidth > 1024;
         const wrapper = document.getElementById("wrapper");

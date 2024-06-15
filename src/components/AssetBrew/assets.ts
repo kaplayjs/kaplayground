@@ -1,6 +1,7 @@
+import fs from "fs";
 import fontIcon from "../../assets/tabs/fonts.png";
 import soundIcon from "../../assets/tabs/sounds.png";
-import { fileToBase64 } from "../../util/fileToBase64";
+import { getImportStatement } from "./assetBrew";
 
 export type AssetDef = {
     name: string;
@@ -330,34 +331,6 @@ const assetNames: AssetDef[] = [
     },
 ];
 
-export const typeByExtension = (ext: string) => {
-    if (
-        ext === "png"
-        || ext === "jpg"
-        || ext === "jpeg"
-        || ext === "gif"
-        || ext === "svg"
-        || ext === "bmp"
-        || ext === "webp"
-    ) return "sprite";
-    else if (
-        ext === "mp3" || ext === "wav" || ext === "ogg"
-    ) return "sound";
-};
-
-export const getImportStatement = (asset: AssetDef) => {
-    switch (asset.type) {
-        case "sprite":
-            return `\nloadSprite("${asset.name}", "${asset.url}")`;
-        case "sound":
-            return `\nloadSound("${asset.name}", "${asset.url}")`;
-        case "bitmapfont":
-            return `\nloadBitmapFont("${asset.name}", "${asset.url}", ${asset.subtype.width}, ${asset.subtype.height})`;
-        default:
-            return "";
-    }
-};
-
 export const getAssetPreview = (assetType: string) => {
     switch (assetType) {
         case "sprite":
@@ -372,13 +345,32 @@ export const getAssetPreview = (assetType: string) => {
 };
 
 // server-side
-async function imageUrlToBase64(url: string) {
+async function imageUrlToBase642(url: string) {
     try {
         const response = await fetch("http://localhost:4321/" + url);
 
         const blob = await response.arrayBuffer();
 
         const contentType = response.headers.get("content-type");
+
+        const base64String = `data:${contentType};base64,${
+            Buffer.from(
+                blob,
+            ).toString("base64")
+        }`;
+
+        return base64String;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+// fs version
+async function imageUrlToBase64(url: string) {
+    try {
+        const blob = fs.readFileSync("public/" + url);
+
+        const contentType = "image/png";
 
         const base64String = `data:${contentType};base64,${
             Buffer.from(
