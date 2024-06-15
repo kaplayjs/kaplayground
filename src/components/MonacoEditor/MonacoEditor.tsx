@@ -62,6 +62,8 @@ const MonacoEditor: FC<{}> = () => {
     };
 
     useEffect(() => {
+        if (!$isEditor.get()) return;
+
         const file = project.files[currentEditingFile] as FileNode;
 
         if (file) {
@@ -71,8 +73,7 @@ const MonacoEditor: FC<{}> = () => {
 
     return (
         <Editor
-            defaultValue={(project.files[currentEditingFile] as FileNode)?.file
-                .contents.toString() ?? ""}
+            defaultValue={""}
             theme="vs-dark"
             language={getLanguage(currentEditingFile) ?? "javascript"}
             options={{
