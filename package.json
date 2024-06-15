@@ -9,9 +9,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "fmt": "dprint fmt",
-    "fk": "cd kaplay && pnpm i && pnpm build && cd .. && pnpm copy",
+    "fk": "cd kaplay && pnpm i && pnpm build",
     "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
-    "win:copy": "xcopy /s /e /i /q /y kaplay\\assets\\sprites public\\ && xcopy /s /e /i /q /y kaplay\\examples\\sprites kaplay\\examples\\fonts kaplay\\examples\\sounds kaplay\\examples\\shaders public\\examples"
+    "win:copy": "xcopy /s /e /i /q /y kaplay\\assets\\sprites public\\sprites && xcopy /s /e /i /q /y kaplay\\examples\\sprites kaplay\\examples\\fonts kaplay\\examples\\sounds kaplay\\examples\\shaders public\\examples"
   },
   "dependencies": {
     "@altronix/xterm": "4.11.0-es6.5",

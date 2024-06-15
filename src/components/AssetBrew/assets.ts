@@ -7,7 +7,7 @@ export type AssetDef = {
     url: string;
     type: string;
     description?: string;
-    subtype?: string;
+    subtype?: any;
 };
 
 export type AssetBrew = {
@@ -95,6 +95,12 @@ const assetNames: AssetDef[] = [
         url: "sprites/ghosty.png",
         type: "sprite",
         description: "A ghost, a spooky thing",
+    },
+    {
+        name: "ghostiny",
+        url: "sprites/ghostiny.png",
+        type: "sprite",
+        description: "A baby ghost, the little brother of Ghosty",
     },
     {
         name: "gigagantrum",
@@ -313,7 +319,31 @@ const assetNames: AssetDef[] = [
         url: "sounds/spring.mp3",
         type: "sound",
     },
+    {
+        name: "happy",
+        url: "fonts/happy_28x36.png",
+        type: "bitmapfont",
+        subtype: {
+            width: 28,
+            height: 36,
+        },
+    },
 ];
+
+export const typeByExtension = (ext: string) => {
+    if (
+        ext === "png"
+        || ext === "jpg"
+        || ext === "jpeg"
+        || ext === "gif"
+        || ext === "svg"
+        || ext === "bmp"
+        || ext === "webp"
+    ) return "sprite";
+    else if (
+        ext === "mp3" || ext === "wav" || ext === "ogg"
+    ) return "sound";
+};
 
 export const getImportStatement = (asset: AssetDef) => {
     switch (asset.type) {
@@ -321,6 +351,8 @@ export const getImportStatement = (asset: AssetDef) => {
             return `\nloadSprite("${asset.name}", "${asset.url}")`;
         case "sound":
             return `\nloadSound("${asset.name}", "${asset.url}")`;
+        case "bitmapfont":
+            return `\nloadBitmapFont("${asset.name}", "${asset.url}", ${asset.subtype.width}, ${asset.subtype.height})`;
         default:
             return "";
     }
@@ -332,6 +364,8 @@ export const getAssetPreview = (assetType: string) => {
             return null;
         case "sound":
             return soundIcon.src;
+        case "bitmapfont":
+            return fontIcon.src;
         default:
             return "";
     }
@@ -373,6 +407,7 @@ export async function getAssets(): Promise<AssetBrew[]> {
                         type: asset.type,
                         url: assetLoaded ?? "",
                         name: asset.name,
+                        subtype: asset.subtype,
                     }),
                     description: asset.description
                         ?? "Another KAPLAY Crew member.",

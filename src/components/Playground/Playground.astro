@@ -21,7 +21,7 @@ $isEditor.set(mode === "editor");
 <main class="flex flex-col h-screen" id="kaplayground" data-mode={mode}>
     <Toolbar />
 
-    <div data-flex-splitter-horizontal>
+    <div data-flex-splitter-horizontal id="wrapper">
         {
             $isEditor.get() && (
                 <div class="w-[10%]">

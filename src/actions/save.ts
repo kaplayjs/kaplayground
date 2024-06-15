@@ -12,7 +12,7 @@ import {
 } from "../stores/project";
 
 export const save = () => {
-    if ($isEditor) {
+    if ($isEditor.get()) {
         const currentEditingFile = $currentEditingFile.get();
         const project = $project.get();
         const projectFile = project.files[currentEditingFile] as ProjectFile;
