@@ -55,7 +55,6 @@ const MonacoEditor: FC<{}> = () => {
 
     const handleMount = (editor: editor.IStandaloneCodeEditor) => {
         $editorInstance.set(editor);
-        $gameViewElement.get()?.run();
 
         if (!$isPlayground.get()) return;
         editor.setValue($playgroundCode.get());
@@ -73,7 +72,6 @@ const MonacoEditor: FC<{}> = () => {
 
     return (
         <Editor
-            defaultValue={$playgroundCode.get()}
             theme="vs-dark"
             language={getLanguage(currentEditingFile) ?? "javascript"}
             options={{

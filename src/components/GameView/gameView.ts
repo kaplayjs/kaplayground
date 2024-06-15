@@ -15,6 +15,8 @@ export class GameView extends HTMLElement {
 
         this._iframe = iframe;
         $gameViewElement.set(this);
+
+        console.debug("GameView element created");
     }
 
     runCode(code: string) {

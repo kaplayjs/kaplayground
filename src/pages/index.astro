@@ -6,30 +6,3 @@ import App from "../layouts/App.astro";
 <App title="KAPLAYGROUND - The KAPLAY Playground" mode="playground">
     <Playground />
 </App>
-
-<script>
-    import { examples } from "../components/Toolbar/examples";
-    import { $editorInstance, $playgroundCode } from "../stores/playground";
-    import { decompressCode } from "../util/compressCode";
-
-    // get examples from url
-    const urlExample = new URLSearchParams(window.location.search).get(
-        "example",
-    );
-    const example = examples.find((e: any) => e?.name === urlExample);
-
-    // get code from url
-    const urlCode = new URLSearchParams(window.location.search).get("code");
-    const code = decompressCode(urlCode ?? "");
-
-    // prefer code over example
-    if (example && !urlCode) {
-        $editorInstance.get()?.setValue(example.content);
-        $playgroundCode.set(example.content);
-    }
-
-    if (code) {
-        $playgroundCode.set(code);
-        $editorInstance.get()?.setValue(code);
-    }
-</script>

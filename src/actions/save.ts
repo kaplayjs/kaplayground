@@ -27,6 +27,6 @@ export const save = () => {
         $fileExplorer.get()?.syncFile(currentEditingFile);
     } // run code
     else {
-        $gameViewElement.get()?.runCode($playgroundCode.get());
+        $gameViewElement.get()?.run();
     }
 };
