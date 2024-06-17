@@ -1,4 +1,4 @@
-import { $gameViewElement, $playgroundCode } from "../../stores/playground";
+import { $gameViewElement, $playgroundCode } from "../../stores";
 import { wrapCode } from "./wrapCode";
 
 export class GameView extends HTMLElement {

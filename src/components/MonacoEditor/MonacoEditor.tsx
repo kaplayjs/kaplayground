@@ -1,33 +1,12 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
-import { useStore } from "@nanostores/react";
-import type { FileNode } from "@webcontainer/api";
+
 import type { editor } from "monaco-editor";
 import { type FC, useEffect } from "react";
-import { $editorInstance, $playgroundCode } from "../../stores/playground";
-import { $currentEditingFile, $project } from "../../stores/project";
+import { $editorInstance, $editorTheme, $playgroundCode } from "../../stores";
 import { configMonaco } from "./configMonaco";
 import EditorLoading from "./EditorLoading";
 
-const langByExt = {
-    ".html": "html",
-    ".css": "css",
-    ".js": "javascript",
-    ".mjs": "javascript",
-    ".cjs": "javascript",
-    ".ts": "typescript",
-    ".json": "json",
-    ".jsx": "javascript",
-};
-
-const getLanguage = (path: string) => {
-    const ext = path.split(".").pop();
-    return langByExt[`.${ext}` as keyof typeof langByExt] ?? "plaintext";
-};
-
 const MonacoEditor: FC<{}> = () => {
-    const currentEditingFile = useStore($currentEditingFile);
-    const project = useStore($project);
-
     const handleChange = (value: string | undefined) => {
         $playgroundCode.set(value ?? "");
     };
@@ -38,21 +17,24 @@ const MonacoEditor: FC<{}> = () => {
     };
 
     useEffect(() => {
-        const file = project.files[currentEditingFile] as FileNode;
-
-        if (file) {
-            $editorInstance.get()?.setValue(file.file.contents.toString());
-        }
-    }, [currentEditingFile]);
+        $editorTheme.subscribe((theme) => {
+            if ($editorInstance.get()) {
+                $editorInstance.get()?.updateOptions({
+                    theme,
+                });
+            }
+        });
+    }, []);
 
     return (
         <Editor
             theme="kaplayrk"
-            language={getLanguage(currentEditingFile) ?? "javascript"}
+            language={"javascript"}
             options={{
                 fontSize: 20,
             }}
-            path={currentEditingFile ?? "main.js"}
+            defaultValue={$playgroundCode.get()}
+            path={"main.js"}
             onChange={handleChange}
             beforeMount={configMonaco}
             onMount={handleMount}

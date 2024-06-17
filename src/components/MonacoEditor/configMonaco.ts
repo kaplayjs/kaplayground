@@ -75,6 +75,4 @@ export const configMonaco = (monaco: Monaco) => {
             "editor.background": "#F2F2F2",
         },
     });
-
-    monaco.editor.setTheme("myTheme");
 };

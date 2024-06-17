@@ -31,7 +31,7 @@ export const darkThemes = [
             themes.map((theme) => (
                 <li>
                     <button
-                        class="btn btn-sm"
+                        class="theme-btn btn btn-sm"
                         data-set-theme={theme}
                         data-act-class="ACTIVECLASS"
                     >
@@ -42,3 +42,24 @@ export const darkThemes = [
         }
     </ul>
 </div>
+
+<script>
+    import { $editorTheme } from "../../../stores";
+
+    export const editorThemes = {
+        "kaplay": "kaplayrk",
+        "emerald": "kaplight",
+    };
+    const themeButtons = document.querySelectorAll(".theme-btn");
+
+    themeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const theme = button.getAttribute("data-set-theme");
+
+            $editorTheme.set(
+                editorThemes?.[theme as keyof typeof editorThemes]
+                    ?? "kaplayrk",
+            );
+        });
+    });
+</script>

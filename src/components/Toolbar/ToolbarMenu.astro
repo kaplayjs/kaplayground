@@ -39,7 +39,7 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
 
 <script>
     import { save } from "../../actions/save";
-    import { $playgroundCode, $toastyElement } from "../../stores/playground";
+    import { $playgroundCode, $toastyElement } from "../../stores";
     import { compressCode } from "../../util/compressCode";
 
     const runButton = document.getElementById("run");

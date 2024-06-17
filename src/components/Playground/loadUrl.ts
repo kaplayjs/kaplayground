@@ -1,5 +1,5 @@
 import { examples } from "../../components/Toolbar/examples";
-import { $gameViewElement, $playgroundCode } from "../../stores/playground";
+import { $gameViewElement, $playgroundCode } from "../../stores";
 import { decompressCode } from "../../util/compressCode";
 
 // get examples from url

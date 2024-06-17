@@ -1,8 +1,8 @@
 import { persistentAtom } from "@nanostores/persistent";
 import type { editor } from "monaco-editor";
 import { atom } from "nanostores";
-import type { GameView } from "../components/GameView/gameView";
-import type { Toasty } from "../components/UI/Toasty.astro";
+import type { GameView } from "./components/GameView/gameView";
+import type { Toasty } from "./components/UI/Toasty.astro";
 
 const defaultCode = `const k = kaplay();
     
@@ -20,6 +20,4 @@ export const $playgroundCode = persistentAtom(
 export const $gameViewElement = atom<GameView | null>(null);
 export const $toastyElement = atom<Toasty | null>(null);
 export const $editorInstance = atom<null | editor.IStandaloneCodeEditor>(null);
-
-// Editor
-export const $isContainerLoading = atom(true);
+export const $editorTheme = atom("kaplayrk");

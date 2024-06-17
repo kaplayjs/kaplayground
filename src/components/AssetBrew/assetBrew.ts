@@ -1,4 +1,4 @@
-import { $editorInstance } from "../../stores/playground.ts";
+import { $editorInstance } from "../../stores.ts";
 import { getImportStatement, typeByExtension } from "./assetBrewUtil.ts";
 
 const assets = document.querySelectorAll<HTMLElement>(".asset");

@@ -2,7 +2,7 @@ import {
     $editorInstance,
     $gameViewElement,
     $playgroundCode,
-} from "../../../stores/playground";
+} from "../../../stores";
 import { download } from "../../../util/download";
 
 const projectExportHTML = document.getElementById("pj-export-html");
