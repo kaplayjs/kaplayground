@@ -1,7 +1,5 @@
 ---
-import { $isEditor, $isPlayground } from "../../stores/playground";
 import AssetBrew from "../AssetBrew/AssetBrew.astro";
-import FileExplorer from "../FileExplorer/FileExplorer.astro";
 import GameView from "../GameView/GameView.astro";
 import MonacoEditor from "../MonacoEditor/MonacoEditor.tsx";
 import Toolbar from "../Toolbar/Toolbar.astro";
@@ -12,22 +10,7 @@ import Toasty from "../UI/Toasty.astro";
     <Toolbar />
 
     <div data-flex-splitter-horizontal id="wrapper">
-        {
-            $isEditor.get() && (
-                <div class="w-[10%]">
-                    <FileExplorer />
-                </div>
-
-                <div role="separator" tabindex="1" />
-            )
-        }
-
-        <div
-            class:list={{
-                "w-1/2": $isPlayground.get(),
-                "w-[40%]": $isEditor.get(),
-            }}
-        >
+        <div class="w-1/2">
             <MonacoEditor client:load />
         </div>
 

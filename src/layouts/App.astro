@@ -1,21 +1,16 @@
 ---
 type Props = {
     title: string;
-    mode?: "playground" | "editor";
 };
 
-const { title, mode } = Astro.props;
+const { title } = Astro.props;
 
 import "tippy.js/dist/tippy.css";
 import "flex-splitter-directive/styles.min.css";
-import { $isEditor, $isPlayground } from "../stores/playground";
-
-$isPlayground.set(mode === "playground");
-$isEditor.set(mode === "editor");
 ---
 
 <!DOCTYPE html>
-<html lang="en" data-mode={mode}>
+<html lang="en">
     <head>
         <script is:inline>
             if (localStorage.getItem("theme") === null) {
@@ -53,7 +48,6 @@ $isEditor.set(mode === "editor");
     </head>
     <body>
         <slot />
-        <script src="./setMode.ts"></script>
     </body>
 </html>
 
@@ -71,8 +65,4 @@ html, body {
 }
 </style>
 
-<script src="./setMode.ts"></script>
-
-<script>
-    import "../components/UI/tooltip";
-</script>
+<script src="../components/UI/tooltip"></script>

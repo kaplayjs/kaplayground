@@ -1,11 +1,5 @@
----
-import { $isEditor } from "../../stores/playground";
-import WebContainerLoading from "../WebContainer/WebContainerLoading.astro";
----
-
 <game-view class="flex-auto">
     <div class="relative h-full w-full">
-        {$isEditor.get() && <WebContainerLoading />}
         <iframe height="100%" width="100%" />
     </div>
 </game-view>

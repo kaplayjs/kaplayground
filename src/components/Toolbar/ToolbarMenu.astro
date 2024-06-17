@@ -2,7 +2,6 @@
 import assetBrewIcon from "../../assets/toolbar/assetbrew.png";
 import runIcon from "../../assets/toolbar/run.png";
 import shareIcon from "../../assets/toolbar/share.png";
-import { $isPlayground } from "../../stores/playground";
 import ToolbarButton from "./ToolbarButton.astro";
 import ToolbarProjectManager from "./Tools/ToolbarCodeManager.astro";
 import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
@@ -16,17 +15,13 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
             tooltip="Run Project"
         />
     </li>
-    {
-        $isPlayground.get() && (
-            <li>
-                <ToolbarButton
-                    id="share"
-                    icon={shareIcon}
-                    tooltip="Share Project"
-                />
-            </li>
-        )
-    }
+    <li>
+        <ToolbarButton
+            id="share"
+            icon={shareIcon}
+            tooltip="Share Project"
+        />
+    </li>
     <li>
         <ToolbarThemeSelector />
     </li>

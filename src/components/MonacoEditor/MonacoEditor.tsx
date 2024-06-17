@@ -3,14 +3,7 @@ import { useStore } from "@nanostores/react";
 import type { FileNode } from "@webcontainer/api";
 import type { editor } from "monaco-editor";
 import { type FC, useEffect } from "react";
-import {
-    $editorInstance,
-    $fileExplorer,
-    $gameViewElement,
-    $isEditor,
-    $isPlayground,
-    $playgroundCode,
-} from "../../stores/playground";
+import { $editorInstance, $playgroundCode } from "../../stores/playground";
 import { $currentEditingFile, $project } from "../../stores/project";
 import { configMonaco } from "./configMonaco";
 import EditorLoading from "./EditorLoading";
@@ -37,32 +30,14 @@ const MonacoEditor: FC<{}> = () => {
 
     const handleChange = (value: string | undefined) => {
         $playgroundCode.set(value ?? "");
-
-        if ($isEditor.get()) {
-            $project.setKey("files", {
-                ...$project.get().files,
-                [currentEditingFile]: {
-                    file: {
-                        contents: value ?? "",
-                    },
-                    saved: false,
-                },
-            });
-
-            $fileExplorer.get()?.syncFile(currentEditingFile);
-        }
     };
 
     const handleMount = (editor: editor.IStandaloneCodeEditor) => {
         $editorInstance.set(editor);
-
-        if (!$isPlayground.get()) return;
         editor.setValue($playgroundCode.get());
     };
 
     useEffect(() => {
-        if (!$isEditor.get()) return;
-
         const file = project.files[currentEditingFile] as FileNode;
 
         if (file) {
@@ -72,7 +47,7 @@ const MonacoEditor: FC<{}> = () => {
 
     return (
         <Editor
-            theme="vs-dark"
+            theme="kaplayrk"
             language={getLanguage(currentEditingFile) ?? "javascript"}
             options={{
                 fontSize: 20,

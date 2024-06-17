@@ -1,6 +1,5 @@
 ---
 import kaplaygroundLogo from "../../assets/logo/kaplayground-o.webp";
-import { $isPlayground } from "../../stores/playground";
 import ToolbarExamples from "./ToolbarExamples.astro";
 import ToolbarMenu from "./ToolbarMenu.astro";
 ---
@@ -25,7 +24,6 @@ import ToolbarMenu from "./ToolbarMenu.astro";
         </figure>
     </a>
 
-    {$isPlayground.get() && <ToolbarExamples />}
-
+    <ToolbarExamples />
     <ToolbarMenu />
 </div>

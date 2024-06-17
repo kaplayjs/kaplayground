@@ -1,4 +1,3 @@
-import type { Terminal } from "@altronix/xterm";
 import { persistentMap } from "@nanostores/persistent";
 import {
     type DirectoryNode,
@@ -61,4 +60,3 @@ export const $project = persistentMap<Project>("project:", {
 
 export const $webContainer = atom<WebContainer | null>(null);
 export const $currentEditingFile = atom<string>("main.js");
-export const $terminal = atom<Terminal | null>(null);

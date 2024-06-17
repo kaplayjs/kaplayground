@@ -56,4 +56,25 @@ export const configMonaco = (monaco: Monaco) => {
             };
         },
     });
+
+    // Themes
+    monaco.editor.defineTheme("kaplayrk", {
+        base: "vs-dark",
+        inherit: true,
+        rules: [],
+        colors: {
+            "editor.background": "#242933",
+        },
+    });
+
+    monaco.editor.defineTheme("kaplight", {
+        base: "vs",
+        inherit: true,
+        rules: [],
+        colors: {
+            "editor.background": "#F2F2F2",
+        },
+    });
+
+    monaco.editor.setTheme("myTheme");
 };
