@@ -17,6 +17,8 @@ export class GameView extends HTMLElement {
         $gameViewElement.set(this);
 
         console.debug("GameView element created");
+
+        this.run();
     }
 
     runCode(code: string) {
