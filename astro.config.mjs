@@ -1,6 +1,7 @@
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,5 +14,21 @@ export default defineConfig({
             "Cross-Origin-Opener-Policy": "same-origin",
             "Cross-Origin-Embedder-Policy": "require-corp",
         },
+    },
+    vite: {
+        plugins: [
+            viteStaticCopy({
+                targets: [
+                    {
+                        src: "kaplay/assets/sprites/**",
+                        dest: "sprites/",
+                    },
+                    {
+                        src: "kaplay/examples/**",
+                        dest: "examples/",
+                    },
+                ],
+            }),
+        ],
     },
 });

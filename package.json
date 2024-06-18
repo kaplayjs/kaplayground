@@ -39,6 +39,7 @@
     "dprint": "^0.45.1",
     "kaplay": "^3000.1.17",
     "monaco-editor": "^0.48.0",
-    "vite": "^5.2.13"
+    "vite": "^5.2.13",
+    "vite-plugin-static-copy": "^1.0.5"
   }
 }

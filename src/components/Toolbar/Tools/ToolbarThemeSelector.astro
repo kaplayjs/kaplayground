@@ -45,6 +45,7 @@ export const darkThemes = [
 
 <script>
     import { $editorTheme } from "../../../stores";
+    import { changeTheme, type Theme } from "../../../util/changeTheme";
 
     export const editorThemes = {
         "kaplay": "kaplayrk",
@@ -60,6 +61,7 @@ export const darkThemes = [
                 editorThemes?.[theme as keyof typeof editorThemes]
                     ?? "kaplayrk",
             );
+            changeTheme(theme as Theme);
         });
     });
 </script>
