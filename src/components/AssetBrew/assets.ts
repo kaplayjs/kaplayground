@@ -26,34 +26,31 @@ const assetNames: AssetDef[] = [
         url: "assets/sprites/bean.png",
         type: "sprite",
         description:
-            "Bean, the friend you never knew you needed. He's the foundator of the KAPLAY Crew.",
+            "Bean, the friend you never knew you needed, also the lead of the KAPLAY Crew",
     },
     {
         name: "apple",
         url: "assets/sprites/apple.png",
         type: "sprite",
-        description:
-            "Apple, the one who keeps the doctor away. The favorite fruit of the KAPLAY Crew.",
+        description: "The favorite fruit of the KAPLAY Crew",
     },
     {
         name: "bag",
         url: "assets/sprites/bag.png",
         type: "sprite",
-        description:
-            "Bag, the one who carries all the stuff. The most useful member of the KAPLAY Crew.",
+        description: "Bag, the one who carries all the stuff",
     },
     {
         name: "bobo",
         url: "assets/sprites/bobo.png",
         type: "sprite",
-        description:
-            "Bobo, the one who's always happy. The most positive member of the KAPLAY Crew.",
+        description: "Bobo, the one who's always happy",
     },
     {
         name: "btfly",
         url: "assets/sprites/btfly.png",
         type: "sprite",
-        description: "Butterfly, the one who's always flying",
+        description: "Simple, a butterfly, with a ",
     },
     {
         name: "cloud",
