@@ -1,208 +1,187 @@
-import fontIcon from "../../assets/tabs/fonts.png";
-import soundIcon from "../../assets/tabs/sounds.png";
-import { getImportStatement } from "./assetBrewUtil";
-
-export type AssetDef = {
-    name: string;
-    url: string;
-    type: string;
-    description?: string;
-    subtype?: any;
-};
-
-export type AssetBrew = {
-    name: string;
-    url: string;
-    type: string;
-    description?: string;
-    preview: string;
-    import: string;
-};
-
-const assetNames: AssetDef[] = [
+const assetNames = [
     {
         name: "bean",
-        url: "sprites/bean.png",
+        url: "assets/sprites/bean.png",
         type: "sprite",
         description:
             "Bean, the friend you never knew you needed, also the lead of the KAPLAY Crew",
     },
     {
         name: "apple",
-        url: "sprites/apple.png",
+        url: "assets/sprites/apple.png",
         type: "sprite",
         description: "The favorite fruit of the KAPLAY Crew",
     },
     {
         name: "bag",
-        url: "sprites/bag.png",
+        url: "assets/sprites/bag.png",
         type: "sprite",
         description: "Bag, the one who carries all the stuff",
     },
     {
         name: "bobo",
-        url: "sprites/bobo.png",
+        url: "assets/sprites/bobo.png",
         type: "sprite",
         description: "Bobo, the one who's always happy",
     },
     {
         name: "btfly",
-        url: "sprites/btfly.png",
+        url: "assets/sprites/btfly.png",
         type: "sprite",
         description: "Simple, a butterfly, with a ",
     },
     {
         name: "cloud",
-        url: "sprites/cloud.png",
+        url: "assets/sprites/cloud.png",
         type: "sprite",
         description: "A cloud, a fluffy thing in the sky",
     },
     {
         name: "coin",
-        url: "sprites/coin.png",
+        url: "assets/sprites/coin.png",
         type: "sprite",
         description: "A coin, a shiny thing, but don't eat it",
     },
     {
         name: "cursy",
-        url: "sprites/cursor_default.png",
+        url: "assets/sprites/cursor_default.png",
         type: "sprite",
         description: "A cursor, a pointer to the future",
     },
     {
         name: "pointer",
-        url: "sprites/cursor_pointer.png",
+        url: "assets/sprites/cursor_pointer.png",
         type: "sprite",
         description: "She's the girlfriend of Cursy",
     },
     {
         name: "tga",
-        url: "sprites/dino.png",
+        url: "assets/sprites/dino.png",
         type: "sprite",
         description: "Someones says it's a dinosaur, others say it's a deity",
     },
     {
         name: "egg",
-        url: "sprites/egg.png",
+        url: "assets/sprites/egg.png",
         type: "sprite",
         description: "An egg, a potential life for a new Bean",
     },
     {
         name: "ghosty",
-        url: "sprites/ghosty.png",
+        url: "assets/sprites/ghosty.png",
         type: "sprite",
         description: "A ghost, a spooky thing",
     },
     {
         name: "ghostiny",
-        url: "sprites/ghostiny.png",
+        url: "assets/sprites/ghostiny.png",
         type: "sprite",
         description: "A baby ghost, the little brother of Ghosty",
     },
     {
         name: "gigagantrum",
-        url: "sprites/gigagantrum.png",
+        url: "assets/sprites/gigagantrum.png",
         type: "sprite",
         description: "A big tree or big thing",
     },
     {
         name: "grape",
-        url: "sprites/grape.png",
+        url: "assets/sprites/grape.png",
         type: "sprite",
         description: "Best friend of the apple",
     },
     {
         name: "grass",
-        url: "sprites/grass.png",
+        url: "assets/sprites/grass.png",
         type: "sprite",
         description: "A grass, a green thing",
     },
     {
         name: "gun",
-        url: "sprites/gun.png",
+        url: "assets/sprites/gun.png",
         type: "sprite",
         description: "Don't play with it, it's dangerous",
     },
     {
         name: "heart",
-        url: "sprites/heart.png",
+        url: "assets/sprites/heart.png",
         type: "sprite",
         description: "A heart, you know what it is",
     },
     {
         name: "jumpy",
-        url: "sprites/jumpy.png",
+        url: "assets/sprites/jumpy.png",
         type: "sprite",
         description: "A jumpy thing",
     },
     {
         name: "k",
-        url: "sprites/k.png",
+        url: "assets/sprites/k.png",
         type: "sprite",
         description: "A letter, the 11th letter of the alphabet",
     },
     {
         name: "kaboom",
-        url: "sprites/kaboom.png",
+        url: "assets/sprites/kaboom.png",
         type: "sprite",
         description: "A big explosion, a big revolution",
     },
     {
         name: "key",
-        url: "sprites/key.png",
+        url: "assets/sprites/key.png",
         type: "sprite",
         description: "The key to enter to the KAPLAY World",
     },
     {
         name: "lightening",
-        url: "sprites/lightening.png",
+        url: "assets/sprites/lightening.png",
         type: "sprite",
         description: "A lightening, a big spark",
     },
     {
         name: "mark",
-        url: "sprites/mark.png",
+        url: "assets/sprites/mark.png",
         type: "sprite",
         description: "ohhi",
     },
     {
         name: "meat",
-        url: "sprites/meat.png",
+        url: "assets/sprites/meat.png",
         type: "sprite",
         description: "It's Bean meat, don't eat it, it's a friend",
     },
     {
         name: "moon",
-        url: "sprites/moon.png",
+        url: "assets/sprites/moon.png",
         type: "sprite",
     },
     {
         name: "mushroom",
-        url: "sprites/mushroom.png",
+        url: "assets/sprites/mushroom.png",
         type: "sprite",
         description: "A mushroom, a fungi",
     },
     {
         name: "note",
-        url: "sprites/note.png",
+        url: "assets/sprites/note.png",
         type: "sprite",
         description: "A note, a musical thing",
     },
     {
         name: "pineapple",
-        url: "sprites/pineapple.png",
+        url: "assets/sprites/pineapple.png",
         type: "sprite",
         description: "Comes from an old world, is the enemy of the pizza",
     },
     {
         name: "portal",
-        url: "sprites/portal.png",
+        url: "assets/sprites/portal.png",
         type: "sprite",
         description: "A portal, a gateway to another world",
     },
     {
         name: "spike",
-        url: "sprites/spike.png",
+        url: "assets/sprites/spike.png",
         type: "sprite",
         description: "A spike, a sharp thing, don't touch it",
     },
@@ -327,63 +306,11 @@ const assetNames: AssetDef[] = [
     },
 ];
 
-export const getAssetPreview = (assetType: string) => {
-    switch (assetType) {
-        case "sprite":
-            return null;
-        case "sound":
-            return soundIcon.src;
-        case "bitmapfont":
-            return fontIcon.src;
-        default:
-            return "";
-    }
-};
-
-// fs version
-// async function imageUrlToBase64(url: string) {
-//     try {
-//         const blob = fs.readFileSync("../kaplay/" + url);
-
-//         const contentType = "image/png";
-
-//         const base64String = `data:${contentType};base64,${
-//             Buffer.from(
-//                 blob,
-//             ).toString("base64")
-//         }`;
-
-//         return base64String;
-//     } catch (err) {
-//         console.log(err);
-//     }
-// }
-
-async function imageUrlToBase642(url: string) {
-    try {
-        const response = await fetch("http://localhost:4321/" + url);
-
-        const blob = await response.arrayBuffer();
-
-        const contentType = response.headers.get("content-type");
-
-        const base64String = `data:${contentType};base64,${
-            Buffer.from(
-                blob,
-            ).toString("base64")
-        }`;
-
-        return base64String;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-export async function getAssets(): Promise<AssetBrew[]> {
+export async function getAssets() {
     const toReturnAssets = await Promise.all(
         assetNames.map(async (asset, index) => {
             try {
-                const assetLoaded = await imageUrlToBase642(asset.url);
+                const assetLoaded = await imageUrlToBase64(asset.url);
 
                 return {
                     name: asset.name,
@@ -398,14 +325,12 @@ export async function getAssets(): Promise<AssetBrew[]> {
                     }),
                     description: asset.description
                         ?? "Another KAPLAY Crew member.",
-                } as AssetBrew;
+                };
             } catch (e) {
                 console.error(e);
             }
         }),
     );
 
-    return toReturnAssets as AssetBrew[];
+    return toReturnAssets;
 }
-
-export const assets = await getAssets();

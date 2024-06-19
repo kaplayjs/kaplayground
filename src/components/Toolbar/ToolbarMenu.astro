@@ -3,6 +3,7 @@ import assetBrewIcon from "../../assets/toolbar/assetbrew.png";
 import runIcon from "../../assets/toolbar/run.png";
 import shareIcon from "../../assets/toolbar/share.png";
 import ToolbarButton from "./ToolbarButton.astro";
+import ToolbarAccountManager from "./Tools/ToolbarAccountManager.astro";
 import ToolbarProjectManager from "./Tools/ToolbarCodeManager.astro";
 import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
 ---
@@ -34,6 +35,9 @@ import ToolbarThemeSelector from "./Tools/ToolbarThemeSelector.astro";
             icon={assetBrewIcon}
             tooltip="Open AssetBrew"
         />
+    </li>
+    <li>
+        <ToolbarAccountManager />
     </li>
 </ul>
 

@@ -15,10 +15,13 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
+    "@astrojs/cloudflare": "^10.4.1",
     "@astrojs/react": "^3.5.0",
     "@astrojs/tailwind": "^5.1.0",
     "@monaco-editor/react": "^4.6.0",
     "@nanostores/persistent": "^0.10.1",
+    "@prisma/client": "5.15.1",
+    "@supabase/supabase-js": "^2.43.5",
     "astro": "^4.9.3",
     "daisyui": "^4.12.2",
     "flex-splitter-directive": "^0.5.1",
@@ -39,6 +42,7 @@
     "dprint": "^0.45.1",
     "kaplay": "^3000.1.17",
     "monaco-editor": "^0.48.0",
+    "prisma": "^5.15.1",
     "vite": "^5.2.13",
     "vite-plugin-static-copy": "^1.0.5"
   }

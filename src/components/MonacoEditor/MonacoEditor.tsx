@@ -32,6 +32,8 @@ const MonacoEditor: FC<{}> = () => {
             language={"javascript"}
             options={{
                 fontSize: 20,
+                fontFamily: "Fira Code",
+                fontLigatures: true,
             }}
             defaultValue={$playgroundCode.get()}
             path={"main.js"}
