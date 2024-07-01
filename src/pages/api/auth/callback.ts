@@ -1,7 +1,7 @@
 export const prerender = false;
 
 import type { APIRoute } from "astro";
-import { createUser, findUserByEmail } from "../../../db/queries";
+import { prisma } from "../../../lib/prisma";
 import { supabase } from "../../../lib/supabase";
 
 export const GET: APIRoute = async ({ url, cookies, redirect }) => {
@@ -32,13 +32,19 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
         return redirect("/");
     }
 
-    const foundUser = await findUserByEmail(data.user?.email);
-
-    if (!foundUser) {
-        await createUser({
-            authId: data.user?.id,
+    const findUser = await prisma.user.findUnique({
+        where: {
             email: data.user?.email,
-            name: data.user?.user_metadata?.user_name,
+        },
+    });
+
+    if (!findUser) {
+        await prisma.user.create({
+            data: {
+                authId: data.user?.id,
+                email: data.user?.email,
+                name: data.user?.user_metadata?.user_name,
+            },
         });
     }
 
