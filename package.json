@@ -2,7 +2,7 @@
   "type": "module",
   "version": "1.0.0-beta.2",
   "scripts": {
-    "setup": "pnpm fk && pnpm copy",
+    "setup": "cd kaplay && pnpm i",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",

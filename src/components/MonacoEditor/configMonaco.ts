@@ -1,6 +1,6 @@
 import type { Monaco } from "@monaco-editor/react";
-import kaboomGlobal from "../../../kaplay/dist/global.d.ts?raw";
-import kaboomModule from "../../../kaplay/dist/kaboom.d.ts?raw";
+import kaboomGlobal from "../../../kaplay/dist/declaration/global.d.ts?raw";
+import kaboomModule from "../../../kaplay/dist/declaration/kaboom.d.ts?raw";
 
 const kaboomFunctionImports = `
 import { PluginList, MergePlugins, KaboomOpt } from "./kaboom"
