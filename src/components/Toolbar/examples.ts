@@ -1,4 +1,4 @@
-import exampleList from "../../../kaplay/examples/examples.json";
+import exampleList from "../../../examples.json";
 
 async function getExamples() {
     const examples = await Promise.all(

@@ -9,9 +9,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "fmt": "dprint fmt",
-    "fk": "cd kaplay && pnpm i && pnpm build",
-    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
-    "win:copy": "xcopy /s /e /i /q /y kaplay\\assets\\sprites public\\sprites && xcopy /s /e /i /q /y kaplay\\examples\\sprites kaplay\\examples\\fonts kaplay\\examples\\sounds kaplay\\examples\\shaders public\\examples"
+    "cf:preview": "wrangler pages dev dist",
+    "cf:deploy": "wrangler pages deploy dist"
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
