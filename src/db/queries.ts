@@ -17,6 +17,12 @@ export async function findUserByEmail(findEmail: string) {
     );
 }
 
+export async function findFirstUserByName(findName: string) {
+    return (await db.select().from(usersTable).where(({ name }) =>
+        eq(name, findName)
+    ))[0];
+}
+
 export async function createProject(data: InsertProject) {
     await db.insert(codeProjectsTable).values(data);
 }

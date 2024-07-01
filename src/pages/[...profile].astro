@@ -1,0 +1,26 @@
+---
+export const prerender = false;
+import { findFirstUserByName } from "../db/queries";
+import App from "../layouts/App.astro";
+
+const { profile } = Astro.params;
+
+if (!profile) return Astro.redirect("/404");
+
+const user = await findFirstUserByName(profile);
+
+if (!user) return Astro.redirect("/404");
+
+const { name } = user;
+
+// const page = pages.find((page) => page.slug === profile);
+// if (!page) return Astro.redirect("/404");
+// const { title, text } = page;
+---
+
+<App title={name}>
+    <div>
+        <h1>{name}</h1>
+        <p>I'm a KAPLAY user 🦕</p>
+    </div>
+</App>
