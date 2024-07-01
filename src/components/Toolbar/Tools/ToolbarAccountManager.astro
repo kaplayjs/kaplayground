@@ -3,7 +3,7 @@ import accountIcon from "../../../assets/toolbar/profile.webp";
 import { supabase } from "../../../lib/supabase";
 import ToolbarButton from "../ToolbarButton.astro";
 
-const { cookies } = Astro;
+const { cookies, redirect } = Astro;
 const accessToken = cookies.get("sb-access-token");
 const refreshToken = cookies.get("sb-refresh-token");
 let logged = false;
