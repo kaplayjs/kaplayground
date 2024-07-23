@@ -1,14 +1,14 @@
 import type { Monaco } from "@monaco-editor/react";
 import kaboomGlobal from "../../../kaplay/dist/declaration/global.d.ts?raw";
-import kaboomModule from "../../../kaplay/dist/declaration/kaboom.d.ts?raw";
+import kaboomModule from "../../../kaplay/dist/doc.d.ts?raw";
 
 const kaboomFunctionImports = `
-import { PluginList, MergePlugins, KaboomOpt } from "./kaboom"
+import { PluginList, MergePlugins, KAPLAYOpt, KAPLAYCtx } from "./kaboom"
 `;
 
 const kaboomFunctionDt = `declare global { 
-    function kaboom<T extends PluginList<unknown> = [undefined]>(options?: KaboomOpt<T>): T extends [undefined] ? KaboomCtx : KaboomCtx & MergePlugins<T>;
-    function kaplay<T extends PluginList<unknown> = [undefined]>(options?: KaboomOpt<T>): T extends [undefined] ? KaboomCtx : KaboomCtx & MergePlugins<T>;
+    function kaboom<T extends PluginList<unknown> = [undefined]>(options?: KAPLAYOpt<T>): T extends [undefined] ? KAPLAYCtx : KAPLAYCtx & MergePlugins<T>;
+    function kaplay<T extends PluginList<unknown> = [undefined]>(options?: KAPLAYOpt<T>): T extends [undefined] ? KAPLAYCtx : KAPLAYCtx & MergePlugins<T>;
 }`;
 
 const dataUrlRegex = /data:[^;]+;base64,[A-Za-z0-9+\/]+={0,2}/g;

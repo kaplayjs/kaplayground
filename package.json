@@ -20,6 +20,7 @@
     "@nanostores/persistent": "^0.10.1",
     "astro": "^4.9.3",
     "daisyui": "^4.12.2",
+    "dts-bundle-generator": "^9.5.1",
     "flex-splitter-directive": "^0.5.1",
     "nanostores": "^0.10.3",
     "pako": "^2.1.0",
