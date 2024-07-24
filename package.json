@@ -28,7 +28,8 @@
     "react-dom": "^18.3.1",
     "tailwindcss": "^3.4.4",
     "tippy.js": "^6.3.7",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "wrangler": "^3.66.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",
