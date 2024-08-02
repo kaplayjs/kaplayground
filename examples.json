@@ -50,6 +50,7 @@
     "pong",
     "postEffect",
     "rect",
+    "animation",
     "transformShape",
     "raycastShape",
     "raycastObject",
