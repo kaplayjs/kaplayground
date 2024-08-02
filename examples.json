@@ -65,7 +65,9 @@
     "easing",
     "bench",
     "gamepad",
-    "binding"
+    "binding",
+    "physics",
+    "physicsfactory"
   ],
   "hidden": [
     "fall"
