@@ -313,7 +313,7 @@ const assetNames = [
 
 for (const asset of assetNames) {
     const blob = fs.readFileSync(
-        path.join(import.meta.dirname, "../kaplay/", asset.url),
+        path.join(import.meta.dirname ?? __dirname, "../kaplay/", asset.url),
     );
     const contentType = "image/png";
 
