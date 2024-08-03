@@ -27,3 +27,4 @@ pnpm-debug.log*
 public/kaboom.js
 public/kaboom.js.map
 .vite 
+assets.json

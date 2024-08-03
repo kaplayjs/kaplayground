@@ -14,29 +14,29 @@ jobs:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        submodules: true
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: true
 
-    # Update references
-    - name: Git Submodule Update
-      run: |
-        git pull --recurse-submodules
-        git submodule update --remote --recursive
+      # Update references
+      - name: Git Submodule Update
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6.1.0
-      with: 
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: "chore: bump repo"
-        committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-        author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
-        signoff: false
-        branch: example-patches
-        delete-branch: true
-        title: "chore: bump repo"
-        reviewers: lajbel
-        body: "ohhi"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump repo"
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: example-patches
+          delete-branch: true
+          title: "chore: bump repo"
+          reviewers: lajbel
+          body: "ohhi"
