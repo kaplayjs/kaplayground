@@ -14,14 +14,11 @@ jobs:
         shell: bash
 
     steps:
-          # Checkout the repository to the GitHub Actions runner
-    - run: git config --global --add url."git@github.com:".insteadOf "https://github.com/"
-    
+    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.BOT_TOKEN }}
-        repository: ${{ github.repository }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         submodules: true
 
     # Update references
@@ -33,9 +30,9 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6.1.0
       with: 
-        token: ${{ secrets.BOT_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "chore: bump repo"
-        committer: Bag Bot[bot] <41898282+Bag-Bot[bot]@users.noreply.github.com>
+        committer: Bag Bot[bot] <41898282+[bot]@users.noreply.github.com>
         author: ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
         signoff: false
         branch: example-patches
