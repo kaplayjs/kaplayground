@@ -1,11 +1,12 @@
-name: 'Submodules Sync'
+name: "Sync KAPLAYGROUND"
 
 on:
   workflow_dispatch:
 
 jobs:
   sync:
-    name: 'Submodules Sync'
+    permissions: write-all
+    name: "Sync KAPLAYGROUND"
     runs-on: ubuntu-latest
 
     defaults:
