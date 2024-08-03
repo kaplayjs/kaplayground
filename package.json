@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "version": "1.0.0-beta.2",
   "scripts": {
     "install": "git submodule init && git submodule update && node scripts/fetchAssets.js && cd kaplay && pnpm i",
