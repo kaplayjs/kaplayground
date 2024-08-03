@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 
 // Fetch all assets, store them in a json
 /** @type { import("../src/components/AssetBrew/assets").AssetDef[] } */
@@ -311,7 +312,9 @@ const assetNames = [
 ];
 
 for (const asset of assetNames) {
-    const blob = fs.readFileSync("../kaplay/" + asset.url);
+    const blob = fs.readFileSync(
+        path.join(import.meta.dirname, "../kaplay/", asset.url),
+    );
     const contentType = "image/png";
 
     const base64String = `data:${contentType};base64,${
