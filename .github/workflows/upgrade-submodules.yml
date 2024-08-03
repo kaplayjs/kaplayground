@@ -14,7 +14,9 @@ jobs:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
+          # Checkout the repository to the GitHub Actions runner
+    - run: git config --global --add url."git@github.com:".insteadOf "https://github.com/"
+    
     - name: Checkout
       uses: actions/checkout@v4
       with:
