@@ -3,8 +3,8 @@ on:
   
 jobs:
     deploy:
+      name: "Deploy KAPLAYGROUND on Cloudflare Workers"
       runs-on: ubuntu-latest
-      name: Deploy
       steps:
         - uses: actions/checkout@v4
         - name: Setup PNPM
