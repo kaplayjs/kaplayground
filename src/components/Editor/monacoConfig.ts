@@ -1,29 +1,20 @@
-import kaboomGlobal from "@/../kaplay/dist/global.d.ts?raw";
-import kaboomModule from "@/../kaplay/dist/kaboom.d.ts?raw";
+import kaplayGlobal from "@/../node_modules/kaplay/dist/declaration/global.d.ts?raw";
+import kaplayModule from "@/../node_modules/kaplay/dist/doc.d.ts?raw";
 import type { Monaco } from "@monaco-editor/react";
-
-const kaboomFunctionImports = `
-import { PluginList, MergePlugins, KaboomOpt } from "./kaboom"
-`;
-
-const kaboomFunctionDt = `declare global { 
-    function kaboom<T extends PluginList<unknown> = [undefined]>(options?: KaboomOpt<T>): T extends [undefined] ? KaboomCtx : KaboomCtx & MergePlugins<T>;
-    function kaplay<T extends PluginList<unknown> = [undefined]>(options?: KaboomOpt<T>): T extends [undefined] ? KaboomCtx : KaboomCtx & MergePlugins<T>;
-}`;
 
 const dataUrlRegex = /data:[^;]+;base64,[A-Za-z0-9+\/]+={0,2}/g;
 
 export const configMonaco = (monaco: Monaco) => {
-    // Add global kaboom types
+    // Add global KAPLAY types
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        kaboomFunctionImports + kaboomGlobal + kaboomFunctionDt,
+        kaplayGlobal,
         "global.d.ts",
     );
 
-    // Add kaboom module types
+    // Add the KAPLAY module
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        kaboomModule,
-        "kaboom.d.ts",
+        kaplayModule,
+        "kaplay.d.ts",
     );
 
     // Hover dataUrl images
@@ -54,6 +45,25 @@ export const configMonaco = (monaco: Monaco) => {
                     },
                 ],
             };
+        },
+    });
+
+    // Themes
+    monaco.editor.defineTheme("kaplayrk", {
+        base: "vs-dark",
+        inherit: true,
+        rules: [],
+        colors: {
+            "editor.background": "#242933",
+        },
+    });
+
+    monaco.editor.defineTheme("kaplight", {
+        base: "vs",
+        inherit: true,
+        rules: [],
+        colors: {
+            "editor.background": "#F2F2F2",
         },
     });
 };

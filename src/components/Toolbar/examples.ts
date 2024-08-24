@@ -31,7 +31,6 @@ import loaderExample from "@/../kaplay/examples/loader?raw";
 import mazeExample from "@/../kaplay/examples/maze?raw";
 import mazeRaycastedLightExample from "@/../kaplay/examples/mazeRaycastedLight?raw";
 import movementExample from "@/../kaplay/examples/movement?raw";
-import multiboomExample from "@/../kaplay/examples/multiboom?raw";
 import multigamepadExample from "@/../kaplay/examples/multigamepad?raw";
 import outExample from "@/../kaplay/examples/out?raw";
 import overlapExample from "@/../kaplay/examples/overlap?raw";
@@ -92,7 +91,6 @@ export const exampleList = [
     { name: "maze", code: mazeExample },
     { name: "mazeRaycastedLight", code: mazeRaycastedLightExample },
     { name: "movement", code: movementExample },
-    { name: "multiboom", code: multiboomExample },
     { name: "multigamepad", code: multigamepadExample },
     { name: "out", code: outExample },
     { name: "overlap", code: overlapExample },

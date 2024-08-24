@@ -1,10 +1,10 @@
 import { useProject } from "@/hooks/useProject";
-import type { KaboomOpt } from "kaboom";
+import type { KAPLAYOpt } from "kaplay";
 import { type FC, useState } from "react";
 
 type Props = {
     label: string;
-    configKey: keyof KaboomOpt;
+    configKey: keyof KAPLAYOpt;
     defaultValue?: boolean;
     tip?: string;
 };

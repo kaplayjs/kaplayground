@@ -1,16 +1,9 @@
 import kaplaygroundLogo from "@/assets/logo/kaplayground-o.webp";
-import runIcon from "@/assets/toolbar/run.png";
-import shareIcon from "@/assets/toolbar/share.png";
-import AboutButton from "@/components/About/AboutButton";
-import Projects from "@/components/Toolbar/Projects";
-import ThemeToggler from "@/components/Toolbar/ThemeToggler";
 import { useProject } from "@/hooks/useProject";
 import { compressCode } from "@/util/compressCode";
-import { type FC, useRef } from "react";
+import { type FC } from "react";
 import { toast } from "react-toastify";
-import ConfigOpenDialog from "../Config/ConfigOpenDialog";
 import ExampleList from "./ExampleList";
-import ToolbarButton from "./ToolbarButton";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
 
 type Props = {
@@ -20,7 +13,7 @@ type Props = {
 };
 
 const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
-    const [getMainFile] = useProject((state) => [state.getMainFile]);
+    const { getKaboomFile, getMainFile } = useProject((state) => state);
 
     const handleRun = () => {
         run();
@@ -63,6 +56,10 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
                     <h1 className="sr-only">KAPLAY</h1>
                 </figure>
             </a>
+
+            <div className="uppercase | badge badge-lg badge-primary">
+                {getKaboomFile() ? "Project" : "Example"} Mode
+            </div>
 
             <ExampleList
                 onProjectReplace={props.onProjectReplace}

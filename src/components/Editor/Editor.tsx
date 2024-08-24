@@ -109,7 +109,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
             onChange={handleEditorChange}
-            theme="vs-dark"
+            theme="kaplayrk"
             language="javascript"
             options={{
                 fontSize: 20,

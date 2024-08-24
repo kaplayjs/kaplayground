@@ -1,6 +1,6 @@
 import { useProject } from "@/hooks/useProject";
 import { stringToType, type Type } from "@/util/stringToType";
-import type { KaboomOpt } from "kaboom";
+import type { KAPLAYOpt } from "kaplay";
 import { useEffect } from "react";
 import { Tooltip } from "react-tooltip";
 import ConfigCheckbox from "./ConfigCheckbox";
@@ -22,7 +22,7 @@ const ConfigDialog = () => {
         const configInputs = document.querySelectorAll(".config-input");
 
         configInputs.forEach((input) => {
-            const key = input.getAttribute("data-set-key") as keyof KaboomOpt;
+            const key = input.getAttribute("data-set-key") as keyof KAPLAYOpt;
             const value = input.getAttribute("data-set-value");
             const type = input.getAttribute("data-set-type") as Type;
 
@@ -33,7 +33,7 @@ const ConfigDialog = () => {
     };
 
     const updateInputs = () => {
-        const configKeys = Object.keys(kaboomConfig) as (keyof KaboomOpt)[];
+        const configKeys = Object.keys(kaboomConfig) as (keyof KAPLAYOpt)[];
 
         configKeys.forEach((key) => {
             const value = kaboomConfig[key];
@@ -72,7 +72,7 @@ const ConfigDialog = () => {
                 <Tooltip id="config-dialog" />
                 <section className="max-h-[400px] overflow-y-auto p-4">
                     <header className="flex items-center font-bold">
-                        <h2 className="text-xl">Kaboom Configuration</h2>
+                        <h2 className="text-xl">KAPLAY Configuration</h2>
                     </header>
                     <main>
                         {getKaboomFile()
@@ -164,10 +164,10 @@ const ConfigDialog = () => {
                             )
                             : (
                                 <>
-                                    Kaboom Configuration are disabled in
-                                    examples and links. Try Projects (toolbox)
+                                    KAPLAY Configuration are disabled in
+                                    examples mode. Try Projects (toolbox) {"->"}
                                     {" "}
-                                    {"->"} Reset Project
+                                    Reset Project
                                 </>
                             )}
                     </main>

@@ -1,5 +1,5 @@
 import { defaultProj } from "@/config/defaultProj";
-import type { KaboomOpt } from "kaboom";
+import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
 import type { Asset } from "./assets";
 import type { File } from "./files";
@@ -8,14 +8,8 @@ export type Project = {
     version: string;
     assets: Asset[];
     files: File[];
-    kaboomConfig: KaboomOpt;
-    /**
-     * The mode of the project
-     *
-     * classic: kaboom() is in the main file
-     * new: kaboom() is in a separate file
-     */
-    mode?: "classic" | "new";
+    kaboomConfig: KAPLAYOpt;
+    mode?: "example" | "project";
 };
 
 export interface ProjectSlice {
