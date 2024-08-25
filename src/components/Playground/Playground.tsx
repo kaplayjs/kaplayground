@@ -17,19 +17,13 @@ import { Tooltip } from "react-tooltip";
 import ConfigDialog from "../Config/ConfigDialog";
 
 const Playground = () => {
-    const [
+    const {
         project,
-        updateKaboomFile,
-        kaboomConfig,
         getCurrentFile,
+        updateKaboomFile,
         setCurrentFile,
-    ] = useProject((state) => [
-        state.project,
-        state.updateKaboomFile,
-        state.project.kaboomConfig,
-        state.getCurrentFile,
-        state.setCurrentFile,
-    ]);
+        getProjectMode,
+    } = useProject();
     const editorRef = useRef<EditorRef>(null);
     const gameViewRef = useRef<GameViewRef>(null);
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
@@ -72,7 +66,7 @@ const Playground = () => {
             setCurrentFile("kaboom.js");
             editorRef.current?.update();
         }
-    }, [kaboomConfig]);
+    }, [project.kaboomConfig]);
 
     return (
         <>
@@ -95,7 +89,11 @@ const Playground = () => {
                                 defaultSizes={[0.5, 2, 2]}
                                 vertical={isPortrait}
                             >
-                                <Allotment.Pane>
+                                <Allotment.Pane
+                                    snap
+                                    minSize={200}
+                                    visible={getProjectMode() === "project"}
+                                >
                                     <FileTree />
                                 </Allotment.Pane>
                                 <Allotment.Pane snap>

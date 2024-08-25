@@ -1,6 +1,6 @@
 import addSriteIcon from "@/assets/add_sprite_icon.png";
 import { useProject } from "@/hooks/useProject";
-import type { AssetKind } from "@/stores/project/assets";
+import type { AssetKind } from "@/stores/assets";
 import { type FC } from "react";
 
 type Props = {

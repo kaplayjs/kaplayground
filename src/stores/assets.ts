@@ -9,12 +9,24 @@ export type Asset = {
     kind: AssetKind;
 };
 
+export type ProjectAsset = {
+    name: string;
+    url: string;
+    kind: AssetKind;
+    id: AssetId;
+};
+
+export type AssetId = number;
+
 export type AssetInQueue = {
     file: File;
     kind: AssetKind;
 };
 
 export interface AssetSlice {
+    /** Last asset ID */
+    lastAssetId: AssetId;
+    /** Assets in queue */
     assetsInQueue: AssetInQueue[];
     /** Add an asset to the queue */
     addAssetToQueue: (asset: AssetInQueue) => void;
@@ -24,6 +36,8 @@ export interface AssetSlice {
     removeAssetFromQueue: (asset: AssetInQueue) => void;
     /** Add an asset to project */
     addAsset: (asset: Asset) => void;
+    /** Remove asset */
+    removeAsset: (assetId: AssetId) => void;
 }
 
 export const createAssetSlice: StateCreator<
@@ -35,6 +49,7 @@ export const createAssetSlice: StateCreator<
     set,
     get,
 ) => ({
+    lastAssetId: 0,
     assetsInQueue: [],
     addAssetToQueue(asset) {
         set((state) => ({
@@ -67,7 +82,9 @@ export const createAssetSlice: StateCreator<
                 project: {
                     ...state.project,
                     assets: state.project.assets.map((oldAsset) =>
-                        oldAsset.name === asset.name ? { ...asset } : oldAsset
+                        oldAsset.name === asset.name
+                            ? { ...asset, id: oldAsset.id }
+                            : oldAsset
                     ),
                 },
             }));
@@ -75,9 +92,22 @@ export const createAssetSlice: StateCreator<
             set((state) => ({
                 project: {
                     ...state.project,
-                    assets: [...state.project.assets, asset],
+                    assets: [...state.project.assets, {
+                        ...asset,
+                        id: state.lastAssetId,
+                    }],
                 },
             }));
         }
+    },
+    removeAsset(assetId: AssetId) {
+        set((state) => ({
+            project: {
+                ...state.project,
+                assets: state.project.assets.filter(
+                    (a) => a.id !== assetId,
+                ),
+            },
+        }));
     },
 });

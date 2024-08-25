@@ -1,7 +1,7 @@
 import projectIcon from "@/assets/toolbar/project.png";
-import { defaultProj } from "@/config/defaultProj";
+import { defaultProject } from "@/config/defaultProject";
 import { useProject } from "@/hooks/useProject";
-import type { Project } from "@/stores/project/project";
+import type { Project } from "@/stores/project";
 import type { FC } from "react";
 import { toast } from "react-toastify";
 import ToolbarButton from "./ToolbarButton";
@@ -52,8 +52,8 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
 
     const handleProjectReset = () => {
         replaceProject({
-            assets: [...defaultProj.assets],
-            files: [...defaultProj.files],
+            assets: [...defaultProject.assets],
+            files: [...defaultProject.files],
         });
 
         onProjectReplace?.();

@@ -1,5 +1,5 @@
 import { useAssets } from "@/hooks/useAssets";
-import type { Asset, AssetKind } from "@/stores/project/assets";
+import type { Asset, AssetKind, ProjectAsset } from "@/stores/assets";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
 import Resource, { type ResourceProps } from "./Resource";
@@ -14,7 +14,7 @@ const ResourcesList: FC<Props> = ({ kind, onDragData, visibleIcon }) => {
         parent,
         draggableAssets,
         setDraggableAssets,
-    ] = useDragAndDrop<HTMLUListElement, Asset>(assets);
+    ] = useDragAndDrop<HTMLUListElement, ProjectAsset>(assets);
 
     useEffect(() => {
         setDraggableAssets(assets);

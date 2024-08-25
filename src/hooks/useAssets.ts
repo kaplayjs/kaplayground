@@ -1,4 +1,10 @@
-import type { Asset, AssetInQueue, AssetKind } from "@/stores/project/assets";
+import type {
+    Asset,
+    AssetId,
+    AssetInQueue,
+    AssetKind,
+    ProjectAsset,
+} from "@/stores/assets";
 import { fileToBase64 } from "@/util/fileToBase64";
 import { useEffect, useMemo } from "react";
 import { useProject } from "./useProject";
@@ -6,30 +12,28 @@ import { useProject } from "./useProject";
 type UseAssetOpt = {
     kind: AssetKind;
 };
-type UseAassetsReturn = {
-    assets: Asset[];
+
+type UseAssetsReturn = {
+    assets: ProjectAsset[];
     addAsset: (asset: Asset) => void;
     addAssetsToQueue: (assets: File[], kind: AssetKind) => void;
     addAssetToQueue: (asset: AssetInQueue) => void;
+    removeAsset: (assetId: AssetId) => void;
 };
-type UseAssetsHook = (opt: UseAssetOpt) => UseAassetsReturn;
+
+type UseAssetsHook = (opt: UseAssetOpt) => UseAssetsReturn;
 
 export const useAssets: UseAssetsHook = ({ kind }) => {
-    const [
-        assets,
+    const {
+        project: { assets },
         addAsset,
         assetsInQueue,
-        addAssetsToQueue,
         addAssetToQueue,
+        removeAsset,
         removeAssetFromQueue,
-    ] = useProject((state) => [
-        state.project.assets,
-        state.addAsset,
-        state.assetsInQueue,
-        state.addAssetsToQueue,
-        state.addAssetToQueue,
-        state.removeAssetFromQueue,
-    ]);
+        addAssetsToQueue,
+    } = useProject();
+
     const filteredAssets = useMemo(
         () => assets.filter((asset) => asset.kind === kind),
         [assets, kind],
@@ -58,5 +62,6 @@ export const useAssets: UseAssetsHook = ({ kind }) => {
         addAsset,
         addAssetsToQueue,
         addAssetToQueue,
+        removeAsset,
     };
 };

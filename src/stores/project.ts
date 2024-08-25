@@ -1,12 +1,12 @@
 import { defaultProject } from "@/config/defaultProject";
 import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
-import type { Asset } from "../assets";
-import type { File } from "../files";
+import type { ProjectAsset } from "./assets";
+import type { File } from "./files";
 
 export type Project = {
     version: string;
-    assets: Asset[];
+    assets: ProjectAsset[];
     files: File[];
     kaboomConfig: KAPLAYOpt;
     mode?: "example" | "project";
@@ -17,6 +17,8 @@ export interface ProjectSlice {
     project: Project;
     /** Replace the project with a new project */
     replaceProject: (project: Partial<Project>) => void;
+    /** Get project mode */
+    getProjectMode: () => Project["mode"];
 }
 
 export const createProjectSlice: StateCreator<
@@ -24,7 +26,7 @@ export const createProjectSlice: StateCreator<
     [],
     [],
     ProjectSlice
-> = (set) => ({
+> = (set, get) => ({
     project: { ...defaultProject },
     replaceProject: (project) => {
         set(() => ({
@@ -33,5 +35,8 @@ export const createProjectSlice: StateCreator<
                 ...project,
             },
         }));
+    },
+    getProjectMode: () => {
+        return get().project.mode;
     },
 });

@@ -1,5 +1,5 @@
 import { useAssets } from "@/hooks/useAssets";
-import type { Asset, AssetKind } from "@/stores/project/assets";
+import type { Asset, AssetKind } from "@/stores/assets";
 import { fileToBase64 } from "@/util/fileToBase64";
 import { removeExtension } from "@/util/removeExtensions";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";

@@ -1,13 +1,10 @@
-import { type AssetSlice, createAssetSlice } from "@/stores/project/assets";
-import { createFilesSlice, type FilesSlice } from "@/stores/project/files";
+import { type AssetSlice, createAssetSlice } from "@/stores/assets";
+import { createFilesSlice, type FilesSlice } from "@/stores/files";
 import {
     createKaboomConfigSlice,
     type KaboomConfigSlice,
-} from "@/stores/project/kaboomConfig";
-import {
-    createProjectSlice,
-    type ProjectSlice,
-} from "@/stores/project/project";
+} from "@/stores/kaboomConfig";
+import { createProjectSlice, type ProjectSlice } from "@/stores/project";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 

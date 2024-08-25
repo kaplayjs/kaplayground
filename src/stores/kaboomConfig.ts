@@ -1,12 +1,12 @@
-import type { KaboomOpt } from "kaboom";
+import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
 import type { ProjectSlice } from "./project";
 
 export interface KaboomConfigSlice {
     /** Replace the Kaboom configuration with a new one */
-    replaceKaboomConfig: (config: KaboomOpt) => void;
+    replaceKaboomConfig: (config: KAPLAYOpt) => void;
     /** Update a config key */
-    updateKaboomConfig: (key: keyof KaboomOpt, value: any) => void;
+    updateKaboomConfig: (key: keyof KAPLAYOpt, value: any) => void;
 }
 
 export const createKaboomConfigSlice: StateCreator<

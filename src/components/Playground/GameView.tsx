@@ -23,7 +23,7 @@ body {
         </style>
 </head>
 <body>
-<script src="/kaboom.js"></script>
+<script src="https://unpkg.com/kaplay@4000.0.0-alpha.2/dist/kaplay.js"></script>
 <script>
     ${code}
 </script>
