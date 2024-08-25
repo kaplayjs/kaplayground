@@ -1,5 +1,5 @@
-import { useProject } from "@/hooks/useProject";
 import type { ChangeEvent, FC } from "react";
+import { useProject } from "../../hooks/useProject";
 import { exampleList } from "./examples";
 
 type Props = {
@@ -18,7 +18,7 @@ const ExampleList: FC<Props> = ({ onProjectReplace }) => {
         );
 
         replaceProject({
-            assets: [],
+            resources: [],
             files: [
                 {
                     name: "main.js",
@@ -30,7 +30,7 @@ const ExampleList: FC<Props> = ({ onProjectReplace }) => {
                 },
             ],
             kaboomConfig: {},
-            mode: "classic",
+            mode: "example",
             version: project.version,
         });
 

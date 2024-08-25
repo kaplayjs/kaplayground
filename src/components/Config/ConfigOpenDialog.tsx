@@ -1,4 +1,4 @@
-import icon from "@/assets/toolbar/config.png";
+import icon from "../../assets/toolbar/config.png";
 import ToolbarButton from "../Toolbar/ToolbarButton";
 
 const ConfigOpenDialog = () => {
@@ -11,7 +11,7 @@ const ConfigOpenDialog = () => {
         <>
             <ToolbarButton
                 onClick={handleModalOpenClick}
-                icon={icon.src}
+                icon={icon}
                 text={"Config"}
                 tip="Config"
             />

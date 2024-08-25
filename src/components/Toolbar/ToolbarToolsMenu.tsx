@@ -1,8 +1,8 @@
-import runIcon from "@/assets/toolbar/run.png";
-import shareIcon from "@/assets/toolbar/share.png";
-import AboutButton from "@/components/About/AboutButton";
-import ConfigOpenDialog from "@/components/Config/ConfigOpenDialog";
 import type { FC } from "react";
+import runIcon from "../../assets/toolbar/run.png";
+import shareIcon from "../../assets/toolbar/share.png";
+import AboutButton from "../../components/About/AboutButton";
+import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
 import Projects from "./Projects";
 import ThemeToggler from "./ThemeToggler";
 import ToolbarButton from "./ToolbarButton";
@@ -19,7 +19,7 @@ const ToolbarToolsMenu: FC<Props> = (props) => {
         <ul className="flex flex-row items-center justify-center h-full">
             <li className="h-full">
                 <ToolbarButton
-                    icon={runIcon.src}
+                    icon={runIcon}
                     text="Run"
                     onClick={props.onRun}
                     tip="Run Project"
@@ -28,7 +28,7 @@ const ToolbarToolsMenu: FC<Props> = (props) => {
             </li>
             <li className="h-full">
                 <ToolbarButton
-                    icon={shareIcon.src}
+                    icon={shareIcon}
                     text="Share"
                     onClick={props.onShare}
                     tip="Share Project"

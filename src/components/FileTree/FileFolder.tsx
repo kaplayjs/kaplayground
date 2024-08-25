@@ -1,7 +1,7 @@
-import closeFolderIcon from "@/assets/filetree/close_folder.png";
-import openFolderIcon from "@/assets/filetree/open_folder.png";
-import { cn } from "@/util/cn";
 import { type FC, type PropsWithChildren, useState } from "react";
+import closeFolderIcon from "../../assets/filetree/close_folder.png";
+import openFolderIcon from "../../assets/filetree/open_folder.png";
+import { cn } from "../../util/cn";
 import FileToolbar from "./FileToolbar";
 
 type Props = PropsWithChildren<{
@@ -33,8 +33,8 @@ const FileFolder: FC<Props> = (
                         >
                             <img
                                 src={folded
-                                    ? closeFolderIcon.src
-                                    : openFolderIcon.src}
+                                    ? closeFolderIcon
+                                    : openFolderIcon}
                                 alt={folded ? "Open folder" : "Close folder"}
                                 className="h-4"
                             />

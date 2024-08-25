@@ -1,6 +1,6 @@
 import type { StateCreator } from "zustand";
 import type { KaboomConfigSlice } from "./kaboomConfig";
-import type { ProjectSlice } from "./project/project";
+import type { ProjectSlice } from "./project";
 
 export type FileKind = "kaboom" | "main" | "scene";
 

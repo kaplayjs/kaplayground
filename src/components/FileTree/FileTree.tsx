@@ -1,5 +1,5 @@
-import { useProject } from "@/hooks/useProject";
 import { useEffect, useState } from "react";
+import { useProject } from "../../hooks/useProject";
 import FileEntry from "./FileEntry";
 import FileFolder from "./FileFolder";
 

@@ -1,19 +1,19 @@
-import kaboomIcon from "@/assets/filetree/kaboom.png";
-import sceneIcon from "@/assets/filetree/scene.png";
-import { useProject } from "@/hooks/useProject";
-import type { File } from "@/stores/files";
-import { cn } from "@/util/cn";
-import { removeExtension } from "@/util/removeExtensions";
 import type { FC } from "react";
+import kaboomIcon from "../../assets/filetree/kaboom.png";
+import sceneIcon from "../../assets/filetree/scene.png";
+import { useProject } from "../../hooks/useProject";
+import type { File } from "../../stores/files";
+import { cn } from "../../util/cn";
+import { removeExtension } from "../../util/removeExtensions";
 
 type Props = {
     file: File;
 };
 
 const logoByKind = {
-    kaboom: kaboomIcon.src,
-    scene: sceneIcon.src,
-    main: kaboomIcon.src,
+    kaboom: kaboomIcon,
+    scene: sceneIcon,
+    main: kaboomIcon,
 };
 
 const FileEntry: FC<Props> = ({ file }) => {

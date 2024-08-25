@@ -1,4 +1,4 @@
-import aboutIcon from "@/assets/toolbar/about.png";
+import aboutIcon from "../../assets/toolbar/about.png";
 import ToolbarButton from "../Toolbar/ToolbarButton";
 
 const AboutButton = () => {
@@ -11,7 +11,7 @@ const AboutButton = () => {
         <>
             <ToolbarButton
                 onClick={handleModalOpenClick}
-                icon={aboutIcon.src}
+                icon={aboutIcon}
                 text={"About"}
                 tip="About"
             />

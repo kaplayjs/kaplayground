@@ -1,6 +1,6 @@
-import { useProject } from "@/hooks/useProject";
 import type { KAPLAYOpt } from "kaplay";
 import { type FC, useState } from "react";
+import { useProject } from "../../hooks/useProject";
 
 type Props = {
     label: string;

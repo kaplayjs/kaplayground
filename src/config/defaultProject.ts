@@ -1,10 +1,10 @@
-import type { Project } from "@/stores/project";
+import type { Project } from "../stores/project";
 import { VERSION } from "./common";
 
 export const defaultProject = {
     version: VERSION,
     mode: "project",
-    assets: [
+    resources: [
         {
             name: "kat.png",
             url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD0AAAA6CAYAAAADZ1FRAAAAAXNSR0IArs4c6QAAAsRJREFUaIHdm91NAzEMx32nDkAnoM9UDNIFGIAOwCwMAAN0AQZB9JlOQDeAF1Kdrrbjz1zUv4SEdPn62U7iS64D3JDu7x5+a2VO5+MwYIVP5+OQNbAMSWCnGmoVejaAFraoCj1VLwawwhapoIuWgpeO9bDfXf5/evu4er7ydt7CABZYSqfzcbiCLhUxC9UGhBnAE0leWIqB9HQtRDB555qmHYlXKY2SQof9ztVJtCRjwRxVIghdyKyNtlRtjBy0aSGzAH++v4jKPT6/qsaAwXPAAACr0/mo2rY0wFJQqo7EABw8JXKVlFqwyAKokcQAh/2u6mUAIfSSsHNJw38qFBqABu8JeCopPJY7sNCclgSeqgbPQgPIwTXAUo94jEj1QaXIqi0rAxYrHxFF3DuBOFeWDMSyyFDyGpiDFqWh1o5btYcZiJuqo6RgzepW4O+fr5R2a6p62gvMgW3WW/j++br8eaTx9oorYAWeAmzWW7aNeT1NeavC5nSRFZiSd25jIqElDfSSoGgV7mmPd1uENsA/dNQxT1EZfG1xKs83620zYIAAT1MhLgGRlMmYQii0tqOMgX2+v4S0i0Vx2JyOBM9eIMfI+ewdbIR3JfVNB4PWTqPfpKy6gs4cTC/7evg+vbQkGdzNQUt089DYYcIVdNY7bE9q6unH59dUo0rbHiMu1QsM1+n02dLR5Pb0HCACKCoiKId2t5C1iAgU2tPZUgmIZswjQOzHMljnS8/hudLDWwNsNY72sJ+9wIv+esAi681KkxuODGUAA0ygsYItbhw9bVojrNnJieaAwAMsWZRFt5a9vAcD8N6V7kKhV7WZsnxxQAkt2AO4Zr5q8wyyMHdgmAFvXZQsiRVbQXJSqjVA1J7uySKrFTVHxHMDZCQtESmzqIHouy6NMj6iVzXYAr7FLwXMHXgNsOSPYEI6lhqgl1/7/AGdp5Ixi1pUmwAAAABJRU5ErkJggg==",

@@ -1,8 +1,8 @@
-import { useProject } from "@/hooks/useProject";
-import { stringToType, type Type } from "@/util/stringToType";
 import type { KAPLAYOpt } from "kaplay";
 import { useEffect } from "react";
 import { Tooltip } from "react-tooltip";
+import { useProject } from "../../hooks/useProject";
+import { stringToType, type Type } from "../../util/stringToType";
 import ConfigCheckbox from "./ConfigCheckbox";
 import ConfigGroup from "./ConfigGroup";
 import ConfigInput from "./ConfigInput";

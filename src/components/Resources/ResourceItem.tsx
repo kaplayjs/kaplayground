@@ -1,19 +1,23 @@
-import { useAssets } from "@/hooks/useAssets";
-import type { ProjectAsset } from "@/stores/assets";
-import { removeExtension } from "@/util/removeExtensions";
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import React, { type FC } from "react";
+import { useResources } from "../../hooks/useResources";
+import type { Resource } from "../../stores/storage/resoures";
+import { removeExtension } from "../../util/removeExtensions";
 
 export type ResourceProps = {
-    asset: ProjectAsset;
+    resource: Resource;
     visibleIcon?: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
 
-const Resource: FC<ResourceProps> = ({ asset, visibleIcon, onDragData }) => {
-    const { removeAsset } = useAssets({ kind: asset.kind });
+const ResourceItem: FC<ResourceProps> = ({
+    resource,
+    visibleIcon,
+    onDragData,
+}) => {
+    const { removeResource } = useResources({ kind: resource.kind });
 
-    const handleAssetDrag = (e: React.DragEvent<HTMLLIElement>) => {
+    const handleResourceDrag = (e: React.DragEvent<HTMLLIElement>) => {
         const assetName = removeExtension(e.currentTarget.dataset.label!);
         const assetUrl = e.currentTarget.dataset.url;
 
@@ -24,32 +28,32 @@ const Resource: FC<ResourceProps> = ({ asset, visibleIcon, onDragData }) => {
     };
 
     const handleResourceImport = () => {
-        console.log("Import", asset.name);
+        console.log("Import", resource.name);
     };
 
     const handleResourceDelete = () => {
-        removeAsset(asset.id);
+        removeResource(resource.id);
     };
 
     return (
         <ContextMenu.Root>
-            <ContextMenu.Trigger data-resource={asset.name}>
+            <ContextMenu.Trigger data-resource={resource.name}>
                 <li
-                    id={asset.name}
-                    key={asset.name}
-                    data-label={asset.name}
-                    data-url={asset.url}
-                    onDragStartCapture={handleAssetDrag}
+                    id={resource.name}
+                    key={resource.name}
+                    data-label={resource.name}
+                    data-url={resource.url}
+                    onDragStartCapture={handleResourceDrag}
                 >
                     <div className="p-2 hover:bg-base-300">
                         <img
                             draggable={false}
-                            src={visibleIcon ?? asset.url}
-                            alt={`Asset ${asset.name}`}
+                            src={visibleIcon ?? resource.url}
+                            alt={`Asset ${resource.name}`}
                             className="h-12 w-12 object-scale-down"
                         />
                         <p className="text-xs text-center text-gray-500">
-                            {removeExtension(asset.name)
+                            {removeExtension(resource.name)
                                 .slice(
                                     0,
                                     10,
@@ -79,4 +83,4 @@ const Resource: FC<ResourceProps> = ({ asset, visibleIcon, onDragData }) => {
     );
 };
 
-export default Resource;
+export default ResourceItem;

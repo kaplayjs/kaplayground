@@ -1,8 +1,8 @@
-import kaplaygroundLogo from "@/assets/logo/kaplayground-o.webp";
-import { useProject } from "@/hooks/useProject";
-import { compressCode } from "@/util/compressCode";
 import { type FC } from "react";
 import { toast } from "react-toastify";
+import kaplaygroundLogo from "../../assets/logo/kaplayground-o.webp";
+import { useProject } from "../../hooks/useProject";
+import { compressCode } from "../../util/compressCode";
 import ExampleList from "./ExampleList";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
 
@@ -49,7 +49,7 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
                 <figure>
                     <img
                         alt="Logo"
-                        src={kaplaygroundLogo.src}
+                        src={kaplaygroundLogo}
                         className="h-8"
                         draggable={false}
                     />

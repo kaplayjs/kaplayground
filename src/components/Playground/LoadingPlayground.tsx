@@ -1,5 +1,5 @@
-import { cn } from "@/util/cn";
 import { type FC } from "react";
+import { cn } from "../../util/cn";
 
 type Props = {
     isLoading: boolean;

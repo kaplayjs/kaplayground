@@ -1,19 +1,20 @@
-import AboutDialog from "@/components/About/AboutDialog";
-import Editor, { type EditorRef } from "@/components/Editor/Editor";
-import FileTree from "@/components/FileTree/FileTree";
-import GameView, { type GameViewRef } from "@/components/Playground/GameView";
-import LoadingPlayground from "@/components/Playground/LoadingPlayground";
-import Resources from "@/components/Resources/Resources";
-import Toolbar from "@/components/Toolbar";
-import { darkThemes } from "@/components/Toolbar/ThemeToggler";
-import { useProject } from "@/hooks/useProject";
-import { cn } from "@/util/cn";
-import { compressCode } from "@/util/compressCode";
 import { Allotment } from "allotment";
 import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import AboutDialog from "../../components/About/AboutDialog";
+import Editor, { type EditorRef } from "../../components/Editor/Editor";
+import FileTree from "../../components/FileTree/FileTree";
+import GameView, {
+    type GameViewRef,
+} from "../../components/Playground/GameView";
+import LoadingPlayground from "../../components/Playground/LoadingPlayground";
+import Resources from "../../components/Resources/Resources";
+import Toolbar from "../../components/Toolbar";
+import { darkThemes } from "../../components/Toolbar/ThemeToggler";
+import { useProject } from "../../hooks/useProject";
+import { cn } from "../../util/cn";
 import ConfigDialog from "../Config/ConfigDialog";
 
 const Playground = () => {

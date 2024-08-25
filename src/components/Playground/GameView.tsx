@@ -1,5 +1,5 @@
-import { useProject } from "@/hooks/useProject";
 import { forwardRef, useImperativeHandle, useRef } from "react";
+import { useProject } from "../../hooks/useProject";
 
 const wrapGame = (code: string) => `
 <!DOCTYPE html>

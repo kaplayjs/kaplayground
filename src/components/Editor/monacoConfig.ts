@@ -1,6 +1,6 @@
-import kaplayGlobal from "@/../node_modules/kaplay/dist/declaration/global.d.ts?raw";
-import kaplayModule from "@/../node_modules/kaplay/dist/doc.d.ts?raw";
 import type { Monaco } from "@monaco-editor/react";
+import kaplayGlobal from "../../../node_modules/kaplay/dist/declaration/global.d.ts?raw";
+import kaplayModule from "../../../node_modules/kaplay/dist/doc.d.ts?raw";
 
 const dataUrlRegex = /data:[^;]+;base64,[A-Za-z0-9+\/]+={0,2}/g;
 

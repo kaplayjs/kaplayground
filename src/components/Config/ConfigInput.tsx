@@ -1,11 +1,10 @@
-import { useProject } from "@/hooks/useProject";
-import type { KaboomOpt } from "kaboom";
+import type { KAPLAYOpt } from "kaplay";
 import { type FC, useRef, useState } from "react";
-import { Tooltip } from "react-tooltip";
+import { useProject } from "../../hooks/useProject";
 
 type Props = {
     label: string;
-    configKey: keyof KaboomOpt;
+    configKey: keyof KAPLAYOpt;
     type: "text" | "number";
     placeholder: string;
     defaultValue?: string | number;
@@ -46,7 +45,9 @@ const ConfigInput: FC<Props> = (
                 placeholder={placeholder}
                 className="input input-bordered w-full max-w-xs config-input"
                 ref={inputRef}
-                defaultValue={kaboomConfig[configKey] ?? defaultValue}
+                defaultValue={kaboomConfig[
+                    configKey as keyof typeof kaboomConfig
+                ] ?? defaultValue}
                 onChange={handleChange}
                 min={0}
                 data-set-value={setValue}

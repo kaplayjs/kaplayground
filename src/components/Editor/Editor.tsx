@@ -1,8 +1,8 @@
-import { useProject } from "@/hooks/useProject";
-import { decompressCode } from "@/util/compressCode";
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import { useProject } from "../../hooks/useProject";
+import { decompressCode } from "../../util/compressCode";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -21,17 +21,11 @@ const IMPORT_CODE_ALERT =
     "Are you sure you want to open this example? This will permanently replace your current project. You can export your current project to save it.";
 
 const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
-    const [
-        project,
+    const {
         getCurrentFile,
         updateFile,
         replaceProject,
-    ] = useProject((state) => [
-        state.project,
-        state.getCurrentFile,
-        state.updateFile,
-        state.replaceProject,
-    ]);
+    } = useProject();
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
@@ -50,7 +44,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
                     name: "main.js",
                     value: decompressCode(codeUrl),
                 }],
-                assets: [],
+                resources: [],
             });
         }
     };

@@ -1,9 +1,9 @@
-import projectIcon from "@/assets/toolbar/project.png";
-import { defaultProject } from "@/config/defaultProject";
-import { useProject } from "@/hooks/useProject";
-import type { Project } from "@/stores/project";
 import type { FC } from "react";
 import { toast } from "react-toastify";
+import projectIcon from "../../assets/toolbar/project.png";
+import { defaultProject } from "../../config/defaultProject";
+import { useProject } from "../../hooks/useProject";
+import type { Project } from "../../stores/project";
 import ToolbarButton from "./ToolbarButton";
 
 type Props = {
@@ -52,7 +52,7 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
 
     const handleProjectReset = () => {
         replaceProject({
-            assets: [...defaultProject.assets],
+            resources: [...defaultProject.resources],
             files: [...defaultProject.files],
         });
 
@@ -62,7 +62,7 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
             <ToolbarButton
-                icon={projectIcon.src}
+                icon={projectIcon}
                 text="Project"
                 tabIndex={0}
                 tip="Project Export/Import"

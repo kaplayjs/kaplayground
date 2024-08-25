@@ -1,27 +1,25 @@
-import { useAssets } from "@/hooks/useAssets";
-import type { Asset, AssetKind } from "@/stores/assets";
-import { fileToBase64 } from "@/util/fileToBase64";
-import { removeExtension } from "@/util/removeExtensions";
-import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import * as HUI from "@headlessui/react";
-import { type FC, useEffect } from "react";
+import { type FC } from "react";
 import Dropzone from "react-dropzone";
-import Resource from "./Resource";
+import { useResources } from "../..//hooks/useResources";
+import type { ResourceKind } from "../../stores/storage/resoures";
 import ResourceAddButton from "./ResourceAddButton";
 import ResourcesList from "./ResourcesList";
 
 type Props = {
-    kind: AssetKind;
+    kind: ResourceKind;
     visibleIcon?: string;
     accept: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
 
 const ResourcesPanel: FC<Props> = (props) => {
-    const { addAssetsToQueue } = useAssets({ kind: props.kind });
+    const { uploadFilesAsResources } = useResources({ kind: props.kind });
 
     const handleAssetDrop = async (acceptedFiles: File[]) => {
-        addAssetsToQueue(acceptedFiles, props.kind);
+        if (acceptedFiles.length === 0) return;
+
+        uploadFilesAsResources(acceptedFiles, props.kind);
     };
 
     return (

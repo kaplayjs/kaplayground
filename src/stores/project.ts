@@ -1,12 +1,12 @@
-import { defaultProject } from "@/config/defaultProject";
 import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
-import type { ProjectAsset } from "./assets";
+import { defaultProject } from "../config/defaultProject";
 import type { File } from "./files";
+import type { Resource } from "./storage/resoures";
 
 export type Project = {
     version: string;
-    assets: ProjectAsset[];
+    resources: Resource[];
     files: File[];
     kaboomConfig: KAPLAYOpt;
     mode?: "example" | "project";

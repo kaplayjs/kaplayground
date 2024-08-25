@@ -1,5 +1,5 @@
-import kaplaygroundLogo from "@/assets/logo/kaplayground-o.webp";
-import { CHANGELOG, REPO, VERSION } from "@/config/common";
+import kaplaygroundLogo from "../../assets/logo/kaplayground-o.webp";
+import { CHANGELOG, REPO, VERSION } from "../../config/common";
 
 const AboutDialog = () => {
     return (
@@ -8,7 +8,7 @@ const AboutDialog = () => {
                 <header className="flex items-center justify-center">
                     <img
                         alt="KAPLAY"
-                        src={kaplaygroundLogo.src}
+                        src={kaplaygroundLogo}
                         className="h-32 object-scale-down"
                     >
                     </img>

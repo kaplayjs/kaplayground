@@ -1,7 +1,7 @@
-import addFileIcon from "@/assets/filetree/add_file.png";
-import removeFileIcon from "@/assets/filetree/remove_file.png";
-import { useProject } from "@/hooks/useProject";
 import type { FC, PropsWithChildren } from "react";
+import addFileIcon from "../../assets/filetree/add_file.png";
+import removeFileIcon from "../../assets/filetree/remove_file.png";
+import { useProject } from "../../hooks/useProject";
 
 const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
     const [addFile, removeFile, getCurrentFile, setCurrentFile] = useProject((
@@ -48,7 +48,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
                 onClick={handleAddScene}
             >
                 <img
-                    src={addFileIcon.src}
+                    src={addFileIcon}
                     alt="Add Scene"
                     className="h-4"
                 />
@@ -59,7 +59,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
                 onClick={handleRemoveScene}
             >
                 <img
-                    src={removeFileIcon.src}
+                    src={removeFileIcon}
                     alt="Remove Scene"
                     className="h-4"
                 />

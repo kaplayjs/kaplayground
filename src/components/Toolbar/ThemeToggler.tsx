@@ -1,5 +1,5 @@
-import themeIcon from "@/assets/toolbar/theme.png";
 import type { FC, MouseEventHandler } from "react";
+import themeIcon from "../../assets/toolbar/theme.png";
 import ToolbarButton from "./ToolbarButton";
 
 const themes = [
@@ -33,7 +33,7 @@ const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
             <ToolbarButton
-                icon={themeIcon.src}
+                icon={themeIcon}
                 text="Theme"
                 tabIndex={0}
                 tip="Change Theme"

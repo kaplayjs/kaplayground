@@ -1,22 +1,26 @@
-import addSriteIcon from "@/assets/add_sprite_icon.png";
-import { useProject } from "@/hooks/useProject";
-import type { AssetKind } from "@/stores/assets";
 import { type FC } from "react";
+import addSriteIcon from "../../assets/add_sprite_icon.png";
+import { useResources } from "../../hooks/useResources";
+import type { ResourceKind } from "../../stores/storage/resoures";
 
 type Props = {
     accept: string;
-    kind: AssetKind;
+    kind: ResourceKind;
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 
 const ResourceAddButton: FC<Props> = ({ accept, kind, inputProps }) => {
-    const addAssetsToQueue = useProject((state) => state.addAssetsToQueue);
+    const {
+        uploadFilesAsResources,
+    } = useResources({
+        kind,
+    });
 
     const handleChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files ?? []);
         if (!files.length) return;
 
-        addAssetsToQueue(files, kind);
+        uploadFilesAsResources(files, kind);
     };
 
     return (
@@ -24,7 +28,7 @@ const ResourceAddButton: FC<Props> = ({ accept, kind, inputProps }) => {
             <label>
                 <div className="btn btn-primary px-2">
                     <img
-                        src={addSriteIcon.src}
+                        src={addSriteIcon}
                         alt="Add sprite"
                         className="w-8 h-8"
                     />

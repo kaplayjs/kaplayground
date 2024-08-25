@@ -1,37 +1,38 @@
-import { useAssets } from "@/hooks/useAssets";
-import type { Asset, AssetKind, ProjectAsset } from "@/stores/assets";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
-import Resource, { type ResourceProps } from "./Resource";
+import { useResources } from "../../hooks/useResources";
+import type { Resource, ResourceKind } from "../../stores/storage/resoures";
+import type { ResourceProps } from "./ResourceItem";
+import ResourceItem from "./ResourceItem";
 
-type Props = Omit<ResourceProps, "asset"> & {
-    kind: AssetKind;
+type Props = Omit<ResourceProps, "resource"> & {
+    kind: ResourceKind;
 };
 
 const ResourcesList: FC<Props> = ({ kind, onDragData, visibleIcon }) => {
-    const { assets } = useAssets({ kind });
+    const { resources } = useResources({ kind });
     const [
         parent,
         draggableAssets,
         setDraggableAssets,
-    ] = useDragAndDrop<HTMLUListElement, ProjectAsset>(assets);
+    ] = useDragAndDrop<HTMLUListElement, Resource>(resources);
 
     useEffect(() => {
-        setDraggableAssets(assets);
-    }, [assets]);
+        setDraggableAssets(resources);
+    }, [resources]);
 
     return (
         <ul
             ref={parent}
             className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44"
         >
-            {draggableAssets.map((asset, i) => (
-                <Resource
+            {draggableAssets.map((resource, i) => (
+                <ResourceItem
                     key={i}
-                    asset={asset}
+                    resource={resource}
                     onDragData={onDragData}
                     visibleIcon={visibleIcon
-                        ?? asset.url}
+                        ?? resource.url}
                 />
             ))}
         </ul>
