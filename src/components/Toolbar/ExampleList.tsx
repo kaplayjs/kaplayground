@@ -29,7 +29,7 @@ const ExampleList: FC<Props> = ({ onProjectReplace }) => {
                     language: "javascript",
                 },
             ],
-            kaboomConfig: {},
+            kaplayConfig: {},
             mode: "example",
             version: project.version,
         });

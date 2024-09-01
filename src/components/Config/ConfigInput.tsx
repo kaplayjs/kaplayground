@@ -16,11 +16,7 @@ const ConfigInput: FC<Props> = (
 ) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [setValue, setSetValue] = useState<string | number>("");
-    const [
-        kaboomConfig,
-    ] = useProject((state) => [
-        state.project.kaboomConfig,
-    ]);
+    const { kaplayConfig } = useProject((state) => state.project);
 
     const handleChange = () => {
         const value = inputRef.current?.value ?? "";
@@ -45,8 +41,8 @@ const ConfigInput: FC<Props> = (
                 placeholder={placeholder}
                 className="input input-bordered w-full max-w-xs config-input"
                 ref={inputRef}
-                defaultValue={kaboomConfig[
-                    configKey as keyof typeof kaboomConfig
+                defaultValue={kaplayConfig[
+                    configKey as keyof typeof kaplayConfig
                 ] ?? defaultValue}
                 onChange={handleChange}
                 min={0}

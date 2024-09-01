@@ -38,5 +38,5 @@ export const defaultProject = {
             isCurrent: true,
         },
     ],
-    kaboomConfig: {},
+    kaplayConfig: {},
 } satisfies Project;

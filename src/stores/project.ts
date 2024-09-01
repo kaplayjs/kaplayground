@@ -8,7 +8,7 @@ export type Project = {
     version: string;
     resources: Resource[];
     files: File[];
-    kaboomConfig: KAPLAYOpt;
+    kaplayConfig: KAPLAYOpt;
     mode?: "example" | "project";
 };
 

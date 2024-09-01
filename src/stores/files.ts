@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import type { KaboomConfigSlice } from "./kaboomConfig";
+import type { KAPLAYConfigSlice } from "./kaplayConfig";
 import type { ProjectSlice } from "./project";
 
 export type FileKind = "kaboom" | "main" | "scene";
@@ -45,7 +45,7 @@ kaboom(${config});
 `;
 
 export const createFilesSlice: StateCreator<
-    FilesSlice & ProjectSlice & KaboomConfigSlice,
+    FilesSlice & ProjectSlice & KAPLAYConfigSlice,
     [],
     [],
     FilesSlice
@@ -102,7 +102,7 @@ export const createFilesSlice: StateCreator<
         );
 
         if (kaboomFile) {
-            const kaboomConfig = get().project.kaboomConfig;
+            const kaboomConfig = get().project.kaplayConfig;
             const kaboomFileContent = wrapKaboomConfig(
                 JSON.stringify(kaboomConfig, null, 4),
             );

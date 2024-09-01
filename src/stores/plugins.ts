@@ -1,6 +1,3 @@
-import type { StateCreator } from "zustand";
-import type { ProjectSlice } from "./project";
-
 export type Plugin = {
     /** Name of the plugin */
     name: string;

@@ -27,14 +27,6 @@ export type ResourceFile = {
 export interface ResourcesSlice {
     /** Last resource ID */
     resourcesLastId: ResourceId;
-    /** Resources that are uploading */
-    resourcesUploading: ResourceFile[];
-    /** Upload a resource */
-    uploadFileAsResource: (file: File, kind: ResourceKind) => void;
-    /** Upload resources */
-    uploadFilesAsResources: (files: File[], kind: ResourceKind) => void;
-    /** Remove an uploading resource */
-    removeUploadingResource: (resource: ResourceFile) => void;
     /** Add a resource */
     addResource: (resource: UploadResource) => void;
     /** Remove a resource */
@@ -53,28 +45,10 @@ export const createResourcesSlice: StateCreator<
     get,
 ) => ({
     resourcesLastId: 0,
-    resourcesUploading: [],
-    uploadFileAsResource(file, kind) {
-        set((state) => ({
-            resourcesUploading: [...state.resourcesUploading, { file, kind }],
-        }));
-    },
-    uploadFilesAsResources(files, kind) {
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            get().uploadFileAsResource(file, kind);
-        }
-    },
-    removeUploadingResource(resource) {
-        set((state) => ({
-            resourcesUploading: state.resourcesUploading.filter(
-                (r) => r !== resource,
-            ),
-        }));
-    },
+
     addResource(resource) {
-        const foundResource = get().resourcesUploading.find(
-            (r) => r.file.name === resource.name,
+        const foundResource = get().project.resources.find(
+            (r) => r.name === resource.name,
         );
 
         if (foundResource) {

@@ -67,7 +67,7 @@ const Playground = () => {
             setCurrentFile("kaboom.js");
             editorRef.current?.update();
         }
-    }, [project.kaboomConfig]);
+    }, [project.kaplayConfig]);
 
     return (
         <>

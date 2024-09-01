@@ -8,15 +8,11 @@ import ConfigGroup from "./ConfigGroup";
 import ConfigInput from "./ConfigInput";
 
 const ConfigDialog = () => {
-    const [
+    const {
         getKaboomFile,
-        kaboomConfig,
-        updateKaboomConfig,
-    ] = useProject((state) => [
-        state.getKaboomFile,
-        state.project.kaboomConfig,
-        state.updateKaboomConfig,
-    ]);
+        project: { kaplayConfig },
+        updateKAPLAYConfig: updateKaboomConfig,
+    } = useProject();
 
     const saveConfig = () => {
         const configInputs = document.querySelectorAll(".config-input");
@@ -33,10 +29,10 @@ const ConfigDialog = () => {
     };
 
     const updateInputs = () => {
-        const configKeys = Object.keys(kaboomConfig) as (keyof KAPLAYOpt)[];
+        const configKeys = Object.keys(kaplayConfig) as (keyof KAPLAYOpt)[];
 
         configKeys.forEach((key) => {
-            const value = kaboomConfig[key];
+            const value = kaplayConfig[key];
             const input = document.querySelector(
                 `[data-set-key="${key}"]`,
             ) as HTMLInputElement;

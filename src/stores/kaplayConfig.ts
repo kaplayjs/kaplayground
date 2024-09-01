@@ -2,35 +2,35 @@ import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
 import type { ProjectSlice } from "./project";
 
-export interface KaboomConfigSlice {
+export interface KAPLAYConfigSlice {
     /** Replace the Kaboom configuration with a new one */
-    replaceKaboomConfig: (config: KAPLAYOpt) => void;
+    replaceKAPLAYConfig: (config: KAPLAYOpt) => void;
     /** Update a config key */
-    updateKaboomConfig: (key: keyof KAPLAYOpt, value: any) => void;
+    updateKAPLAYConfig: (key: keyof KAPLAYOpt, value: any) => void;
 }
 
 export const createKaboomConfigSlice: StateCreator<
-    KaboomConfigSlice & ProjectSlice,
+    KAPLAYConfigSlice & ProjectSlice,
     [],
     [],
-    KaboomConfigSlice
+    KAPLAYConfigSlice
 > = (set) => ({
-    replaceKaboomConfig(config) {
+    replaceKAPLAYConfig(config) {
         set((state) => ({
             project: {
                 ...state.project,
-                kaboomConfig: {
+                kaplayConfig: {
                     ...config,
                 },
             },
         }));
     },
-    updateKaboomConfig(key, value) {
+    updateKAPLAYConfig(key, value) {
         set((state) => ({
             project: {
                 ...state.project,
-                kaboomConfig: {
-                    ...state.project.kaboomConfig,
+                kaplayConfig: {
+                    ...state.project.kaplayConfig,
                     [key]: value,
                 },
             },

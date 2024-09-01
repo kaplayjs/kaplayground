@@ -3,6 +3,7 @@ import { type FC } from "react";
 import Dropzone from "react-dropzone";
 import { useResources } from "../..//hooks/useResources";
 import type { ResourceKind } from "../../stores/storage/resoures";
+import { fileToBase64 } from "../../util/fileToBase64";
 import ResourceAddButton from "./ResourceAddButton";
 import ResourcesList from "./ResourcesList";
 
@@ -14,17 +15,27 @@ type Props = {
 };
 
 const ResourcesPanel: FC<Props> = (props) => {
-    const { uploadFilesAsResources } = useResources({ kind: props.kind });
+    const { addResource } = useResources({ kind: props.kind });
 
-    const handleAssetDrop = async (acceptedFiles: File[]) => {
+    const handleAssetUpload = async (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
 
-        uploadFilesAsResources(acceptedFiles, props.kind);
+        acceptedFiles.forEach(async (file) => {
+            try {
+                addResource({
+                    name: file.name,
+                    url: await fileToBase64(file),
+                    kind: props.kind,
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        });
     };
 
     return (
         <HUI.TabPanel className="w-full h-full">
-            <Dropzone onDrop={handleAssetDrop} noClick>
+            <Dropzone onDrop={handleAssetUpload} noClick>
                 {({ getRootProps, getInputProps }) => (
                     <div
                         className="h-full p-2"

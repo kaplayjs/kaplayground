@@ -10,9 +10,9 @@ type Props = {
 };
 
 const ConfigCheckbox: FC<Props> = ({ configKey, label, defaultValue, tip }) => {
-    const [kaboomConfig] = useProject((state) => [state.project.kaboomConfig]);
+    const { kaplayConfig } = useProject((state) => state.project);
     const [setValue, setSetValue] = useState<boolean>(
-        kaboomConfig[configKey] ?? defaultValue,
+        kaplayConfig[configKey] ?? defaultValue,
     );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

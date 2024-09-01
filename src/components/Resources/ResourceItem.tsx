@@ -27,24 +27,20 @@ const ResourceItem: FC<ResourceProps> = ({
         );
     };
 
-    const handleResourceImport = () => {
-        console.log("Import", resource.name);
-    };
-
     const handleResourceDelete = () => {
         removeResource(resource.id);
     };
 
     return (
         <ContextMenu.Root>
-            <ContextMenu.Trigger data-resource={resource.name}>
-                <li
-                    id={resource.name}
-                    key={resource.name}
-                    data-label={resource.name}
-                    data-url={resource.url}
-                    onDragStartCapture={handleResourceDrag}
-                >
+            <ContextMenu.Trigger
+                draggable={false}
+                id={resource.name}
+                data-label={resource.name}
+                data-url={resource.url}
+                onDragStartCapture={handleResourceDrag}
+            >
+                <li>
                     <div className="p-2 hover:bg-base-300">
                         <img
                             draggable={false}
@@ -65,12 +61,6 @@ const ResourceItem: FC<ResourceProps> = ({
 
             <ContextMenu.Portal>
                 <ContextMenu.Content className="rounded-btn | bg-base-300 | flex flex-col">
-                    <ContextMenu.Item
-                        className="btn btn-ghost justify-start"
-                        onClick={handleResourceImport}
-                    >
-                        Import in code
-                    </ContextMenu.Item>
                     <ContextMenu.Item
                         className="btn btn-ghost justify-start"
                         onClick={handleResourceDelete}
