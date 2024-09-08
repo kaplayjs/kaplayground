@@ -48,6 +48,7 @@ const FileEntry: FC<Props> = ({ file }) => {
                 },
             )}
             onClick={handleClick}
+            data-file-kind={kind}
         >
             <span className="text-left truncate w-[50%]">
                 {removeExtension(name)}
