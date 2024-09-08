@@ -15,6 +15,7 @@ const logoByKind = {
     kaplay: assets.dino.outlined,
     scene: sceneIcon,
     main: assets.dino.outlined,
+    assets: assets.bag.outlined,
 };
 
 const FileEntry: FC<Props> = ({ file }) => {

@@ -47,34 +47,36 @@ export const createResourcesSlice: StateCreator<
     resourcesLastId: 0,
 
     addResource(resource) {
-        const foundResource = get().project.resources.find(
-            (r) => r.name === resource.name,
-        );
+        const foundResource = get().project.resources[resource.name];
 
         if (foundResource) {
             set((state) => ({
                 project: {
                     ...state.project,
-                    resources: [
+                    resources: {
                         ...state.project.resources,
-                        {
-                            id: state.resourcesLastId,
-                            ...resource,
+                        [`${resource.kind}/${resource.name}`]: {
+                            id: foundResource.id,
+                            kind: resource.kind,
+                            name: resource.name,
+                            url: resource.url,
                         },
-                    ],
+                    },
                 },
             }));
         } else {
             set((state) => ({
                 project: {
                     ...state.project,
-                    resources: [
+                    resources: {
                         ...state.project.resources,
-                        {
+                        [`${resource.kind}/${resource.name}`]: {
                             id: state.resourcesLastId + 1,
-                            ...resource,
+                            kind: resource.kind,
+                            name: resource.name,
+                            url: resource.url,
                         },
-                    ],
+                    },
                 },
                 resourcesLastId: state.resourcesLastId + 1,
             }));
@@ -84,8 +86,10 @@ export const createResourcesSlice: StateCreator<
         set((state) => ({
             project: {
                 ...state.project,
-                resources: state.project.resources.filter(
-                    (r) => r.id !== resourceId,
+                resources: Object.fromEntries(
+                    Object.entries(state.project.resources).filter(
+                        ([, resource]) => resource.id !== resourceId,
+                    ),
                 ),
             },
         }));

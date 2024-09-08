@@ -42,23 +42,66 @@ const GameView = forwardRef<GameViewRef, GameViewProps>(({
     onLoad,
 }, ref) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    const [files, getKaboomFile, getMainFile] = useProject((state) => [
-        state.project.files,
-        state.getKaboomFile,
-        state.getMainFile,
-    ]);
+    const {
+        getMainFile,
+        project: { files, resources },
+        getKAPLAYFile,
+        getProjectMode,
+        getAssetsFile,
+    } = useProject();
+
+    const transformAssetUrl = (regex: RegExp, code: string) => {
+        return code.replace(regex, (match, asset: string) => {
+            // remove first / and last / from asset, also remove "assets" from asset
+            const normalizeAsset = asset.replace(/^\/|\/$/g, "").replace(
+                "assets/",
+                "",
+            ).replace(/"/g, "");
+            console.log(normalizeAsset);
+
+            return match.replace(
+                asset,
+                resources[normalizeAsset]?.url ?? asset,
+            );
+        });
+    };
+
+    const parseAssets = (code: string) => {
+        const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*\)/g;
+        const regexComment = /\/\/\s*kaplay-transformation-asset\s*(.*)/g;
+
+        console.log(
+            transformAssetUrl(regexLoad, transformAssetUrl(regexComment, code)),
+        );
+
+        return code.replace(regexLoad, (match, asset: string) => {
+            // remove first / and last / from asset, also remove "assets" from asset
+            const normalizeAsset = asset.replace(/^\/|\/$/g, "").replace(
+                "assets/",
+                "",
+            );
+
+            return match.replace(
+                asset,
+                resources[normalizeAsset]?.url ?? asset,
+            );
+        });
+    };
 
     useImperativeHandle(ref, () => ({
         run() {
             if (!iframeRef.current) return;
             const iframe = iframeRef.current;
 
-            let kaboomFile = "";
+            let KAPLAYFile = "";
             let mainFile = "";
+            let assetsFile = "";
             let sceneFiles = "";
+            let parsedFiles = "";
 
-            kaboomFile = getKaboomFile()?.value ?? "";
+            KAPLAYFile = getKAPLAYFile()?.value ?? "";
             mainFile = getMainFile()?.value ?? "";
+            assetsFile = getAssetsFile()?.value ?? "";
 
             files.forEach((file) => {
                 if (file.kind !== "scene") return;
@@ -66,11 +109,14 @@ const GameView = forwardRef<GameViewRef, GameViewProps>(({
                 sceneFiles += `\n${file.value}\n`;
             });
 
-            const finalFiles = kaboomFile
-                ? kaboomFile + sceneFiles + mainFile
-                : mainFile + sceneFiles;
+            if (getProjectMode() === "project") {
+                parsedFiles = KAPLAYFile + assetsFile + sceneFiles + mainFile;
+            } else {
+                parsedFiles = mainFile;
+            }
 
-            iframe.srcdoc = wrapGame(finalFiles);
+            const finalCode = parseAssets(parsedFiles);
+            iframe.srcdoc = wrapGame(finalCode);
         },
     }));
 

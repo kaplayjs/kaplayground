@@ -4,7 +4,7 @@ import FileEntry from "./FileEntry";
 import FileFolder from "./FileFolder";
 
 const FileTree = () => {
-    const files = useProject((state) => state.project.files);
+    const { getProjectMode, project: { files } } = useProject();
     const [scenes, setScenes] = useState(
         files.filter((file) => file.kind === "scene"),
     );
@@ -14,11 +14,15 @@ const FileTree = () => {
     const [main, setMain] = useState(
         files.filter((file) => file.kind === "main")[0],
     );
+    const [assets, setAssets] = useState(
+        files.filter((file) => file.kind === "assets")[0],
+    );
 
     useEffect(() => {
         setScenes(files.filter((file) => file.kind === "scene"));
         setKaplay(files.filter((file) => file.kind === "kaplay")[0]);
         setMain(files.filter((file) => file.kind === "main")[0]);
+        setAssets(files.filter((file) => file.kind === "assets")[0]);
     }, [files]);
 
     return (
@@ -41,7 +45,12 @@ const FileTree = () => {
             <FileFolder level={0} toolbar={false}>
                 <li>
                     <FileEntry file={main} />
-                    {kaplay && <FileEntry file={kaplay} />}
+                    {getProjectMode() === "project" && (
+                        <>
+                            <FileEntry file={kaplay} />
+                            <FileEntry file={assets} />
+                        </>
+                    )}
                 </li>
             </FileFolder>
         </div>

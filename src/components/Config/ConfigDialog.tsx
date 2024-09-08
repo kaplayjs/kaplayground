@@ -9,7 +9,7 @@ import ConfigInput from "./ConfigInput";
 
 const ConfigDialog = () => {
     const {
-        getKaboomFile,
+        getKAPLAYFile: getKaboomFile,
         project: { kaplayConfig },
         updateKAPLAYConfig: updateKaboomConfig,
     } = useProject();

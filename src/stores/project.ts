@@ -6,7 +6,7 @@ import type { Resource } from "./storage/resoures";
 
 export type Project = {
     version: string;
-    resources: Resource[];
+    resources: Record<string, Resource>;
     files: File[];
     kaplayConfig: KAPLAYOpt;
     mode?: "example" | "project";

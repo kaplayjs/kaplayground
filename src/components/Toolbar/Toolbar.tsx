@@ -13,7 +13,9 @@ type Props = {
 };
 
 const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
-    const { getKaboomFile, getMainFile } = useProject((state) => state);
+    const { getKAPLAYFile: getKaboomFile, getMainFile } = useProject((state) =>
+        state
+    );
 
     const handleRun = () => {
         run();

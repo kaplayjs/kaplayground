@@ -25,9 +25,11 @@ export const useResources: UseResourcesHook = ({ kind }) => {
     } = useProject();
 
     const filteredResources = useMemo(() => {
-        if (!kind) return resources;
+        if (!kind) return Object.values(resources);
 
-        return resources.filter((r) => r.kind === kind);
+        return Object.values(resources).filter(
+            (resource) => resource.kind === kind,
+        );
     }, [resources, kind]);
 
     return {

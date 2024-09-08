@@ -2,7 +2,7 @@ import type { StateCreator } from "zustand";
 import type { KAPLAYConfigSlice } from "./kaplayConfig";
 import type { ProjectSlice } from "./project";
 
-export type FileKind = "kaplay" | "main" | "scene";
+export type FileKind = "kaplay" | "main" | "scene" | "assets";
 
 export type File = {
     name: string;
@@ -25,7 +25,9 @@ export interface FilesSlice {
     /** Get current file */
     getCurrentFile: () => File | null;
     /** Get the KAPLAY file */
-    getKaboomFile: () => File | null;
+    getKAPLAYFile: () => File | null;
+    /** Get the assets file */
+    getAssetsFile: () => File | null;
     /** Get the main file */
     getMainFile: () => File | null;
     /** Set the current file */
@@ -124,13 +126,18 @@ export const createFilesSlice: StateCreator<
         return get().project.files.find((file) => file.isCurrent) ?? null;
     },
 
-    getKaboomFile() {
+    getKAPLAYFile() {
         return get().project.files.find((file) => file.kind === "kaplay")
             ?? null;
     },
 
     getMainFile() {
         return get().project.files.find((file) => file.kind === "main")
+            ?? null;
+    },
+
+    getAssetsFile() {
+        return get().project.files.find((file) => file.kind === "assets")
             ?? null;
     },
 

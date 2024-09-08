@@ -44,7 +44,7 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
                     name: "main.js",
                     value: decompressCode(codeUrl),
                 }],
-                resources: [],
+                resources: {},
             });
         }
     };
@@ -71,6 +71,21 @@ const MonacoEditor = forwardRef<EditorRef, Props>((props, ref) => {
                 props.onRun();
             },
         });
+
+        editor.createDecorationsCollection([
+            {
+                options: {
+                    isWholeLine: true,
+                    glyphMarginClassName: "image-glyph",
+                },
+                range: {
+                    startLineNumber: 1,
+                    startColumn: 1,
+                    endLineNumber: 1,
+                    endColumn: 1,
+                },
+            },
+        ]);
     };
 
     const handleEditorChange = (value: string | undefined) => {
