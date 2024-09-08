@@ -64,7 +64,7 @@ export const configMonaco = (monaco: Monaco) => {
                         ),
                     },
                     {
-                        label: "k-object",
+                        label: "k-obj",
                         kind: monaco.languages.CompletionItemKind.Module,
                         insertText: "const ${1:obj} = add([\n    ${2}\n]);",
                         range: new monaco.Range(
@@ -184,6 +184,88 @@ export const configMonaco = (monaco: Monaco) => {
                         label: "k-debug",
                         kind: monaco.languages.CompletionItemKind.Module,
                         insertText: "debug.inspect = true;",
+                        range: new monaco.Range(
+                            position.lineNumber,
+                            position.column - 1,
+                            position.lineNumber,
+                            position.column,
+                        ),
+                        insertTextRules:
+                            monaco.languages.CompletionItemInsertTextRule
+                                .InsertAsSnippet,
+                    },
+                    {
+                        label: "k-onLoad",
+                        kind: monaco.languages.CompletionItemKind.Module,
+                        insertText: "onLoad(() => {\n    ${1}\n});",
+                        range: new monaco.Range(
+                            position.lineNumber,
+                            position.column - 1,
+                            position.lineNumber,
+                            position.column,
+                        ),
+                        insertTextRules:
+                            monaco.languages.CompletionItemInsertTextRule
+                                .InsertAsSnippet,
+                    },
+                    {
+                        label: "k-scene",
+                        kind: monaco.languages.CompletionItemKind.Module,
+                        insertText:
+                            "scene(\"${1:sceneName}\", () => {\n    ${2}\n});",
+                        range: new monaco.Range(
+                            position.lineNumber,
+                            position.column - 1,
+                            position.lineNumber,
+                            position.column,
+                        ),
+                        insertTextRules:
+                            monaco.languages.CompletionItemInsertTextRule
+                                .InsertAsSnippet,
+                    },
+                    {
+                        label: "k-onCollide",
+                        kind: monaco.languages.CompletionItemKind.Module,
+                        insertText:
+                            "onCollide(\"${1:tag1}\", \"${2:tag2}\", () => {\n    ${3}\n});",
+                        range: new monaco.Range(
+                            position.lineNumber,
+                            position.column - 1,
+                            position.lineNumber,
+                            position.column,
+                        ),
+                        insertTextRules:
+                            monaco.languages.CompletionItemInsertTextRule
+                                .InsertAsSnippet,
+                    },
+                    {
+                        label: "k-level",
+                        kind: monaco.languages.CompletionItemKind.Module,
+                        insertText: `addLevel([
+    "     $$",
+    "=======",
+], {
+    tileWidth: 64,
+    tileHeight: 64,
+    pos: vec2(100, 200),
+    tiles: {
+        "=": () => [
+            rect(64, 64),
+            area(),
+            body({ isStatic: true }),
+            color("#6bc96c"),
+            outline(4),
+            anchor("bot"),
+        ],
+        "$": () => [
+            circle(16),
+            area(),
+            color("#fcef8d"),
+            outline(4),
+            anchor("bot")
+        ],
+    }
+})`,
                         range: new monaco.Range(
                             position.lineNumber,
                             position.column - 1,

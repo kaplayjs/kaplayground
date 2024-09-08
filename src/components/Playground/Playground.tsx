@@ -21,7 +21,7 @@ const Playground = () => {
     const {
         project,
         getCurrentFile,
-        syncKAPLAYFile: updateKaboomFile,
+        syncKAPLAYFile,
         setCurrentFile,
         getProjectMode,
     } = useProject();
@@ -60,7 +60,7 @@ const Playground = () => {
 
     // Update KAPLAY file in real time with configuration
     useEffect(() => {
-        updateKaboomFile();
+        syncKAPLAYFile();
         handleRun();
         const currentFileName = getCurrentFile()?.name;
 

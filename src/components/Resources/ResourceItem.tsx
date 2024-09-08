@@ -31,6 +31,10 @@ const ResourceItem: FC<ResourceProps> = ({
         removeResource(resource.id);
     };
 
+    const handleResourceLoad = () => {
+        console.log("Load Resource");
+    };
+
     return (
         <ContextMenu.Root>
             <ContextMenu.Trigger
@@ -66,6 +70,12 @@ const ResourceItem: FC<ResourceProps> = ({
                         onClick={handleResourceDelete}
                     >
                         Delete
+                    </ContextMenu.Item>
+                    <ContextMenu.Item
+                        className="btn btn-ghost justify-start"
+                        onClick={handleResourceLoad}
+                    >
+                        Load Resource
                     </ContextMenu.Item>
                 </ContextMenu.Content>
             </ContextMenu.Portal>
