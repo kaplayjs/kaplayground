@@ -21,7 +21,7 @@ const Playground = () => {
     const {
         project,
         getCurrentFile,
-        updateKaboomFile,
+        syncKAPLAYFile: updateKaboomFile,
         setCurrentFile,
         getProjectMode,
     } = useProject();
@@ -42,6 +42,7 @@ const Playground = () => {
 
     const handleProjectReplace = () => {
         handleRun();
+        window.history.replaceState({}, document.title, "/");
         editorRef.current?.update();
     };
 
@@ -57,14 +58,14 @@ const Playground = () => {
         if (project.files.length > 0) setLoadingProject(false);
     }, [project]);
 
-    // Update kaboom file in real time with configuration
+    // Update KAPLAY file in real time with configuration
     useEffect(() => {
         updateKaboomFile();
         handleRun();
         const currentFileName = getCurrentFile()?.name;
 
-        if (currentFileName === "kaboom.js") {
-            setCurrentFile("kaboom.js");
+        if (currentFileName === "kaplay.js") {
+            setCurrentFile("kaplay.js");
             editorRef.current?.update();
         }
     }, [project.kaplayConfig]);

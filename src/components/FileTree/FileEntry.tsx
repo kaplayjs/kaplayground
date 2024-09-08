@@ -1,5 +1,5 @@
+import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
-import kaboomIcon from "../../assets/filetree/kaboom.png";
 import sceneIcon from "../../assets/filetree/scene.png";
 import { useProject } from "../../hooks/useProject";
 import type { File } from "../../stores/files";
@@ -11,9 +11,9 @@ type Props = {
 };
 
 const logoByKind = {
-    kaboom: kaboomIcon,
+    kaplay: assets.dino.outlined,
     scene: sceneIcon,
-    main: kaboomIcon,
+    main: assets.dino.outlined,
 };
 
 const FileEntry: FC<Props> = ({ file }) => {
@@ -41,7 +41,7 @@ const FileEntry: FC<Props> = ({ file }) => {
             <img
                 src={logoByKind[kind]}
                 alt={kind}
-                className="w-4 h-4 ml-auto"
+                className="w-4 h-4 ml-auto object-scale-down"
             />
         </button>
     );

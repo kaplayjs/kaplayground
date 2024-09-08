@@ -2,7 +2,7 @@ import type { StateCreator } from "zustand";
 import type { KAPLAYConfigSlice } from "./kaplayConfig";
 import type { ProjectSlice } from "./project";
 
-export type FileKind = "kaboom" | "main" | "scene";
+export type FileKind = "kaplay" | "main" | "scene";
 
 export type File = {
     name: string;
@@ -20,11 +20,11 @@ export interface FilesSlice {
     removeFile: (name: string) => void;
     /** Update a file */
     updateFile: (name: string, value: string) => void;
-    /** Update kaboom file with configurations */
-    updateKaboomFile: () => void;
+    /** Update KAPLAY file with configurations */
+    syncKAPLAYFile: () => void;
     /** Get current file */
     getCurrentFile: () => File | null;
-    /** Get the main (kaboom) file */
+    /** Get the KAPLAY file */
     getKaboomFile: () => File | null;
     /** Get the main file */
     getMainFile: () => File | null;
@@ -96,22 +96,22 @@ export const createFilesSlice: StateCreator<
         }
     },
 
-    updateKaboomFile() {
-        const kaboomFile = get().project.files.find((file) =>
-            file.kind === "kaboom"
+    syncKAPLAYFile() {
+        const kaplayFile = get().project.files.find((file) =>
+            file.kind === "kaplay"
         );
 
-        if (kaboomFile) {
-            const kaboomConfig = get().project.kaplayConfig;
+        if (kaplayFile) {
+            const kaplayConfig = get().project.kaplayConfig;
             const kaboomFileContent = wrapKaboomConfig(
-                JSON.stringify(kaboomConfig, null, 4),
+                JSON.stringify(kaplayConfig, null, 4),
             );
 
             set((state) => ({
                 project: {
                     ...state.project,
                     files: state.project.files.map((file) =>
-                        file.kind === "kaboom"
+                        file.kind === "kaplay"
                             ? { ...file, value: kaboomFileContent }
                             : file
                     ),
@@ -125,7 +125,7 @@ export const createFilesSlice: StateCreator<
     },
 
     getKaboomFile() {
-        return get().project.files.find((file) => file.kind === "kaboom")
+        return get().project.files.find((file) => file.kind === "kaplay")
             ?? null;
     },
 

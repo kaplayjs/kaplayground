@@ -10,12 +10,13 @@
     "astro": "astro",
     "fmt": "dprint fmt",
     "fk": "cd kaplay && pnpm i && pnpm build && cd .. && pnpm copy",
-    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples"
+    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@formkit/drag-and-drop": "^0.0.38",
     "@headlessui/react": "^2.0.1",
-    "@kaplayjs/crew": "^1.4.1",
+    "@kaplayjs/crew": "^1.4.4",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-context-menu": "^2.2.1",
     "allotment": "^1.20.1",

@@ -20,7 +20,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
         addFile({
             name: sceneName + ".js",
             kind: "scene",
-            value: `scene("${sceneName}", () => {\n\n})`,
+            value: `scene("${sceneName}", () => {\n\n});`,
             isCurrent: true,
             isEncoded: false,
             language: "javascript",
@@ -31,7 +31,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
         const currentFile = getCurrentFile();
         if (!currentFile) return;
 
-        if (currentFile.kind === "kaboom" || currentFile.kind === "main") {
+        if (currentFile.kind === "kaplay" || currentFile.kind === "main") {
             return alert("You cannot remove this file");
         }
 

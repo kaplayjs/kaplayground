@@ -26,7 +26,7 @@ const Toolbar: FC<Props> = ({ run, onThemeChange, ...props }) => {
 
         if (url.toString().length > 3000) {
             alert(
-                "The URL is too lengthy; it has been copied, but using the new project import/export feature is recommended.",
+                "The URL is too lengthy; it has been copied, but using project export is recommended.",
             );
         }
 
