@@ -20,8 +20,6 @@ export const useAssets: UseAssetsHook = ({ kind }) => {
         project: { assets },
     } = useProject();
 
-    console.debug("useAssets", kind);
-
     const filteredAssets = useMemo(() => {
         if (!kind) return Object.values(assets);
 

@@ -12,6 +12,7 @@ import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 import ConfigDialog from "../Config/ConfigDialog";
 import Editor from "../Editor/MonacoEditor";
+import { ExamplesBrowser } from "../ExamplesBrowser";
 import GameView from "./GameView";
 
 const Playground = () => {
@@ -31,7 +32,7 @@ const Playground = () => {
     useEffect(() => {
         if (project.files.size > 0) setLoadingProject(false);
         else {
-            loadDefaultSetup("project");
+            loadDefaultSetup("project", new Map(), new Map());
         }
     }, [project]);
 
@@ -67,7 +68,11 @@ const Playground = () => {
                                                 onMount={handleMount}
                                             />
                                         </Allotment.Pane>
-                                        <Allotment.Pane>
+                                        <Allotment.Pane
+                                            snap
+                                            visible={getProjectMode()
+                                                === "project"}
+                                        >
                                             <Resources />
                                         </Allotment.Pane>
                                     </Allotment>
@@ -77,15 +82,16 @@ const Playground = () => {
                                 </Allotment.Pane>
                             </Allotment>
                         </main>
-                    </div>
 
-                    <AboutDialog />
-                    <ConfigDialog />
-                    <ToastContainer
-                        position="bottom-right"
-                        transition={Slide}
-                    />
-                    <Tooltip id="global" />
+                        <AboutDialog />
+                        <ConfigDialog />
+                        <ToastContainer
+                            position="bottom-right"
+                            transition={Slide}
+                        />
+                        <Tooltip id="global" />
+                        <ExamplesBrowser />
+                    </div>
 
                     <LoadingPlayground isLoading={loadingEditor} />
                 </>

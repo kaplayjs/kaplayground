@@ -5,11 +5,7 @@ import { useProject } from "../../hooks/useProject";
 import type { Project } from "../../stores/project";
 import ToolbarButton from "./ToolbarButton";
 
-type Props = {
-    onProjectReplace?(): void;
-};
-
-const Projects: FC<Props> = ({ onProjectReplace }) => {
+const Projects: FC = () => {
     const { project, replaceProject, resetProject } = useProject();
 
     const handleDownload = () => {
@@ -38,7 +34,6 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
         reader.onload = (e) => {
             const project = JSON.parse(e.target?.result as string) as Project;
             replaceProject(project);
-            onProjectReplace?.();
         };
 
         reader.readAsText(file);
@@ -46,8 +41,6 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
 
     const handleProjectReset = () => {
         resetProject();
-
-        onProjectReplace?.();
     };
 
     return (

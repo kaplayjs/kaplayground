@@ -1,4 +1,5 @@
 import type { ChangeEvent, FC } from "react";
+import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import type { File } from "../../stores/storage/files";
 import { exampleList } from "./examples";
@@ -9,6 +10,10 @@ const ExampleList: FC = () => {
         replaceProject,
         addFile,
     } = useProject();
+    const {
+        update,
+        run,
+    } = useEditor();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const exampleIndex = ev.target.selectedOptions[0].getAttribute(
@@ -30,14 +35,18 @@ const ExampleList: FC = () => {
             language: "javascript",
             path: "main.js",
         });
+
+        update();
+        run();
     };
 
     return (
         <select
             className="select select-bordered select-sm w-full max-w-xs"
             onChange={handleExampleChange}
+            defaultValue={"none"}
         >
-            <option selected>none</option>
+            <option value="none">none</option>
             {exampleList.map((example, i) => (
                 <option key={example.name} data-example={i}>
                     {example.name}

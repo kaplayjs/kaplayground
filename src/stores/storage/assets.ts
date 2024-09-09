@@ -18,7 +18,6 @@ export type UploadAsset = {
 };
 
 export type Asset = UploadAsset & {
-    id: AssetId;
     // import function for kaplay
     importFunction: string;
 };
@@ -82,7 +81,6 @@ export const createAssetsSlice: StateCreator<
         } else {
             assets.set(asset.path, {
                 ...asset,
-                id: get().assetsLastId + 1,
                 importFunction: loadByAsset(
                     asset.name,
                     asset.url,
@@ -90,9 +88,7 @@ export const createAssetsSlice: StateCreator<
                 ),
             });
 
-            set((state) => ({
-                assetsLastId: state.assetsLastId + 1,
-            }));
+            set({});
         }
     },
     removeAsset(resourceId) {

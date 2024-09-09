@@ -21,6 +21,7 @@
     "@radix-ui/react-context-menu": "^2.2.1",
     "allotment": "^1.20.1",
     "clsx": "^2.1.1",
+    "daisyui": "^4.12.10",
     "magic-string": "^0.30.10",
     "pako": "^2.1.0",
     "react": "^18.3.1",
@@ -30,6 +31,7 @@
     "react-toastify": "^10.0.5",
     "react-tooltip": "^5.26.4",
     "tailwind-merge": "^2.3.0",
+    "tailwindcss": "^3.4.10",
     "theme-change": "^2.5.0",
     "typescript": "^5.4.5",
     "zustand": "^4.5.2"
@@ -40,13 +42,11 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
-    "daisyui": "^4.10.5",
     "dprint": "^0.45.1",
     "globals": "^15.9.0",
     "kaplay": "3001.0.0-alpha.22",
     "monaco-editor": "^0.48.0",
     "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.3",
     "vite": "^5.4.2"
   },
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"

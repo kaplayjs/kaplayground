@@ -29,6 +29,8 @@ export interface FilesSlice {
     getMainFile: () => File | null;
     /** Get a file */
     getFile: (path: string) => File | null;
+    /** Get files by folder */
+    getFilesByFolder: (folder: string) => File[];
 }
 
 export const wrapKAPLAYConfig = (config: string) =>
@@ -111,5 +113,11 @@ export const createFilesSlice: StateCreator<
 
     getAssetsFile() {
         return get().getFile("assets.js");
+    },
+
+    getFilesByFolder(folder) {
+        return Array.from(get().project.files.values()).filter(
+            (file) => file.path.startsWith(folder),
+        );
     },
 });

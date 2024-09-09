@@ -23,7 +23,11 @@ export interface ProjectSlice {
     /** Get project mode */
     getProjectMode: () => Project["mode"];
     /** Load defaut setup for every project mode */
-    loadDefaultSetup: (mode: Project["mode"]) => void;
+    loadDefaultSetup: (
+        mode: Project["mode"],
+        files: Map<string, File>,
+        assets: Map<string, Asset>,
+    ) => void;
 }
 
 export const createProjectSlice: StateCreator<
@@ -40,17 +44,25 @@ export const createProjectSlice: StateCreator<
         mode: "project",
     },
     resetProject: () => {
+        console.debug("Resetting project");
+
+        const files = new Map();
+        const assets = new Map();
+
+        // Load default setup
+        get().loadDefaultSetup("project", files, assets);
+
+        console.log("New files", files, assets);
+
         set(() => ({
             project: {
                 version: "2.0.0",
-                files: new Map(),
-                assets: new Map(),
+                files: files,
+                assets: assets,
                 kaplayConfig: {},
                 mode: "project",
             },
         }));
-
-        get().loadDefaultSetup("project");
     },
     replaceProject: (project) => {
         const { run, update } = useEditor.getState();
@@ -66,23 +78,16 @@ export const createProjectSlice: StateCreator<
     getProjectMode: () => {
         return get().project.mode;
     },
-    loadDefaultSetup: (mode) => {
-        const { addFile } = get();
-
+    loadDefaultSetup: (mode, files, assets) => {
         if (mode === "project") {
             defaultProject.files.forEach((file) => {
-                addFile(file);
+                files.set(file.path, file);
+            });
+            defaultProject.resources.forEach((asset) => {
+                assets.set(asset.path, asset);
             });
         } else {
-            const file = defaultProject.files.filter((file) => {
-                return file.kind === "main";
-            })[0];
-
-            addFile(file);
+            files.set("main.js", defaultProject.files[1]);
         }
-
-        defaultProject.resources.forEach((resource) => {
-            get().addAsset(resource);
-        });
     },
 });
