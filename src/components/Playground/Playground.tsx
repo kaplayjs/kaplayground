@@ -1,74 +1,39 @@
 import { Allotment } from "allotment";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import AboutDialog from "../../components/About/AboutDialog";
-import Editor, { type EditorRef } from "../../components/Editor/Editor";
 import FileTree from "../../components/FileTree/FileTree";
-import GameView, {
-    type GameViewRef,
-} from "../../components/Playground/GameView";
 import LoadingPlayground from "../../components/Playground/LoadingPlayground";
 import Resources from "../../components/Resources/Resources";
 import Toolbar from "../../components/Toolbar";
-import { darkThemes } from "../../components/Toolbar/ThemeToggler";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 import ConfigDialog from "../Config/ConfigDialog";
+import Editor from "../Editor/MonacoEditor";
+import GameView from "./GameView";
 
 const Playground = () => {
     const {
         project,
-        getCurrentFile,
-        syncKAPLAYFile,
-        setCurrentFile,
         getProjectMode,
+        loadDefaultSetup,
     } = useProject();
-    const editorRef = useRef<EditorRef>(null);
-    const gameViewRef = useRef<GameViewRef>(null);
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
 
-    const handleRun = () => {
-        gameViewRef.current?.run();
-    };
-
     const handleMount = () => {
-        handleRun();
         setLoadingEditor(false);
     };
 
-    const handleProjectReplace = () => {
-        handleRun();
-        window.history.replaceState({}, document.title, "/");
-        editorRef.current?.update();
-    };
-
-    const handleThemeChange = (theme: string) => {
-        const isDarkTheme = darkThemes.includes(theme);
-        let newTheme = isDarkTheme ? "vs-dark" : "vs-light";
-
-        editorRef.current?.setTheme(newTheme);
-        document.documentElement.setAttribute("data-theme", theme);
-    };
-
     useEffect(() => {
-        if (project.files.length > 0) setLoadingProject(false);
-    }, [project]);
-
-    // Update KAPLAY file in real time with configuration
-    useEffect(() => {
-        syncKAPLAYFile();
-        handleRun();
-        const currentFileName = getCurrentFile()?.name;
-
-        if (currentFileName === "kaplay.js") {
-            setCurrentFile("kaplay.js");
-            editorRef.current?.update();
+        if (project.files.size > 0) setLoadingProject(false);
+        else {
+            loadDefaultSetup("project");
         }
-    }, [project.kaplayConfig]);
+    }, [project]);
 
     return (
         <>
@@ -80,12 +45,9 @@ const Playground = () => {
                         })}
                     >
                         <header className="h-[6%] flex">
-                            <Toolbar
-                                run={handleRun}
-                                onThemeChange={handleThemeChange}
-                                onProjectReplace={handleProjectReplace}
-                            />
+                            <Toolbar />
                         </header>
+
                         <main className="h-[94%] overflow-hidden">
                             <Allotment
                                 defaultSizes={[0.5, 2, 2]}
@@ -102,10 +64,7 @@ const Playground = () => {
                                     <Allotment vertical defaultSizes={[2, 1]}>
                                         <Allotment.Pane>
                                             <Editor
-                                                onRun={handleRun}
                                                 onMount={handleMount}
-                                                path="playground"
-                                                ref={editorRef}
                                             />
                                         </Allotment.Pane>
                                         <Allotment.Pane>
@@ -114,18 +73,20 @@ const Playground = () => {
                                     </Allotment>
                                 </Allotment.Pane>
                                 <Allotment.Pane snap>
-                                    <GameView ref={gameViewRef} />
+                                    <GameView />
                                 </Allotment.Pane>
                             </Allotment>
                         </main>
-                        <AboutDialog />
-                        <ConfigDialog />
-                        <ToastContainer
-                            position="bottom-right"
-                            transition={Slide}
-                        />
-                        <Tooltip id="global" />
                     </div>
+
+                    <AboutDialog />
+                    <ConfigDialog />
+                    <ToastContainer
+                        position="bottom-right"
+                        transition={Slide}
+                    />
+                    <Tooltip id="global" />
+
                     <LoadingPlayground isLoading={loadingEditor} />
                 </>
             )}

@@ -1,5 +1,6 @@
 import type { FC, MouseEventHandler } from "react";
 import themeIcon from "../../assets/toolbar/theme.png";
+import { useEditor } from "../../hooks/useEditor";
 import ToolbarButton from "./ToolbarButton";
 
 const themes = [
@@ -15,11 +16,9 @@ export const darkThemes = [
     "kaplay",
 ];
 
-type Props = {
-    onThemeChange?: (theme: string) => void;
-};
+const ThemeToggler: FC = () => {
+    const { setTheme } = useEditor();
 
-const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
     const handleThemeChange: MouseEventHandler = (ev) => {
         const target = ev.target as HTMLElement;
         const theme = target.getAttribute("data-set-theme");
@@ -27,9 +26,14 @@ const ThemeToggler: FC<Props> = ({ onThemeChange }) => {
         localStorage.setItem("theme", theme || "");
 
         if (theme) {
-            onThemeChange?.(theme);
+            const isDarkTheme = darkThemes.includes(theme);
+            let newTheme = isDarkTheme ? "vs-dark" : "vs-light";
+
+            setTheme(newTheme);
+            document.documentElement.setAttribute("data-theme", theme);
         }
     };
+
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
             <ToolbarButton

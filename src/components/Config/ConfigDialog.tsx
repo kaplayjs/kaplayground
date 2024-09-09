@@ -1,6 +1,7 @@
 import type { KAPLAYOpt } from "kaplay";
 import { useEffect } from "react";
 import { Tooltip } from "react-tooltip";
+import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { stringToType, type Type } from "../../util/stringToType";
 import ConfigCheckbox from "./ConfigCheckbox";
@@ -9,10 +10,14 @@ import ConfigInput from "./ConfigInput";
 
 const ConfigDialog = () => {
     const {
-        getKAPLAYFile: getKaboomFile,
-        project: { kaplayConfig },
-        updateKAPLAYConfig: updateKaboomConfig,
+        getProjectMode,
+        getKAPLAYConfig,
+        updateKAPLAYConfig,
+        syncKAPLAYFile,
     } = useProject();
+    const {
+        update,
+    } = useEditor();
 
     const saveConfig = () => {
         const configInputs = document.querySelectorAll(".config-input");
@@ -23,16 +28,21 @@ const ConfigDialog = () => {
             const type = input.getAttribute("data-set-type") as Type;
 
             if (key && value) {
-                updateKaboomConfig(key, stringToType(value, type));
+                updateKAPLAYConfig(key, stringToType(value, type));
             }
         });
+
+        syncKAPLAYFile();
+        update();
     };
 
     const updateInputs = () => {
-        const configKeys = Object.keys(kaplayConfig) as (keyof KAPLAYOpt)[];
+        const configKeys = Object.keys(
+            getKAPLAYConfig(),
+        ) as (keyof KAPLAYOpt)[];
 
         configKeys.forEach((key) => {
-            const value = kaplayConfig[key];
+            const value = getKAPLAYConfig()[key];
             const input = document.querySelector(
                 `[data-set-key="${key}"]`,
             ) as HTMLInputElement;
@@ -71,7 +81,7 @@ const ConfigDialog = () => {
                         <h2 className="text-xl">KAPLAY Configuration</h2>
                     </header>
                     <main>
-                        {getKaboomFile()
+                        {getProjectMode() === "project"
                             ? (
                                 <>
                                     <ConfigGroup title="screen & perf">

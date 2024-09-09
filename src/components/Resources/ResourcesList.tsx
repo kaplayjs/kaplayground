@@ -1,25 +1,25 @@
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
-import { useResources } from "../../hooks/useResources";
-import type { Resource, ResourceKind } from "../../stores/storage/resoures";
+import { useAssets } from "../../hooks/useAssets";
+import type { Asset, AssetKind } from "../../stores/storage/assets";
 import type { ResourceProps } from "./ResourceItem";
 import ResourceItem from "./ResourceItem";
 
-type Props = Omit<ResourceProps, "resource"> & {
-    kind: ResourceKind;
+type Props = Omit<ResourceProps, "asset"> & {
+    kind: AssetKind;
 };
 
 const ResourcesList: FC<Props> = ({ kind, onDragData, visibleIcon }) => {
-    const { resources } = useResources({ kind });
+    const { assets } = useAssets({ kind });
     const [
         parent,
         draggableAssets,
         setDraggableAssets,
-    ] = useDragAndDrop<HTMLUListElement, Resource>(resources);
+    ] = useDragAndDrop<HTMLUListElement, Asset>(assets);
 
     useEffect(() => {
-        setDraggableAssets(resources);
-    }, [resources]);
+        setDraggableAssets(assets);
+    }, [assets]);
 
     return (
         <ul
@@ -29,7 +29,7 @@ const ResourcesList: FC<Props> = ({ kind, onDragData, visibleIcon }) => {
             {draggableAssets.map((resource, i) => (
                 <ResourceItem
                     key={i}
-                    resource={resource}
+                    asset={resource}
                     onDragData={onDragData}
                     visibleIcon={visibleIcon
                         ?? resource.url}

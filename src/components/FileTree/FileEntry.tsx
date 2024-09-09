@@ -2,10 +2,11 @@ import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
 import sceneIcon from "../../assets/filetree/scene.png";
 import { useProject } from "../../hooks/useProject";
-import type { File } from "../../stores/files";
+import type { File } from "../../stores/storage/files";
 import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
+import { useEditor } from "../../hooks/useEditor";
 
 type Props = {
     file: File;
@@ -19,11 +20,11 @@ const logoByKind = {
 };
 
 const FileEntry: FC<Props> = ({ file }) => {
-    const { removeFile, setCurrentFile, getCurrentFile } = useProject();
-    const { name, kind } = file;
+    const { removeFile } = useProject();
+    const { currentFile, setCurrentFile } = useEditor();
 
     const handleClick: MouseEventHandler = () => {
-        setCurrentFile(name);
+        setCurrentFile(file.path);
     };
 
     const handleDelete: MouseEventHandler = (e) => {
@@ -34,7 +35,7 @@ const FileEntry: FC<Props> = ({ file }) => {
         }
 
         if (confirm("Are you sure you want to remove this scene?")) {
-            removeFile(file.name);
+            removeFile(file.path);
             setCurrentFile("main.js");
         }
     };
@@ -44,15 +45,15 @@ const FileEntry: FC<Props> = ({ file }) => {
             className={cn(
                 "file | btn btn-sm w-full justify-start rounded-none px-2",
                 {
-                    "btn-primary": getCurrentFile()?.name === name,
-                    "btn-ghost": getCurrentFile()?.name !== name,
+                    "btn-primary": currentFile === file.path,
+                    "btn-ghost": currentFile !== file.path,
                 },
             )}
             onClick={handleClick}
-            data-file-kind={kind}
+            data-file-kind={file.kind}
         >
             <span className="text-left truncate w-[50%]">
-                {removeExtension(name)}
+                {removeExtension(file.name)}
             </span>
             <div role="toolbar" className="file-actions hidden">
                 <button
@@ -67,8 +68,8 @@ const FileEntry: FC<Props> = ({ file }) => {
                 </button>
             </div>
             <img
-                src={logoByKind[kind]}
-                alt={kind}
+                src={logoByKind[file.kind]}
+                alt={file.kind}
                 className="w-4 h-4 ml-auto object-scale-down"
             />
         </div>

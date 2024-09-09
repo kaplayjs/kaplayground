@@ -1,7 +1,6 @@
 import type { FC } from "react";
 import { toast } from "react-toastify";
 import projectIcon from "../../assets/toolbar/project.png";
-import { defaultProject } from "../../config/defaultProject";
 import { useProject } from "../../hooks/useProject";
 import type { Project } from "../../stores/project";
 import ToolbarButton from "./ToolbarButton";
@@ -11,12 +10,7 @@ type Props = {
 };
 
 const Projects: FC<Props> = ({ onProjectReplace }) => {
-    const [project, replaceProject] = useProject((
-        state,
-    ) => [
-        state.project,
-        state.replaceProject,
-    ]);
+    const { project, replaceProject, resetProject } = useProject();
 
     const handleDownload = () => {
         const blob = new Blob([JSON.stringify(project)], {
@@ -51,10 +45,7 @@ const Projects: FC<Props> = ({ onProjectReplace }) => {
     };
 
     const handleProjectReset = () => {
-        replaceProject({
-            resources: [...defaultProject.resources],
-            files: [...defaultProject.files],
-        });
+        resetProject();
 
         onProjectReplace?.();
     };

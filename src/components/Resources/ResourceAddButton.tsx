@@ -1,10 +1,10 @@
 import { type FC } from "react";
 import addSriteIcon from "../../assets/add_sprite_icon.png";
-import type { ResourceKind } from "../../stores/storage/resoures";
+import type { AssetKind } from "../../stores/storage/assets";
 
 type Props = {
     accept: string;
-    kind: ResourceKind;
+    kind: AssetKind;
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 

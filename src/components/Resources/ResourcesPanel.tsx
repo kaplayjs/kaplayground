@@ -1,31 +1,32 @@
 import * as HUI from "@headlessui/react";
 import { type FC } from "react";
 import Dropzone from "react-dropzone";
-import { useResources } from "../..//hooks/useResources";
-import type { ResourceKind } from "../../stores/storage/resoures";
+import { useAssets } from "../../hooks/useAssets";
+import type { AssetKind } from "../../stores/storage/assets";
 import { fileToBase64 } from "../../util/fileToBase64";
 import ResourceAddButton from "./ResourceAddButton";
 import ResourcesList from "./ResourcesList";
 
 type Props = {
-    kind: ResourceKind;
+    kind: AssetKind;
     visibleIcon?: string;
     accept: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
 
 const ResourcesPanel: FC<Props> = (props) => {
-    const { addResource } = useResources({ kind: props.kind });
+    const { addAsset } = useAssets({ kind: props.kind });
 
     const handleAssetUpload = async (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
 
         acceptedFiles.forEach(async (file) => {
             try {
-                addResource({
+                addAsset({
                     name: file.name,
                     url: await fileToBase64(file),
                     kind: props.kind,
+                    path: `${props.kind}s/${file.name}`,
                 });
             } catch (e) {
                 console.error(e);

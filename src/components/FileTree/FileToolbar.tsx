@@ -13,9 +13,8 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
             name: sceneName + ".js",
             kind: "scene",
             value: `scene("${sceneName}", () => {\n\n});`,
-            isCurrent: true,
-            isEncoded: false,
             language: "javascript",
+            path: `scenes/${sceneName}.js`,
         });
     };
 

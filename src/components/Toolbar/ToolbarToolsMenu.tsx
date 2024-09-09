@@ -1,60 +1,65 @@
-import type { FC } from "react";
+import type { FC, PropsWithChildren } from "react";
 import runIcon from "../../assets/toolbar/run.png";
 import shareIcon from "../../assets/toolbar/share.png";
 import AboutButton from "../../components/About/AboutButton";
 import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
+import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import Projects from "./Projects";
 import ThemeToggler from "./ThemeToggler";
 import ToolbarButton from "./ToolbarButton";
 
-type Props = {
-    onRun: () => void;
-    onShare: () => void;
-    onThemeChange?: (theme: string) => void;
-    onProjectReplace?: () => void;
+const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
+    return (
+        <li className="h-full">
+            {children}
+        </li>
+    );
 };
 
-const ToolbarToolsMenu: FC<Props> = (props) => {
+const ToolbarToolsMenu: FC = () => {
     const { getProjectMode } = useProject();
+    const { run } = useEditor();
 
     return (
         <ul className="flex flex-row items-center justify-center h-full">
-            <li className="h-full">
+            <ToolbarToolItem>
                 <ToolbarButton
                     icon={runIcon}
                     text="Run"
-                    onClick={props.onRun}
+                    onClick={run}
                     tip="Run Project"
                     keys={["ctrl", "s"]}
                 />
-            </li>
+            </ToolbarToolItem>
             {getProjectMode() == "example" && (
-                <li className="h-full">
+                <ToolbarToolItem>
                     <ToolbarButton
                         icon={shareIcon}
                         text="Share"
-                        onClick={props.onShare}
+                        onClick={() => {
+                            alert("reimplement share");
+                        }}
                         tip="Share Project"
                     />
-                </li>
+                </ToolbarToolItem>
             )}
-            <li className="h-full">
-                <ThemeToggler
-                    onThemeChange={props.onThemeChange}
-                />
-            </li>
-            <li className="h-full">
-                <Projects
-                    onProjectReplace={props.onProjectReplace}
-                />
-            </li>
-            <li className="h-full">
+
+            <ToolbarToolItem>
+                <ThemeToggler />
+            </ToolbarToolItem>
+
+            <ToolbarToolItem>
+                <Projects />
+            </ToolbarToolItem>
+
+            <ToolbarToolItem>
                 <AboutButton />
-            </li>
-            <li className="h-full">
+            </ToolbarToolItem>
+
+            <ToolbarToolItem>
                 <ConfigOpenDialog />
-            </li>
+            </ToolbarToolItem>
         </ul>
     );
 };

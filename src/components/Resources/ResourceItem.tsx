@@ -1,21 +1,25 @@
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import React, { type FC } from "react";
-import { useResources } from "../../hooks/useResources";
-import type { Resource } from "../../stores/storage/resoures";
+import { useAssets } from "../../hooks/useAssets";
+import { useProject } from "../../hooks/useProject";
+import type { Asset } from "../../stores/storage/assets";
 import { removeExtension } from "../../util/removeExtensions";
 
 export type ResourceProps = {
-    resource: Resource;
+    asset: Asset;
     visibleIcon?: string;
     onDragData: (assetName: string, assetUrl: string) => string;
 };
 
 const ResourceItem: FC<ResourceProps> = ({
-    resource,
+    asset,
     visibleIcon,
     onDragData,
 }) => {
-    const { removeResource } = useResources({ kind: resource.kind });
+    const { removeAsset } = useAssets({
+        kind: asset.kind,
+    });
+    const { updateFile, getAssetsFile } = useProject();
 
     const handleResourceDrag = (e: React.DragEvent<HTMLLIElement>) => {
         const assetName = removeExtension(e.currentTarget.dataset.label!);
@@ -28,32 +32,37 @@ const ResourceItem: FC<ResourceProps> = ({
     };
 
     const handleResourceDelete = () => {
-        removeResource(resource.id);
+        removeAsset(asset.path);
     };
 
     const handleResourceLoad = () => {
-        console.log("Load Resource");
+        const assetsFile = getAssetsFile();
+        if (!assetsFile) return;
+
+        const newAssetsFile = assetsFile.value + `\n${asset.importFunction}`;
+
+        updateFile("assets.js", newAssetsFile);
     };
 
     return (
         <ContextMenu.Root>
             <ContextMenu.Trigger
                 draggable={false}
-                id={resource.name}
-                data-label={resource.name}
-                data-url={resource.url}
+                id={asset.name}
+                data-label={asset.name}
+                data-url={asset.url}
                 onDragStartCapture={handleResourceDrag}
             >
                 <li>
                     <div className="p-2 hover:bg-base-300">
                         <img
                             draggable={false}
-                            src={visibleIcon ?? resource.url}
-                            alt={`Asset ${resource.name}`}
+                            src={visibleIcon ?? asset.url}
+                            alt={`Asset ${asset.name}`}
                             className="h-12 w-12 object-scale-down"
                         />
                         <p className="text-xs text-center text-gray-500">
-                            {removeExtension(resource.name)
+                            {removeExtension(asset.name)
                                 .slice(
                                     0,
                                     10,

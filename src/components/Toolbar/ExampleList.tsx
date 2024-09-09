@@ -1,16 +1,14 @@
 import type { ChangeEvent, FC } from "react";
 import { useProject } from "../../hooks/useProject";
+import type { File } from "../../stores/storage/files";
 import { exampleList } from "./examples";
 
-type Props = {
-    onProjectReplace?: () => void;
-};
-
-const ExampleList: FC<Props> = ({ onProjectReplace }) => {
-    const [
+const ExampleList: FC = () => {
+    const {
         project,
         replaceProject,
-    ] = useProject((state) => [state.project, state.replaceProject]);
+        addFile,
+    } = useProject();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const exampleIndex = ev.target.selectedOptions[0].getAttribute(
@@ -18,23 +16,20 @@ const ExampleList: FC<Props> = ({ onProjectReplace }) => {
         );
 
         replaceProject({
-            resources: [],
-            files: [
-                {
-                    name: "main.js",
-                    value: exampleList[Number(exampleIndex)].code,
-                    isCurrent: true,
-                    isEncoded: true,
-                    kind: "main",
-                    language: "javascript",
-                },
-            ],
+            assets: new Map(),
+            files: new Map<string, File>(),
             kaplayConfig: {},
             mode: "example",
             version: project.version,
         });
 
-        onProjectReplace?.();
+        addFile({
+            name: "main.js",
+            value: exampleList[Number(exampleIndex)].code,
+            kind: "main",
+            language: "javascript",
+            path: "main.js",
+        });
     };
 
     return (
