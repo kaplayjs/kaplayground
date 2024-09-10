@@ -1,4 +1,4 @@
-import kaplaygroundLogo from "../../assets/logo/kaplayground-o.webp";
+import kaplaygroundLogo from "../../assets/kaplayground.png";
 import { useProject } from "../../hooks/useProject";
 import ExampleList from "./ExampleList";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";

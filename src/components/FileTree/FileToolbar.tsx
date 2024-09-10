@@ -1,5 +1,5 @@
+import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
-import addFileIcon from "../../assets/filetree/add_file.png";
 import { useProject } from "../../hooks/useProject";
 
 const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
@@ -25,7 +25,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
                 onClick={handleAddScene}
             >
                 <img
-                    src={addFileIcon}
+                    src={assets.plus.outlined}
                     alt="Add Scene"
                     className="h-4"
                 />

@@ -1,4 +1,4 @@
-import aboutIcon from "../../assets/toolbar/about.png";
+import { assets } from "@kaplayjs/crew";
 import ToolbarButton from "../Toolbar/ToolbarButton";
 
 const AboutButton = () => {
@@ -11,7 +11,7 @@ const AboutButton = () => {
         <>
             <ToolbarButton
                 onClick={handleModalOpenClick}
-                icon={aboutIcon}
+                icon={assets.question_mark.outlined}
                 text={"About"}
                 tip="About"
             />

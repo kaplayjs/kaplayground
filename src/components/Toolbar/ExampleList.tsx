@@ -9,6 +9,7 @@ const ExampleList: FC = () => {
         project,
         replaceProject,
         addFile,
+        setProjectMode,
     } = useProject();
     const {
         update,
@@ -19,6 +20,12 @@ const ExampleList: FC = () => {
         const exampleIndex = ev.target.selectedOptions[0].getAttribute(
             "data-example",
         );
+
+        useProject.persist.setOptions({
+            name: "kaplay-off-example",
+        });
+
+        setProjectMode("example");
 
         replaceProject({
             assets: new Map(),

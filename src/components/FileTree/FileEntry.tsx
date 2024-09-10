@@ -1,6 +1,5 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
-import sceneIcon from "../../assets/filetree/scene.png";
 import { useProject } from "../../hooks/useProject";
 import type { File } from "../../stores/storage/files";
 import { cn } from "../../util/cn";
@@ -14,9 +13,9 @@ type Props = {
 
 const logoByKind = {
     kaplay: assets.dino.outlined,
-    scene: sceneIcon,
-    main: assets.dino.outlined,
-    assets: assets.bag.outlined,
+    scene: assets.art.outlined,
+    main: assets.play.outlined,
+    assets: assets.assetbrew.outlined,
 };
 
 const FileEntry: FC<Props> = ({ file }) => {
@@ -61,7 +60,7 @@ const FileEntry: FC<Props> = ({ file }) => {
                     onClick={handleDelete}
                 >
                     <img
-                        src={assets.bag.outlined}
+                        src={assets.trash.outlined}
                         alt="Delete"
                         className="h-4"
                     />

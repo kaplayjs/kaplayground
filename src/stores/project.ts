@@ -2,6 +2,7 @@ import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
 import { defaultProject } from "../config/defaultProject";
 import { useEditor } from "../hooks/useEditor";
+import { useProject } from "../hooks/useProject";
 import type { Asset, AssetsSlice } from "./storage/assets";
 import type { File, FilesSlice } from "./storage/files";
 
@@ -20,8 +21,14 @@ export interface ProjectSlice {
     resetProject: () => void;
     /** Replace the project with a new project */
     replaceProject: (project: Project) => void;
+    /** Set the project mode */
+    setProjectMode: (mode: Project["mode"]) => void;
     /** Get project mode */
     getProjectMode: () => Project["mode"];
+    /** Save a project */
+    saveProject: (name: string) => void;
+    /** Load a project */
+    loadProject: (name: string) => void;
     /** Load defaut setup for every project mode */
     loadDefaultSetup: (
         mode: Project["mode"],
@@ -75,8 +82,30 @@ export const createProjectSlice: StateCreator<
         update();
         run();
     },
+    setProjectMode: (mode) => {
+        set(() => ({
+            project: {
+                ...get().project,
+                mode: mode,
+            },
+        }));
+    },
     getProjectMode: () => {
         return get().project.mode;
+    },
+    saveProject: (name: string) => {
+        useProject.persist.setOptions({
+            name: name,
+        });
+
+        useProject.persist.rehydrate();
+    },
+    loadProject: (name: string) => {
+        useProject.persist.setOptions({
+            name: name,
+        });
+
+        useProject.persist.rehydrate();
     },
     loadDefaultSetup: (mode, files, assets) => {
         if (mode === "project") {

@@ -1,4 +1,4 @@
-import icon from "../../assets/toolbar/config.png";
+import { assets } from "@kaplayjs/crew";
 import ToolbarButton from "../Toolbar/ToolbarButton";
 
 const ConfigOpenDialog = () => {
@@ -11,7 +11,7 @@ const ConfigOpenDialog = () => {
         <>
             <ToolbarButton
                 onClick={handleModalOpenClick}
-                icon={icon}
+                icon={assets.config.outlined}
                 text={"Config"}
                 tip="Config"
             />

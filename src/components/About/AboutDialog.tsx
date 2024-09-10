@@ -1,4 +1,4 @@
-import kaplaygroundLogo from "../../assets/logo/kaplayground-o.webp";
+import kaplaygroundLogo from "../../assets/kaplayground.png";
 import { CHANGELOG, REPO, VERSION } from "../../config/common";
 
 const AboutDialog = () => {
@@ -16,8 +16,8 @@ const AboutDialog = () => {
 
                 <main>
                     <p className="py-4">
-                        KAPLAY is the web editor designed for creating KAPLAY
-                        games.
+                        KAPLAYGROUND is the web editor designed for creating
+                        KAPLAY games.
                     </p>
 
                     <p>

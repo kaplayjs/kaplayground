@@ -1,8 +1,8 @@
+import { assets } from "@kaplayjs/crew";
 import { type FC, type PropsWithChildren, useState } from "react";
-import closeFolderIcon from "../../assets/filetree/close_folder.png";
-import openFolderIcon from "../../assets/filetree/open_folder.png";
 import { cn } from "../../util/cn";
 import FileToolbar from "./FileToolbar";
+import "./FileFolder.css";
 
 type Props = PropsWithChildren<{
     level: 0 | 1 | 2;
@@ -32,11 +32,10 @@ const FileFolder: FC<Props> = (
                             onClick={() => setFolded(!folded)}
                         >
                             <img
-                                src={folded
-                                    ? closeFolderIcon
-                                    : openFolderIcon}
+                                src={assets.arrow.outlined}
                                 alt={folded ? "Open folder" : "Close folder"}
-                                className="h-4"
+                                data-folded={folded}
+                                className="folded-icon | h-4"
                             />
                         </button>
                     </FileToolbar>

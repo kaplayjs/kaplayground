@@ -1,5 +1,5 @@
+import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
-import themeIcon from "../../assets/toolbar/theme.png";
 import { useEditor } from "../../hooks/useEditor";
 import ToolbarButton from "./ToolbarButton";
 
@@ -37,7 +37,7 @@ const ThemeToggler: FC = () => {
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
             <ToolbarButton
-                icon={themeIcon}
+                icon={assets.palette.outlined}
                 text="Theme"
                 tabIndex={0}
                 tip="Change Theme"

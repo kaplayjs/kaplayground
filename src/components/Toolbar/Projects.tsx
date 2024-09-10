@@ -1,12 +1,14 @@
+import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import { toast } from "react-toastify";
-import projectIcon from "../../assets/toolbar/project.png";
+import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import type { Project } from "../../stores/project";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project, replaceProject, resetProject } = useProject();
+    const { project, replaceProject, loadProject } = useProject();
+    const { update, run } = useEditor();
 
     const handleDownload = () => {
         const blob = new Blob([JSON.stringify(project)], {
@@ -40,13 +42,15 @@ const Projects: FC = () => {
     };
 
     const handleProjectReset = () => {
-        resetProject();
+        loadProject("kaplay-unsaved-pj");
+        update();
+        run();
     };
 
     return (
         <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
             <ToolbarButton
-                icon={projectIcon}
+                icon={assets.toolbox.outlined}
                 text="Project"
                 tabIndex={0}
                 tip="Project Export/Import"

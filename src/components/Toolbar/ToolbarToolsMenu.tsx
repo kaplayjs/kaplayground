@@ -1,6 +1,5 @@
+import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
-import runIcon from "../../assets/toolbar/run.png";
-import shareIcon from "../../assets/toolbar/share.png";
 import AboutButton from "../../components/About/AboutButton";
 import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
 import { useEditor } from "../../hooks/useEditor";
@@ -25,7 +24,7 @@ const ToolbarToolsMenu: FC = () => {
         <ul className="flex flex-row items-center justify-center h-full">
             <ToolbarToolItem>
                 <ToolbarButton
-                    icon={runIcon}
+                    icon={assets.play.outlined}
                     text="Run"
                     onClick={run}
                     tip="Run Project"
@@ -35,7 +34,7 @@ const ToolbarToolsMenu: FC = () => {
             {getProjectMode() == "example" && (
                 <ToolbarToolItem>
                     <ToolbarButton
-                        icon={shareIcon}
+                        icon={assets.bag.outlined}
                         text="Share"
                         onClick={() => {
                             alert("reimplement share");
