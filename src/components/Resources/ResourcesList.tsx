@@ -9,7 +9,7 @@ type Props = Omit<ResourceProps, "asset"> & {
     kind: AssetKind;
 };
 
-const ResourcesList: FC<Props> = ({ kind, onDragData, visibleIcon }) => {
+const ResourcesList: FC<Props> = ({ kind, visibleIcon }) => {
     const { assets } = useAssets({ kind });
     const [
         parent,
@@ -30,7 +30,6 @@ const ResourcesList: FC<Props> = ({ kind, onDragData, visibleIcon }) => {
                 <ResourceItem
                     key={i}
                     asset={resource}
-                    onDragData={onDragData}
                     visibleIcon={visibleIcon
                         ?? resource.url}
                 />

@@ -15,7 +15,15 @@ const IMPORT_CODE_ALERT =
 
 const MonacoEditor: FC<Props> = (props) => {
     const { updateFile, replaceProject, addFile, getFile } = useProject();
-    const { setEditor, run, update, currentFile } = useEditor();
+    const {
+        setEditor,
+        run,
+        update,
+        currentFile,
+        setMonaco,
+        updateImageDecorations,
+        setGylphDecorations,
+    } = useEditor();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -49,6 +57,7 @@ const MonacoEditor: FC<Props> = (props) => {
         monaco: Monaco,
     ) => {
         setEditor(editor);
+        setMonaco(monaco);
         props.onMount?.();
         editor.setValue(getFile(currentFile)?.value ?? "");
 
@@ -76,20 +85,8 @@ const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
-        editor.createDecorationsCollection([
-            {
-                options: {
-                    isWholeLine: true,
-                    glyphMarginClassName: "image-glyph",
-                },
-                range: {
-                    startLineNumber: 1,
-                    startColumn: 1,
-                    endLineNumber: 1,
-                    endColumn: 1,
-                },
-            },
-        ]);
+        let decorations = editor.createDecorationsCollection([]);
+        setGylphDecorations(decorations);
 
         run();
     };
@@ -101,6 +98,7 @@ const MonacoEditor: FC<Props> = (props) => {
         if (!currentProjectFile) return console.debug("Current file not found");
 
         updateFile(currentFile, value ?? "");
+        updateImageDecorations();
     };
 
     return (
@@ -114,6 +112,9 @@ const MonacoEditor: FC<Props> = (props) => {
             language="javascript"
             options={{
                 fontSize: 20,
+                glyphMargin: true,
+                lineNumbersMinChars: 2,
+                folding: false,
             }}
             path={getFile(currentFile)?.path ?? "main.js"}
         />

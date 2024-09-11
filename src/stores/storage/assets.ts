@@ -1,4 +1,5 @@
 import type { StateCreator } from "zustand";
+import { removeExtension } from "../../util/removeExtensions";
 import type { ProjectSlice } from "../project";
 
 /** The Assets's id */
@@ -46,10 +47,11 @@ const assetFuncByKind: Record<AssetKind, string> = {
 
 const loadByAsset = (
     assetName: string,
-    assetUrl: string,
     assetKind: AssetKind,
 ) => {
-    return `${assetFuncByKind[assetKind]}("${assetName}", "${assetUrl}")`;
+    return `${assetFuncByKind[assetKind]}("${
+        removeExtension(assetName)
+    }", "assets/${assetKind}s/${assetName}",)`;
 };
 
 export const createAssetsSlice: StateCreator<
@@ -79,11 +81,19 @@ export const createAssetsSlice: StateCreator<
 
             set({});
         } else {
+            console.debug(
+                "Asset added",
+                asset,
+                loadByAsset(
+                    asset.name,
+                    asset.kind,
+                ),
+            );
+
             assets.set(asset.path, {
                 ...asset,
                 importFunction: loadByAsset(
                     asset.name,
-                    asset.url,
                     asset.kind,
                 ),
             });

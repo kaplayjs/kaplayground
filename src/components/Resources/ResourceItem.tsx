@@ -8,27 +8,16 @@ import { removeExtension } from "../../util/removeExtensions";
 export type ResourceProps = {
     asset: Asset;
     visibleIcon?: string;
-    onDragData: (assetName: string, assetUrl: string) => string;
 };
 
-const ResourceItem: FC<ResourceProps> = ({
-    asset,
-    visibleIcon,
-    onDragData,
-}) => {
+const ResourceItem: FC<ResourceProps> = ({ asset, visibleIcon }) => {
     const { removeAsset } = useAssets({
         kind: asset.kind,
     });
     const { updateFile, getAssetsFile } = useProject();
 
     const handleResourceDrag = (e: React.DragEvent<HTMLLIElement>) => {
-        const assetName = removeExtension(e.currentTarget.dataset.label!);
-        const assetUrl = e.currentTarget.dataset.url;
-
-        e.dataTransfer.setData(
-            "text",
-            `${onDragData(assetName, assetUrl!)}`,
-        );
+        e.dataTransfer.setData("text", asset.importFunction);
     };
 
     const handleResourceDelete = () => {

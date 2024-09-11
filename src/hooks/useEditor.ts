@@ -1,3 +1,4 @@
+import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { createRef, type MutableRefObject } from "react";
 import { create } from "zustand";
@@ -7,12 +8,22 @@ import { useProject } from "./useProject";
 type EditorStore = {
     /** Monaco's editor instance */
     editor: editor.IStandaloneCodeEditor | null;
+    /** Monaco instance */
+    monaco: Monaco | null;
     /** The current file */
     currentFile: string;
+    /** Gylph decorations */
+    gylphDecorations: editor.IEditorDecorationsCollection | null;
     /** Set the current file */
     setCurrentFile: (path: string) => void;
     /** Set Monaco's editor instance */
     setEditor: (editor: editor.IStandaloneCodeEditor) => void;
+    /** Set Monaco instance */
+    setMonaco: (monaco: Monaco) => void;
+    /** Set gylph decorations */
+    setGylphDecorations: (
+        gylphDecorations: editor.IEditorDecorationsCollection,
+    ) => void;
     /** Sync content of the current file and Monaco view */
     update: () => void;
     /** Set's Monaco's theme */
@@ -23,16 +34,26 @@ type EditorStore = {
     setIframe: (iframe: HTMLIFrameElement) => void;
     /** Run the game */
     run: () => void;
+    /** Update image decorations */
+    updateImageDecorations: () => void;
 };
 
 export const useEditor = create<EditorStore>((set, get) => ({
     editor: null,
+    monaco: null,
+    gylphDecorations: null,
+    setGylphDecorations: (gylphDecorations) => {
+        set({ gylphDecorations });
+    },
     currentFile: "main.js",
     setCurrentFile: (path) => {
         set({ currentFile: path });
     },
     setEditor: (editor) => {
         set({ editor });
+    },
+    setMonaco: (monaco) => {
+        set({ monaco });
     },
     update: () => {
         const currentFile = useProject.getState().getFile(get().currentFile);
@@ -98,5 +119,54 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         const finalCode = parseAssets(parsedFiles);
         iframe.srcdoc = wrapGame(finalCode);
+    },
+    updateImageDecorations() {
+        const editor = get().editor;
+        const monaco = get().monaco;
+        const model = editor?.getModel();
+        const gylphDecorations = get().gylphDecorations;
+
+        if (!editor || !monaco || !model || !gylphDecorations) {
+            return console.error("No editor");
+        }
+
+        const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*\)/g;
+
+        // for each every line
+        const lines = editor.getModel()?.getLinesContent() ?? [];
+        let linesRange: {
+            image: string;
+            line: number;
+        }[] = [];
+
+        lines.forEach((line, index) => {
+            const match = line.match(regexLoad);
+            if (!match) return;
+
+            const url = line.replace(regexLoad, (_, url) => {
+                return url;
+            });
+
+            const normalizedUrl = url.replace(/^\/|\/$/g, "").replace(
+                /"/g,
+                "",
+            ).replace(";", "");
+
+            linesRange.push({
+                image: normalizedUrl,
+                line: index + 1,
+            });
+        });
+
+        gylphDecorations.set(linesRange.map(({ image, line }) => ({
+            range: new monaco.Range(line, 1, line, 1),
+            options: {
+                glyphMarginClassName: "monaco-glyph-margin",
+                glyphMarginHoverMessage: {
+                    value: `![image](http://localhost:5173/${image})`,
+                    isTrusted: true,
+                },
+            },
+        })));
     },
 }));

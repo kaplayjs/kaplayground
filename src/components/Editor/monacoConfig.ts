@@ -17,6 +17,11 @@ export const configMonaco = (monaco: Monaco) => {
         "kaplay.d.ts",
     );
 
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        noSemanticValidation: true,
+        noSyntaxValidation: false,
+    });
+
     // Hover dataUrl images
     monaco.languages.registerHoverProvider("javascript", {
         provideHover(model, position) {
@@ -288,6 +293,8 @@ export const configMonaco = (monaco: Monaco) => {
         rules: [],
         colors: {
             "editor.background": "#242933",
+            "editor.selectionBackground": "#6BC46B",
+            "editor.lineHighlightBorder`": "#CBDC2F38",
         },
     });
 

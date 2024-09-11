@@ -9,3 +9,19 @@ html, body, #root {
     overflow: hidden;
     scrollbar-width: none;
 }
+
+/* temp */
+
+.monaco-glyph-margin {
+	width: 40px;
+}
+
+.monaco-glyph-margin::after {
+	background-image: url("/assetbrew.png");
+    background-size: 24px;
+	background-repeat: no-repeat;
+    display: inline-block;
+    width: 40px; 
+    height: 20px;
+    content:"";
+}

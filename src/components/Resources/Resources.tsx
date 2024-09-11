@@ -14,21 +14,15 @@ const Resources = () => {
             <HUI.TabPanels className="flex-1 flex">
                 <ResourcesPanel
                     kind="sprite"
-                    onDragData={(name, url) =>
-                        `\nloadSprite("${name}", "${url}")`}
                     accept="image/*"
                 />
                 <ResourcesPanel
                     kind="sound"
-                    onDragData={(name, url) =>
-                        `\nloadSound("${name}", "${url}")`}
                     visibleIcon={assets.sounds.sprite}
                     accept="audio/*"
                 />
                 <ResourcesPanel
                     kind="font"
-                    onDragData={(name, url) =>
-                        `\nloadFont("${name}", "${url}")`}
                     visibleIcon={assets.fonts.sprite}
                     accept=".ttf,.otf"
                 />

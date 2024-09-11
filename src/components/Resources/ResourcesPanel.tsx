@@ -11,7 +11,6 @@ type Props = {
     kind: AssetKind;
     visibleIcon?: string;
     accept: string;
-    onDragData: (assetName: string, assetUrl: string) => string;
 };
 
 const ResourcesPanel: FC<Props> = (props) => {
@@ -45,7 +44,6 @@ const ResourcesPanel: FC<Props> = (props) => {
                         <div className="h-full flex flex-col justify-between">
                             <ResourcesList
                                 kind={props.kind}
-                                onDragData={props.onDragData}
                                 visibleIcon={props.visibleIcon}
                             />
                             <ResourceAddButton
