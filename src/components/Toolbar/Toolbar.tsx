@@ -1,4 +1,4 @@
-import kaplaygroundLogo from "../../assets/kaplayground.png";
+import kaplaygroundLogo from "../../../public/pg.png";
 import { useProject } from "../../hooks/useProject";
 import ExampleList from "./ExampleList";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
@@ -27,7 +27,7 @@ const Toolbar = () => {
             </a>
 
             <div className="uppercase | badge badge-lg badge-primary">
-                {getProjectMode() === "project" ? "Project" : "Example"} Mode
+                {getProjectMode() === "project" ? "PJ" : "EX"}
             </div>
 
             <ExampleList />

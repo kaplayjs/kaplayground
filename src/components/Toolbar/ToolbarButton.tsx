@@ -16,7 +16,7 @@ const generateKbdFromKeys = (keys: string[]) => {
 const ToolbarButton = forwardRef<Ref, Props>((props, ref) => {
     return (
         <button
-            className="btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+            className="btn btn-xs btn-ghost px-2 rounded-sm items-center justify-center h-full"
             data-tooltip-id="global"
             data-tooltip-html={`${props.tip}</br>${
                 props.keys ? generateKbdFromKeys(props.keys) : ""
@@ -25,7 +25,8 @@ const ToolbarButton = forwardRef<Ref, Props>((props, ref) => {
             ref={ref}
             {...props}
         >
-            <img src={props.icon} alt={props.text} className="h-8" />
+            <span>{props.text}</span>
+            <img src={props.icon} alt={props.text} className="h-4" />
         </button>
     );
 });

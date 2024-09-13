@@ -5,7 +5,7 @@ type Props = {
         name: string;
         description: string;
         code: string;
-        image: string;
+        image?: string;
     };
 };
 
@@ -15,13 +15,6 @@ export const Example: FC<Props> = ({ example }) => {
             <div>
                 <h2 className="text-xl font-medium">{example.name}</h2>
                 <p>{example.description}</p>
-            </div>
-            <div>
-                <img
-                    src={example.image}
-                    alt={example.name}
-                    className="rounded-sm"
-                />
             </div>
         </section>
     );

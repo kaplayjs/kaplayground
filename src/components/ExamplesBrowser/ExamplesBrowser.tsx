@@ -12,7 +12,7 @@ export const ExamplesBrowser = () => {
                         example to open it in the editor.
                     </p>
                 </header>
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4">
                     {examples.map((example, index) => (
                         <Example example={example} key={index} />
                     ))}

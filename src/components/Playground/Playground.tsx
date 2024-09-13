@@ -45,11 +45,11 @@ const Playground = () => {
                             "hidden": loadingEditor,
                         })}
                     >
-                        <header className="h-[6%] flex">
+                        <header className="h-[4%] flex">
                             <Toolbar />
                         </header>
 
-                        <main className="h-[94%] overflow-hidden">
+                        <main className="h-[96%] overflow-hidden">
                             <Allotment
                                 defaultSizes={[0.5, 2, 2]}
                                 vertical={isPortrait}

@@ -48,18 +48,31 @@ const ExampleList: FC = () => {
     };
 
     return (
-        <select
-            className="select select-bordered select-sm w-full max-w-xs"
-            onChange={handleExampleChange}
-            defaultValue={"none"}
-        >
-            <option value="none">none</option>
-            {exampleList.map((example, i) => (
-                <option key={example.name} data-example={i}>
-                    {example.name}
-                </option>
-            ))}
-        </select>
+        <div className="join border border-base-100">
+            <select
+                className="join-item | select select-xs w-full max-w-xs"
+                onChange={handleExampleChange}
+                defaultValue={"none"}
+            >
+                <option value="none">none</option>
+                {exampleList.map((example, i) => (
+                    <option key={example.name} data-example={i}>
+                        {example.name}
+                    </option>
+                ))}
+            </select>
+            <button
+                className="join-item | btn btn-xs"
+                onClick={() => {
+                    const dialog = document.querySelector<HTMLDialogElement>(
+                        "#examples-browser",
+                    );
+                    dialog?.showModal();
+                }}
+            >
+                Browse all
+            </button>
+        </div>
     );
 };
 
