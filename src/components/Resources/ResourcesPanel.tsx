@@ -1,4 +1,4 @@
-import * as HUI from "@headlessui/react";
+import * as Tabs from "@radix-ui/react-tabs";
 import { type FC } from "react";
 import Dropzone from "react-dropzone";
 import { useAssets } from "../../hooks/useAssets";
@@ -8,6 +8,7 @@ import ResourceAddButton from "./ResourceAddButton";
 import ResourcesList from "./ResourcesList";
 
 type Props = {
+    value: string;
     kind: AssetKind;
     visibleIcon?: string;
     accept: string;
@@ -34,7 +35,7 @@ const ResourcesPanel: FC<Props> = (props) => {
     };
 
     return (
-        <HUI.TabPanel className="w-full h-full">
+        <Tabs.Content className="w-full h-full" value={props.value}>
             <Dropzone onDrop={handleAssetUpload} noClick>
                 {({ getRootProps, getInputProps }) => (
                     <div
@@ -55,7 +56,7 @@ const ResourcesPanel: FC<Props> = (props) => {
                     </div>
                 )}
             </Dropzone>
-        </HUI.TabPanel>
+        </Tabs.Content>
     );
 };
 

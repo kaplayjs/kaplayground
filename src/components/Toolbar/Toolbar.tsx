@@ -8,7 +8,7 @@ const Toolbar = () => {
 
     return (
         <div
-            className="flex flex-1 justify-between items-center bg-base-300 px-2"
+            className="flex flex-1 justify-between items-center bg-base-300"
             role="toolbar"
         >
             <a

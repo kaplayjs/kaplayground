@@ -6,13 +6,13 @@ import { Tooltip } from "react-tooltip";
 import AboutDialog from "../../components/About/AboutDialog";
 import FileTree from "../../components/FileTree/FileTree";
 import LoadingPlayground from "../../components/Playground/LoadingPlayground";
-import Resources from "../../components/Resources/Resources";
 import Toolbar from "../../components/Toolbar";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 import ConfigDialog from "../Config/ConfigDialog";
 import Editor from "../Editor/MonacoEditor";
 import { ExamplesBrowser } from "../ExamplesBrowser";
+import Assets from "../Resources/Assets";
 import GameView from "./GameView";
 
 const Playground = () => {
@@ -73,7 +73,7 @@ const Playground = () => {
                                             visible={getProjectMode()
                                                 === "project"}
                                         >
-                                            <Resources />
+                                            <Assets />
                                         </Allotment.Pane>
                                     </Allotment>
                                 </Allotment.Pane>
