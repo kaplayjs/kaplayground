@@ -1,25 +1,27 @@
 import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { createRef, type MutableRefObject } from "react";
+import { toast } from "react-toastify";
 import { create } from "zustand";
 import { parseAssets, wrapGame } from "../util/compiler";
 import { useProject } from "./useProject";
 
+/** The internal API to interact with the editor */
 type EditorStore = {
     /** Monaco's editor instance */
     editor: editor.IStandaloneCodeEditor | null;
-    /** Monaco instance */
-    monaco: Monaco | null;
-    /** The current file */
-    currentFile: string;
-    /** Gylph decorations */
-    gylphDecorations: editor.IEditorDecorationsCollection | null;
-    /** Set the current file */
-    setCurrentFile: (path: string) => void;
     /** Set Monaco's editor instance */
     setEditor: (editor: editor.IStandaloneCodeEditor) => void;
+    /** Monaco instance */
+    monaco: Monaco | null;
     /** Set Monaco instance */
     setMonaco: (monaco: Monaco) => void;
+    /** The current file */
+    currentFile: string;
+    /** Set the current file */
+    setCurrentFile: (path: string) => void;
+    /** Gylph decorations */
+    gylphDecorations: editor.IEditorDecorationsCollection | null;
     /** Set gylph decorations */
     setGylphDecorations: (
         gylphDecorations: editor.IEditorDecorationsCollection,
@@ -36,11 +38,19 @@ type EditorStore = {
     run: () => void;
     /** Update image decorations */
     updateImageDecorations: () => void;
+    /** Display notification */
+    showNotification: (message: string) => void;
 };
 
 export const useEditor = create<EditorStore>((set, get) => ({
     editor: null,
+    setEditor: (editor) => {
+        set({ editor });
+    },
     monaco: null,
+    setMonaco: (monaco) => {
+        set({ monaco });
+    },
     gylphDecorations: null,
     setGylphDecorations: (gylphDecorations) => {
         set({ gylphDecorations });
@@ -49,11 +59,15 @@ export const useEditor = create<EditorStore>((set, get) => ({
     setCurrentFile: (path) => {
         set({ currentFile: path });
     },
-    setEditor: (editor) => {
-        set({ editor });
-    },
-    setMonaco: (monaco) => {
-        set({ monaco });
+    iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
+    setIframe: (iframe) => {
+        if (!iframe) {
+            return;
+        }
+        const newRef = createRef() as MutableRefObject<HTMLIFrameElement>;
+        newRef.current = iframe;
+
+        set({ iframe: newRef });
     },
     update: () => {
         const currentFile = useProject.getState().getFile(get().currentFile);
@@ -71,16 +85,6 @@ export const useEditor = create<EditorStore>((set, get) => ({
         editor.updateOptions({
             theme,
         });
-    },
-    iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
-    setIframe: (iframe) => {
-        if (!iframe) {
-            return;
-        }
-        const newRef = createRef() as MutableRefObject<HTMLIFrameElement>;
-        newRef.current = iframe;
-
-        set({ iframe: newRef });
     },
     run() {
         const iframe = get().iframe.current;
@@ -168,5 +172,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 },
             },
         })));
+    },
+    showNotification(message) {
+        toast(message);
     },
 }));

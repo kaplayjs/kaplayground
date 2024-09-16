@@ -1,30 +1,22 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
-import { toast } from "react-toastify";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import type { Project } from "../../stores/project";
+import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
     const { project, replaceProject, loadProject } = useProject();
-    const { update, run } = useEditor();
+    const { update, run, showNotification } = useEditor();
 
     const handleDownload = () => {
         const blob = new Blob([JSON.stringify(project)], {
             type: "application/json",
         });
 
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-
-        a.href = url;
-        a.download = "project.kaplay";
-        a.click();
-
-        toast("Project exporting, check downloads");
-
-        URL.revokeObjectURL(url);
+        downloadBlob(blob, "project.kaplay");
+        showNotification("Exporting the project, check downloads...");
     };
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
