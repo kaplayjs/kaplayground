@@ -4,6 +4,7 @@ import { type FC } from "react";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { decompressCode } from "../../util/compressCode";
+import { debug } from "../../util/logs";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -94,9 +95,10 @@ const MonacoEditor: FC<Props> = (props) => {
 
     const handleEditorChange = (value: string | undefined) => {
         const currentProjectFile = getFile(getCurrentFile());
+        if (!currentProjectFile) return debug(0, "Current file not found");
 
-        if (!currentProjectFile) return console.debug("Current file not found");
-        console.debug(
+        debug(
+            0,
             "Due to editor change, updating file",
             currentProjectFile.path,
         );

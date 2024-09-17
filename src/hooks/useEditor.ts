@@ -4,6 +4,7 @@ import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { wrapGame } from "../util/compiler";
+import { debug } from "../util/logs";
 import { useProject } from "./useProject";
 
 /** The internal API to interact with the editor */
@@ -137,6 +138,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         iframe.srcdoc = wrapGame(parsedFiles);
     },
     updateImageDecorations() {
+        debug(0, "Updating gylph decorations");
         const editor = get().editor;
         const monaco = get().monaco;
         const model = editor?.getModel();
@@ -150,6 +152,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         // for each every line
         const lines = editor.getModel()?.getLinesContent() ?? [];
+
         let linesRange: {
             image: string;
             line: number;
@@ -168,8 +171,19 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 "",
             ).replace(";", "");
 
+            const projectAsset = useProject.getState().project.assets.get(
+                normalizedUrl.replace("assets/", ""),
+            );
+
+            if (projectAsset) {
+                return linesRange.push({
+                    image: projectAsset.url,
+                    line: index + 1,
+                });
+            }
+
             linesRange.push({
-                image: normalizedUrl,
+                image: `http://localhost:5173/${normalizedUrl}`,
                 line: index + 1,
             });
         });
@@ -179,7 +193,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
             options: {
                 glyphMarginClassName: "monaco-glyph-margin",
                 glyphMarginHoverMessage: {
-                    value: `![image](http://localhost:5173/${image})`,
+                    value: `![image](${image})`,
                     isTrusted: true,
                 },
             },
