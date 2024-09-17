@@ -1,29 +1,29 @@
 import { assets } from "@kaplayjs/crew";
 import * as Tabs from "@radix-ui/react-tabs";
-import ResourcesPanel from "./ResourcesPanel";
-import ResourceTab from "./ResourceTab";
+import AssetsPanel from "./AssetsPanel";
+import AssetsTab from "./AssetsTab";
 
 const Assets = () => {
     return (
-        <Tabs.Root className="flex flex-col h-full">
+        <Tabs.Root className="flex flex-col h-full" defaultValue="Sprites">
             <Tabs.List className="tabs tabs-bordered bg-base-200 w-full">
-                <ResourceTab label="Sprites" icon={assets.mark.outlined} />
-                <ResourceTab label="Sounds" icon={assets.sounds.outlined} />
-                <ResourceTab label="Fonts" icon={assets.fonts.outlined} />
+                <AssetsTab label="Sprites" icon={assets.mark.outlined} />
+                <AssetsTab label="Sounds" icon={assets.sounds.outlined} />
+                <AssetsTab label="Fonts" icon={assets.fonts.outlined} />
             </Tabs.List>
 
-            <ResourcesPanel
+            <AssetsPanel
                 value="Sprites"
                 kind="sprite"
                 accept="image/*"
             />
-            <ResourcesPanel
+            <AssetsPanel
                 value="Sounds"
                 kind="sound"
                 visibleIcon={assets.sounds.sprite}
                 accept="audio/*"
             />
-            <ResourcesPanel
+            <AssetsPanel
                 value="Fonts"
                 kind="font"
                 visibleIcon={assets.fonts.sprite}

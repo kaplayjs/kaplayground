@@ -35,6 +35,8 @@ export interface AssetsSlice {
     addAsset: (asset: UploadAsset) => void;
     /** Remove an asset */
     removeAsset: (path: string) => void;
+    /** Order assets */
+    orderAssets: (order: string[]) => void;
 }
 
 type Slice = ProjectSlice & AssetsSlice;
@@ -51,7 +53,7 @@ const loadByAsset = (
 ) => {
     return `${assetFuncByKind[assetKind]}("${
         removeExtension(assetName)
-    }", "assets/${assetKind}s/${assetName}",)`;
+    }", "assets/${assetKind}s/${assetName}");`;
 };
 
 export const createAssetsSlice: StateCreator<
@@ -64,7 +66,6 @@ export const createAssetsSlice: StateCreator<
     get,
 ) => ({
     assetsLastId: 0,
-
     addAsset(asset) {
         console.debug("Adding asset", asset);
         const assets = get().project.assets;
@@ -112,5 +113,27 @@ export const createAssetsSlice: StateCreator<
         }
 
         set({});
+    },
+    orderAssets(order) {
+        const assets = get().project.assets;
+
+        const newAssets = new Map(
+            order.map((path) => {
+                const asset = assets.get(path);
+
+                if (!asset) {
+                    throw new Error("One asset is missing");
+                }
+
+                return [path, asset];
+            }),
+        );
+
+        set({
+            project: {
+                ...get().project,
+                assets: newAssets,
+            },
+        });
     },
 });

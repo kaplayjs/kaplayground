@@ -8,7 +8,7 @@ type Props = {
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 
-const ResourceAddButton: FC<Props> = ({ accept, inputProps }) => {
+const AssetsAddButton: FC<Props> = ({ accept, inputProps }) => {
     return (
         <div className="flex justify-end items-center min-h-10">
             <label>
@@ -31,4 +31,4 @@ const ResourceAddButton: FC<Props> = ({ accept, inputProps }) => {
     );
 };
 
-export default ResourceAddButton;
+export default AssetsAddButton;

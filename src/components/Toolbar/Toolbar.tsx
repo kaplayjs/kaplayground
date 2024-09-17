@@ -1,4 +1,4 @@
-import kaplaygroundLogo from "../../../public/pg.png";
+import kaplaygroundLogo from "/pg.png";
 import { useProject } from "../../hooks/useProject";
 import ExampleList from "./ExampleList";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";

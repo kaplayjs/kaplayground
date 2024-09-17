@@ -1,11 +1,14 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { type FC } from "react";
+import * as React from "react";
 import Dropzone from "react-dropzone";
 import { useAssets } from "../../hooks/useAssets";
 import type { AssetKind } from "../../stores/storage/assets";
 import { fileToBase64 } from "../../util/fileToBase64";
-import ResourceAddButton from "./ResourceAddButton";
-import ResourcesList from "./ResourcesList";
+import AssetsAddButton from "./AssetsAddButton";
+import AssetsList from "./AssetsList";
+import "./AssetsPanel.css";
+import { useEditor } from "../../hooks/useEditor";
+import { cn } from "../../util/cn";
 
 type Props = {
     value: string;
@@ -14,8 +17,10 @@ type Props = {
     accept: string;
 };
 
-const ResourcesPanel: FC<Props> = (props) => {
+const AssetsPanel: React.FC<Props> = (props) => {
     const { addAsset } = useAssets({ kind: props.kind });
+    const { showNotification } = useEditor();
+    const [isDragging, setIsDragging] = React.useState(false);
 
     const handleAssetUpload = async (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
@@ -35,19 +40,40 @@ const ResourcesPanel: FC<Props> = (props) => {
     };
 
     return (
-        <Tabs.Content className="w-full h-full" value={props.value}>
-            <Dropzone onDrop={handleAssetUpload} noClick>
+        <Tabs.Content
+            className={cn("w-full h-full", {
+                "dragging-border": isDragging,
+            })}
+            value={props.value}
+        >
+            <Dropzone
+                onDrop={handleAssetUpload}
+                noClick
+                onDragEnter={() => {
+                    setIsDragging(true);
+                }}
+                onDragLeave={() => {
+                    setIsDragging(false);
+                }}
+                onDropAccepted={() => {
+                    setIsDragging(false);
+                }}
+                onDropRejected={() => {
+                    showNotification("Invalid file type!");
+                    setIsDragging(false);
+                }}
+            >
                 {({ getRootProps, getInputProps }) => (
                     <div
                         className="h-full p-2"
                         {...getRootProps()}
                     >
                         <div className="h-full flex flex-col justify-between">
-                            <ResourcesList
+                            <AssetsList
                                 kind={props.kind}
                                 visibleIcon={props.visibleIcon}
                             />
-                            <ResourceAddButton
+                            <AssetsAddButton
                                 accept={props.accept}
                                 kind={props.kind}
                                 inputProps={getInputProps()}
@@ -60,4 +86,4 @@ const ResourcesPanel: FC<Props> = (props) => {
     );
 };
 
-export default ResourcesPanel;
+export default AssetsPanel;

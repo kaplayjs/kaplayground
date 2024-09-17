@@ -6,7 +6,7 @@ type TabProps = {
     icon: string;
 };
 
-const ResourceTab: FC<TabProps> = ({ label, icon }) => {
+const AssetsTab: FC<TabProps> = ({ label, icon }) => {
     return (
         <Tabs.Trigger
             value={label}
@@ -24,4 +24,4 @@ const ResourceTab: FC<TabProps> = ({ label, icon }) => {
     );
 };
 
-export default ResourceTab;
+export default AssetsTab;

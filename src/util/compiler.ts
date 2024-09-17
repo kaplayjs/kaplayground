@@ -31,7 +31,6 @@ body {
 `;
 
 const transformAssetUrl = (regex: RegExp, code: string) => {
-    console.debug();
     const { project: { assets: resources } } = useProject.getState();
 
     return code.replace(regex, (match, asset: string) => {
@@ -40,8 +39,6 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
             "assets/",
             "",
         ).replace(/"/g, "");
-
-        console.log(resources);
 
         return match.replace(
             asset,

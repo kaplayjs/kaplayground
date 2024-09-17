@@ -23,6 +23,7 @@ const MonacoEditor: FC<Props> = (props) => {
         setMonaco,
         updateImageDecorations,
         setGylphDecorations,
+        getCurrentFile,
     } = useEditor();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
@@ -77,7 +78,7 @@ const MonacoEditor: FC<Props> = (props) => {
 
         editor.addAction({
             id: "sync-file",
-            label: "Sync Game",
+            label: "Sync File with Project",
             contextMenuGroupId: "navigation",
             contextMenuOrder: 1.5,
             run: () => {
@@ -92,12 +93,15 @@ const MonacoEditor: FC<Props> = (props) => {
     };
 
     const handleEditorChange = (value: string | undefined) => {
-        console.debug("Editor changed value");
-        const currentProjectFile = getFile(currentFile);
+        const currentProjectFile = getFile(getCurrentFile());
 
         if (!currentProjectFile) return console.debug("Current file not found");
+        console.debug(
+            "Due to editor change, updating file",
+            currentProjectFile.path,
+        );
 
-        updateFile(currentFile, value ?? "");
+        updateFile(currentProjectFile.path, value ?? "");
         updateImageDecorations();
     };
 
@@ -116,7 +120,6 @@ const MonacoEditor: FC<Props> = (props) => {
                 lineNumbersMinChars: 2,
                 folding: false,
             }}
-            path={getFile(currentFile)?.path ?? "main.js"}
         />
     );
 };

@@ -2,15 +2,15 @@ import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
 import { useAssets } from "../../hooks/useAssets";
 import type { Asset, AssetKind } from "../../stores/storage/assets";
-import type { ResourceProps } from "./ResourceItem";
-import ResourceItem from "./ResourceItem";
+import type { ResourceProps } from "./AssetsItem";
+import AssetsItem from "./AssetsItem";
 
 type Props = Omit<ResourceProps, "asset"> & {
     kind: AssetKind;
 };
 
-const ResourcesList: FC<Props> = ({ kind, visibleIcon }) => {
-    const { assets } = useAssets({ kind });
+const AssetsList: FC<Props> = ({ kind, visibleIcon }) => {
+    const { assets, orderAssets } = useAssets({ kind });
     const [
         parent,
         draggableAssets,
@@ -21,13 +21,17 @@ const ResourcesList: FC<Props> = ({ kind, visibleIcon }) => {
         setDraggableAssets(assets);
     }, [assets]);
 
+    useEffect(() => {
+        orderAssets(draggableAssets.map((asset) => asset.path));
+    }, [draggableAssets]);
+
     return (
         <ul
             ref={parent}
-            className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44"
+            className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44 "
         >
             {draggableAssets.map((resource, i) => (
-                <ResourceItem
+                <AssetsItem
                     key={i}
                     asset={resource}
                     visibleIcon={visibleIcon
@@ -38,4 +42,4 @@ const ResourcesList: FC<Props> = ({ kind, visibleIcon }) => {
     );
 };
 
-export default ResourcesList;
+export default AssetsList;

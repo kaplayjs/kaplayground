@@ -3,7 +3,7 @@ import type { editor } from "monaco-editor";
 import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
-import { parseAssets, wrapGame } from "../util/compiler";
+import { wrapGame } from "../util/compiler";
 import { useProject } from "./useProject";
 
 /** The internal API to interact with the editor */
@@ -20,6 +20,8 @@ type EditorStore = {
     currentFile: string;
     /** Set the current file */
     setCurrentFile: (path: string) => void;
+    /** Get the current file path */
+    getCurrentFile: () => string;
     /** Gylph decorations */
     gylphDecorations: editor.IEditorDecorationsCollection | null;
     /** Set gylph decorations */
@@ -40,6 +42,8 @@ type EditorStore = {
     updateImageDecorations: () => void;
     /** Display notification */
     showNotification: (message: string) => void;
+    /** Set value in Monaco instance */
+    setEditorValue: (value: string) => void;
 };
 
 export const useEditor = create<EditorStore>((set, get) => ({
@@ -58,6 +62,10 @@ export const useEditor = create<EditorStore>((set, get) => ({
     currentFile: "main.js",
     setCurrentFile: (path) => {
         set({ currentFile: path });
+        get().update();
+    },
+    getCurrentFile: () => {
+        return get().currentFile;
     },
     iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
     setIframe: (iframe) => {
@@ -70,13 +78,18 @@ export const useEditor = create<EditorStore>((set, get) => ({
         set({ iframe: newRef });
     },
     update: () => {
-        const currentFile = useProject.getState().getFile(get().currentFile);
+        const currentFile = useProject.getState().getFile(
+            get().getCurrentFile(),
+        );
         if (!currentFile) return;
 
-        const editor = get().editor;
-        if (!editor) return;
+        console.debug(
+            "Editor value updated with currentFile",
+            currentFile.path,
+        );
 
-        editor.setValue(currentFile.value);
+        get().setEditorValue(currentFile.value);
+        get().updateImageDecorations();
     },
     setTheme: (theme: string) => {
         const editor = get().editor;
@@ -121,8 +134,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
             parsedFiles = mainFile;
         }
 
-        const finalCode = parseAssets(parsedFiles);
-        iframe.srcdoc = wrapGame(finalCode);
+        iframe.srcdoc = wrapGame(parsedFiles);
     },
     updateImageDecorations() {
         const editor = get().editor;
@@ -175,5 +187,13 @@ export const useEditor = create<EditorStore>((set, get) => ({
     },
     showNotification(message) {
         toast(message);
+    },
+    setEditorValue(value) {
+        console.debug("Setting editor value to", value);
+
+        const editor = get().editor;
+        if (!editor) return console.error("No editor");
+
+        editor.setValue(value);
     },
 }));
