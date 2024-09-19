@@ -1,9 +1,10 @@
 import { examples } from "./data/examples";
 import { Example } from "./Example";
+import "./ExamplesBrowser.css";
 
 export const ExamplesBrowser = () => {
     return (
-        <dialog id="examples-browser" className="modal bg-[#00000070]" open>
+        <dialog id="examples-browser" className="modal bg-[#00000070]">
             <main className="modal-box overflow-hidden p-4 flex flex-col gap-2">
                 <header>
                     <h2 className="text-3xl font-semibold">Examples</h2>
@@ -12,7 +13,7 @@ export const ExamplesBrowser = () => {
                         example to open it in the editor.
                     </p>
                 </header>
-                <div className="flex flex-wrap gap-4">
+                <div className="examples-list | gap-2 px-4 overflow-auto">
                     {examples.map((example, index) => (
                         <Example example={example} key={index} />
                     ))}

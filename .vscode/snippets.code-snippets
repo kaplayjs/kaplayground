@@ -1,0 +1,10 @@
+{
+	"Print to console": {
+		"scope": "javascript,typescript",
+		"prefix": "ie",
+		"body": [
+			"import ${1}Example from \"./../../../../kaplay/examples/${1}.js?raw\";",
+		],
+		"description": "Import an example"
+	}
+}
