@@ -5,9 +5,8 @@
   "scripts": {
     "dev": "vite dev",
     "start": "vite dev",
-    "build": "vite check && astro build",
-    "preview": "astro preview",
-    "astro": "astro",
+    "build": "vite build",
+    "preview": "vite preview",
     "fmt": "dprint fmt",
     "fk": "cd kaplay && pnpm i && pnpm build && cd .. && pnpm copy",
     "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
@@ -46,7 +45,8 @@
     "kaplay": "3001.0.0-alpha.22",
     "monaco-editor": "^0.48.0",
     "postcss": "^8.4.41",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-static-copy": "^1.0.6"
   },
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
 }
