@@ -7,7 +7,7 @@ import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project, replaceProject, loadProject } = useProject();
+    const { project, replaceProject, createNewProject } = useProject();
     const { update, run, showNotification } = useEditor();
 
     const handleDownload = () => {
@@ -34,7 +34,7 @@ const Projects: FC = () => {
     };
 
     const handleProjectReset = () => {
-        loadProject("kaplay-unsaved-pj");
+        createNewProject();
         update();
         run();
     };
@@ -72,7 +72,7 @@ const Projects: FC = () => {
                     <button
                         onClick={handleProjectReset}
                     >
-                        Reset project
+                        Create new project
                     </button>
                 </li>
             </ul>

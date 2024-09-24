@@ -19,7 +19,7 @@ const Playground = () => {
     const {
         project,
         getProjectMode,
-        resetProject,
+        createNewProject,
     } = useProject();
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
@@ -32,7 +32,7 @@ const Playground = () => {
     useEffect(() => {
         if (project.files.size > 0) setLoadingProject(false);
         else {
-            resetProject();
+            createNewProject();
         }
     }, [project]);
 

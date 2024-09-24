@@ -1,4 +1,5 @@
 import { useProject } from "../hooks/useProject";
+import { debug } from "./logs";
 
 // Wraps the game in an acceptable format for iFrame
 export const wrapGame = (code: string) => `
@@ -34,6 +35,8 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
     const { project: { assets: resources } } = useProject.getState();
 
     return code.replace(regex, (match, asset: string) => {
+        debug(0, "asset matched", asset);
+
         // remove first / and last / from asset, also remove "assets" from asset
         const normalizeAsset = asset.replace(/^\/|\/$/g, "").replace(
             "assets/",
@@ -51,8 +54,12 @@ export const parseAssets = (code: string) => {
     const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*\)/g;
     const regexComment = /\/\/\s*kaplay-transformation-asset\s*(.*)/g;
 
-    return transformAssetUrl(
+    const codeTransformed = transformAssetUrl(
         regexLoad,
         transformAssetUrl(regexComment, code),
     );
+
+    debug(1, "code with assets", codeTransformed);
+
+    return codeTransformed;
 };

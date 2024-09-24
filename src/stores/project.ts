@@ -3,6 +3,7 @@ import type { StateCreator } from "zustand";
 import { defaultProject } from "../config/defaultProject";
 import { useEditor } from "../hooks/useEditor";
 import { useProject } from "../hooks/useProject";
+import { debug } from "../util/logs";
 import type { Asset, AssetsSlice } from "./storage/assets";
 import type { File, FilesSlice } from "./storage/files";
 
@@ -18,8 +19,8 @@ export type Project = {
 export interface ProjectSlice {
     /** The current project */
     project: Project;
-    /** Reset the project */
-    resetProject: () => void;
+    /** Creates a new project */
+    createNewProject: () => void;
     /** Replace the project with a new project */
     replaceProject: (project: Project) => void;
     /** Set the project mode */
@@ -60,20 +61,24 @@ export const createProjectSlice: StateCreator<
         kaplayConfig: {},
         mode: "project",
     },
-    resetProject: () => {
-        console.debug("Resetting project");
+    createNewProject: () => {
+        debug(0, "creating a new project");
 
         const files = new Map();
         const assets = new Map();
 
         // Load default setup
         get().loadDefaultSetup("project", files, assets);
+        debug(1, "New files for the new project", files, assets);
 
-        console.log("New files", files, assets);
+        useProject.persist.setOptions({
+            name: "Untitled Project",
+        });
+        useProject.persist.rehydrate();
 
         set(() => ({
             project: {
-                name: "Untitled Project",
+                name: "Project #" + get().getSavedProjects().length,
                 version: "2.0.0",
                 files: files,
                 assets: assets,
@@ -81,6 +86,8 @@ export const createProjectSlice: StateCreator<
                 mode: "project",
             },
         }));
+
+        useEditor.getState().update();
     },
     replaceProject: (project) => {
         const { run, update } = useEditor.getState();
@@ -121,6 +128,8 @@ export const createProjectSlice: StateCreator<
         });
 
         useProject.persist.rehydrate();
+
+        localStorage.removeItem(`Untitled Project`);
     },
     isProjectSaved: (name: string) => {
         return get().getSavedProjects().includes(`pj-${name}`);

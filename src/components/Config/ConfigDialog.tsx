@@ -173,7 +173,7 @@ const ConfigDialog = () => {
                                     KAPLAY Configuration are disabled in
                                     examples mode. Try Projects (toolbox) {"->"}
                                     {" "}
-                                    Reset Project
+                                    Create Project
                                 </>
                             )}
                     </main>
