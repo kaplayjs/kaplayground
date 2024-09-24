@@ -43,7 +43,6 @@
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "dprint": "^0.45.1",
-    "globals": "^15.9.0",
     "kaplay": "3001.0.0-alpha.22",
     "monaco-editor": "^0.48.0",
     "postcss": "^8.4.41",

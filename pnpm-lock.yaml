@@ -90,9 +90,6 @@ importers:
       dprint:
         specifier: ^0.45.1
         version: 0.45.1
-      globals:
-        specifier: ^15.9.0
-        version: 15.9.0
       kaplay:
         specifier: 3001.0.0-alpha.22
         version: 3001.0.0-alpha.22
@@ -1162,10 +1159,6 @@ packages:
   globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
-
-  globals@15.9.0:
-    resolution: {integrity: sha512-SmSKyLLKFbSr6rptvP8izbyxJL4ILwqO9Jg23UA0sDlGlu58V59D1//I3vlc0KJphVdUR7vMjHIplYnzBxorQA==}
-    engines: {node: '>=18'}
 
   has-flag@3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
@@ -2684,8 +2677,6 @@ snapshots:
       path-scurry: 1.11.1
 
   globals@11.12.0: {}
-
-  globals@15.9.0: {}
 
   has-flag@3.0.0: {}
 
