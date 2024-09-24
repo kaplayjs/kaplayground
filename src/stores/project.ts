@@ -7,6 +7,7 @@ import type { Asset, AssetsSlice } from "./storage/assets";
 import type { File, FilesSlice } from "./storage/files";
 
 export type Project = {
+    name: string;
     version: string;
     assets: Map<string, Asset>;
     files: Map<string, File>;
@@ -25,6 +26,14 @@ export interface ProjectSlice {
     setProjectMode: (mode: Project["mode"]) => void;
     /** Get project mode */
     getProjectMode: () => Project["mode"];
+    /** Get project name */
+    getProjectName: () => string;
+    /** Get the list of saved projects */
+    getSavedProjects: () => string[];
+    /** Project exists */
+    isProjectSaved: (name: string) => boolean;
+    /** Set project name */
+    setProjectName: (name: string) => void;
     /** Save a project */
     saveProject: (name: string) => void;
     /** Load a project */
@@ -44,6 +53,7 @@ export const createProjectSlice: StateCreator<
     ProjectSlice
 > = (set, get) => ({
     project: {
+        name: "Untitled Project",
         version: "2.0.0",
         files: new Map(),
         assets: new Map(),
@@ -63,6 +73,7 @@ export const createProjectSlice: StateCreator<
 
         set(() => ({
             project: {
+                name: "Untitled Project",
                 version: "2.0.0",
                 files: files,
                 assets: assets,
@@ -82,6 +93,17 @@ export const createProjectSlice: StateCreator<
         update();
         run();
     },
+    getProjectName: () => {
+        return get().project.name;
+    },
+    setProjectName: (name: string) => {
+        set(() => ({
+            project: {
+                ...get().project,
+                name: name,
+            },
+        }));
+    },
     setProjectMode: (mode) => {
         set(() => ({
             project: {
@@ -95,10 +117,26 @@ export const createProjectSlice: StateCreator<
     },
     saveProject: (name: string) => {
         useProject.persist.setOptions({
-            name: name,
+            name: `pj-${name}`,
         });
 
         useProject.persist.rehydrate();
+    },
+    isProjectSaved: (name: string) => {
+        return get().getSavedProjects().includes(`pj-${name}`);
+    },
+    getSavedProjects: () => {
+        let keys: string[] = [];
+
+        for (let i = 0, len = localStorage.length; i < len; ++i) {
+            const localKey = localStorage.key(i);
+
+            if (localKey && localKey.startsWith("pj-")) {
+                keys.push(localKey);
+            }
+        }
+
+        return keys;
     },
     loadProject: (name: string) => {
         useProject.persist.setOptions({

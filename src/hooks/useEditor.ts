@@ -11,20 +11,20 @@ import { useProject } from "./useProject";
 type EditorStore = {
     /** Monaco's editor instance */
     editor: editor.IStandaloneCodeEditor | null;
-    /** Set Monaco's editor instance */
-    setEditor: (editor: editor.IStandaloneCodeEditor) => void;
     /** Monaco instance */
     monaco: Monaco | null;
-    /** Set Monaco instance */
-    setMonaco: (monaco: Monaco) => void;
     /** The current file */
     currentFile: string;
+    /** Gylph decorations */
+    gylphDecorations: editor.IEditorDecorationsCollection | null;
+    /** Set Monaco's editor instance */
+    setEditor: (editor: editor.IStandaloneCodeEditor) => void;
+    /** Set Monaco instance */
+    setMonaco: (monaco: Monaco) => void;
     /** Set the current file */
     setCurrentFile: (path: string) => void;
     /** Get the current file path */
     getCurrentFile: () => string;
-    /** Gylph decorations */
-    gylphDecorations: editor.IEditorDecorationsCollection | null;
     /** Set gylph decorations */
     setGylphDecorations: (
         gylphDecorations: editor.IEditorDecorationsCollection,

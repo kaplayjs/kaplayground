@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@formkit/drag-and-drop": "^0.0.38",
-    "@kaplayjs/crew": "^1.5.3",
+    "@kaplayjs/crew": "^1.6.1",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-context-menu": "^2.2.1",
     "@radix-ui/react-tabs": "^1.1.0",

@@ -1,11 +1,9 @@
 import kaplaygroundLogo from "/pg.png";
-import { useProject } from "../../hooks/useProject";
 import ExampleList from "./ExampleList";
+import ProjectStatus from "./ProjectStatus";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
 
 const Toolbar = () => {
-    const { getProjectMode } = useProject((state) => state);
-
     return (
         <div
             className="flex flex-1 justify-between items-center bg-base-300"
@@ -26,9 +24,7 @@ const Toolbar = () => {
                 </figure>
             </a>
 
-            <div className="uppercase | badge badge-lg badge-primary">
-                {getProjectMode() === "project" ? "PJ" : "EX"}
-            </div>
+            <ProjectStatus />
 
             <ExampleList />
             <ToolbarToolsMenu />

@@ -5,7 +5,7 @@ import { useProject } from "../../hooks/useProject";
 const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
     const { addFile } = useProject();
 
-    const handleAddScene = () => {
+    const handleAddFile = () => {
         const sceneName = prompt("Scene name");
         if (!sceneName) return;
 
@@ -22,7 +22,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
         <div className="flex" role="toolbar">
             <button
                 className="btn btn-ghost btn-xs rounded-sm px-1"
-                onClick={handleAddScene}
+                onClick={handleAddFile}
             >
                 <img
                     src={assets.plus.outlined}

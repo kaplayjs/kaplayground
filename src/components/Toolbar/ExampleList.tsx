@@ -10,6 +10,8 @@ const ExampleList: FC = () => {
         replaceProject,
         addFile,
         setProjectMode,
+        getSavedProjects,
+        loadProject,
     } = useProject();
     const {
         update,
@@ -21,30 +23,37 @@ const ExampleList: FC = () => {
             "data-example",
         );
 
-        useProject.persist.setOptions({
-            name: "kaplay-off-example",
-        });
+        if (exampleIndex) {
+            useProject.persist.setOptions({
+                name: "kaplay-off-example",
+            });
 
-        setProjectMode("example");
+            setProjectMode("example");
 
-        replaceProject({
-            assets: new Map(),
-            files: new Map<string, File>(),
-            kaplayConfig: {},
-            mode: "example",
-            version: project.version,
-        });
+            replaceProject({
+                name: "Untitled Example",
+                assets: new Map(),
+                files: new Map<string, File>(),
+                kaplayConfig: {},
+                mode: "example",
+                version: project.version,
+            });
 
-        addFile({
-            name: "main.js",
-            value: exampleList[Number(exampleIndex)].code,
-            kind: "main",
-            language: "javascript",
-            path: "main.js",
-        });
+            addFile({
+                name: "main.js",
+                value: exampleList[Number(exampleIndex)].code,
+                kind: "main",
+                language: "javascript",
+                path: "main.js",
+            });
 
-        update();
-        run();
+            update();
+            run();
+        } else {
+            loadProject(ev.target.value);
+            update();
+            run();
+        }
     };
 
     return (
@@ -55,6 +64,14 @@ const ExampleList: FC = () => {
                 defaultValue={"none"}
             >
                 <option value="none">none</option>
+                <option className="text-md" disabled>Projects</option>
+                {getSavedProjects().map((project) => (
+                    <option key={project} value={project} data-project>
+                        {project.replace("pj-", "")}
+                    </option>
+                ))}
+
+                <option className="text-md" disabled>KAPLAY Examples</option>
                 {exampleList.map((example, i) => (
                     <option key={example.name} data-example={i}>
                         {example.name}
