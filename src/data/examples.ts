@@ -1,6 +1,17 @@
 import examplesList from "./exampleList.json";
 
-type tag = "basic concepts" | "physics" | "animation" | "ui" | "ai" | "audio" | "testing" | "input" | "effects" | "math" | "game"
+type tag =
+    | "basic concepts"
+    | "physics"
+    | "animation"
+    | "ui"
+    | "ai"
+    | "audio"
+    | "testing"
+    | "input"
+    | "effects"
+    | "math"
+    | "game";
 
 export type Example = {
     name: string;
@@ -8,6 +19,7 @@ export type Example = {
     index: string;
     description: string | null;
     formatedName: string;
+    hidden?: boolean;
     version?: string;
     tags?: tag[];
     difficulty?: "easy" | "medium" | "hard" | "auto";
@@ -218,13 +230,14 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "easy",
     },
     // TODO: This example shouldn't be on the examples list i think...
-    // Could be part of a custom component example instead 
-    // "inspectExample": {
-    //     formatedName: "Inspect example",
-    //     description: "How to add custom inspect properties to a custom component.",
-    //     tags: ["testing"],
-    //     difficulty: "easy",
-    // },
+    "inspectExample": {
+        formatedName: "Inspect example",
+        description:
+            "How to add custom inspect properties to a custom component.",
+        tags: ["testing"],
+        difficulty: "easy",
+        hidden: true,
+    },
     "kaboom": {
         formatedName: "Kaboom!",
         description: "How to KABOOM.",
@@ -245,7 +258,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "layers": {
         formatedName: "Layers",
-        description: "How to make use of a kaplay's layering system.",
+        description: "How to make use of a KAPLAY's layering system.",
         tags: ["ui"],
         difficulty: "easy",
     },
@@ -306,7 +319,8 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "out": {
         formatedName: "Out of screen",
-        description: "How to handle behaviour for objects that got out of the screen.",
+        description:
+            "How to handle behaviour for objects that got out of the screen.",
         tags: ["basic concepts"],
         difficulty: "easy",
     },
@@ -318,7 +332,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "particle": {
         formatedName: "Particle",
-        description: "How to use kaplay's particle system.",
+        description: "How to use KAPLAY's particle system.",
         tags: ["effects"],
         difficulty: "medium",
     },
@@ -379,12 +393,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "easy",
     },
     // TODO: Is this meant to be a debug test, could it be removed or hidden?
-    // "raycastLevelTest": {
-    //     formatedName: "Raycast level test",
-    //     description: "How to search for objects (multiple conditions).",
-    //     tags: ["basic concepts"],
-    //     difficulty: "easy",
-    // },
+    "raycastLevelTest": {
+        formatedName: "Raycast level test",
+        description: "How to search for objects (multiple conditions).",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+        hidden: true,
+    },
     "raycastObject": {
         formatedName: "Raycasts objects",
         description: "How to shoot a raycast and make it bounce.",
@@ -400,7 +415,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     // },
     "raycaster3d": {
         formatedName: "3D Raycaster",
-        description: "Basically, how to make 3D in kaplay.",
+        description: "Basically, how to make 3D in KAPLAY.",
         tags: ["math", "effects"],
         difficulty: "hard",
     },
@@ -412,13 +427,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "rpg": {
         formatedName: "RPG",
-        description: "How to make a RPG type game in kaplay.",
+        description: "How to make a RPG type game in KAPLAY.",
         tags: ["game"],
         difficulty: "medium",
     },
     "runner": {
         formatedName: "Runner",
-        description: "How to make a runner type game in kaplay.",
+        description: "How to make a runner type game in KAPLAY.",
         tags: ["game"],
         difficulty: "easy",
     },
@@ -436,7 +451,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "shooter": {
         formatedName: "Shooter",
-        description: "How to make a shooter type game in kaplay.",
+        description: "How to make a shooter type game in KAPLAY.",
         tags: ["game"],
         difficulty: "easy",
     },
@@ -467,13 +482,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     "text": {
         formatedName: "Text",
         description: "How to add text.",
-        tags: ["basic concepts"],
+        tags: ["basic concepts", "ui"],
         difficulty: "easy",
     },
     "textInput": {
         formatedName: "Text Input",
         description: "How to receive and display text.",
-        tags: ["input"],
+        tags: ["input", "ui"],
         difficulty: "easy",
     },
     "tiled": {
@@ -489,16 +504,16 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "easy",
     },
     // TODO: idk what this is neither
-    // "transformShape": {
-    //     formatedName: "Transform shape",
-    //     description: "How to wait and loop functions.",
-    //     tags: ["basic concepts"],
-    //     difficulty: "easy",
-    // },
+    "transformShape": {
+        formatedName: "Transform shape",
+        description: "Something.",
+        tags: ["math"],
+        difficulty: "easy",
+    },
     "tween": {
         formatedName: "Tweens",
         description: "How to tween properties of an object.",
-        tags: ["basic concepts"],
+        tags: ["basic concepts", "math"],
         difficulty: "easy",
     },
 };
@@ -507,6 +522,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
 
 export const examples = examplesList.filter((example) =>
     examplesMetaData[example.name]?.version !== "4000"
+    || examplesMetaData[example.name]?.hidden
 ).map((example) => {
     return {
         ...example,
