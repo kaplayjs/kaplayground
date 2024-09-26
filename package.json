@@ -3,14 +3,13 @@
   "type": "module",
   "version": "2.0.0",
   "scripts": {
+    "install": "git submodule update --init --recursive && cd kaplay && pnpm i",
     "dev": "vite dev",
     "start": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "generate:examples": "node --experimental-strip-types scripts/examples.ts",
     "fmt": "dprint fmt",
-    "fk": "cd kaplay && pnpm i && pnpm build && cd .. && pnpm copy",
-    "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
     "check": "tsc --noEmit"
   },
   "dependencies": {
