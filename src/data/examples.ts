@@ -1,5 +1,7 @@
 import examplesList from "./exampleList.json";
 
+type tag = "basic concepts" | "physics" | "animation" | "ui" | "ai" | "audio" | "testing" | "input" | "effects" | "math" | "game"
+
 export type Example = {
     name: string;
     code: string;
@@ -7,7 +9,7 @@ export type Example = {
     description: string | null;
     formatedName: string;
     version?: string;
-    tags?: string[];
+    tags?: tag[];
     difficulty?: "easy" | "medium" | "hard" | "auto";
     image?: string;
 };
@@ -96,7 +98,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     "concert": {
         formatedName: "Concert",
         description: "Celebrate Kaboom.js v2000 and back to the old days.",
-        tags: ["games"],
+        tags: ["game"],
         difficulty: "medium",
     },
     "confetti": {
@@ -120,7 +122,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     "doublejump": {
         formatedName: "Double Jump",
         description: "How to add a double jump.",
-        tags: ["basic concepts", "games"],
+        tags: ["basic concepts", "game"],
         difficulty: "medium",
     },
     "drag": {
@@ -143,13 +145,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     "eatlove": {
         formatedName: "Eat Love",
         description: "A simple game to eat love.",
-        tags: ["games"],
+        tags: ["game"],
         difficulty: "medium",
     },
     "egg": {
         formatedName: "Egg",
         description: "A game about eggs.",
-        tags: ["games"],
+        tags: ["game"],
         difficulty: "medium",
     },
     "fadeIn": {
@@ -165,13 +167,343 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "easy",
         version: "4000",
     },
+    // TODO: This could be better explained, it actually makes use of debug.stepFrame()
+    //  so you could argue this is testing
     "fall": {
         formatedName: "Fall",
         description: "How to make game objects fall.",
         tags: ["basic concepts", "physics"],
         difficulty: "easy",
     },
+    "fixedUpdate": {
+        formatedName: "Fixed update",
+        description: "How to use fixed update.",
+        tags: ["basic concepts", "physics"],
+        difficulty: "medium",
+    },
+    "flameBar": {
+        formatedName: "Flame bar",
+        description: "How to make mario-like flamebars using parent/children.",
+        tags: ["basic concepts"],
+        difficulty: "medium",
+    },
+    "flappy": {
+        formatedName: "Flappy bird",
+        description: "How to make popular game flappy bird.",
+        tags: ["game", "ui"],
+        difficulty: "medium",
+    },
+    "gamepad": {
+        formatedName: "Gamepad",
+        description: "How to use gamepads in your game.",
+        tags: ["input"],
+        difficulty: "easy",
+    },
+    "ghosthunting": {
+        formatedName: "Ghost hunting",
+        description: "How to make a top-down shooter game.",
+        tags: ["game", "ai", "effects"],
+        difficulty: "hard",
+    },
+    "gravity": {
+        formatedName: "Gravity",
+        description: "How to make use of gravity and simple physics.",
+        tags: ["physics"],
+        difficulty: "easy",
+    },
+    "hover": {
+        formatedName: "Hover",
+        description: "How to manage hovers using the mouse.",
+        tags: ["ui"],
+        difficulty: "easy",
+    },
+    // TODO: This example shouldn't be on the examples list i think...
+    // Could be part of a custom component example instead 
+    // "inspectExample": {
+    //     formatedName: "Inspect example",
+    //     description: "How to add custom inspect properties to a custom component.",
+    //     tags: ["testing"],
+    //     difficulty: "easy",
+    // },
+    "kaboom": {
+        formatedName: "Kaboom!",
+        description: "How to KABOOM.",
+        tags: ["effects"],
+        difficulty: "easy",
+    },
+    "largeTexture": {
+        formatedName: "Large texture",
+        description: "How to manage large textures (+1000px).",
+        tags: ["ui"],
+        difficulty: "easy",
+    },
+    "simpleLayers": {
+        formatedName: "Simple layers",
+        description: "How to make use of a simple layering system.",
+        tags: ["ui"],
+        difficulty: "easy",
+    },
+    "layers": {
+        formatedName: "Layers",
+        description: "How to make use of a kaplay's layering system.",
+        tags: ["ui"],
+        difficulty: "easy",
+    },
+    "level": {
+        formatedName: "Levels",
+        description: "How to create levels using layouts and symbols.",
+        tags: ["basic concepts"],
+        difficulty: "medium",
+    },
+    // TODO: im not sure what this is
+    // "levelRaycast": {
+    //     formatedName: "Level raycast",
+    //     description: "How to create levels using layouts and symbols.",
+    //     tags: ["basic concepts"],
+    //     difficulty: "medium",
+    // },
+    "linecap": {
+        formatedName: "Line cap",
+        description: "How to add caps to lines.",
+        tags: ["ui"],
+        difficulty: "medium",
+    },
+    "linejoin": {
+        formatedName: "Line join",
+        description: "How to set the way lines join.",
+        tags: ["ui"],
+        difficulty: "medium",
+    },
+    "loader": {
+        formatedName: "Custom loading",
+        description: "How to make a custom loading screen.",
+        tags: ["ui"],
+        difficulty: "medium",
+    },
+    "maze": {
+        formatedName: "Maze",
+        description: "How to make a maze.",
+        tags: ["game", "math"],
+        difficulty: "hard",
+    },
+    "mazeRaycastedLight": {
+        formatedName: "Maze (raycasted light)",
+        description: "How to make a maze (and raycast a light).",
+        tags: ["game", "math", "effects"],
+        difficulty: "hard",
+    },
+    "movement": {
+        formatedName: "Simple movement",
+        description: "How to make simple directional movement.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "multiGamepad": {
+        formatedName: "Multi gamepad",
+        description: "How to use multiple gamepads in your game.",
+        tags: ["input"],
+        difficulty: "easy",
+    },
+    "out": {
+        formatedName: "Out of screen",
+        description: "How to handle behaviour for objects that got out of the screen.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "overlap": {
+        formatedName: "Overlap",
+        description: "How to detect overlap of shapes.",
+        tags: ["math"],
+        difficulty: "medium",
+    },
+    "particle": {
+        formatedName: "Particle",
+        description: "How to use kaplay's particle system.",
+        tags: ["effects"],
+        difficulty: "medium",
+    },
+    "pauseMenu": {
+        formatedName: "Pause menu",
+        description: "How to make a simple pause menu.",
+        tags: ["ui", "game"],
+        difficulty: "medium",
+    },
+    // TODO: Not sure what this is either
+    // "physics": {
+    //     formatedName: "Physics",
+    //     description: "How to predict physics?.",
+    //     tags: ["math"],
+    //     difficulty: "hard",
+    // },
+    "physicsFactory": {
+        formatedName: "Physics Factory",
+        description: "How to make use of various types of physics.",
+        tags: ["math"],
+        difficulty: "hard",
+    },
+    "platformer": {
+        formatedName: "Platformer",
+        description: "How to make a platformer game.",
+        tags: ["game", "basic concepts"],
+        difficulty: "easy",
+    },
+    "polygon": {
+        formatedName: "Polygon",
+        description: "How to draw a polygon.",
+        tags: ["math"],
+        difficulty: "medium",
+    },
+    // TODO: Not sure what this is
+    // "polygonuv": {
+    //     formatedName: "PolygonUV",
+    //     description: "Wobbly ghosts.",
+    //     tags: ["math"],
+    //     difficulty: "medium",
+    // },
+    "pong": {
+        formatedName: "Pong",
+        description: "How to make pong.",
+        tags: ["game", "basic concepts"],
+        difficulty: "easy",
+    },
+    "postEffect": {
+        formatedName: "Post Effect",
+        description: "How to apply shaders in the screen (post effects).",
+        tags: ["effects"],
+        difficulty: "medium",
+    },
+    "query": {
+        formatedName: "Query",
+        description: "How to search for objects (multiple conditions).",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    // TODO: Is this meant to be a debug test, could it be removed or hidden?
+    // "raycastLevelTest": {
+    //     formatedName: "Raycast level test",
+    //     description: "How to search for objects (multiple conditions).",
+    //     tags: ["basic concepts"],
+    //     difficulty: "easy",
+    // },
+    "raycastObject": {
+        formatedName: "Raycasts objects",
+        description: "How to shoot a raycast and make it bounce.",
+        tags: ["math"],
+        difficulty: "medium",
+    },
+    // TODO: i think these two are the same
+    // "raycastShape": {
+    //     formatedName: "Raycasts shapes",
+    //     description: "How to shoot a raycast and make it bounce.",
+    //     tags: ["math"],
+    //     difficulty: "medium",
+    // },
+    "raycaster3d": {
+        formatedName: "3D Raycaster",
+        description: "Basically, how to make 3D in kaplay.",
+        tags: ["math", "effects"],
+        difficulty: "hard",
+    },
+    "rect": {
+        formatedName: "Rectangle",
+        description: "Rect() component for making rectangle objects.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "rpg": {
+        formatedName: "RPG",
+        description: "How to make a RPG type game in kaplay.",
+        tags: ["game"],
+        difficulty: "medium",
+    },
+    "runner": {
+        formatedName: "Runner",
+        description: "How to make a runner type game in kaplay.",
+        tags: ["game"],
+        difficulty: "easy",
+    },
+    "scenes": {
+        formatedName: "Scenes",
+        description: "How to make use of scenes and states.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "shader": {
+        formatedName: "Shader",
+        description: "How to make use of shaders.",
+        tags: ["basic concepts", "effects"],
+        difficulty: "medium",
+    },
+    "shooter": {
+        formatedName: "Shooter",
+        description: "How to make a shooter type game in kaplay.",
+        tags: ["game"],
+        difficulty: "easy",
+    },
+    "size": {
+        formatedName: "Scale of game",
+        description: "How to manage a project's resolution and scale.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "slice9": {
+        formatedName: "Slice9",
+        description: "How to make use of slice9-type sprites.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "sprite": {
+        formatedName: "Sprite",
+        description: "How to add your own sprites and animate them.",
+        tags: ["basic concepts", "animation"],
+        difficulty: "easy",
+    },
+    "spriteatlas": {
+        formatedName: "Sprite atlases",
+        description: "How to make use of sprite atlases.",
+        tags: ["basic concepts", "animation"],
+        difficulty: "easy",
+    },
+    "text": {
+        formatedName: "Text",
+        description: "How to add text.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "textInput": {
+        formatedName: "Text Input",
+        description: "How to receive and display text.",
+        tags: ["input"],
+        difficulty: "easy",
+    },
+    "tiled": {
+        formatedName: "Tiled sprites",
+        description: "How to tile sprites.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    "timer": {
+        formatedName: "Timer",
+        description: "How to wait and loop functions.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
+    // TODO: idk what this is neither
+    // "transformShape": {
+    //     formatedName: "Transform shape",
+    //     description: "How to wait and loop functions.",
+    //     tags: ["basic concepts"],
+    //     difficulty: "easy",
+    // },
+    "tween": {
+        formatedName: "Tweens",
+        description: "How to tween properties of an object.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
+    },
 };
+
+// would like to personally apologize to MF for not understanding a lot of examples
 
 export const examples = examplesList.filter((example) =>
     examplesMetaData[example.name]?.version !== "4000"
