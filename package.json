@@ -7,6 +7,7 @@
     "start": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
+    "generate:examples": "node --experimental-strip-types scripts/examples.ts",
     "fmt": "dprint fmt",
     "fk": "cd kaplay && pnpm i && pnpm build && cd .. && pnpm copy",
     "copy": "cp -r kaplay/assets/sprites kaplay/dist/kaboom.js kaplay/dist/kaboom.js.map public/ && cp -r kaplay/examples/sprites kaplay/examples/fonts kaplay/examples/sounds kaplay/examples/shaders public/examples",
@@ -15,6 +16,7 @@
   "dependencies": {
     "@formkit/drag-and-drop": "^0.0.38",
     "@kaplayjs/crew": "^1.6.1",
+    "@kaplayjs/dprint-config": "^1.1.0",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-context-menu": "^2.2.1",
     "@radix-ui/react-tabs": "^1.1.0",
@@ -36,6 +38,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/node": "^22.7.0",
     "@types/pako": "^2.0.3",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",

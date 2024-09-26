@@ -9,10 +9,10 @@ import LoadingPlayground from "../../components/Playground/LoadingPlayground";
 import Toolbar from "../../components/Toolbar";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
+import Assets from "../Assets/Assets";
 import ConfigDialog from "../Config/ConfigDialog";
 import Editor from "../Editor/MonacoEditor";
 import { ExamplesBrowser } from "../ExamplesBrowser";
-import Assets from "../Resources/Assets";
 import GameView from "./GameView";
 
 const Playground = () => {

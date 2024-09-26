@@ -24,7 +24,7 @@ body {
         </style>
 </head>
 <body>
-<script src="https://unpkg.com/kaplay@4000.0.0-alpha.2/dist/kaplay.js"></script>
+<script src="https://unpkg.com/kaplay@latest/dist/kaplay.js"></script>
 <script>
     ${parseAssets(code)}
 </script>
@@ -35,7 +35,7 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
     const { project: { assets: resources } } = useProject.getState();
 
     return code.replace(regex, (match, asset: string) => {
-        debug(0, "asset matched", asset);
+        debug(0, "Transforming urls, asset matched", asset);
 
         // remove first / and last / from asset, also remove "assets" from asset
         const normalizeAsset = asset.replace(/^\/|\/$/g, "").replace(
@@ -59,7 +59,7 @@ export const parseAssets = (code: string) => {
         transformAssetUrl(regexComment, code),
     );
 
-    debug(1, "code with assets", codeTransformed);
+    debug(2, "Code with assets", codeTransformed);
 
     return codeTransformed;
 };

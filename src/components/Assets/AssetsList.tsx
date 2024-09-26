@@ -21,14 +21,13 @@ const AssetsList: FC<Props> = ({ kind, visibleIcon }) => {
         setDraggableAssets(assets);
     }, [assets]);
 
-    useEffect(() => {
-        orderAssets(draggableAssets.map((asset) => asset.path));
-    }, [draggableAssets]);
-
     return (
         <ul
             ref={parent}
             className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44 "
+            onDrag={() => {
+                orderAssets(draggableAssets.map((asset) => asset.path));
+            }}
         >
             {draggableAssets.map((resource, i) => (
                 <AssetsItem

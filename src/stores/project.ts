@@ -37,8 +37,6 @@ export interface ProjectSlice {
     setProjectName: (name: string) => void;
     /** Save a project */
     saveProject: (name: string) => void;
-    /** Load a project */
-    loadProject: (name: string) => void;
     /** Load defaut setup for every project mode */
     loadDefaultSetup: (
         mode: Project["mode"],
@@ -146,13 +144,6 @@ export const createProjectSlice: StateCreator<
         }
 
         return keys;
-    },
-    loadProject: (name: string) => {
-        useProject.persist.setOptions({
-            name: name,
-        });
-
-        useProject.persist.rehydrate();
     },
     loadDefaultSetup: (mode, files, assets) => {
         if (mode === "project") {

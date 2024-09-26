@@ -4,10 +4,10 @@
 // 2: Ultra internal and long log
 export const debug = (level: number = 0, ...msg: any[]) => {
     if (level === 0) {
-        console.debug(`%c${msg.join(" ")}`, "color: #ff00ff");
+        console.debug(`%c${msg.join(" ")}`, "color: #6694e3");
     } else if (level === 1) {
-        console.debug(`%c${msg.join(" ")}`, "color: #ff00ff");
+        console.debug(`%c${msg.join(" ")}`, "color: #e8db2a");
     } else if (level === 2) {
-        console.trace(`%c${msg.join(" ")}`, "color: #ff00ff");
+        console.trace(`%c${msg.join(" ")}`, "color: #cc3f7a");
     }
 };

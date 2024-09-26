@@ -16,7 +16,7 @@ export const useProject = create<Store>()(persist((...a) => ({
     ...createAssetsSlice(...a),
     ...createKaboomConfigSlice(...a),
 }), {
-    name: "kaplay-unsaved-pj",
+    name: "Untitled Project",
     storage: {
         getItem: (name) => {
             const str = localStorage.getItem(name);

@@ -1,4 +1,5 @@
 import type { StateCreator } from "zustand";
+import { debug } from "../../util/logs";
 import { removeExtension } from "../../util/removeExtensions";
 import type { ProjectSlice } from "../project";
 
@@ -103,18 +104,19 @@ export const createAssetsSlice: StateCreator<
         }
     },
     removeAsset(resourceId) {
-        console.debug("Removing asset", resourceId);
+        debug(0, "Removing asset", resourceId);
         const assets = get().project.assets;
 
         if (assets.has(resourceId)) {
             assets.delete(resourceId);
         } else {
-            console.debug("Asset not found", resourceId);
+            debug(0, "Tried to remove, asset not found", resourceId);
         }
 
         set({});
     },
     orderAssets(order) {
+        debug(1, "Ordering assets", order);
         const assets = get().project.assets;
 
         const newAssets = new Map(

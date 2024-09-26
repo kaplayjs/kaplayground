@@ -13,7 +13,10 @@ importers:
         version: 0.0.38
       '@kaplayjs/crew':
         specifier: ^1.6.1
-        version: 1.6.1(typescript@5.4.5)
+        version: 1.6.1(@types/node@22.7.0)(typescript@5.4.5)
+      '@kaplayjs/dprint-config':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.48.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -72,6 +75,9 @@ importers:
         specifier: ^4.5.2
         version: 4.5.2(@types/react@18.3.1)(react@18.3.1)
     devDependencies:
+      '@types/node':
+        specifier: ^22.7.0
+        version: 22.7.0
       '@types/pako':
         specifier: ^2.0.3
         version: 2.0.3
@@ -83,7 +89,7 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@5.4.2)
+        version: 4.3.1(vite@5.4.2(@types/node@22.7.0))
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.41)
@@ -101,10 +107,10 @@ importers:
         version: 8.4.41
       vite:
         specifier: ^5.4.2
-        version: 5.4.2
+        version: 5.4.2(@types/node@22.7.0)
       vite-plugin-static-copy:
         specifier: ^1.0.6
-        version: 1.0.6(vite@5.4.2)
+        version: 1.0.6(vite@5.4.2(@types/node@22.7.0))
 
 packages:
 
@@ -484,8 +490,8 @@ packages:
     peerDependencies:
       typescript: ^5.0.0
 
-  '@kaplayjs/dprint-config@1.0.1':
-    resolution: {integrity: sha512-tCG2EemNl2RJerc1Im3qiBMpfGxmiyK2AAxIGeXD0EKz1toWOdeW/A+4e8eztQIFQFCYYgxXCsnKti/xFmcZmw==}
+  '@kaplayjs/dprint-config@1.1.0':
+    resolution: {integrity: sha512-yMcScoE/3cDrVyX+T5I5T2qIMq5pnzdbmTNSTonT3/toOUBQwHqfEsqLjj7+4MkHf16HgNrN8nu+bkZ8VZ36kQ==}
     hasBin: true
 
   '@monaco-editor/loader@1.4.0':
@@ -880,6 +886,9 @@ packages:
 
   '@types/estree@1.0.5':
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
+
+  '@types/node@22.7.0':
+    resolution: {integrity: sha512-MOdOibwBs6KW1vfqz2uKMlxq5xAfAZ98SZjO8e3XnAbFnTJtAspqhWk7hrdSAs9/Y14ZWMiy7/MxMUzAOadYEw==}
 
   '@types/pako@2.0.3':
     resolution: {integrity: sha512-bq0hMV9opAcrmE0Byyo0fY3Ew4tgOevJmQ9grUhpXQhYfyLJ1Kqg3P33JT5fdbT2AjeAjR51zqqVjAL/HMkx7Q==}
@@ -1598,6 +1607,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
@@ -2033,10 +2045,10 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@kaplayjs/crew@1.6.1(typescript@5.4.5)':
+  '@kaplayjs/crew@1.6.1(@types/node@22.7.0)(typescript@5.4.5)':
     dependencies:
       typescript: 5.4.5
-      vite: 5.4.2
+      vite: 5.4.2(@types/node@22.7.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -2047,7 +2059,7 @@ snapshots:
       - sugarss
       - terser
 
-  '@kaplayjs/dprint-config@1.0.1':
+  '@kaplayjs/dprint-config@1.1.0':
     dependencies:
       commander: 12.1.0
       dprint: 0.47.2
@@ -2397,6 +2409,10 @@ snapshots:
 
   '@types/estree@1.0.5': {}
 
+  '@types/node@22.7.0':
+    dependencies:
+      undici-types: 6.19.8
+
   '@types/pako@2.0.3': {}
 
   '@types/prop-types@15.7.12': {}
@@ -2410,14 +2426,14 @@ snapshots:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3
 
-  '@vitejs/plugin-react@4.3.1(vite@5.4.2)':
+  '@vitejs/plugin-react@4.3.1(vite@5.4.2(@types/node@22.7.0))':
     dependencies:
       '@babel/core': 7.24.5
       '@babel/plugin-transform-react-jsx-self': 7.24.5(@babel/core@7.24.5)
       '@babel/plugin-transform-react-jsx-source': 7.24.1(@babel/core@7.24.5)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.2
+      vite: 5.4.2(@types/node@22.7.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -2763,7 +2779,7 @@ snapshots:
 
   kaplay@3001.0.0-alpha.22:
     dependencies:
-      '@kaplayjs/dprint-config': 1.0.1
+      '@kaplayjs/dprint-config': 1.1.0
 
   lilconfig@2.1.0: {}
 
@@ -3123,6 +3139,8 @@ snapshots:
 
   typescript@5.4.5: {}
 
+  undici-types@6.19.8: {}
+
   universalify@2.0.1: {}
 
   update-browserslist-db@1.0.15(browserslist@4.23.0):
@@ -3164,20 +3182,21 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite-plugin-static-copy@1.0.6(vite@5.4.2):
+  vite-plugin-static-copy@1.0.6(vite@5.4.2(@types/node@22.7.0)):
     dependencies:
       chokidar: 3.6.0
       fast-glob: 3.3.2
       fs-extra: 11.2.0
       picocolors: 1.0.1
-      vite: 5.4.2
+      vite: 5.4.2(@types/node@22.7.0)
 
-  vite@5.4.2:
+  vite@5.4.2(@types/node@22.7.0):
     dependencies:
       esbuild: 0.21.3
       postcss: 8.4.41
       rollup: 4.21.0
     optionalDependencies:
+      '@types/node': 22.7.0
       fsevents: 2.3.3
 
   which@2.0.2:

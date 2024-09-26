@@ -1,224 +1,165 @@
-import addExample from "../../../../../kaplay/examples/add.js?raw";
-import audioExample from "../../../../kaplay/examples/audio.js?raw";
-import bindingExample from "../../../../kaplay/examples/binding.js?raw";
-import burpExample from "../../../../kaplay/examples/burp.js?raw";
-import childrenExample from "../../../../kaplay/examples/children.js?raw";
-import collisionExample from "../../../../kaplay/examples/collision.js?raw";
-import componentExample from "../../../../kaplay/examples/component.js?raw";
-import concertExample from "../../../../kaplay/examples/concert.js?raw";
-import confettiExample from "../../../../kaplay/examples/confetti.js?raw";
-import dialogExample from "../../../../kaplay/examples/dialog.js?raw";
-import doublejumpExample from "../../../../kaplay/examples/doublejump.js?raw";
-import dragExample from "../../../../kaplay/examples/drag.js?raw";
-import drawExample from "../../../../kaplay/examples/draw.js?raw";
-import eatloveExample from "../../../../kaplay/examples/eatlove.js?raw";
-import eggExample from "../../../../kaplay/examples/egg.js?raw";
-import fadeInExample from "../../../../kaplay/examples/fadeIn.js?raw";
-import fallExample from "../../../../kaplay/examples/fall.js?raw";
-import flamebarExample from "../../../../kaplay/examples/flamebar.js?raw";
-import flappyExample from "../../../../kaplay/examples/flappy.js?raw";
-import gamepadExample from "../../../../kaplay/examples/gamepad.js?raw";
-import gravityExample from "../../../../kaplay/examples/gravity.js?raw";
-import hoverExample from "../../../../kaplay/examples/hover.js?raw";
-import kaboomExample from "../../../../kaplay/examples/kaboom.js?raw";
-import largeTextureExample from "../../../../kaplay/examples/largeTexture.js?raw";
-import layerExample from "../../../../kaplay/examples/layer.js?raw";
-import levelExample from "../../../../kaplay/examples/level.js?raw";
-import loaderExample from "../../../../kaplay/examples/loader.js?raw";
-import mazeExample from "../../../../kaplay/examples/maze.js?raw";
-import mazeRaycastedLightExample from "../../../../kaplay/examples/mazeRaycastedLight.js?raw";
-import movementExample from "../../../../kaplay/examples/movement.js?raw";
-import multigamepadExample from "../../../../kaplay/examples/multigamepad.js?raw";
-import outExample from "../../../../kaplay/examples/out.js?raw";
-import overlapExample from "../../../../kaplay/examples/overlap.js?raw";
-import sceneExample from "../../../../kaplay/examples/scenes.js?raw";
-import spriteExample from "../../../../kaplay/examples/sprite.js?raw";
-import textExample from "../../../../kaplay/examples/text.js?raw";
+import examplesList from "../../../data/examples.json";
 
-import addImage from "../assets/add.png";
-import movementImage from "../assets/movement.png";
+export type Example = {
+    name: string;
+    code: string;
+    index: string;
+    description: string | null;
+    formatedName: string;
+    version?: string;
+    tags?: string[];
+    difficulty?: "easy" | "medium" | "hard" | "auto";
+    image?: string;
+};
 
-export const examples = [
-    {
-        name: "Adding objects",
-        description: "Add objects to the scene",
-        code: addExample,
-        image: addImage,
+export const examplesMetaData: Record<string, Partial<Example>> = {
+    "add": {
+        formatedName: "Add game objects",
+        description: "How to add game objects to the scene.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
     },
-    {
-        name: "Movement",
-        description: "Move objects in the scene",
-        code: movementExample,
-        image: movementImage,
+    "ai": {
+        formatedName: "AI with State Machine",
+        description: "How to create a simple AI.",
+        tags: ["basic concepts", "ai"],
+        difficulty: "easy",
     },
-    {
-        name: "Sprite Component",
-        description: "Add sprites to the scene",
-        code: spriteExample,
+    "animation": {
+        formatedName: "Animation",
+        description: "How to animate game objects properties.",
+        tags: ["basic concepts", "animation"],
+        difficulty: "easy",
     },
-    {
-        name: "Text Component",
-        description: "Add text to the scene",
-        code: textExample,
+    "audio": {
+        formatedName: "Audio",
+        description: "How to play audio files and change volume, speed, etc.",
+        tags: ["basic concepts", "audio"],
+        difficulty: "easy",
     },
-    {
-        name: "Audio Component",
-        description: "Add audio to the project",
-        code: audioExample,
+    "bench": {
+        formatedName: "Benchmark",
+        description: "A benchmark to see sprite rendering perfomance",
+        tags: ["testing"],
+        difficulty: "auto",
     },
-    {
-        name: "Scenes",
-        description: "Using scenes in KAPLAY",
-        code: sceneExample,
+    "binding": {
+        formatedName: "Input bindings",
+        description:
+            "How to set common names as jump, shoot to keys/mouse/gamepad buttons.",
+        tags: ["basic concepts", "input"],
+        difficulty: "easy",
     },
-    {
-        name: "Input Bindings",
-        description: "Using common names for input",
-        code: bindingExample,
+    "burp": {
+        formatedName: "Burp",
+        description: "One of the KAPLAY's core features.",
+        tags: ["basic concepts"],
+        difficulty: "hard",
     },
-    {
-        name: "Burp",
-        description: "Burpman was here",
-        code: burpExample,
+    "button": {
+        formatedName: "Button",
+        description: "How to create a button and handle click events.",
+        tags: ["basic concepts", "ui"],
+        difficulty: "easy",
     },
-    {
-        name: "Children",
-        description: "Adding children to objects",
-        code: childrenExample,
+    "camera": {
+        formatedName: "Camera",
+        description: "How to handle with camera and its properties.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
     },
-    {
-        name: "Collision",
-        description: "Collision example",
-        code: collisionExample,
+    "children": {
+        formatedName: "Children",
+        description: "How to create children on game objects.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
     },
-    {
-        name: "Component",
-        description: "Component example",
-        code: componentExample,
+    "collision": {
+        formatedName: "Collision",
+        description: "How to handle collision between game objects.",
+        tags: ["basic concepts", "physics"],
+        difficulty: "easy",
     },
-    {
-        name: "Concert",
-        description: "Concert example",
-        code: concertExample,
+    "collisionshapes": {
+        formatedName: "Collision Shapes",
+        description: "How to create different collision shapes.",
+        tags: ["physics"],
+        difficulty: "medium",
+        version: "4000",
     },
-    {
-        name: "Confetti",
-        description: "Confetti example",
-        code: confettiExample,
+    "component": {
+        formatedName: "Component",
+        description: "How to create and use components.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
     },
-    {
-        name: "Dialog",
-        description: "Dialog example",
-        code: dialogExample,
+    "concert": {
+        formatedName: "Concert",
+        description: "Celebrate Kaboom.js v2000 and back to the old days.",
+        tags: ["games"],
+        difficulty: "medium",
     },
-    {
-        name: "Doublejump",
-        description: "Doublejump example",
-        code: doublejumpExample,
+    "confetti": {
+        formatedName: "Confetti",
+        description: "How to create a confetti effect.",
+        tags: ["effects"],
+        difficulty: "medium",
     },
-    {
-        name: "Drag",
-        description: "Drag example",
-        code: dragExample,
+    "curves": {
+        formatedName: "Curves",
     },
-    {
-        name: "Draw",
-        description: "Draw example",
-        code: drawExample,
+    "dialog": {
+        formatedName: "Dialog",
+        description: "How to create a dialog box with a typewriter.",
+        tags: ["ui"],
+        difficulty: "medium",
     },
-    {
-        name: "Eatlove",
-        description: "Eatlove example",
-        code: eatloveExample,
+    "doublejump": {
+        formatedName: "Double Jump",
+        description: "How to add a double jump.",
+        tags: ["basic concepts", "games"],
+        difficulty: "medium",
     },
-    {
-        name: "Egg",
-        description: "Egg example",
-        code: eggExample,
+    "drag": {
+        formatedName: "Drag",
+        description: "Make game objects draggable.",
+        tags: ["ui"],
+        difficulty: "medium",
     },
-    {
-        name: "FadeIn",
-        description: "FadeIn example",
-        code: fadeInExample,
+    "draw": {
+        formatedName: "Draw",
+        description: "How to use KAPLAY as a canvas draw library.",
+        tags: ["basic concepts"],
+        difficulty: "easy",
     },
-    {
-        name: "Fall",
-        description: "Fall example",
-        code: fallExample,
+    "easing": {
+        formatedName: "Tween Easings",
+        description: "How to use easing functions on tweens.",
+        tags: ["basic concepts", "animation"],
     },
-    {
-        name: "Flamebar",
-        description: "Flamebar example",
-        code: flamebarExample,
+    "eatlove": {
+        formatedName: "Eat Love",
+        description: "A simple game to eat love.",
+        tags: ["games"],
+        difficulty: "medium",
     },
-    {
-        name: "Flappy",
-        description: "Flappy example",
-        code: flappyExample,
+    "egg": {
+        formatedName: "Egg",
+        description: "A game about eggs.",
+        tags: ["games"],
+        difficulty: "medium",
     },
-    {
-        name: "Gamepad",
-        description: "Gamepad example",
-        code: gamepadExample,
-    },
-    {
-        name: "Gravity",
-        description: "Gravity example",
-        code: gravityExample,
-    },
-    {
-        name: "Hover",
-        description: "Hover example",
-        code: hoverExample,
-    },
-    {
-        name: "Kaboom",
-        description: "Kaboom example",
-        code: kaboomExample,
-    },
-    {
-        name: "Large Texture",
-        description: "Large Texture example",
-        code: largeTextureExample,
-    },
-    {
-        name: "Layer",
-        description: "Layer example",
-        code: layerExample,
-    },
-    {
-        name: "Level",
-        description: "Level example",
-        code: levelExample,
-    },
-    {
-        name: "Loader",
-        description: "Loader example",
-        code: loaderExample,
-    },
-    {
-        name: "Maze",
-        description: "Maze example",
-        code: mazeExample,
-    },
-    {
-        name: "Maze Raycasted Light",
-        description: "Maze Raycasted Light example",
-        code: mazeRaycastedLightExample,
-    },
-    {
-        name: "Multi Gamepad",
-        description: "Multi Gamepad example",
-        code: multigamepadExample,
-    },
-    {
-        name: "Out",
-        description: "Out example",
-        code: outExample,
-    },
-    {
-        name: "Overlap",
-        description: "Overlap example",
-        code: overlapExample,
-    },
-];
+};
+
+export const examples = examplesList.filter((example) =>
+    examplesMetaData[example.name]?.version !== "4000"
+).map((example) => {
+    return {
+        ...example,
+        description: examplesMetaData[example.name]?.description ?? null,
+        formatedName: examplesMetaData[example.name]?.formatedName
+            ?? example.name,
+        tags: examplesMetaData[example.name]?.tags ?? [],
+        difficulty: examplesMetaData[example.name]?.difficulty ?? "medium",
+    };
+});

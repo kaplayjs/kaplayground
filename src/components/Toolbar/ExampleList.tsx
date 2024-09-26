@@ -1,22 +1,11 @@
 import type { ChangeEvent, FC } from "react";
+import exampleList from "../../data/examples.json";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
-import type { File } from "../../stores/storage/files";
-import { exampleList } from "./examples";
 
 const ExampleList: FC = () => {
-    const {
-        project,
-        replaceProject,
-        addFile,
-        setProjectMode,
-        getSavedProjects,
-        loadProject,
-    } = useProject();
-    const {
-        update,
-        run,
-    } = useEditor();
+    const { getSavedProjects } = useProject();
+    const { loadExample, loadProject } = useEditor();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const exampleIndex = ev.target.selectedOptions[0].getAttribute(
@@ -24,35 +13,9 @@ const ExampleList: FC = () => {
         );
 
         if (exampleIndex) {
-            useProject.persist.setOptions({
-                name: "kaplay-off-example",
-            });
-
-            setProjectMode("example");
-
-            replaceProject({
-                name: "Untitled Example",
-                assets: new Map(),
-                files: new Map<string, File>(),
-                kaplayConfig: {},
-                mode: "example",
-                version: project.version,
-            });
-
-            addFile({
-                name: "main.js",
-                value: exampleList[Number(exampleIndex)].code,
-                kind: "main",
-                language: "javascript",
-                path: "main.js",
-            });
-
-            update();
-            run();
+            loadExample(exampleIndex);
         } else {
             loadProject(ev.target.value);
-            update();
-            run();
         }
     };
 
@@ -63,8 +26,10 @@ const ExampleList: FC = () => {
                 onChange={handleExampleChange}
                 defaultValue={"none"}
             >
-                <option value="none">none</option>
-                <option className="text-md" disabled>Projects</option>
+                <option className="text-md" disabled value="none">
+                    Projects
+                </option>
+
                 {getSavedProjects().map((project) => (
                     <option key={project} value={project} data-project>
                         {project.replace("pj-", "")}
@@ -72,6 +37,7 @@ const ExampleList: FC = () => {
                 ))}
 
                 <option className="text-md" disabled>KAPLAY Examples</option>
+
                 {exampleList.map((example, i) => (
                     <option key={example.name} data-example={i}>
                         {example.name}

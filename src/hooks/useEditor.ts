@@ -3,6 +3,8 @@ import type { editor } from "monaco-editor";
 import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import examplesList from "../data/examples.json";
+import type { File } from "../stores/storage/files";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
 import { useProject } from "./useProject";
@@ -45,6 +47,10 @@ type EditorStore = {
     showNotification: (message: string) => void;
     /** Set value in Monaco instance */
     setEditorValue: (value: string) => void;
+    /** Load an example */
+    loadExample: (example: string) => void;
+    /** Load a project */
+    loadProject: (project: string) => void;
 };
 
 export const useEditor = create<EditorStore>((set, get) => ({
@@ -209,5 +215,39 @@ export const useEditor = create<EditorStore>((set, get) => ({
         if (!editor) return console.error("No editor");
 
         editor.setValue(value);
+    },
+    loadExample(exampleIndex) {
+        useProject.persist.setOptions({
+            name: "Untitled Example",
+        });
+
+        useProject.getState().replaceProject({
+            name: "Untitled Example",
+            assets: new Map(),
+            files: new Map<string, File>(),
+            kaplayConfig: {},
+            mode: "example",
+            version: "2.0.0",
+        });
+
+        useProject.getState().addFile({
+            name: "main.js",
+            value: examplesList[Number(exampleIndex)].code,
+            kind: "main",
+            language: "javascript",
+            path: "main.js",
+        });
+
+        get().update();
+        get().run();
+    },
+    loadProject(project: string) {
+        useProject.persist.setOptions({
+            name: project,
+        });
+
+        useProject.persist.rehydrate();
+        get().update();
+        get().run();
     },
 }));
