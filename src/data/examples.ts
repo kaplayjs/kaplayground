@@ -1,4 +1,4 @@
-import examplesList from "../../../data/examples.json";
+import examplesList from "./exampleList.json";
 
 export type Example = {
     name: string;
@@ -107,6 +107,9 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "curves": {
         formatedName: "Curves",
+        description: "Something I don't understand.",
+        tags: ["math"],
+        difficulty: "hard",
     },
     "dialog": {
         formatedName: "Dialog",
@@ -148,6 +151,25 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         description: "A game about eggs.",
         tags: ["games"],
         difficulty: "medium",
+    },
+    "fadeIn": {
+        formatedName: "Fade In",
+        description: "How to fade in game objects.",
+        tags: ["effects"],
+        difficulty: "easy",
+    },
+    "fakeMouse": {
+        formatedName: "Fake Mouse",
+        description: "How to create a fake mouse in-game.",
+        tags: ["ui", "input"],
+        difficulty: "easy",
+        version: "4000",
+    },
+    "fall": {
+        formatedName: "Fall",
+        description: "How to make game objects fall.",
+        tags: ["basic concepts", "physics"],
+        difficulty: "easy",
     },
 };
 

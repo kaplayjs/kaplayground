@@ -3,7 +3,7 @@ import type { editor } from "monaco-editor";
 import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
-import examplesList from "../data/examples.json";
+import examplesList from "../data/exampleList.json";
 import type { File } from "../stores/storage/files";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";

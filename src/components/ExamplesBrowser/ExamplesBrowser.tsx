@@ -1,5 +1,5 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { examples } from "./data/examples";
+import { examples } from "../../data/examples";
 import { ExampleEntry } from "./ExampleEntry";
 import "./ExamplesBrowser.css";
 import { assets } from "@kaplayjs/crew";

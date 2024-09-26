@@ -1,8 +1,8 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
+import type { Example } from "../../data/examples";
 import { useEditor } from "../../hooks/useEditor";
 import { cn } from "../../util/cn";
-import type { Example } from "./data/examples";
 
 type Props = {
     example: Omit<Example, "code">;

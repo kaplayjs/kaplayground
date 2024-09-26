@@ -1,5 +1,5 @@
 import type { ChangeEvent, FC } from "react";
-import exampleList from "../../data/examples.json";
+import { examples } from "../../data/examples";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 
@@ -38,8 +38,8 @@ const ExampleList: FC = () => {
 
                 <option className="text-md" disabled>KAPLAY Examples</option>
 
-                {exampleList.map((example, i) => (
-                    <option key={example.name} data-example={i}>
+                {examples.map((example) => (
+                    <option key={example.name} data-example={example.index}>
                         {example.name}
                     </option>
                 ))}
