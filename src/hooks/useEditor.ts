@@ -238,6 +238,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
             path: "main.js",
         });
 
+        get().editor?.setScrollTop(0);
         get().update();
         get().run();
     },
@@ -247,6 +248,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
         });
 
         useProject.persist.rehydrate();
+
+        get().editor?.setScrollTop(0);
         get().update();
         get().run();
     },
