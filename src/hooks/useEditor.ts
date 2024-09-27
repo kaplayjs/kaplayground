@@ -4,6 +4,7 @@ import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import examplesList from "../data/exampleList.json";
+import { examples } from "../data/examples";
 import type { File } from "../stores/storage/files";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
@@ -217,12 +218,19 @@ export const useEditor = create<EditorStore>((set, get) => ({
         editor.setValue(value);
     },
     loadExample(exampleIndex) {
+        const exampleId =
+            examplesList.filter(example => example.index === exampleIndex)[0]
+                .name;
+        const exampleName =
+            examples.filter(example => example.name === exampleId)[0]
+                .formatedName;
+
         useProject.persist.setOptions({
-            name: "Untitled Example",
+            name: exampleName,
         });
 
         useProject.getState().replaceProject({
-            name: "Untitled Example",
+            name: exampleName,
             assets: new Map(),
             files: new Map<string, File>(),
             kaplayConfig: {},

@@ -248,7 +248,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["ui"],
         difficulty: "easy",
     },
-    "simpleLayers": {
+    "layer": {
         formatedName: "Simple layers",
         description: "How to make use of a simple layering system.",
         tags: ["ui"],
@@ -529,5 +529,5 @@ export const examples = examplesList.filter((example) =>
             ?? example.name,
         tags: examplesMetaData[example.name]?.tags ?? [],
         difficulty: examplesMetaData[example.name]?.difficulty ?? "medium",
-    };
+    } as Example;
 });
