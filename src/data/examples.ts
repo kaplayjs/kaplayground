@@ -193,9 +193,9 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["basic concepts", "physics"],
         difficulty: "medium",
     },
-    "flameBar": {
+    "flamebar": {
         formatedName: "Flame bar",
-        description: "How to make mario-like flamebars using parent/children.",
+        description: "How to make mario-like flame bars using parent/children.",
         tags: ["basic concepts"],
         difficulty: "medium",
     },
@@ -250,7 +250,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["ui"],
         difficulty: "easy",
     },
-    "simpleLayers": {
+    "layer": {
         formatedName: "Simple layers",
         description: "How to make use of a simple layering system.",
         tags: ["ui"],
@@ -269,12 +269,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "medium",
     },
     // TODO: im not sure what this is
-    // "levelRaycast": {
-    //     formatedName: "Level raycast",
-    //     description: "How to create levels using layouts and symbols.",
-    //     tags: ["basic concepts"],
-    //     difficulty: "medium",
-    // },
+    "levelraycast": {
+        formatedName: "Level raycast",
+        description: "How to create levels using layouts and symbols.",
+        tags: ["basic concepts"],
+        difficulty: "medium",
+        hidden: true,
+    },
     "linecap": {
         formatedName: "Line cap",
         description: "How to add caps to lines.",
@@ -311,7 +312,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["basic concepts"],
         difficulty: "easy",
     },
-    "multiGamepad": {
+    "multigamepad": {
         formatedName: "Multi gamepad",
         description: "How to use multiple gamepads in your game.",
         tags: ["input"],
@@ -343,13 +344,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "medium",
     },
     // TODO: Not sure what this is either
-    // "physics": {
-    //     formatedName: "Physics",
-    //     description: "How to predict physics?.",
-    //     tags: ["math"],
-    //     difficulty: "hard",
-    // },
-    "physicsFactory": {
+    "physics": {
+        formatedName: "Physics",
+        description: "How to predict physics?.",
+        tags: ["math"],
+        difficulty: "hard",
+    },
+    "physicsfactory": {
         formatedName: "Physics Factory",
         description: "How to make use of various types of physics.",
         tags: ["math"],
@@ -368,12 +369,12 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "medium",
     },
     // TODO: Not sure what this is
-    // "polygonuv": {
-    //     formatedName: "PolygonUV",
-    //     description: "Wobbly ghosts.",
-    //     tags: ["math"],
-    //     difficulty: "medium",
-    // },
+    "polygonuv": {
+        formatedName: "PolygonUV",
+        description: "Wobbly ghosts.",
+        tags: ["math"],
+        difficulty: "medium",
+    },
     "pong": {
         formatedName: "Pong",
         description: "How to make pong.",
@@ -407,12 +408,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "medium",
     },
     // TODO: i think these two are the same
-    // "raycastShape": {
-    //     formatedName: "Raycasts shapes",
-    //     description: "How to shoot a raycast and make it bounce.",
-    //     tags: ["math"],
-    //     difficulty: "medium",
-    // },
+    "raycastShape": {
+        formatedName: "Raycasts shapes",
+        description: "How to shoot a raycast and make it bounce.",
+        tags: ["math"],
+        difficulty: "medium",
+        hidden: true,
+    },
     "raycaster3d": {
         formatedName: "3D Raycaster",
         description: "Basically, how to make 3D in KAPLAY.",
