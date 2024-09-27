@@ -179,12 +179,10 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         difficulty: "easy",
         version: "4000",
     },
-    // TODO: This could be better explained, it actually makes use of debug.stepFrame()
-    //  so you could argue this is testing
     "fall": {
         formatedName: "Fall",
-        description: "How to make game objects fall.",
-        tags: ["basic concepts", "physics"],
+        description: "How to use some debug features for pausing and stepping.",
+        tags: ["basic concepts", "testing"],
         difficulty: "easy",
     },
     "fixedUpdate": {
@@ -193,9 +191,9 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["basic concepts", "physics"],
         difficulty: "medium",
     },
-    "flameBar": {
+    "flamebar": {
         formatedName: "Flame bar",
-        description: "How to make mario-like flamebars using parent/children.",
+        description: "How to make mario-like flame bars using parent/children.",
         tags: ["basic concepts"],
         difficulty: "medium",
     },
@@ -311,7 +309,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["basic concepts"],
         difficulty: "easy",
     },
-    "multiGamepad": {
+    "multigamepad": {
         formatedName: "Multi gamepad",
         description: "How to use multiple gamepads in your game.",
         tags: ["input"],
@@ -342,18 +340,18 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["ui", "game"],
         difficulty: "medium",
     },
-    // TODO: Not sure what this is either
-    // "physics": {
-    //     formatedName: "Physics",
-    //     description: "How to predict physics?.",
-    //     tags: ["math"],
-    //     difficulty: "hard",
-    // },
-    "physicsFactory": {
+    "physics": {
+        formatedName: "Physics",
+        description: "How to predict physics?.",
+        tags: ["math"],
+        difficulty: "hard",
+    },
+    "physicsfactory": {
         formatedName: "Physics Factory",
         description: "How to make use of various types of physics.",
         tags: ["math"],
         difficulty: "hard",
+        hidden: true,
     },
     "platformer": {
         formatedName: "Platformer",
@@ -367,13 +365,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["math"],
         difficulty: "medium",
     },
-    // TODO: Not sure what this is
-    // "polygonuv": {
-    //     formatedName: "PolygonUV",
-    //     description: "Wobbly ghosts.",
-    //     tags: ["math"],
-    //     difficulty: "medium",
-    // },
+    "polygonuv": {
+        formatedName: "PolygonUV",
+        description: "Wobbly ghosts.",
+        tags: ["math"],
+        difficulty: "medium",
+        hidden: true,
+    },
     "pong": {
         formatedName: "Pong",
         description: "How to make pong.",
