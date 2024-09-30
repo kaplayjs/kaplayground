@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "generate:examples": "node --experimental-strip-types scripts/examples.ts",
     "fmt": "dprint fmt",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit --p tsconfig.app.json"
   },
   "dependencies": {
     "@formkit/drag-and-drop": "^0.0.38",
