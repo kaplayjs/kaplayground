@@ -4,14 +4,14 @@ import FileFolder from "./FileFolder";
 
 const FileTree = () => {
     const {
-        getProjectMode,
         getFile,
         getFilesByFolder,
+        getProject,
     } = useProject();
 
     return (
         <div className="flex flex-col p-2 gap-2">
-            {getProjectMode() === "project" && (
+            {getProject().mode === "pj" && (
                 <>
                     <FileFolder level={1} title="Scenes">
                         {getFilesByFolder("scenes").length === 0

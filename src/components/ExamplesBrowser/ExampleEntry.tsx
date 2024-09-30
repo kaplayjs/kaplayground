@@ -2,6 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import type { Example } from "../../data/examples";
 import { useEditor } from "../../hooks/useEditor";
+import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 
 type Props = {
@@ -17,7 +18,8 @@ const imagesPerDifficulty: Record<string, string> = {
 };
 
 export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
-    const { loadExample } = useEditor();
+    const { loadDefaultExample } = useProject();
+    const { loadProject } = useEditor();
 
     const handleClick = () => {
         const dialog = document.querySelector<HTMLDialogElement>(
@@ -27,8 +29,9 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
         dialog?.close();
 
         if (isProject) {
+            loadProject(example.name);
         } else {
-            loadExample(example.index);
+            loadDefaultExample(example.index);
         }
     };
 

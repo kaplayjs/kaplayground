@@ -16,7 +16,7 @@ export const useProject = create<Store>()(persist((...a) => ({
     ...createAssetsSlice(...a),
     ...createKaboomConfigSlice(...a),
 }), {
-    name: "Untitled Project",
+    name: "upj-Untitled",
     storage: {
         getItem: (name) => {
             const str = localStorage.getItem(name);

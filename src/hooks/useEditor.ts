@@ -4,103 +4,68 @@ import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import examplesList from "../data/exampleList.json";
-import type { File } from "../stores/storage/files";
+import { examples } from "../data/examples";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
 import { useProject } from "./useProject";
-import { examples } from "../data/examples";
 
-/** The internal API to interact with the editor */
-type EditorStore = {
-    /** Monaco's editor instance */
+type EditorRuntime = {
     editor: editor.IStandaloneCodeEditor | null;
-    /** Monaco instance */
     monaco: Monaco | null;
-    /** The current file */
     currentFile: string;
-    /** Gylph decorations */
     gylphDecorations: editor.IEditorDecorationsCollection | null;
-    /** Set Monaco's editor instance */
-    setEditor: (editor: editor.IStandaloneCodeEditor) => void;
-    /** Set Monaco instance */
-    setMonaco: (monaco: Monaco) => void;
-    /** Set the current file */
-    setCurrentFile: (path: string) => void;
-    /** Get the current file path */
-    getCurrentFile: () => string;
-    /** Set gylph decorations */
-    setGylphDecorations: (
-        gylphDecorations: editor.IEditorDecorationsCollection,
-    ) => void;
-    /** Sync content of the current file and Monaco view */
-    update: () => void;
-    /** Set's Monaco's theme */
-    setTheme: (theme: string) => void;
-    /** GameView iFrame */
     iframe: MutableRefObject<HTMLIFrameElement>;
-    /** Set iFrame */
-    setIframe: (iframe: HTMLIFrameElement) => void;
-    /** Run the game */
+};
+
+type EditorStore = {
+    runtime: {
+        editor: editor.IStandaloneCodeEditor | null;
+        monaco: Monaco | null;
+        currentFile: string;
+        gylphDecorations: editor.IEditorDecorationsCollection | null;
+        iframe: MutableRefObject<HTMLIFrameElement>;
+    };
+    update: (value?: string) => void;
     run: () => void;
-    /** Update image decorations */
+    getRuntime: () => EditorRuntime;
+    setTheme: (theme: string) => void;
     updateImageDecorations: () => void;
-    /** Display notification */
     showNotification: (message: string) => void;
-    /** Set value in Monaco instance */
     setEditorValue: (value: string) => void;
-    /** Load an example */
-    loadExample: (example: string) => void;
-    /** Load a project */
+    loadDefaultExample: (example: string) => void;
     loadProject: (project: string) => void;
 };
 
-export const useEditor = create<EditorStore>((set, get) => ({
-    editor: null,
-    setEditor: (editor) => {
-        set({ editor });
+export const useEditor = create<EditorStore>((_set, get) => ({
+    runtime: {
+        editor: null,
+        monaco: null,
+        currentFile: "main.js",
+        gylphDecorations: null,
+        iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
+        isDefaultExample: false,
     },
-    monaco: null,
-    setMonaco: (monaco) => {
-        set({ monaco });
-    },
-    gylphDecorations: null,
-    setGylphDecorations: (gylphDecorations) => {
-        set({ gylphDecorations });
-    },
-    currentFile: "main.js",
-    setCurrentFile: (path) => {
-        set({ currentFile: path });
-        get().update();
-    },
-    getCurrentFile: () => {
-        return get().currentFile;
-    },
-    iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
-    setIframe: (iframe) => {
-        if (!iframe) {
+    getRuntime: () => get().runtime,
+    update: (customValue?: string) => {
+        if (customValue) {
+            debug(0, "Editor value updated with custom value");
+
+            get().setEditorValue(customValue);
             return;
         }
-        const newRef = createRef() as MutableRefObject<HTMLIFrameElement>;
-        newRef.current = iframe;
 
-        set({ iframe: newRef });
-    },
-    update: () => {
         const currentFile = useProject.getState().getFile(
-            get().getCurrentFile(),
+            get().getRuntime().currentFile,
         );
         if (!currentFile) return;
 
-        console.debug(
-            "Editor value updated with currentFile",
-            currentFile.path,
-        );
+        debug(0, "Editor value updated with", currentFile.path);
 
         get().setEditorValue(currentFile.value);
         get().updateImageDecorations();
     },
     setTheme: (theme: string) => {
-        const editor = get().editor;
+        const editor = get().runtime.editor;
         if (!editor) return;
 
         editor.updateOptions({
@@ -108,15 +73,15 @@ export const useEditor = create<EditorStore>((set, get) => ({
         });
     },
     run() {
-        const iframe = get().iframe.current;
+        const iframe = document.querySelector<HTMLIFrameElement>("#game-view");
+        if (!iframe) return;
+
         const {
             getKAPLAYFile,
             getMainFile,
             getAssetsFile,
-            getProjectMode,
-            project: { files },
-        } = useProject
-            .getState();
+            getProject,
+        } = useProject.getState();
         if (!iframe) return;
 
         let KAPLAYFile = "";
@@ -129,13 +94,13 @@ export const useEditor = create<EditorStore>((set, get) => ({
         mainFile = getMainFile()?.value ?? "";
         assetsFile = getAssetsFile()?.value ?? "";
 
-        files.forEach((file) => {
+        getProject().files.forEach((file) => {
             if (file.kind !== "scene") return;
 
             sceneFiles += `\n${file.value}\n`;
         });
 
-        if (getProjectMode() === "project") {
+        if (getProject().mode === "pj") {
             parsedFiles =
                 `${KAPLAYFile}\n\n ${assetsFile}\n\n ${sceneFiles}\n\n ${mainFile}`;
         } else {
@@ -146,10 +111,10 @@ export const useEditor = create<EditorStore>((set, get) => ({
     },
     updateImageDecorations() {
         debug(0, "Updating gylph decorations");
-        const editor = get().editor;
-        const monaco = get().monaco;
+        const editor = get().runtime.editor;
+        const monaco = get().runtime.monaco;
+        const gylphDecorations = get().runtime.gylphDecorations;
         const model = editor?.getModel();
-        const gylphDecorations = get().gylphDecorations;
 
         if (!editor || !monaco || !model || !gylphDecorations) {
             return console.error("No editor");
@@ -210,39 +175,32 @@ export const useEditor = create<EditorStore>((set, get) => ({
         toast(message);
     },
     setEditorValue(value) {
-        console.debug("Setting editor value to", value);
+        debug(0, "Setting editor value to", value);
 
-        const editor = get().editor;
+        const editor = get().runtime.editor;
         if (!editor) return console.error("No editor");
 
         editor.setValue(value);
     },
-    loadExample(exampleIndex) {
-        const exampleId = examplesList.filter(example => example.index === exampleIndex)[0].name;
-        const exampleName = examples.filter(example => example.name === exampleId)[0].formatedName
-        
+    loadDefaultExample(exampleIndex) {
+        const exampleId =
+            examplesList.filter(example => example.index === exampleIndex)[0]
+                .name;
+        const exampleName =
+            examples.filter(example => example.name === exampleId)[0]
+                .formatedName;
+
         useProject.persist.setOptions({
             name: exampleName,
         });
 
-        useProject.getState().replaceProject({
-            name: exampleName,
-            assets: new Map(),
-            files: new Map<string, File>(),
-            kaplayConfig: {},
-            mode: "example",
-            version: "2.0.0",
-        });
+        useProject.getState().createNewProject("ex");
+        useProject.getState().updateFile(
+            "main.js",
+            examplesList[Number(exampleIndex)].code,
+        );
 
-        useProject.getState().addFile({
-            name: "main.js",
-            value: examplesList[Number(exampleIndex)].code,
-            kind: "main",
-            language: "javascript",
-            path: "main.js",
-        });
-
-        get().editor?.setScrollTop(0);
+        get().runtime.editor?.setScrollTop(0);
         get().update();
         get().run();
     },
@@ -253,7 +211,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         useProject.persist.rehydrate();
 
-        get().editor?.setScrollTop(0);
+        get().runtime.editor?.setScrollTop(0);
         get().update();
         get().run();
     },

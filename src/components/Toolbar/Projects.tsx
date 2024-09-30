@@ -2,12 +2,11 @@ import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
-import type { Project } from "../../stores/project";
 import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project, replaceProject, createNewProject } = useProject();
+    const { project, createNewProject } = useProject();
     const { update, run, showNotification } = useEditor();
 
     const handleDownload = () => {
@@ -20,21 +19,22 @@ const Projects: FC = () => {
     };
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        alert("reimplement project upload");
+        // const file = e.target.files?.[0];
+        // if (!file) return;
 
-        const reader = new FileReader();
+        // const reader = new FileReader();
 
-        reader.onload = (e) => {
-            const project = JSON.parse(e.target?.result as string) as Project;
-            replaceProject(project);
-        };
+        // reader.onload = (e) => {
+        //     const project = JSON.parse(e.target?.result as string) as Project;
+        //     replaceProject(project);
+        // };
 
-        reader.readAsText(file);
+        // reader.readAsText(file);
     };
 
     const handleProjectReset = () => {
-        createNewProject();
+        createNewProject("pj");
         update();
         run();
     };

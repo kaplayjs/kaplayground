@@ -17,7 +17,7 @@ const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const ToolbarToolsMenu: FC = () => {
-    const { getProjectMode } = useProject();
+    const { getProject } = useProject();
     const { run } = useEditor();
 
     return (
@@ -31,7 +31,7 @@ const ToolbarToolsMenu: FC = () => {
                     keys={["ctrl", "s"]}
                 />
             </ToolbarToolItem>
-            {getProjectMode() == "example" && (
+            {getProject().mode == "ex" && (
                 <ToolbarToolItem>
                     <ToolbarButton
                         icon={assets.bag.outlined}

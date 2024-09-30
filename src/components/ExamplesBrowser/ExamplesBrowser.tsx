@@ -1,5 +1,5 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { examples } from "../../data/examples";
+import { examples, type Tag } from "../../data/examples";
 import { ExampleEntry } from "./ExampleEntry";
 import "./ExamplesBrowser.css";
 import { assets } from "@kaplayjs/crew";
@@ -37,7 +37,7 @@ export const ExamplesBrowser = () => {
                     />
                 </header>
 
-                <Tabs.Root className="overflow-auto">
+                <Tabs.Root className="overflow-auto" defaultValue="Projects">
                     <TabsList>
                         <TabTrigger
                             label="Projects"
@@ -57,13 +57,16 @@ export const ExamplesBrowser = () => {
                             <ExampleEntry
                                 example={{
                                     description: null,
-                                    formatedName: project.replace(
-                                        "pj-",
-                                        "",
-                                    ),
+                                    formatedName: project.slice(3),
                                     name: project,
                                     index: "0",
+                                    tags: [
+                                        ...project.startsWith("pj-")
+                                            ? ["project"] as Tag[]
+                                            : ["example"] as Tag[],
+                                    ],
                                 }}
+                                isProject
                                 key={project}
                             />
                         ))}

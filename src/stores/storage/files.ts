@@ -1,4 +1,5 @@
 import type { StateCreator } from "zustand";
+import { debug } from "../../util/logs";
 import type { KAPLAYConfigSlice } from "../kaplayConfig";
 import type { ProjectSlice } from "../project";
 
@@ -52,12 +53,13 @@ export const createFilesSlice: StateCreator<
     FilesSlice
 > = (set, get) => ({
     addFile(file) {
+        debug(0, "Adding file", file.path);
         get().project.files.set(file.path, file);
         set({});
     },
 
     removeFile(path) {
-        console.debug("Removing file", path);
+        debug(0, "Removing file", path);
         const files = get().project.files;
 
         const foundFile = files.has(path) ? files.get(path) : null;
@@ -72,11 +74,18 @@ export const createFilesSlice: StateCreator<
     },
 
     updateFile(path, value) {
-        console.debug("Updating file", path);
+        debug(0, "Updating file", path);
         const files = get().project.files;
 
         const foundFile = files.has(path) ? files.get(path) : null;
-        if (!foundFile) return console.debug("File not found", path);
+        if (!foundFile) return debug(2, "File not found", path);
+
+        if (get().getProject().isDefault) {
+            debug(0, "Default project, dettaching", path);
+            get().setProject({
+                isDefault: false,
+            });
+        }
 
         get().addFile({
             ...foundFile,

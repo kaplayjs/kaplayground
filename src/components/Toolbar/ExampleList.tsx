@@ -4,16 +4,16 @@ import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 
 const ExampleList: FC = () => {
-    const { getSavedProjects } = useProject();
-    const { loadExample, loadProject } = useEditor();
+    const { getSavedProjects, loadDefaultExample } = useProject();
+    const { loadProject } = useEditor();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const exampleIndex = ev.target.selectedOptions[0].getAttribute(
-            "data-example",
+            "data-def-example",
         );
 
         if (exampleIndex) {
-            loadExample(exampleIndex);
+            loadDefaultExample(exampleIndex);
         } else {
             loadProject(ev.target.value);
         }
@@ -30,16 +30,26 @@ const ExampleList: FC = () => {
                     Projects
                 </option>
 
-                {getSavedProjects().map((project) => (
-                    <option key={project} value={project} data-project>
+                {getSavedProjects("pj").map((project) => (
+                    <option key={project} value={project}>
                         {project.replace("pj-", "")}
+                    </option>
+                ))}
+
+                <option className="text-md" disabled value="none">
+                    User Examples
+                </option>
+
+                {getSavedProjects("ex").map((project) => (
+                    <option key={project} value={project}>
+                        {project.replace("ex-", "")}
                     </option>
                 ))}
 
                 <option className="text-md" disabled>KAPLAY Examples</option>
 
                 {examples.map((example) => (
-                    <option key={example.name} data-example={example.index}>
+                    <option key={example.name} data-def-example={example.index}>
                         {example.name}
                     </option>
                 ))}
