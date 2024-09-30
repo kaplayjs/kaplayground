@@ -18,7 +18,7 @@ import GameView from "./GameView";
 const Playground = () => {
     const {
         project,
-        getProjectMode,
+        getProject,
         createNewProject,
     } = useProject();
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
@@ -32,7 +32,7 @@ const Playground = () => {
     useEffect(() => {
         if (project.files.size > 0) setLoadingProject(false);
         else {
-            createNewProject();
+            createNewProject("pj");
         }
     }, [project]);
 
@@ -57,7 +57,7 @@ const Playground = () => {
                                 <Allotment.Pane
                                     snap
                                     minSize={200}
-                                    visible={getProjectMode() === "project"}
+                                    visible={getProject().mode === "pj"}
                                 >
                                     <FileTree />
                                 </Allotment.Pane>
@@ -70,8 +70,7 @@ const Playground = () => {
                                         </Allotment.Pane>
                                         <Allotment.Pane
                                             snap
-                                            visible={getProjectMode()
-                                                === "project"}
+                                            visible={getProject().mode === "pj"}
                                         >
                                             <Assets />
                                         </Allotment.Pane>

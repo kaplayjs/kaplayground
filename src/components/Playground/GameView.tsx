@@ -1,18 +1,13 @@
 import { type FC } from "react";
-import { useEditor } from "../../hooks/useEditor";
 
 type GameViewProps = {
     onLoad?: () => void;
 };
 
 const GameView: FC<GameViewProps> = ({ onLoad }) => {
-    const {
-        setIframe,
-    } = useEditor();
-
     return (
         <iframe
-            ref={setIframe}
+            id="game-view"
             tabIndex={0}
             onLoad={onLoad}
             style={{

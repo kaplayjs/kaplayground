@@ -10,10 +10,10 @@ import ConfigInput from "./ConfigInput";
 
 const ConfigDialog = () => {
     const {
-        getProjectMode,
         getKAPLAYConfig,
         updateKAPLAYConfig,
         syncKAPLAYFile,
+        getProject,
     } = useProject();
     const {
         update,
@@ -81,7 +81,7 @@ const ConfigDialog = () => {
                         <h2 className="text-xl">KAPLAY Configuration</h2>
                     </header>
                     <main>
-                        {getProjectMode() === "project"
+                        {getProject().mode === "pj"
                             ? (
                                 <>
                                     <ConfigGroup title="screen & perf">

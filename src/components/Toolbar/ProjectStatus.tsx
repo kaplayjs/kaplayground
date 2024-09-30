@@ -2,35 +2,33 @@ import { assets } from "@kaplayjs/crew";
 import { useProject } from "../../hooks/useProject";
 
 const ProjectStatus = () => {
-    const {
-        getProjectMode,
-        project,
-        saveProject,
-        getProjectName,
-        setProjectName,
-        isProjectSaved,
-    } = useProject();
+    const { saveProject, getProject, setProject, projectIsSaved } =
+        useProject();
 
     const handleSaveProject = () => {
-        saveProject(getProjectName());
+        saveProject(getProject().name);
     };
 
     const handleEditName = () => {
-        const projectName = prompt("Project name");
+        const projectName = prompt("New project name?");
         if (!projectName) return;
 
-        setProjectName(projectName);
+        setProject({ name: projectName });
     };
+
+    if (getProject().isDefault) return;
 
     return (
         <div className="flex flex-row gap-2">
             <div className="uppercase | badge badge-lg badge-primary">
-                {getProjectMode() === "project" ? "PJ" : "EX"}
+                {getProject().mode}
             </div>
 
             <div>
-                {project.name || "Untitled Project"}
-                {!isProjectSaved(getProjectName()) && <span>*</span>}
+                {getProject().name}
+                {!projectIsSaved(getProject().name, getProject().mode) && (
+                    <span>*</span>
+                )}
             </div>
 
             <button

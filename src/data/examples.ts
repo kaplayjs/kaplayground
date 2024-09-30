@@ -1,6 +1,6 @@
 import examplesList from "./exampleList.json";
 
-type tag =
+export type Tag =
     | "basic concepts"
     | "physics"
     | "animation"
@@ -11,7 +11,9 @@ type tag =
     | "input"
     | "effects"
     | "math"
-    | "game";
+    | "game"
+    | "project"
+    | "example";
 
 export type Example = {
     name: string;
@@ -21,7 +23,7 @@ export type Example = {
     formatedName: string;
     hidden?: boolean;
     version?: string;
-    tags?: tag[];
+    tags?: Tag[];
     difficulty?: "easy" | "medium" | "hard" | "auto";
     image?: string;
 };
