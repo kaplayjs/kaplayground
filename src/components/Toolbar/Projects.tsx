@@ -18,6 +18,7 @@ const Projects: FC = () => {
         showNotification("Exporting the project, check downloads...");
     };
 
+    // @ts-ignore
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         alert("reimplement project upload");
         // const file = e.target.files?.[0];

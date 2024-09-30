@@ -20,10 +20,10 @@ const logoByKind = {
 
 const FileEntry: FC<Props> = ({ file }) => {
     const { removeFile } = useProject();
-    const { currentFile, setCurrentFile } = useEditor();
+    const { getRuntime } = useEditor();
 
     const handleClick: MouseEventHandler = () => {
-        setCurrentFile(file.path);
+        getRuntime().currentFile = file.path;
     };
 
     const handleDelete: MouseEventHandler = (e) => {
@@ -35,7 +35,7 @@ const FileEntry: FC<Props> = ({ file }) => {
 
         if (confirm("Are you sure you want to remove this scene?")) {
             removeFile(file.path);
-            setCurrentFile("main.js");
+            getRuntime().currentFile = "main.js";
         }
     };
 
@@ -44,8 +44,8 @@ const FileEntry: FC<Props> = ({ file }) => {
             className={cn(
                 "file | btn btn-sm w-full justify-start rounded-none px-2",
                 {
-                    "btn-primary": currentFile === file.path,
-                    "btn-ghost": currentFile !== file.path,
+                    "btn-primary": getRuntime().currentFile === file.path,
+                    "btn-ghost": getRuntime().currentFile !== file.path,
                 },
             )}
             onClick={handleClick}
