@@ -7,6 +7,7 @@ import { stringToType, type Type } from "../../util/stringToType";
 import ConfigCheckbox from "./ConfigCheckbox";
 import ConfigGroup from "./ConfigGroup";
 import ConfigInput from "./ConfigInput";
+import { EditorConfig } from "./Sections/EditorConfig";
 
 const ConfigDialog = () => {
     const {
@@ -177,7 +178,12 @@ const ConfigDialog = () => {
                                 </>
                             )}
                     </main>
+
+                    <div className="divider"></div>
+
+                    <EditorConfig />
                 </section>
+
                 <footer className="p-4 bg-base-200">
                     <div className="modal-action">
                         <form method="dialog">
