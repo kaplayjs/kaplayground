@@ -3,8 +3,6 @@ import type { editor } from "monaco-editor";
 import { createRef, type MutableRefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
-import examplesList from "../data/exampleList.json";
-import { examples } from "../data/examples";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
 import { useProject } from "./useProject";
@@ -183,24 +181,7 @@ export const useEditor = create<EditorStore>((_set, get) => ({
         editor.setValue(value);
     },
     loadDefaultExample(exampleIndex) {
-        const exampleId =
-            examplesList.filter(example => example.index === exampleIndex)[0]
-                .name;
-        const exampleName =
-            examples.filter(example => example.name === exampleId)[0]
-                .formatedName;
-
-        useProject.persist.setOptions({
-            name: exampleName,
-        });
-
-        useProject.getState().createNewProject("ex");
-        useProject.getState().updateFile(
-            "main.js",
-            examplesList[Number(exampleIndex)].code,
-        );
-
-        get().runtime.editor?.setScrollTop(0);
+        useProject.getState().loadDefaultExample(exampleIndex);
         get().update();
         get().run();
     },

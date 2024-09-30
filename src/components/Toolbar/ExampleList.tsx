@@ -4,8 +4,8 @@ import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 
 const ExampleList: FC = () => {
-    const { getSavedProjects, loadDefaultExample } = useProject();
-    const { loadProject } = useEditor();
+    const { getSavedProjects } = useProject();
+    const { loadProject, loadDefaultExample } = useEditor();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const exampleIndex = ev.target.selectedOptions[0].getAttribute(
