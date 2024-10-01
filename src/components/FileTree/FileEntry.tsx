@@ -20,10 +20,10 @@ const logoByKind = {
 
 const FileEntry: FC<Props> = ({ file }) => {
     const { removeFile } = useProject();
-    const { getRuntime } = useEditor();
+    const { getRuntime, setCurrentFile } = useEditor();
 
     const handleClick: MouseEventHandler = () => {
-        getRuntime().currentFile = file.path;
+        setCurrentFile(file.path);
     };
 
     const handleDelete: MouseEventHandler = (e) => {
@@ -35,7 +35,7 @@ const FileEntry: FC<Props> = ({ file }) => {
 
         if (confirm("Are you sure you want to remove this scene?")) {
             removeFile(file.path);
-            getRuntime().currentFile = "main.js";
+            setCurrentFile("main.js");
         }
     };
 

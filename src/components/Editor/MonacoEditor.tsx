@@ -12,7 +12,8 @@ type Props = {
 
 const MonacoEditor: FC<Props> = (props) => {
     const { updateFile, getFile } = useProject();
-    const { run, update, updateImageDecorations, getRuntime } = useEditor();
+    const { run, update, updateImageDecorations, getRuntime, setRuntime } =
+        useEditor();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -22,8 +23,7 @@ const MonacoEditor: FC<Props> = (props) => {
         editor: editor.IStandaloneCodeEditor,
         monaco: Monaco,
     ) => {
-        getRuntime().editor = editor;
-        getRuntime().monaco = monaco;
+        setRuntime({ editor, monaco });
         const currentFile = getRuntime().currentFile;
 
         props.onMount?.();

@@ -26,6 +26,8 @@ type EditorStore = {
     update: (value?: string) => void;
     run: () => void;
     getRuntime: () => EditorRuntime;
+    setRuntime: (runtime: Partial<EditorRuntime>) => void;
+    setCurrentFile: (currentFile: string) => void;
     setTheme: (theme: string) => void;
     updateImageDecorations: () => void;
     showNotification: (message: string) => void;
@@ -34,7 +36,7 @@ type EditorStore = {
     loadProject: (project: string) => void;
 };
 
-export const useEditor = create<EditorStore>((_set, get) => ({
+export const useEditor = create<EditorStore>((set, get) => ({
     runtime: {
         editor: null,
         monaco: null,
@@ -43,7 +45,25 @@ export const useEditor = create<EditorStore>((_set, get) => ({
         iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
         isDefaultExample: false,
     },
+    setRuntime: (runtime) => {
+        set((state) => ({
+            runtime: {
+                ...state.runtime,
+                ...runtime,
+            },
+        }));
+    },
     getRuntime: () => get().runtime,
+    setCurrentFile: (currentFile) => {
+        set((state) => ({
+            runtime: {
+                ...state.runtime,
+                currentFile,
+            },
+        }));
+
+        get().update();
+    },
     update: (customValue?: string) => {
         if (customValue) {
             debug(0, "Editor value updated with custom value");
