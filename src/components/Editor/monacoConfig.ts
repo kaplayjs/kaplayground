@@ -14,7 +14,7 @@ export const configMonaco = (monaco: Monaco) => {
     // Add the KAPLAY module
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
         kaplayModule,
-        "kaplay.d.ts",
+        "types.d.ts",
     );
 
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({

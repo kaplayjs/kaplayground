@@ -2,6 +2,7 @@
   "name": "kaplayground",
   "type": "module",
   "version": "2.0.0",
+  "bin": "scripts/cli.js",
   "scripts": {
     "install": "git submodule update --init --recursive && cd kaplay && pnpm i",
     "dev": "vite dev",
@@ -10,12 +11,12 @@
     "preview": "vite preview",
     "generate:examples": "node --experimental-strip-types scripts/examples.ts",
     "fmt": "dprint fmt",
-    "check": "tsc --noEmit --p tsconfig.app.json"
+    "check": "tsc --noEmit --p tsconfig.app.json",
+    "dev:bin": "node scripts/cli.js --examples=fakeExamples"
   },
   "dependencies": {
     "@formkit/drag-and-drop": "^0.0.38",
     "@kaplayjs/crew": "^1.6.1",
-    "@kaplayjs/dprint-config": "^1.1.0",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-context-menu": "^2.2.1",
     "@radix-ui/react-tabs": "^1.1.0",
@@ -37,6 +38,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@kaplayjs/dprint-config": "^1.1.0",
     "@types/node": "^22.7.0",
     "@types/pako": "^2.0.3",
     "@types/react": "^18.3.1",
@@ -48,6 +50,7 @@
     "monaco-editor": "^0.48.0",
     "postcss": "^8.4.41",
     "vite": "^5.4.2",
+    "vite-plugin-custom-env": "^1.0.3",
     "vite-plugin-static-copy": "^1.0.6"
   },
   "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
