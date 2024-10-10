@@ -1,0 +1,1 @@
+export { AboutDialog } from "./AboutDialog";

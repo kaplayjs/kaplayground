@@ -1,19 +1,16 @@
-import { Allotment } from "allotment";
+import { assets } from "@kaplayjs/crew";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
-import AboutDialog from "../../components/About/AboutDialog";
-import FileTree from "../../components/FileTree/FileTree";
-import LoadingPlayground from "../../components/Playground/LoadingPlayground";
-import Toolbar from "../../components/Toolbar";
 import { useProject } from "../../hooks/useProject";
-import { cn } from "../../util/cn";
-import Assets from "../Assets/Assets";
+import { AboutDialog } from "../About";
 import ConfigDialog from "../Config/ConfigDialog";
-import Editor from "../Editor/MonacoEditor";
 import { ExamplesBrowser } from "../ExamplesBrowser";
-import GameView from "./GameView";
+import ExampleList from "../Toolbar/ExampleList";
+import { LoadingPlayground } from "./LoadingPlayground";
+import { WorkspaceExample } from "./WorkspaceExample";
+import { WorkspaceProject } from "./WorkspaceProject";
 
 const Playground = () => {
     const {
@@ -29,72 +26,76 @@ const Playground = () => {
         setLoadingEditor(false);
     };
 
+    // First useEffect
     useEffect(() => {
-        if (project.files.size > 0) setLoadingProject(false);
-        else {
+        const defaultTheme = localStorage.getItem("theme") as string;
+        document.documentElement.setAttribute(
+            "data-theme",
+            defaultTheme || "Ghostiny",
+        );
+    }, []);
+
+    useEffect(() => {
+        if (project.files.size > 0) {
+            setLoadingProject(false);
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedCode = urlParams.get("code");
+            if (sharedCode) {
+            }
+        } else {
             createNewProject("pj");
         }
     }, [project]);
 
+    if (loadingProject) {
+        return (
+            <LoadingPlayground
+                isLoading={loadingEditor}
+                isPortrait={isPortrait}
+                isProject={project.mode === "pj"}
+            />
+        );
+    }
+
+    if (project.mode === "pj" && isPortrait) {
+        return (
+            <div className="h-full flex flex-col items-center justify-center bg-base-300 p-4 gap-4">
+                <img src={assets.burpman.outlined} />
+
+                <p>
+                    Projects are currently not supported in mobile! Please use a
+                    desktop device, anyway you can still view examples.
+                </p>
+
+                <ExampleList />
+                <ExamplesBrowser />
+            </div>
+        );
+    }
+
     return (
         <>
-            {loadingProject ? <LoadingPlayground isLoading /> : (
-                <>
-                    <div
-                        className={cn("h-full w-screen", {
-                            "hidden": loadingEditor,
-                        })}
-                    >
-                        <header className="h-[4%] flex">
-                            <Toolbar />
-                        </header>
+            {getProject().mode === "pj"
+                ? (
+                    <WorkspaceProject
+                        editorIsLoading={loadingEditor}
+                        isPortrait={isPortrait}
+                        onMount={handleMount}
+                    />
+                )
+                : (
+                    <WorkspaceExample
+                        editorIsLoading={loadingEditor}
+                        isPortrait={isPortrait}
+                        onMount={handleMount}
+                    />
+                )}
 
-                        <main className="h-[96%] overflow-hidden">
-                            <Allotment
-                                defaultSizes={[0.5, 2, 2]}
-                                vertical={isPortrait}
-                            >
-                                <Allotment.Pane
-                                    snap
-                                    minSize={200}
-                                    visible={getProject().mode === "pj"}
-                                >
-                                    <FileTree />
-                                </Allotment.Pane>
-                                <Allotment.Pane snap>
-                                    <Allotment vertical defaultSizes={[2, 1]}>
-                                        <Allotment.Pane>
-                                            <Editor
-                                                onMount={handleMount}
-                                            />
-                                        </Allotment.Pane>
-                                        <Allotment.Pane
-                                            snap
-                                            visible={getProject().mode === "pj"}
-                                        >
-                                            <Assets />
-                                        </Allotment.Pane>
-                                    </Allotment>
-                                </Allotment.Pane>
-                                <Allotment.Pane snap>
-                                    <GameView />
-                                </Allotment.Pane>
-                            </Allotment>
-                        </main>
-
-                        <AboutDialog />
-                        <ConfigDialog />
-                        <ToastContainer
-                            position="bottom-right"
-                            transition={Slide}
-                        />
-                        <Tooltip id="global" />
-                        <ExamplesBrowser />
-                    </div>
-
-                    <LoadingPlayground isLoading={loadingEditor} />
-                </>
-            )}
+            <AboutDialog />
+            <ConfigDialog />
+            <ToastContainer position="bottom-right" transition={Slide} />
+            <Tooltip id="global" />
+            <ExamplesBrowser />
         </>
     );
 };

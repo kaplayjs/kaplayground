@@ -10,10 +10,17 @@ type Props = {
     onMount?: () => void;
 };
 
-const MonacoEditor: FC<Props> = (props) => {
+const defaultTheme = localStorage.getItem("theme") as string;
+
+export const MonacoEditor: FC<Props> = (props) => {
     const { updateFile, getFile } = useProject();
-    const { run, update, updateImageDecorations, getRuntime, setRuntime } =
-        useEditor();
+    const {
+        run,
+        update,
+        updateImageDecorations,
+        getRuntime,
+        setRuntime,
+    } = useEditor();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -31,9 +38,6 @@ const MonacoEditor: FC<Props> = (props) => {
 
         editor.onDidChangeModelContent((ev) => {
             if (ev.isFlush) {
-                // set value
-
-                updateImageDecorations();
             } else {
                 const currentProjectFile = getFile(getRuntime().currentFile);
                 if (!currentProjectFile) {
@@ -48,6 +52,17 @@ const MonacoEditor: FC<Props> = (props) => {
 
                 updateFile(currentProjectFile.path, editor.getValue());
             }
+
+            updateImageDecorations();
+        });
+
+        editor.onDidChangeModel((ev) => {
+            debug(0, "Model changed", ev.newModelUrl);
+            editor.getModel()?.setValue(
+                getFile(getRuntime().currentFile)?.value ?? "",
+            );
+
+            updateImageDecorations();
         });
 
         // Editor Shortcuts
@@ -83,9 +98,10 @@ const MonacoEditor: FC<Props> = (props) => {
     return (
         <Editor
             defaultLanguage="javascript"
+            defaultValue={getFile(getRuntime().currentFile)?.value}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
-            theme="kaplayrk"
+            theme={defaultTheme}
             language="javascript"
             options={{
                 fontSize: 20,
@@ -93,8 +109,7 @@ const MonacoEditor: FC<Props> = (props) => {
                 lineNumbersMinChars: 2,
                 folding: false,
             }}
+            path={getRuntime().currentFile}
         />
     );
 };
-
-export default MonacoEditor;

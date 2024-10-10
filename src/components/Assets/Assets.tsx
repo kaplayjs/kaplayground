@@ -3,7 +3,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import AssetsPanel from "./AssetsPanel";
 import AssetsTab from "./AssetsTab";
 
-const Assets = () => {
+export const Assets = () => {
     return (
         <Tabs.Root className="flex flex-col h-full" defaultValue="Sprites">
             <Tabs.List className="tabs tabs-bordered bg-base-200 w-full">
@@ -32,5 +32,3 @@ const Assets = () => {
         </Tabs.Root>
     );
 };
-
-export default Assets;

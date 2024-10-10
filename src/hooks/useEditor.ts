@@ -61,8 +61,6 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 currentFile,
             },
         }));
-
-        get().update();
     },
     update: (customValue?: string) => {
         if (customValue) {

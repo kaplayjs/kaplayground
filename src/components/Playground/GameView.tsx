@@ -4,7 +4,7 @@ type GameViewProps = {
     onLoad?: () => void;
 };
 
-const GameView: FC<GameViewProps> = ({ onLoad }) => {
+export const GameView: FC<GameViewProps> = ({ onLoad }) => {
     return (
         <iframe
             id="game-view"
@@ -19,7 +19,3 @@ const GameView: FC<GameViewProps> = ({ onLoad }) => {
         />
     );
 };
-
-GameView.displayName = "GameView";
-
-export default GameView;

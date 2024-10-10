@@ -1,20 +1,8 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
 import { useEditor } from "../../hooks/useEditor";
+import { themes } from "../Editor/config/themes";
 import ToolbarButton from "./ToolbarButton";
-
-const themes = [
-    "kaplay",
-    "emerald",
-];
-
-export const lightThemes = [
-    "emerald",
-];
-
-export const darkThemes = [
-    "kaplay",
-];
 
 const ThemeToggler: FC = () => {
     const { setTheme } = useEditor();
@@ -26,10 +14,7 @@ const ThemeToggler: FC = () => {
         localStorage.setItem("theme", theme || "");
 
         if (theme) {
-            const isDarkTheme = darkThemes.includes(theme);
-            let newTheme = isDarkTheme ? "vs-dark" : "vs-light";
-
-            setTheme(newTheme);
+            setTheme(theme);
             document.documentElement.setAttribute("data-theme", theme);
         }
     };
@@ -46,7 +31,7 @@ const ThemeToggler: FC = () => {
                 tabIndex={0}
                 className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
             >
-                {themes.map((theme) => (
+                {Object.keys(themes).map((theme) => (
                     <li key={theme}>
                         <button
                             data-set-theme={theme}

@@ -2,7 +2,7 @@ import { useProject } from "../../hooks/useProject";
 import FileEntry from "./FileEntry";
 import FileFolder from "./FileFolder";
 
-const FileTree = () => {
+export const FileTree = () => {
     const {
         getFile,
         getFilesByFolder,
@@ -46,5 +46,3 @@ const FileTree = () => {
         </div>
     );
 };
-
-export default FileTree;

@@ -10,14 +10,16 @@ export default {
     daisyui: {
         themes: [
             {
-                "kaplay": {
+                "Spiker": {
                     ...require("daisyui/src/theming/themes")["dim"],
                     primary: "#6ba672",
                 },
+                "Ghostiny": {
+                    ...require("daisyui/src/theming/themes")["emerald"],
+                },
             },
-            "emerald",
         ],
-        darkTheme: "kaplay",
+        darkTheme: "Spiker",
         logs: false,
     },
 };

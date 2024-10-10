@@ -1,19 +1,24 @@
 import type { Monaco } from "@monaco-editor/react";
-import kaplayGlobal from "../../../node_modules/kaplay/dist/declaration/global.d.ts?raw";
-import kaplayModule from "../../../node_modules/kaplay/dist/doc.d.ts?raw";
-
-const dataUrlRegex = /data:[^;]+;base64,[A-Za-z0-9+\/]+={0,2}/g;
+import globalTs from "../../../node_modules/kaplay/dist/declaration/global.d.ts?raw";
+import docTs from "../../../node_modules/kaplay/dist/doc.d.ts?raw";
+import { DATA_URL_REGEX } from "../../util/regex";
+import { themes } from "./config/themes";
 
 export const configMonaco = (monaco: Monaco) => {
     // Add global KAPLAY types
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        kaplayGlobal,
+        globalTs,
         "global.d.ts",
     );
 
     // Add the KAPLAY module
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        kaplayModule,
+        docTs,
+        "kaplay.d.ts",
+    );
+
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+        docTs,
         "types.d.ts",
     );
 
@@ -22,15 +27,19 @@ export const configMonaco = (monaco: Monaco) => {
         noSyntaxValidation: false,
     });
 
+    monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        allowNonTsExtensions: true,
+        allowJs: true,
+    });
+
     // Hover dataUrl images
     monaco.languages.registerHoverProvider("javascript", {
         provideHover(model, position) {
             const line = model.getLineContent(position.lineNumber);
-            const dataUrisInLine = line.match(dataUrlRegex);
-
-            if (!dataUrisInLine) {
-                return null;
-            }
+            const dataUrisInLine = line.match(DATA_URL_REGEX);
+            if (!dataUrisInLine) return null;
 
             const lineIndex = position.lineNumber - 1;
             const charIndex = line.indexOf(dataUrisInLine[0]);
@@ -287,23 +296,6 @@ export const configMonaco = (monaco: Monaco) => {
     });
 
     // Themes
-    monaco.editor.defineTheme("kaplayrk", {
-        base: "vs-dark",
-        inherit: true,
-        rules: [],
-        colors: {
-            "editor.background": "#242933",
-            "editor.selectionBackground": "#6BC46B",
-            "editor.lineHighlightBorder`": "#CBDC2F38",
-        },
-    });
-
-    monaco.editor.defineTheme("kaplight", {
-        base: "vs",
-        inherit: true,
-        rules: [],
-        colors: {
-            "editor.background": "#F2F2F2",
-        },
-    });
+    monaco.editor.defineTheme("Spiker", themes.Spiker);
+    monaco.editor.defineTheme("Ghostiny", themes.Ghostiny);
 };

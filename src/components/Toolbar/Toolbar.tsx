@@ -3,7 +3,7 @@ import ExampleList from "./ExampleList";
 import ProjectStatus from "./ProjectStatus";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
 
-const Toolbar = () => {
+export const Toolbar = () => {
     return (
         <div
             className="flex flex-1 justify-between items-center bg-base-300"
@@ -25,11 +25,8 @@ const Toolbar = () => {
             </a>
 
             <ProjectStatus />
-
             <ExampleList />
             <ToolbarToolsMenu />
         </div>
     );
 };
-
-export default Toolbar;

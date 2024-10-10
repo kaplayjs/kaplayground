@@ -63,6 +63,8 @@ export const createProjectSlice: StateCreator<
             },
         }));
     },
+    createNewExampleProject() {
+    },
     createNewProject: (filter: ProjectMode, exampleIndex?: string) => {
         debug(0, "Creating a new project");
 

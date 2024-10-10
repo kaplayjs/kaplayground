@@ -4,6 +4,7 @@ import AboutButton from "../../components/About/AboutButton";
 import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
+import { compressCode } from "../../util/compressCode";
 import Projects from "./Projects";
 import ThemeToggler from "./ThemeToggler";
 import ToolbarButton from "./ToolbarButton";
@@ -17,11 +18,20 @@ const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const ToolbarToolsMenu: FC = () => {
-    const { getProject } = useProject();
+    const { getProject, getMainFile } = useProject();
     const { run } = useEditor();
 
+    const handleShare = () => {
+        const mainFile = getMainFile();
+        const url = `${window.location.origin}/?code=${
+            compressCode(mainFile?.value!)
+        }`;
+        navigator.clipboard.writeText(url);
+        window.history.pushState({}, "", url);
+    };
+
     return (
-        <ul className="flex flex-row items-center justify-center h-full">
+        <ul className="flex flex-row items-center justify-center h-full w-full">
             <ToolbarToolItem>
                 <ToolbarButton
                     icon={assets.play.outlined}
@@ -36,9 +46,7 @@ const ToolbarToolsMenu: FC = () => {
                     <ToolbarButton
                         icon={assets.bag.outlined}
                         text="Share"
-                        onClick={() => {
-                            alert("reimplement share");
-                        }}
+                        onClick={handleShare}
                         tip="Share Project"
                     />
                 </ToolbarToolItem>

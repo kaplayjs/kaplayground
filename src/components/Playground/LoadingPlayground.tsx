@@ -3,15 +3,17 @@ import { cn } from "../../util/cn";
 
 type Props = {
     isLoading: boolean;
+    isPortrait: boolean;
+    isProject: boolean;
 };
 
-const LoadingPlayground: FC<Props> = ({ isLoading }) => {
+export const LoadingPlayground: FC<Props> = (props) => {
     return (
         <div
             className={cn(
                 "h-full flex flex-col items-center justify-center",
                 {
-                    "hidden": !isLoading,
+                    "hidden": !props.isLoading,
                 },
             )}
         >
@@ -23,5 +25,3 @@ const LoadingPlayground: FC<Props> = ({ isLoading }) => {
         </div>
     );
 };
-
-export default LoadingPlayground;

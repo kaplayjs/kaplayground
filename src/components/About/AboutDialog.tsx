@@ -1,7 +1,7 @@
 import kaplaygroundLogo from "../../assets/kaplayground.png";
 import { CHANGELOG, REPO, VERSION } from "../../config/common";
 
-const AboutDialog = () => {
+export const AboutDialog = () => {
     return (
         <dialog id="my_modal_1" className="modal">
             <section className="modal-box">
@@ -74,5 +74,3 @@ const AboutDialog = () => {
         </dialog>
     );
 };
-
-export default AboutDialog;
