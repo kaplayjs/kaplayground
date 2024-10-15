@@ -6,7 +6,6 @@ import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
 import { useEditor } from "../../hooks/useEditor";
-import { debug } from "../../util/logs";
 
 type Props = {
     file: File;
@@ -23,11 +22,13 @@ const FileButton: FC<{
     onClick: MouseEventHandler;
     icon: keyof typeof assets;
     rotate?: 0 | 90 | 180 | 270;
+    hidden?: boolean;
 }> = (props) => {
     return (
         <button
             className="btn btn-ghost btn-xs rounded-sm px-1"
             onClick={props.onClick}
+            hidden={props.hidden}
         >
             <img
                 src={assets[props.icon].outlined}
@@ -134,6 +135,11 @@ export const FileEntry: FC<Props> = ({ file }) => {
                     onClick={handleMoveUp}
                     icon="arrow"
                     rotate={270}
+                />
+                <FileButton
+                    onClick={handleMoveDown}
+                    icon="arrow"
+                    rotate={90}
                 />
             </div>
             <img

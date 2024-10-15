@@ -8,9 +8,8 @@ import { configMonaco } from "./monacoConfig";
 
 type Props = {
     onMount?: () => void;
+    defaultTheme?: string;
 };
-
-const defaultTheme = localStorage.getItem("theme") as string;
 
 export const MonacoEditor: FC<Props> = (props) => {
     const { updateFile, getFile } = useProject();
@@ -101,7 +100,7 @@ export const MonacoEditor: FC<Props> = (props) => {
             defaultValue={getFile(getRuntime().currentFile)?.value}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
-            theme={defaultTheme}
+            theme={props.defaultTheme}
             language="javascript"
             options={{
                 fontSize: 20,
