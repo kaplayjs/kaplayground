@@ -4,6 +4,7 @@ import type { KAPLAYConfigSlice } from "../kaplayConfig";
 import type { ProjectSlice } from "../project";
 
 export type FileKind = "kaplay" | "main" | "scene" | "assets";
+export type FileFolder = "scenes" | "assets" | "root";
 
 export type File = {
     name: string;
@@ -11,6 +12,13 @@ export type File = {
     language: string;
     value: string;
     kind: FileKind;
+};
+
+export const folderByKind: Record<FileKind, FileFolder> = {
+    kaplay: "root",
+    main: "root",
+    scene: "scenes",
+    assets: "assets",
 };
 
 export interface FilesSlice {
@@ -31,7 +39,7 @@ export interface FilesSlice {
     /** Get a file */
     getFile: (path: string) => File | null;
     /** Get files by folder */
-    getFilesByFolder: (folder: string) => File[];
+    getFilesByFolder: (folder: FileFolder) => File[];
 }
 
 export const wrapKAPLAYConfig = (config: string) =>
@@ -125,6 +133,12 @@ export const createFilesSlice: StateCreator<
     },
 
     getFilesByFolder(folder) {
+        if (folder === "root") {
+            return Array.from(get().project.files.values()).filter(
+                (file) => !file.path.startsWith("scenes"),
+            );
+        }
+
         return Array.from(get().project.files.values()).filter(
             (file) => file.path.startsWith(folder),
         );

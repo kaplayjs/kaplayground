@@ -6,6 +6,7 @@ import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
 import { useEditor } from "../../hooks/useEditor";
+import { debug } from "../../util/logs";
 
 type Props = {
     file: File;
@@ -18,8 +19,28 @@ const logoByKind = {
     assets: assets.assetbrew.outlined,
 };
 
-const FileEntry: FC<Props> = ({ file }) => {
-    const { removeFile } = useProject();
+const FileButton: FC<{
+    onClick: MouseEventHandler;
+    icon: keyof typeof assets;
+    rotate?: 0 | 90 | 180 | 270;
+}> = (props) => {
+    return (
+        <button
+            className="btn btn-ghost btn-xs rounded-sm px-1"
+            onClick={props.onClick}
+        >
+            <img
+                src={assets[props.icon].outlined}
+                alt="Delete"
+                className="h-4 data-[rotation=90]:rotate-90 data-[rotation=180]:rotate-180 data-[rotation=270]:-rotate-90"
+                data-rotation={props.rotate}
+            />
+        </button>
+    );
+};
+
+export const FileEntry: FC<Props> = ({ file }) => {
+    const { removeFile, project, setProject } = useProject();
     const { getRuntime, setCurrentFile } = useEditor();
 
     const handleClick: MouseEventHandler = () => {
@@ -39,6 +60,56 @@ const FileEntry: FC<Props> = ({ file }) => {
         }
     };
 
+    const handleMoveUp: MouseEventHandler = (e) => {
+        e.stopPropagation();
+
+        // order the map with the file one step up
+        const files = project.files;
+        const order = Array.from(files.keys());
+        const index = order.indexOf(file.path);
+
+        if (index === 0) return;
+
+        const newOrder = [...order];
+        newOrder.splice(index, 1);
+
+        newOrder.splice(index - 1, 0, file.path);
+
+        const newFiles = new Map(
+            newOrder.map((path) => [path, files.get(path)!]),
+        );
+
+        setProject({
+            ...project,
+            files: newFiles,
+        });
+    };
+
+    const handleMoveDown: MouseEventHandler = (e) => {
+        e.stopPropagation();
+
+        // order the map with the file one step down
+        const files = project.files;
+        const order = Array.from(files.keys());
+        const index = order.indexOf(file.path);
+
+        if (index === order.length - 1) return;
+
+        const newOrder = [...order];
+        newOrder.splice(index, 1);
+
+        newOrder.splice(index + 1, 0, file.path);
+
+        const newFiles = new Map(
+            newOrder.map((path) => [path, files.get(path)!]),
+        );
+
+        setProject({
+            ...project,
+            files: newFiles,
+        });
+    };
+
     return (
         <div
             className={cn(
@@ -51,20 +122,19 @@ const FileEntry: FC<Props> = ({ file }) => {
             onClick={handleClick}
             data-file-kind={file.kind}
         >
-            <span className="text-left truncate w-[50%]">
+            <span className="text-left truncate w-[50%] flex-1">
                 {removeExtension(file.name)}
             </span>
             <div role="toolbar" className="file-actions hidden">
-                <button
-                    className="btn btn-ghost btn-xs rounded-sm px-1"
+                <FileButton
                     onClick={handleDelete}
-                >
-                    <img
-                        src={assets.trash.outlined}
-                        alt="Delete"
-                        className="h-4"
-                    />
-                </button>
+                    icon="trash"
+                />
+                <FileButton
+                    onClick={handleMoveUp}
+                    icon="arrow"
+                    rotate={270}
+                />
             </div>
             <img
                 src={logoByKind[file.kind]}
@@ -74,5 +144,3 @@ const FileEntry: FC<Props> = ({ file }) => {
         </div>
     );
 };
-
-export default FileEntry;

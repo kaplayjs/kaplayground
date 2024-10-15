@@ -1,20 +1,26 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
 import { useProject } from "../../hooks/useProject";
+import { type FileKind, folderByKind } from "../../stores/storage/files";
 
-const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
-    const { addFile } = useProject();
+type Props = PropsWithChildren<{
+    kind: FileKind;
+}>;
+
+export const FileToolbar: FC<Props> = (props) => {
+    const { addFile, getFile } = useProject();
 
     const handleAddFile = () => {
-        const sceneName = prompt("Scene name");
-        if (!sceneName) return;
+        const fileName = prompt("File name");
+        if (!fileName) return;
+        if (getFile(`${folderByKind[props.kind]}/${fileName}.js`)) return;
 
         addFile({
-            name: sceneName + ".js",
+            name: fileName + ".js",
             kind: "scene",
-            value: `scene("${sceneName}", () => {\n\n});`,
+            value: `scene("${fileName}", () => {\n\n});`,
             language: "javascript",
-            path: `scenes/${sceneName}.js`,
+            path: `${folderByKind[props.kind]}/${fileName}.js`,
         });
     };
 
@@ -31,9 +37,7 @@ const FileToolbar: FC<PropsWithChildren> = ({ children }) => {
                 />
             </button>
 
-            {children}
+            {props.children}
         </div>
     );
 };
-
-export default FileToolbar;

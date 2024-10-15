@@ -2,6 +2,7 @@ import { Allotment } from "allotment";
 import type { FC } from "react";
 import { cn } from "../../util/cn";
 import { MonacoEditor } from "../Editor/MonacoEditor";
+import { Toolbar } from "../Toolbar";
 import ExampleList from "../Toolbar/ExampleList";
 import ToolbarToolsMenu from "../Toolbar/ToolbarToolsMenu";
 import { GameView } from "./GameView";
@@ -21,7 +22,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                 })}
             >
                 <header className="h-[4%] flex">
-                    <ToolbarToolsMenu />
+                    {props.isPortrait && <ToolbarToolsMenu /> || <Toolbar />}
                 </header>
 
                 <main className="h-[92%] lg:h-[96%] overflow-hidden">
