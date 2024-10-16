@@ -100,13 +100,16 @@ export const MonacoEditor: FC<Props> = (props) => {
             defaultValue={getFile(getRuntime().currentFile)?.value}
             beforeMount={handleEditorBeforeMount}
             onMount={handleEditorMount}
-            theme={props.defaultTheme}
+            theme={localStorage.getItem("theme") || "Spiker"}
             language="javascript"
             options={{
                 fontSize: 20,
                 glyphMargin: true,
                 lineNumbersMinChars: 2,
                 folding: false,
+                minimap: {
+                    enabled: false,
+                },
             }}
             path={getRuntime().currentFile}
         />

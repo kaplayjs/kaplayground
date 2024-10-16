@@ -30,14 +30,9 @@ export type AssetFile = {
 };
 
 export interface AssetsSlice {
-    /** Last asset ID */
     assetsLastId: AssetId;
-    /** Add an asset */
     addAsset: (asset: UploadAsset) => void;
-    /** Remove an asset */
     removeAsset: (path: string) => void;
-    /** Order assets */
-    orderAssets: (order: string[]) => void;
 }
 
 type Slice = ProjectSlice & AssetsSlice;
@@ -114,28 +109,5 @@ export const createAssetsSlice: StateCreator<
         }
 
         set({});
-    },
-    orderAssets(order) {
-        debug(1, "Ordering assets", order);
-        const assets = get().project.assets;
-
-        const newAssets = new Map(
-            order.map((path) => {
-                const asset = assets.get(path);
-
-                if (!asset) {
-                    throw new Error("One asset is missing");
-                }
-
-                return [path, asset];
-            }),
-        );
-
-        set({
-            project: {
-                ...get().project,
-                assets: newAssets,
-            },
-        });
     },
 });

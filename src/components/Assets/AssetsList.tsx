@@ -10,7 +10,7 @@ type Props = Omit<ResourceProps, "asset"> & {
 };
 
 const AssetsList: FC<Props> = ({ kind, visibleIcon }) => {
-    const { assets, orderAssets } = useAssets({ kind });
+    const { assets } = useAssets({ kind });
     const [
         parent,
         draggableAssets,
@@ -25,9 +25,6 @@ const AssetsList: FC<Props> = ({ kind, visibleIcon }) => {
         <ul
             ref={parent}
             className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44 "
-            onDrag={() => {
-                orderAssets(draggableAssets.map((asset) => asset.path));
-            }}
         >
             {draggableAssets.map((resource, i) => (
                 <AssetsItem

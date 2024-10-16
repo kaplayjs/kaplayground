@@ -12,6 +12,21 @@ import { LoadingPlayground } from "./LoadingPlayground";
 import { WorkspaceExample } from "./WorkspaceExample";
 import { WorkspaceProject } from "./WorkspaceProject";
 
+const defaultTheme = localStorage.getItem("theme") as string;
+const browserPrefersDark = window.matchMedia(
+    "(prefers-color-scheme: dark)",
+).matches;
+
+document.documentElement.setAttribute(
+    "data-theme",
+    defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
+);
+
+localStorage.setItem(
+    "theme",
+    defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
+);
+
 const Playground = () => {
     const {
         project,
@@ -20,7 +35,6 @@ const Playground = () => {
     } = useProject();
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
-    const [defaultTheme, setDefaultTheme] = useState<string | null>(null);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
 
     const handleMount = () => {
@@ -36,10 +50,6 @@ const Playground = () => {
 
         document.documentElement.setAttribute(
             "data-theme",
-            defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
-        );
-
-        setDefaultTheme(
             defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
         );
     }, []);

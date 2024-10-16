@@ -34,7 +34,7 @@ body {
 const transformAssetUrl = (regex: RegExp, code: string) => {
     const { project: { assets: resources } } = useProject.getState();
 
-    return code.replace(regex, (match, asset: string) => {
+    const x = code.replace(regex, (match, asset: string) => {
         debug(0, "Transforming urls, asset matched", asset);
 
         // remove first / and last / from asset, also remove "assets" from asset
@@ -43,11 +43,15 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
             "",
         ).replace(/"/g, "");
 
+        debug(0, "Resource found:", resources.get(normalizeAsset)?.url);
+
         return match.replace(
             asset,
             resources.get(normalizeAsset)?.url ?? asset,
         );
     });
+
+    return x;
 };
 
 export const parseAssets = (code: string) => {
