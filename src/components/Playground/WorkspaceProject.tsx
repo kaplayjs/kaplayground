@@ -17,15 +17,15 @@ export const WorkspaceProject: FC<Props> = (props) => {
     return (
         <>
             <div
-                className={cn("h-full w-screen", {
+                className={cn("h-screen w-screen flex flex-col", {
                     "hidden": props.editorIsLoading,
                 })}
             >
-                <header className="h-[4%] flex">
+                <header className="h-9 flex">
                     <Toolbar />
                 </header>
 
-                <main className="h-[96%] overflow-hidden">
+                <main className="h-full overflow-hidden">
                     <Allotment
                         defaultSizes={[0.5, 2, 2]}
                         vertical={props.isPortrait}

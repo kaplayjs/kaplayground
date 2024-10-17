@@ -15,38 +15,36 @@ type Props = {
 
 export const WorkspaceExample: FC<Props> = (props) => {
     return (
-        <>
-            <div
-                className={cn("h-full w-screen", {
-                    "hidden": props.editorIsLoading,
-                })}
-            >
-                <header className="h-[4%] flex">
-                    {props.isPortrait && <ToolbarToolsMenu /> || <Toolbar />}
-                </header>
+        <div
+            className={cn("h-full w-screen flex flex-col", {
+                "hidden": props.editorIsLoading,
+            })}
+        >
+            <header className="h-9 flex">
+                {props.isPortrait && <ToolbarToolsMenu /> || <Toolbar />}
+            </header>
 
-                <main className="h-[92%] lg:h-[96%] overflow-hidden">
-                    <Allotment
-                        vertical={props.isPortrait}
-                        defaultSizes={[0.5, 0.5]}
-                    >
-                        <Allotment.Pane snap>
-                            <MonacoEditor
-                                onMount={props.onMount}
-                            />
-                        </Allotment.Pane>
-                        <Allotment.Pane snap>
-                            <GameView />
-                        </Allotment.Pane>
-                    </Allotment>
-                </main>
+            <main className="h-full overflow-hidden">
+                <Allotment
+                    vertical={props.isPortrait}
+                    defaultSizes={[0.5, 0.5]}
+                >
+                    <Allotment.Pane snap>
+                        <MonacoEditor
+                            onMount={props.onMount}
+                        />
+                    </Allotment.Pane>
+                    <Allotment.Pane snap>
+                        <GameView />
+                    </Allotment.Pane>
+                </Allotment>
+            </main>
 
-                {props.isPortrait && (
-                    <footer className="h-[4%] flex justify-center items-center bg-base-300">
-                        <ExampleList />
-                    </footer>
-                )}
-            </div>
-        </>
+            {props.isPortrait && (
+                <footer className="h-10 flex justify-center items-center bg-base-300">
+                    <ExampleList />
+                </footer>
+            )}
+        </div>
     );
 };
