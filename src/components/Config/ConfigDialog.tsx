@@ -1,32 +1,42 @@
-import { Tooltip } from "react-tooltip";
-import { EditorConfig } from "./Sections/EditorConfig";
+import { useProject } from "../../hooks/useProject";
+import { debug } from "../../util/logs";
+import { Dialog } from "../UI/Dialog";
+import { ConfigProject } from "./ConfigProject";
 
 const ConfigDialog = () => {
-    return (
-        <dialog id="config" className="modal">
-            <main className="modal-box overflow-hidden px-0 py-0">
-                <Tooltip id="config-dialog" />
-                <section className="max-h-[400px] overflow-y-auto p-4">
-                    <EditorConfig />
-                </section>
+    const { setProject } = useProject();
 
-                <footer className="p-4 bg-base-200">
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn btn-primary">
-                                Save Changes
-                            </button>
-                        </form>
-                    </div>
-                </footer>
-            </main>
-            <form
-                method="dialog"
-                className="modal-backdrop"
+    const handleDeleteAllData = () => {
+        if (confirm("Are you sure you want to delete all data?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    };
+
+    const handleSave = () => {
+        const versionEl = document.querySelector<HTMLSelectElement>(
+            "#version-selector",
+        );
+
+        if (!versionEl) return;
+
+        const version = versionEl.value;
+        debug(0, "Project KAPLAY version set to", version);
+        setProject({ kaplayVersion: version });
+    };
+
+    return (
+        <Dialog id="config" onSave={handleSave}>
+            <ConfigProject />
+            <div className="divider"></div>
+            <h2 className="text-2xl font-bold pb-4">Misc configuration</h2>
+            <button
+                className="btn btn-warning"
+                onClick={handleDeleteAllData}
             >
-                <button>Close</button>
-            </form>
-        </dialog>
+                Delete All Data
+            </button>
+        </Dialog>
     );
 };
 

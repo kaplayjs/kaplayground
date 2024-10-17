@@ -3,8 +3,8 @@ import { FileFold } from "./FileFold";
 
 export const FileTree = () => {
     return (
-        <View direction={"column"} justify="between" height="full">
-            <View direction={"column"} padding={2} gap={2}>
+        <View direction={"column"} justify="between" height="full" el={"div"}>
+            <View direction={"column"} padding={2} gap={2} el="div">
                 <FileFold
                     level={1}
                     title="Scenes"
@@ -18,7 +18,7 @@ export const FileTree = () => {
                 />
             </View>
 
-            <View direction="column" padding={2} gap={2}>
+            <View direction="column" padding={2} gap={2} el={"div"}>
                 <ul className="flex flex-col font-bold">
                     <li className="link link-primary">
                         <a

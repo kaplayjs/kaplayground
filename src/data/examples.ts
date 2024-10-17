@@ -525,8 +525,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
 // would like to personally apologize to MF for not understanding a lot of examples
 
 export const examples = examplesList.filter((example) =>
-    examplesMetaData[example.name]?.version !== "4000"
-    || examplesMetaData[example.name]?.hidden
+    !examplesMetaData[example.name]?.hidden
 ).map((example) => {
     return {
         ...example,

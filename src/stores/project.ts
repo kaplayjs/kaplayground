@@ -16,6 +16,7 @@ export type Project = {
     assets: Map<string, Asset>;
     files: Map<string, File>;
     kaplayConfig: KAPLAYOpt;
+    kaplayVersion: string;
     mode: ProjectMode;
     isDefault?: boolean;
 };
@@ -50,7 +51,7 @@ export const createProjectSlice: StateCreator<
         assets: new Map(),
         kaplayConfig: {},
         mode: "pj",
-        saved: false,
+        kaplayVersion: "3001.0.0-beta.5",
     },
     getProject: () => {
         return get().project;
@@ -107,7 +108,7 @@ export const createProjectSlice: StateCreator<
                 assets: assets,
                 kaplayConfig: {},
                 mode: filter,
-                saved: false,
+                kaplayVersion: "3001.0.0-beta.5",
                 isDefault: exampleIndex ? true : false,
             },
         }));

@@ -15,6 +15,7 @@
     "dev:bin": "node scripts/cli.js --examples=fakeExamples"
   },
   "dependencies": {
+    "@fontsource-variable/rubik": "^5.1.0",
     "@formkit/drag-and-drop": "^0.0.38",
     "@kaplayjs/crew": "^1.6.1",
     "@monaco-editor/react": "^4.6.0",

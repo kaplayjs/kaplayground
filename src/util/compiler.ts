@@ -24,7 +24,7 @@ body {
         </style>
 </head>
 <body>
-<script src="https://unpkg.com/kaplay@latest/dist/kaplay.js"></script>
+<script src="https://unpkg.com/kaplay@${useProject.getState().project.kaplayVersion}/dist/kaboom.js"></script>
 <script>
     ${parseAssets(code)}
 </script>

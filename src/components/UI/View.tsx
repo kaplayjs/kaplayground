@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from "react";
+import type { ElementType, FC, PropsWithChildren } from "react";
 import { cn } from "../../util/cn";
 
 export type ViewProps = PropsWithChildren<{
@@ -8,13 +8,17 @@ export type ViewProps = PropsWithChildren<{
     justify?: "center" | "start" | "end" | "between" | "around";
     height?: "full" | "screen";
     className?: string;
+    id?: string;
+    el: ElementType<{
+        className?: string;
+    }>;
 }>;
 
 export const View: FC<ViewProps> = (props) => {
     const needsFlex = props.direction || props.gap || props.justify;
 
     return (
-        <div
+        <props.el
             className={cn({
                 "flex": needsFlex,
                 "flex-col": props.direction === "column",
@@ -33,8 +37,10 @@ export const View: FC<ViewProps> = (props) => {
                 "h-full": props.height === "full",
                 "h-screen": props.height === "screen",
             }, props.className)}
+            id={props.id}
+            {...props}
         >
             {props.children}
-        </div>
+        </props.el>
     );
 };
