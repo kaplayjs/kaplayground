@@ -1,11 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import {
-    type FC,
-    type PropsWithChildren,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { type FC, type PropsWithChildren, useMemo, useState } from "react";
 import { cn } from "../../util/cn";
 import { FileToolbar } from "./FileToolbar";
 import "./FileFolder.css";
