@@ -9,7 +9,7 @@ const defaultCode = `kaplay();
 loadBean();
 
 add([
-    sprite("bean");
+    sprite("bean"),
 ]);
 `;
 
