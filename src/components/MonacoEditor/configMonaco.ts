@@ -6,7 +6,7 @@ import docTs from "../../../kaplay/dist/doc.d.ts?raw";
 const dataUrlRegex = /data:[^;]+;base64,[A-Za-z0-9+\/]+={0,2}/g;
 
 const globalImport = `
-import type { PluginList, MergePlugins, ButtonsDef } from "./types";
+import type { PluginList, MergePlugins, ButtonsDef, KAPLAYCtx, KAPLAYOpt } from "types.d.ts";
 
 declare global {
 
@@ -15,7 +15,7 @@ const kaplay: <TPlugins extends PluginList<unknown> = [
 ], TButtons extends ButtonsDef = {}, TButtonsName extends string = keyof TButtons & string>(gopt?: KAPLAYOpt<TPlugins, TButtons>) => TPlugins extends [
 	undefined
 ] ? KAPLAYCtx<TButtons, TButtonsName> : KAPLAYCtx<TButtons, TButtonsName> & MergePlugins<TPlugins>;
- 
+
 }
 
 
