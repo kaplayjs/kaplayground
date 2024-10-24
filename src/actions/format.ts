@@ -8,5 +8,7 @@ export const format = () => {
         indent_char: " ",
     });
 
+    const oldPos = $editorInstance.get()?.getPosition();
     $editorInstance.get()?.setValue(formattedCode);
+    $editorInstance.get()?.setPosition(oldPos!);
 };
