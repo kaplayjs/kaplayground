@@ -4,9 +4,14 @@ import { atom } from "nanostores";
 import type { GameView } from "./components/GameView/gameView";
 import type { Toasty } from "./components/UI/Toasty.astro";
 
-const defaultCode = `const k = kaplay();
-    
-k.debug.log("welcome to kaplayground!");`;
+const defaultCode = `kaplay();
+
+loadBean();
+
+add([
+    sprite("bean");
+]);
+`;
 
 export const $playgroundCode = persistentAtom(
     "kaplayground_code",
@@ -21,4 +26,4 @@ export const $gameViewElement = atom<GameView | null>(null);
 export const $toastyElement = atom<Toasty | null>(null);
 export const $editorInstance = atom<null | editor.IStandaloneCodeEditor>(null);
 export const $editorTheme = atom("kaplayrk");
-export const $version = atom("v4000");
+export const $version = atom("v3001");

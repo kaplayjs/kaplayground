@@ -1,29 +1,45 @@
 import type { Monaco } from "@monaco-editor/react";
-import kaboomGlobal from "../../../kaplay/dist/declaration/global.d.ts?raw";
-import kaboomModule from "../../../kaplay/dist/doc.d.ts?raw";
-
-const kaboomFunctionImports = `
-import { PluginList, MergePlugins, KAPLAYOpt, KAPLAYCtx } from "./kaboom"
-`;
-
-const kaboomFunctionDt = `declare global { 
-    function kaboom<T extends PluginList<unknown> = [undefined]>(options?: KAPLAYOpt<T>): T extends [undefined] ? KAPLAYCtx : KAPLAYCtx & MergePlugins<T>;
-    function kaplay<T extends PluginList<unknown> = [undefined]>(options?: KAPLAYOpt<T>): T extends [undefined] ? KAPLAYCtx : KAPLAYCtx & MergePlugins<T>;
-}`;
+import globalDts from "../../../kaplay/dist/declaration/global.d.ts?raw";
+import kaplayDts from "../../../kaplay/dist/declaration/kaplay.d.ts?raw";
+import docTs from "../../../kaplay/dist/doc.d.ts?raw";
 
 const dataUrlRegex = /data:[^;]+;base64,[A-Za-z0-9+\/]+={0,2}/g;
 
+const globalImport = `
+import type { PluginList, MergePlugins, ButtonsDef } from "./types";
+
+declare global {
+
+const kaplay: <TPlugins extends PluginList<unknown> = [
+	undefined
+], TButtons extends ButtonsDef = {}, TButtonsName extends string = keyof TButtons & string>(gopt?: KAPLAYOpt<TPlugins, TButtons>) => TPlugins extends [
+	undefined
+] ? KAPLAYCtx<TButtons, TButtonsName> : KAPLAYCtx<TButtons, TButtonsName> & MergePlugins<TPlugins>;
+ 
+}
+
+
+`;
+
 export const configMonaco = (monaco: Monaco) => {
-    // Add global kaboom types
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        kaboomFunctionImports + kaboomGlobal + kaboomFunctionDt,
+        globalDts,
         "global.d.ts",
     );
 
-    // Add kaboom module types
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        kaboomModule,
-        "kaboom.d.ts",
+        kaplayDts,
+        "index.d.ts",
+    );
+
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+        docTs,
+        "types.d.ts",
+    );
+
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+        globalImport,
+        "global2.d.ts",
     );
 
     // Hover dataUrl images

@@ -3,14 +3,15 @@
     class="select select-bordered select-sm w-full max-w-48 lg:max-w-xs ml-2"
     title="Choose an example"
 >
-    <option selected value="v4000">v4000</option>
+    <option selected value="v4000">v4000 (experimental)</option>
     <option selected value="v3001">v3001</option>
 </select>
 
 <script>
+    import { save } from "../../actions/save";
     import { $version } from "../../stores";
 
-    const select = document.querySelector<HTMLSelectElement>("version-select");
+    const select = document.querySelector<HTMLSelectElement>("#version-select");
     const options = select?.querySelectorAll<HTMLOptionElement>("option");
 
     select?.addEventListener("change", () => {
@@ -19,6 +20,7 @@
 
         if (version) {
             $version.set(version);
+            save();
         }
     });
 </script>

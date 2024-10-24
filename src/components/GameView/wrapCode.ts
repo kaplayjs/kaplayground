@@ -1,13 +1,13 @@
-import kaboomJsFile from "../../../kaplay/dist/kaboom.js?raw";
 import { $version } from "../../stores";
 
-const versions = {
-    v4000:
-        "https://cdn.jsdelivr.net/npm/kaplay@4000.0.0-alpha.1/dist/kaplay.js",
-    v3001: "https://cdn.jsdelivr.net/npm/kaplay@3001.0.0-alpha.21",
+const versions: Record<string, string> = {
+    v4000: "https://unpkg.com/kaplay@next/dist/kaplay.js",
+    v3001: "https://unpkg.com/kaplay@latest/dist/kaplay.js",
 };
 
 export const wrapCode = (code: any) => {
+    const version = $version.get();
+
     return `
 <!DOCTYPE html>
 <head>
@@ -28,11 +28,10 @@ body {
         }
         </style>
 </head>
-<body>
-<script>
-${kaboomJsFile}
-</script>
 
+<script src="${versions[version]}"></script>
+
+<body>
 <script type="module">
 ${code}
 </script>

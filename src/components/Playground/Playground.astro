@@ -11,13 +11,13 @@ import Toasty from "../UI/Toasty.astro";
     <Toolbar />
 
     <div id="wrapper">
-        <div class="h-1/2 lg:w-1/2 lg:h-full">
+        <div class="lg:w-1/2 flex-auto">
             <MonacoEditor client:load />
         </div>
 
         <div role="separator" tabindex="1" />
 
-        <div class="h-1/2 lg:w-1/2 lg:h-full">
+        <div class="lg:w-1/2 flex-auto">
             <GameView />
         </div>
     </div>

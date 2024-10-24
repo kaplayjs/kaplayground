@@ -6,15 +6,6 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 // https://astro.build/config
 export default defineConfig({
     integrations: [react(), tailwind()],
-    devToolbar: {
-        enabled: false,
-    },
-    server: {
-        headers: {
-            "Cross-Origin-Opener-Policy": "same-origin",
-            "Cross-Origin-Embedder-Policy": "require-corp",
-        },
-    },
     vite: {
         plugins: [
             viteStaticCopy({
