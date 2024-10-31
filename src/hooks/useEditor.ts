@@ -33,7 +33,6 @@ type EditorStore = {
     showNotification: (message: string) => void;
     setEditorValue: (value: string) => void;
     loadDefaultExample: (example: string) => void;
-    loadProject: (project: string) => void;
 };
 
 export const useEditor = create<EditorStore>((set, get) => ({
@@ -132,9 +131,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const gylphDecorations = get().runtime.gylphDecorations;
         const model = editor?.getModel();
 
-        if (!editor || !monaco || !model || !gylphDecorations) {
-            return console.error("No editor");
-        }
+        if (!editor || !monaco || !model || !gylphDecorations) return;
 
         const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*\)/g;
 
@@ -191,26 +188,15 @@ export const useEditor = create<EditorStore>((set, get) => ({
         toast(message);
     },
     setEditorValue(value) {
-        debug(0, "Setting editor value to", value);
-
         const editor = get().runtime.editor;
-        if (!editor) return console.error("No editor");
+        if (!editor) return;
+
+        debug(0, "Setting editor value to", value);
 
         editor.setValue(value);
     },
     loadDefaultExample(exampleIndex) {
         useProject.getState().loadDefaultExample(exampleIndex);
-        get().update();
-        get().run();
-    },
-    loadProject(project: string) {
-        useProject.persist.setOptions({
-            name: project,
-        });
-
-        useProject.persist.rehydrate();
-
-        get().runtime.editor?.setScrollTop(0);
         get().update();
         get().run();
     },

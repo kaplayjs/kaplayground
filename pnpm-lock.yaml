@@ -103,8 +103,8 @@ importers:
         specifier: ^0.45.1
         version: 0.45.1
       kaplay:
-        specifier: 3001.0.0-alpha.22
-        version: 3001.0.0-alpha.22
+        specifier: 3001.0.0-beta.8
+        version: 3001.0.0-beta.8
       monaco-editor:
         specifier: ^0.48.0
         version: 0.48.0
@@ -1255,8 +1255,8 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  kaplay@3001.0.0-alpha.22:
-    resolution: {integrity: sha512-gTecxN/NmVQVK5vGrkl87j3Xf+Lc7nWj5qJAShV3B+zykbS0u6P1hAxHSLVnbQ3aSn0LokQ/5GGDop1u2mwvjw==}
+  kaplay@3001.0.0-beta.8:
+    resolution: {integrity: sha512-+Wc509qEpO7TDu7QdV63cm00AwgSjmz5RI/1QlChA7Ncx6nDmxlccVyTA/ODS6DdKIkf1GuOn8G/yhReR0gWmg==}
 
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
@@ -2818,9 +2818,7 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  kaplay@3001.0.0-alpha.22:
-    dependencies:
-      '@kaplayjs/dprint-config': 1.1.0
+  kaplay@3001.0.0-beta.8: {}
 
   lilconfig@2.1.0: {}
 

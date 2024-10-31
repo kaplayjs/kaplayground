@@ -2,6 +2,7 @@ import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
 import { defaultProject } from "../config/defaultProject";
 import examplesList from "../data/exampleList.json";
+import { useConfig } from "../hooks/useConfig";
 import { useEditor } from "../hooks/useEditor";
 import { useProject } from "../hooks/useProject";
 import { debug } from "../util/logs";
@@ -18,6 +19,7 @@ export type Project = {
     kaplayConfig: KAPLAYOpt;
     kaplayVersion: string;
     mode: ProjectMode;
+    id: string;
     isDefault?: boolean;
 };
 
@@ -29,7 +31,9 @@ export interface ProjectSlice {
     createNewProject: (filter: ProjectMode, example?: string) => void;
     getSavedProjects: (filter?: "pj" | "ex") => string[];
     projectIsSaved: (name: string, filter: "pj" | "ex") => boolean;
-    saveProject: (name: string) => void;
+    saveProject: (newId: string, oldId: string) => void;
+    importProject: (project: Project) => void;
+    loadProject: (project: string) => void;
     loadDefaultExample: (example: string) => void;
     loadDefaultSetup: (
         mode: Project["mode"],
@@ -51,7 +55,8 @@ export const createProjectSlice: StateCreator<
         assets: new Map(),
         kaplayConfig: {},
         mode: "pj",
-        kaplayVersion: "3001.0.0-beta.5",
+        kaplayVersion: "3001.0.0-beta.8",
+        id: `upj-Untitled`,
     },
     getProject: () => {
         return get().project;
@@ -60,6 +65,19 @@ export const createProjectSlice: StateCreator<
         set(() => ({
             project: {
                 ...get().project,
+                ...project,
+            },
+        }));
+    },
+    importProject: (project: Project) => {
+        useProject.persist.setOptions({
+            name: project.name,
+        });
+
+        useProject.persist.rehydrate();
+
+        set(() => ({
+            project: {
                 ...project,
             },
         }));
@@ -100,39 +118,63 @@ export const createProjectSlice: StateCreator<
         });
         useProject.persist.rehydrate();
 
+        useConfig.setState({
+            config: {
+                lastOpenedProject: `u${filter}-Untitled`,
+            },
+        });
+
         set(() => ({
             project: {
-                name: `${filter}#${get().getSavedProjects().length}`,
+                name: `${filter}#${get().getSavedProjects("pj").length}`,
                 version: "2.0.0",
                 files: files,
                 assets: assets,
                 kaplayConfig: {},
                 mode: filter,
-                kaplayVersion: "3001.0.0-beta.5",
+                kaplayVersion: "3001.0.0-beta.8",
                 isDefault: exampleIndex ? true : false,
+                id: `u${filter}-Untitled`,
             },
         }));
     },
-    saveProject: (name: string) => {
+    saveProject: (id: string, oldId: string) => {
         useProject.persist.setOptions({
-            name: `${get().project.mode}-${name}`,
+            name: `${get().project.mode}-${id}`,
         });
 
         useProject.persist.rehydrate();
 
-        localStorage.removeItem(`u${get().project.mode}-Untitled`);
+        localStorage.removeItem(oldId);
+
+        useConfig.setState({
+            config: {
+                lastOpenedProject: `${get().project.mode}-${id}`,
+            },
+        });
+
+        set({
+            project: {
+                ...get().project,
+                id: `${get().project.mode}-${id}`,
+            },
+        });
     },
     projectIsSaved: (name: string, filter: "pj" | "ex") => {
         return get().getSavedProjects().includes(`${filter}-${name}`);
     },
     getSavedProjects: (filter) => {
-        const prefix = filter ? `${filter}-` : "";
+        const prefix = filter ? `${filter}-` : "pj-";
+        const secondPrefix = "ex-";
         let keys: string[] = [];
 
         for (let i = 0, len = localStorage.length; i < len; ++i) {
             const localKey = localStorage.key(i);
 
-            if (localKey && localKey.startsWith(prefix)) {
+            if (
+                (localKey && localKey.startsWith(prefix))
+                || (localKey && localKey.startsWith(secondPrefix))
+            ) {
                 keys.push(localKey);
             }
         }
@@ -154,5 +196,22 @@ export const createProjectSlice: StateCreator<
         } else {
             files.set("main.js", defaultProject.files[1]);
         }
+    },
+    loadProject(project: string) {
+        useProject.persist.setOptions({
+            name: project,
+        });
+
+        useProject.persist.rehydrate();
+
+        useEditor.getState().runtime.editor?.setScrollTop(0);
+        useEditor.getState().update();
+        useEditor.getState().run();
+
+        useConfig.getState().setConfig({
+            lastOpenedProject: project,
+        });
+
+        set({});
     },
 });

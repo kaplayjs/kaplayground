@@ -1,5 +1,6 @@
 import { type Packument } from "query-registry";
 import { useEffect, useState } from "react";
+import { useProject } from "../../hooks/useProject";
 
 async function getPackageInfo(name: string): Promise<Packument> {
     const endpoint = `https://registry.npmjs.org/${name}`;
@@ -12,6 +13,7 @@ export const ConfigProject = () => {
     const [packageInfo, setPackageInfo] = useState<Packument | null>(
         null,
     );
+    const { project } = useProject();
 
     useEffect(() => {
         async function fetchPackageInfo() {
@@ -45,6 +47,11 @@ export const ConfigProject = () => {
                             </option>
                         ))}
                 </select>
+                <div className="label">
+                    <span className="label-text">
+                        Current version: {project.kaplayVersion}
+                    </span>
+                </div>
             </label>
         </>
     );

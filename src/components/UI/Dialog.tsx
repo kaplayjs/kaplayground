@@ -6,7 +6,7 @@ type Props = ComponentProps<"dialog"> & {
     onCloseWithoutSave?: () => void;
 };
 
-export const Dialog: FC<Props> = (props) => {
+export const Dialog: FC<Props> = ({ onSave, onCloseWithoutSave, ...props }) => {
     return (
         <View className="modal" el={"dialog"} id={props.id} {...props}>
             <main className="modal-box overflow-hidden px-0 py-0">
@@ -19,7 +19,7 @@ export const Dialog: FC<Props> = (props) => {
                         <form method="dialog">
                             <button
                                 className="btn btn-primary"
-                                onClick={props.onSave}
+                                onClick={onSave}
                             >
                                 Save Changes
                             </button>
@@ -32,7 +32,7 @@ export const Dialog: FC<Props> = (props) => {
                 className="modal-backdrop"
             >
                 <button
-                    onClick={props.onCloseWithoutSave}
+                    onClick={onCloseWithoutSave}
                 >
                     Close
                 </button>

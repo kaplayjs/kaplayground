@@ -2,36 +2,70 @@ import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
+import type { Project } from "../../stores/project";
+import type { Asset } from "../../stores/storage/assets";
+import type { File } from "../../stores/storage/files";
 import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project, createNewProject } = useProject();
+    const { project, createNewProject, importProject, loadProject } =
+        useProject();
     const { update, run, showNotification } = useEditor();
 
     const handleDownload = () => {
-        const blob = new Blob([JSON.stringify(project)], {
+        const projectLocal = localStorage.getItem(project.id);
+
+        if (!projectLocal) {
+            showNotification("No project to export... Remember to save!");
+            return;
+        }
+
+        const blob = new Blob([projectLocal], {
             type: "application/json",
         });
 
-        downloadBlob(blob, "project.kaplay");
+        downloadBlob(blob, `${project.name}.kaplay`);
         showNotification("Exporting the project, check downloads...");
     };
 
-    // @ts-ignore
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        alert("reimplement project upload");
-        // const file = e.target.files?.[0];
-        // if (!file) return;
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-        // const reader = new FileReader();
+        const reader = new FileReader();
 
-        // reader.onload = (e) => {
-        //     const project = JSON.parse(e.target?.result as string) as Project;
-        //     replaceProject(project);
-        // };
+        reader.onload = (e) => {
+            const project = JSON.parse(e.target?.result as string) as {
+                state: {
+                    project: Omit<Project, "files" | "assets"> & {
+                        assets: [string, Asset][];
+                        files: [string, File][];
+                    };
+                };
+            };
 
-        // reader.readAsText(file);
+            const fileMap = new Map<string, File>();
+            const assetMap = new Map<string, Asset>();
+
+            project.state.project.files.forEach((file) => {
+                fileMap.set(file[0], file[1]);
+            });
+
+            project.state.project.assets.forEach((asset) => {
+                assetMap.set(asset[0], asset[1]);
+            });
+
+            importProject({
+                ...project.state.project,
+                files: fileMap,
+                assets: assetMap,
+            });
+
+            loadProject(project.state.project.id);
+        };
+
+        reader.readAsText(file);
     };
 
     const handleProjectReset = () => {
@@ -65,6 +99,7 @@ const Projects: FC = () => {
                             type="file"
                             className="hidden"
                             onChange={handleProjectUpload}
+                            accept=".kaplay"
                         />
                         <span>Import project</span>
                     </label>

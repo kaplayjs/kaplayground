@@ -1,20 +1,27 @@
 import { assets } from "@kaplayjs/crew";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useProject } from "../../hooks/useProject";
 
 const ProjectStatus = () => {
-    const { saveProject, getProject, setProject, projectIsSaved } =
-        useProject();
+    const { saveProject, getProject, projectIsSaved } = useProject();
+    const [name, setName] = useState(getProject().name);
 
     const handleSaveProject = () => {
-        saveProject(getProject().name);
+        saveProject(name, getProject().id);
     };
 
     const handleEditName = () => {
         const projectName = prompt("New project name?");
         if (!projectName) return;
 
-        setProject({ name: projectName });
+        setName(projectName);
+        toast("Project name updated, remember save now!");
     };
+
+    useEffect(() => {
+        setName(getProject().name);
+    }, [getProject().name]);
 
     if (getProject().isDefault) return;
 
@@ -25,10 +32,8 @@ const ProjectStatus = () => {
             </div>
 
             <div>
-                {getProject().name}
-                {!projectIsSaved(getProject().name, getProject().mode) && (
-                    <span>*</span>
-                )}
+                {name}
+                {!projectIsSaved(name, getProject().mode) && <span>*</span>}
             </div>
 
             <button

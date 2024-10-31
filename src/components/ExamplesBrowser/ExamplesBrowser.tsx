@@ -20,6 +20,13 @@ export const ExamplesBrowser = () => {
             ),
         [filter],
     );
+    const filteredProjects = useCallback(
+        () =>
+            getSavedProjects().filter((project) =>
+                project.toLowerCase().includes(filter.toLowerCase())
+            ),
+        [filter],
+    );
 
     return (
         <dialog id="examples-browser" className="modal bg-[#00000070]">
@@ -53,23 +60,30 @@ export const ExamplesBrowser = () => {
                         value="Projects"
                         className="examples-list | gap-2 py-2 overflow-auto"
                     >
-                        {getSavedProjects().map((project) => (
-                            <ExampleEntry
-                                example={{
-                                    description: null,
-                                    formatedName: project.slice(3),
-                                    name: project,
-                                    index: "0",
-                                    tags: [
-                                        ...project.startsWith("pj-")
-                                            ? ["project"] as Tag[]
-                                            : ["example"] as Tag[],
-                                    ],
-                                }}
-                                isProject
-                                key={project}
-                            />
-                        ))}
+                        {filteredProjects().length > 0
+                            && filteredProjects().map((project) => (
+                                <ExampleEntry
+                                    example={{
+                                        description: null,
+                                        formatedName: project.slice(3),
+                                        name: project,
+                                        index: "0",
+                                        tags: [
+                                            ...project.startsWith("pj-")
+                                                ? ["project"] as Tag[]
+                                                : ["example"] as Tag[],
+                                        ],
+                                    }}
+                                    isProject
+                                    key={project}
+                                />
+                            ))}
+
+                        {filteredProjects().length === 0 && (
+                            <p className="text-center text-base text-gray-500">
+                                No projects found
+                            </p>
+                        )}
                     </Tabs.Content>
                     <Tabs.Content
                         value="Examples"
@@ -78,6 +92,12 @@ export const ExamplesBrowser = () => {
                         {filteredExamples().map((example, index) => (
                             <ExampleEntry example={example} key={index} />
                         ))}
+
+                        {filteredExamples().length === 0 && (
+                            <p className="text-center text-base text-gray-500">
+                                No examples found
+                            </p>
+                        )}
                     </Tabs.Content>
                 </Tabs.Root>
             </main>

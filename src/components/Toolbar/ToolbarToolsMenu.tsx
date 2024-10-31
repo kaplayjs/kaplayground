@@ -1,5 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
+import { toast } from "react-toastify";
 import AboutButton from "../../components/About/AboutButton";
 import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
 import { useEditor } from "../../hooks/useEditor";
@@ -23,11 +24,17 @@ const ToolbarToolsMenu: FC = () => {
 
     const handleShare = () => {
         const mainFile = getMainFile();
-        const url = `${window.location.origin}/?code=${
-            compressCode(mainFile?.value!)
-        }`;
-        navigator.clipboard.writeText(url);
-        window.history.pushState({}, "", url);
+        const compressedCode = compressCode(mainFile?.value!);
+        const codeParam = encodeURIComponent(compressedCode);
+        const url = `${window.location.origin}/?code=${codeParam}`;
+
+        if (url.length <= 2048) {
+            navigator.clipboard.writeText(url).then(() => {
+                toast("Project shared, URL copied to clipboard!");
+            });
+        } else {
+            alert("Code too long to encode in URL");
+        }
     };
 
     return (
