@@ -2,6 +2,10 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
+## 2.0.0 (31/10/2024) Spooky Edition
+
+- todo()
+
 ## 1.0.0-beta (27/5/2024)
 
 Project renamed to **KAPLAYGROUND**, due to the name **KAPLAY** is now used
