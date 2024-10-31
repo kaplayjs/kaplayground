@@ -92,7 +92,7 @@ const Playground = () => {
                 mode: "ex",
                 id: "ex-shared",
                 kaplayConfig: {},
-                kaplayVersion: "3001.0.0",
+                kaplayVersion: "3001.0.1",
                 name: "Shared Example",
                 version: "2.0.0",
                 isDefault: true,
