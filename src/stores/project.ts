@@ -89,6 +89,7 @@ export const createProjectSlice: StateCreator<
 
         const files = new Map<string, File>();
         const assets = new Map();
+        let id = `u${filter}-Untitled`;
 
         // Load default setup
         if (filter === "pj") {
@@ -96,7 +97,7 @@ export const createProjectSlice: StateCreator<
             debug(1, "New files for the new project", files, assets);
         } else if (exampleIndex) {
             const example = examplesList.filter(example =>
-                example.index === exampleIndex
+                example.index === exampleIndex || example.name === exampleIndex
             )[0];
 
             files.set("main.js", {
@@ -106,6 +107,8 @@ export const createProjectSlice: StateCreator<
                 path: "main.js",
                 value: example.code,
             });
+
+            id = example.name;
         } else {
             get().loadDefaultSetup("ex", files, assets);
             debug(1, "New files for the new example project", files, assets);
@@ -134,7 +137,7 @@ export const createProjectSlice: StateCreator<
                 mode: filter,
                 kaplayVersion: "3001.0.1",
                 isDefault: exampleIndex ? true : false,
-                id: `u${filter}-Untitled`,
+                id: id,
             },
         }));
     },

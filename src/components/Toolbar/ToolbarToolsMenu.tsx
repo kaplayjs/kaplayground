@@ -23,6 +23,19 @@ const ToolbarToolsMenu: FC = () => {
     const { run } = useEditor();
 
     const handleShare = () => {
+        const isDefault = getProject().isDefault;
+
+        if (isDefault) {
+            const exampleParam = encodeURIComponent(getProject().id);
+            const url = `${window.location.origin}/?example=${exampleParam}`;
+
+            navigator.clipboard.writeText(url).then(() => {
+                toast("Example shared, URL copied to clipboard!");
+            });
+
+            return;
+        }
+
         const mainFile = getMainFile();
         const compressedCode = compressCode(mainFile?.value!);
         const codeParam = encodeURIComponent(compressedCode);
