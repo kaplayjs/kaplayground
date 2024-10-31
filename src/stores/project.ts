@@ -55,7 +55,7 @@ export const createProjectSlice: StateCreator<
         assets: new Map(),
         kaplayConfig: {},
         mode: "pj",
-        kaplayVersion: "3001.0.0-beta.8",
+        kaplayVersion: "3001.0.0",
         id: `upj-Untitled`,
     },
     getProject: () => {
@@ -132,7 +132,7 @@ export const createProjectSlice: StateCreator<
                 assets: assets,
                 kaplayConfig: {},
                 mode: filter,
-                kaplayVersion: "3001.0.0-beta.8",
+                kaplayVersion: "3001.0.0",
                 isDefault: exampleIndex ? true : false,
                 id: `u${filter}-Untitled`,
             },
