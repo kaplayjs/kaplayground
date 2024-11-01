@@ -1,5 +1,6 @@
 import type { KAPLAYOpt } from "kaplay";
 import type { StateCreator } from "zustand";
+import { DEFAULT_KAPLAY_VERSION } from "../config/common";
 import { defaultProject } from "../config/defaultProject";
 import examplesList from "../data/exampleList.json";
 import { useConfig } from "../hooks/useConfig";
@@ -55,7 +56,7 @@ export const createProjectSlice: StateCreator<
         assets: new Map(),
         kaplayConfig: {},
         mode: "pj",
-        kaplayVersion: "3001.0.1",
+        kaplayVersion: DEFAULT_KAPLAY_VERSION,
         id: `upj-Untitled`,
     },
     getProject: () => {
@@ -135,7 +136,7 @@ export const createProjectSlice: StateCreator<
                 assets: assets,
                 kaplayConfig: {},
                 mode: filter,
-                kaplayVersion: "3001.0.1",
+                kaplayVersion: DEFAULT_KAPLAY_VERSION,
                 isDefault: exampleIndex ? true : false,
                 id: id,
             },

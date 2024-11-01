@@ -6,6 +6,7 @@ export const CHANGELOG =
 export const REPO = "https://github.com/lajbel/kaplayground";
 
 export const KAPLAY_FILE = "kaplay.js";
+export const DEFAULT_KAPLAY_VERSION = "3001.0.2";
 
 // Context menus
 export const RESOURCES_MENU_ID = "F";

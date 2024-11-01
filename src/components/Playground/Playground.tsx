@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import { DEFAULT_KAPLAY_VERSION } from "../../config/common";
 import { useConfig } from "../../hooks/useConfig";
 import { useProject } from "../../hooks/useProject";
 import { decompressCode } from "../../util/compressCode";
@@ -74,7 +75,7 @@ const Playground = () => {
             mode: "ex",
             id: "ex-shared",
             kaplayConfig: {},
-            kaplayVersion: "3001.0.1",
+            kaplayVersion: DEFAULT_KAPLAY_VERSION,
             name: "Shared Example",
             version: "2.0.0",
             isDefault: true,

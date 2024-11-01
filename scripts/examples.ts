@@ -33,3 +33,5 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
 
     console.log("Generated exampleList.json");
 };
+
+generateExamples();
