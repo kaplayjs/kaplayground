@@ -1,3 +1,4 @@
+import { DEFAULT_KAPLAY_VERSION } from "../config/common";
 import examplesList from "./exampleList.json";
 
 export type Tag =
@@ -27,6 +28,8 @@ export type Example = {
     difficulty?: "easy" | "medium" | "hard" | "auto";
     image?: string;
 };
+
+const VERSION_4000 = "4000.0.0-alpha.14";
 
 export const examplesMetaData: Record<string, Partial<Example>> = {
     "add": {
@@ -101,13 +104,18 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         description: "How to create different collision shapes.",
         tags: ["physics"],
         difficulty: "medium",
-        version: "4000",
+        version: VERSION_4000,
     },
     "component": {
         formatedName: "Component",
         description: "How to create and use components.",
         tags: ["basic concepts"],
         difficulty: "easy",
+    },
+    "clip": {
+        formatedName: "Clip",
+        version: VERSION_4000,
+        hidden: true,
     },
     "concert": {
         formatedName: "Concert",
@@ -137,13 +145,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         formatedName: "Double Jump",
         description: "How to add a double jump.",
         tags: ["basic concepts", "game"],
-        difficulty: "medium",
+        difficulty: "easy",
     },
     "drag": {
         formatedName: "Drag",
         description: "Make game objects draggable.",
         tags: ["ui"],
-        difficulty: "medium",
+        difficulty: "easy",
     },
     "draw": {
         formatedName: "Draw",
@@ -179,7 +187,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         description: "How to create a fake mouse in-game.",
         tags: ["ui", "input"],
         difficulty: "easy",
-        version: "4000",
+        version: VERSION_4000,
     },
     // TODO: This could be better explained, it actually makes use of debug.stepFrame()
     //  so you could argue this is testing
@@ -520,9 +528,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["basic concepts", "math"],
         difficulty: "easy",
     },
+    "weirdTextTags": {
+        formatedName: "Weird text tags",
+        description: "How to use weird text tags.",
+        tags: ["ui"],
+        difficulty: "easy",
+    },
 };
-
-// would like to personally apologize to MF for not understanding a lot of examples
 
 export const examples = examplesList.filter((example) =>
     !examplesMetaData[example.name]?.hidden
@@ -534,5 +546,7 @@ export const examples = examplesList.filter((example) =>
             ?? example.name,
         tags: examplesMetaData[example.name]?.tags ?? [],
         difficulty: examplesMetaData[example.name]?.difficulty ?? "medium",
+        version: examplesMetaData[example.name]?.version
+            ?? DEFAULT_KAPLAY_VERSION,
     };
 });

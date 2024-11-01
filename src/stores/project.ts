@@ -1,8 +1,9 @@
 import type { KAPLAYOpt } from "kaplay";
+import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
 import { DEFAULT_KAPLAY_VERSION } from "../config/common";
 import { defaultProject } from "../config/defaultProject";
-import examplesList from "../data/exampleList.json";
+import { examples } from "../data/examples";
 import { useConfig } from "../hooks/useConfig";
 import { useEditor } from "../hooks/useEditor";
 import { useProject } from "../hooks/useProject";
@@ -90,6 +91,8 @@ export const createProjectSlice: StateCreator<
 
         const files = new Map<string, File>();
         const assets = new Map();
+        const lastVersion = get().project.kaplayVersion;
+        let version = DEFAULT_KAPLAY_VERSION;
         let id = `u${filter}-Untitled`;
 
         // Load default setup
@@ -97,7 +100,7 @@ export const createProjectSlice: StateCreator<
             get().loadDefaultSetup("pj", files, assets);
             debug(1, "New files for the new project", files, assets);
         } else if (exampleIndex) {
-            const example = examplesList.filter(example =>
+            const example = examples.filter(example =>
                 example.index === exampleIndex || example.name === exampleIndex
             )[0];
 
@@ -110,6 +113,8 @@ export const createProjectSlice: StateCreator<
             });
 
             id = example.name;
+
+            version = example.version;
         } else {
             get().loadDefaultSetup("ex", files, assets);
             debug(1, "New files for the new example project", files, assets);
@@ -128,6 +133,12 @@ export const createProjectSlice: StateCreator<
             },
         });
 
+        if (lastVersion !== version) {
+            toast(
+                `KAPLAY version updated to ${version} for this example. May take a few seconds to load.`,
+            );
+        }
+
         set(() => ({
             project: {
                 name: `${filter}#${get().getSavedProjects("pj").length}`,
@@ -136,7 +147,7 @@ export const createProjectSlice: StateCreator<
                 assets: assets,
                 kaplayConfig: {},
                 mode: filter,
-                kaplayVersion: DEFAULT_KAPLAY_VERSION,
+                kaplayVersion: version,
                 isDefault: exampleIndex ? true : false,
                 id: id,
             },
