@@ -18,7 +18,6 @@ export const FileTree = () => {
                     folder="objects"
                     kind="obj"
                     toolbar
-                    folded
                 />
                 <FileFold
                     level={1}
@@ -26,7 +25,6 @@ export const FileTree = () => {
                     folder="utils"
                     kind="util"
                     toolbar
-                    folded
                 />
                 <FileFold
                     folder="root"
