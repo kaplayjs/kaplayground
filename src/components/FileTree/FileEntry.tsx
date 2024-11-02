@@ -11,7 +11,7 @@ type Props = {
     file: File;
 };
 
-const logoByKind: Record<FileKind, string> = {
+export const logoByKind: Record<FileKind, string> = {
     kaplay: assets.dino.outlined,
     scene: assets.art.outlined,
     main: assets.play.outlined,
@@ -125,6 +125,11 @@ export const FileEntry: FC<Props> = ({ file }) => {
             onClick={handleClick}
             data-file-kind={file.kind}
         >
+            <img
+                src={logoByKind[file.kind]}
+                alt={file.kind}
+                className="w-4 h-4 ml-auto object-scale-down"
+            />
             <span className="text-left truncate w-[50%] flex-1">
                 {removeExtension(file.name)}
             </span>
@@ -144,11 +149,6 @@ export const FileEntry: FC<Props> = ({ file }) => {
                     rotate={90}
                 />
             </div>
-            <img
-                src={logoByKind[file.kind]}
-                alt={file.kind}
-                className="w-4 h-4 ml-auto object-scale-down"
-            />
         </div>
     );
 };

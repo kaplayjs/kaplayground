@@ -5,7 +5,7 @@ import { FileToolbar } from "./FileToolbar";
 import "./FileFolder.css";
 import { useProject } from "../../hooks/useProject";
 import type { FileFolder, FileKind } from "../../stores/storage/files";
-import { FileEntry } from "./FileEntry";
+import { FileEntry, logoByKind } from "./FileEntry";
 
 type Props = PropsWithChildren<{
     level: 0 | 1 | 2;
@@ -33,9 +33,15 @@ export const FileFold: FC<Props> = (props) => {
 
     return (
         <div className="mb-2">
-            <div className="flex justify-between">
-                {props.title && (
-                    <h2 className="text-lg font-medium">{props.title}</h2>
+            <div className="flex justify-between items-center">
+                {props.title && props.kind && (
+                    <div className="flex items-center justify-center gap-4">
+                        <img
+                            src={logoByKind[props.kind]}
+                            className="w-4"
+                        />
+                        <h2 className="text-lg font-medium">{props.title}</h2>
+                    </div>
                 )}
 
                 {(props.toolbar && props.kind) && (
