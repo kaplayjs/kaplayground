@@ -99,27 +99,34 @@ export const useEditor = create<EditorStore>((set, get) => ({
         } = useProject.getState();
         if (!iframe) return;
 
-        let KAPLAYFile = "";
-        let mainFile = "";
-        let assetsFile = "";
-        let sceneFiles = "";
+        let mainFile = getMainFile()?.value ?? "";
         let parsedFiles = "";
 
-        KAPLAYFile = getKAPLAYFile()?.value ?? "";
-        mainFile = getMainFile()?.value ?? "";
-        assetsFile = getAssetsFile()?.value ?? "";
-
-        getProject().files.forEach((file) => {
-            if (file.kind !== "scene") return;
-
-            sceneFiles += `\n${file.value}\n`;
-        });
-
-        if (getProject().mode === "pj") {
-            parsedFiles =
-                `${KAPLAYFile}\n\n ${assetsFile}\n\n ${sceneFiles}\n\n ${mainFile}`;
-        } else {
+        if (getProject().mode === "ex") {
             parsedFiles = mainFile;
+        } else {
+            let sceneFiles = "";
+            let objectFiles = "";
+            let utilFiles = "";
+            let KAPLAYFile = getKAPLAYFile()?.value ?? "";
+            let assetsFile = getAssetsFile()?.value ?? "";
+
+            getProject().files.forEach((file) => {
+                if (file.kind == "scene") {
+                    sceneFiles += `\n${file.value}\n`;
+                } else if (file.kind == "obj") {
+                    objectFiles += `\n${file.value}\n`;
+                } else if (file.kind == "util") {
+                    utilFiles += `\n${file.value}\n`;
+                }
+            });
+
+            parsedFiles = `${KAPLAYFile}\n\n 
+            ${assetsFile}\n\n 
+            ${utilFiles}\n\n
+            ${objectFiles}\n\n
+            ${sceneFiles}\n\n 
+            ${mainFile}`;
         }
 
         iframe.srcdoc = wrapGame(parsedFiles);

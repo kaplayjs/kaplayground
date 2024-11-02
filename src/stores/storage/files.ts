@@ -3,8 +3,8 @@ import { debug } from "../../util/logs";
 import type { KAPLAYConfigSlice } from "../kaplayConfig";
 import type { ProjectSlice } from "../project";
 
-export type FileKind = "kaplay" | "main" | "scene" | "assets";
-export type FileFolder = "scenes" | "assets" | "root";
+export type FileKind = "kaplay" | "main" | "scene" | "assets" | "util" | "obj";
+export type FileFolder = "root" | "scenes" | "assets" | "utils" | "objects";
 
 export type File = {
     name: string;
@@ -19,6 +19,8 @@ export const folderByKind: Record<FileKind, FileFolder> = {
     main: "root",
     scene: "scenes",
     assets: "assets",
+    util: "utils",
+    obj: "objects",
 };
 
 export interface FilesSlice {
@@ -127,7 +129,9 @@ export const createFilesSlice: StateCreator<
     getFilesByFolder(folder) {
         if (folder === "root") {
             return Array.from(get().project.files.values()).filter(
-                (file) => !file.path.startsWith("scenes"),
+                (file) =>
+                    file.kind === "kaplay" || file.kind === "main"
+                    || file.kind === "assets",
             );
         }
 

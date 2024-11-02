@@ -1,7 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
 import { useProject } from "../../hooks/useProject";
-import type { File } from "../../stores/storage/files";
+import type { File, FileKind } from "../../stores/storage/files";
 import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
@@ -11,11 +11,13 @@ type Props = {
     file: File;
 };
 
-const logoByKind = {
+const logoByKind: Record<FileKind, string> = {
     kaplay: assets.dino.outlined,
     scene: assets.art.outlined,
     main: assets.play.outlined,
     assets: assets.assetbrew.outlined,
+    obj: assets.burpman.outlined,
+    util: assets.toolbox.outlined,
 };
 
 const FileButton: FC<{

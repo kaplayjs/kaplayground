@@ -15,6 +15,7 @@ type Props = PropsWithChildren<{
     kind?: FileKind;
     /** Folder */
     folder: FileFolder;
+    folded?: boolean;
 }>;
 
 const paddingLevels = {
@@ -24,7 +25,7 @@ const paddingLevels = {
 };
 
 export const FileFold: FC<Props> = (props) => {
-    const [folded, setFolded] = useState(false);
+    const [folded, setFolded] = useState(props.folded);
     const { getFilesByFolder, project } = useProject();
     const files = useMemo(() => getFilesByFolder(props.folder), [
         project.files.values(),

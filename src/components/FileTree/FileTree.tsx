@@ -13,6 +13,22 @@ export const FileTree = () => {
                     toolbar
                 />
                 <FileFold
+                    level={1}
+                    title="Game Objs"
+                    folder="objects"
+                    kind="obj"
+                    toolbar
+                    folded
+                />
+                <FileFold
+                    level={1}
+                    title="Utils"
+                    folder="utils"
+                    kind="util"
+                    toolbar
+                    folded
+                />
+                <FileFold
                     folder="root"
                     level={0}
                 />

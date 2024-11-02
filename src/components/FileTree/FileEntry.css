@@ -1,3 +1,13 @@
+
+/* Show file actions on hoveronly if kind is not scene nor assets nor kaplay */
 .file[data-file-kind="scene"]:hover .file-actions {
+  display: block;
+}
+
+.file[data-file-kind="util"]:hover .file-actions {
+  display: block;
+}
+
+.file[data-file-kind="obj"]:hover .file-actions {
   display: block;
 }

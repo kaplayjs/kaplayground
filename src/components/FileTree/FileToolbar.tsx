@@ -7,6 +7,15 @@ type Props = PropsWithChildren<{
     kind: FileKind;
 }>;
 
+const templateByKind = (fileName: string): Record<FileKind, string> => ({
+    assets: `// User can't create this`,
+    kaplay: `// User can't create this`,
+    main: `// User can't create this`,
+    scene: `scene("${fileName}", () => {\n\n});\n`,
+    obj: `function add${fileName}() {\n\n}\n`,
+    util: `function ${fileName}() {\n\n}\n`,
+});
+
 export const FileToolbar: FC<Props> = (props) => {
     const { addFile, getFile } = useProject();
 
@@ -17,8 +26,8 @@ export const FileToolbar: FC<Props> = (props) => {
 
         addFile({
             name: fileName + ".js",
-            kind: "scene",
-            value: `scene("${fileName}", () => {\n\n});`,
+            kind: props.kind,
+            value: templateByKind(fileName)[props.kind],
             language: "javascript",
             path: `${folderByKind[props.kind]}/${fileName}.js`,
         });
