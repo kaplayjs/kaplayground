@@ -9,8 +9,7 @@ import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project, createNewProject, importProject, loadProject } =
-        useProject();
+    const { project, createNewProject, importProject } = useProject();
     const { update, run, showNotification } = useEditor();
 
     const handleDownload = () => {
@@ -61,8 +60,6 @@ const Projects: FC = () => {
                 files: fileMap,
                 assets: assetMap,
             });
-
-            loadProject(project.state.project.id);
         };
 
         reader.readAsText(file);

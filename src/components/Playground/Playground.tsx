@@ -78,12 +78,10 @@ const Playground = () => {
             kaplayVersion: DEFAULT_KAPLAY_VERSION,
             name: "Shared Example",
             version: "2.0.0",
-            isDefault: true,
+            isDefault: false,
         });
 
-        loadProject("shared");
         setLoadingProject(false);
-
         return;
     };
 

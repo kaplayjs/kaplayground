@@ -76,13 +76,13 @@ export const createProjectSlice: StateCreator<
             name: project.name,
         });
 
-        useProject.persist.rehydrate();
-
         set(() => ({
             project: {
                 ...project,
             },
         }));
+
+        useProject.persist.rehydrate();
     },
     createNewExampleProject() {
     },
