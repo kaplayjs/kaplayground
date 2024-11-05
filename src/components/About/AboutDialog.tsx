@@ -33,14 +33,6 @@ export const AboutDialog = () => {
                         <br />
                         <a
                             className="font-medium link link-primary"
-                            href={CHANGELOG}
-                            target="_blank"
-                        >
-                            Changelog
-                        </a>
-                        <br />
-                        <a
-                            className="font-medium link link-primary"
                             href={REPO}
                             target="_blank"
                         >

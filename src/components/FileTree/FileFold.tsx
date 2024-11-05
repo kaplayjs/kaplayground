@@ -71,7 +71,8 @@ export const FileFold: FC<Props> = (props) => {
                 {files.length === 0
                     ? (
                         <li className="text-gray-500 text-xs">
-                            Create an {props.folder} to start
+                            Create {props.kind === "obj" ? "an" : "a"}{" "}
+                            {props.kind} to start
                         </li>
                     )
                     : (
