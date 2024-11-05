@@ -2,7 +2,7 @@ import type { KAPLAYOpt } from "kaplay";
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
 import { DEFAULT_KAPLAY_VERSION } from "../config/common";
-import { defaultProject } from "../config/defaultProject";
+import { defaultExampleFile, defaultProject } from "../config/defaultProject";
 import { examples } from "../data/examples";
 import { useConfig } from "../hooks/useConfig";
 import { useEditor } from "../hooks/useEditor";
@@ -26,19 +26,18 @@ export type Project = {
 };
 
 export interface ProjectSlice {
-    /** The current project */
     project: Project;
     getProject(): Project;
     setProject(project: Partial<Project>): void;
-    createNewProject: (filter: ProjectMode, example?: string) => void;
-    getSavedProjects: (filter?: "pj" | "ex") => string[];
-    projectIsSaved: (name: string, filter: "pj" | "ex") => boolean;
-    saveProject: (newId: string, oldId: string) => void;
-    importProject: (project: Project) => void;
-    loadProject: (project: string) => void;
-    loadDefaultExample: (example: string) => void;
-    loadDefaultSetup: (
-        mode: Project["mode"],
+    createNewProject: (mode: ProjectMode, example?: string) => void;
+    createNewProjectFromDemo: (demo: string) => void;
+    projectIsSaved: (id: string, mode: ProjectMode) => boolean;
+    getSavedProjects: (filter?: ProjectMode) => string[];
+    saveProject: (newProjectId: string, oldProjectId: string) => void;
+    loadProject: (projectId: string, replaceProject?: Project) => void;
+    loadSharedDemo: (sharedCode: string) => void;
+    setDefaultProjectFiles: (
+        mode: ProjectMode,
         files: Map<string, File>,
         assets: Map<string, Asset>,
     ) => void;
@@ -71,52 +70,44 @@ export const createProjectSlice: StateCreator<
             },
         }));
     },
-    importProject: (project: Project) => {
-        useProject.persist.setOptions({
-            name: project.name,
-        });
-
-        set(() => ({
-            project: {
-                ...project,
-            },
-        }));
-
-        useProject.persist.rehydrate();
-    },
-    createNewExampleProject() {
-    },
-    createNewProject: (filter: ProjectMode, exampleIndex?: string) => {
-        debug(0, "Creating a new project");
-
+    createNewProject: (filter: ProjectMode, demo?: string) => {
         const files = new Map<string, File>();
-        const assets = new Map();
+        const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
+
         let version = DEFAULT_KAPLAY_VERSION;
         let id = `u${filter}-Untitled`;
 
-        // Load default setup
         if (filter === "pj") {
-            get().loadDefaultSetup("pj", files, assets);
-            debug(1, "New files for the new project", files, assets);
-        } else if (exampleIndex) {
-            const example = examples.filter(example =>
-                example.index === exampleIndex || example.name === exampleIndex
+            // Create a new project with default files and assets
+            get().setDefaultProjectFiles("pj", files, assets);
+            debug(2, "Default files loaded");
+        } else if (demo) {
+            // Load a demo
+            const foundDemo = examples.filter(example =>
+                example.index === demo || example.name === demo
             )[0];
+
+            if (!foundDemo) {
+                debug(2, "Demo not found", demo);
+                return;
+            }
 
             files.set("main.js", {
                 kind: "main",
                 language: "javascript",
                 name: "main.js",
                 path: "main.js",
-                value: example.code,
+                value: foundDemo.code,
             });
 
-            id = example.name;
+            id = foundDemo.name;
+            version = foundDemo.version;
 
-            version = example.version;
+            debug(0, "Demo loaded", foundDemo.name);
         } else {
-            get().loadDefaultSetup("ex", files, assets);
+            // Create a new project with default files and assets for examples
+            get().setDefaultProjectFiles("ex", files, assets);
             debug(1, "New files for the new example project", files, assets);
         }
 
@@ -127,10 +118,8 @@ export const createProjectSlice: StateCreator<
         });
         useProject.persist.rehydrate();
 
-        useConfig.setState({
-            config: {
-                lastOpenedProject: `u${filter}-Untitled`,
-            },
+        useConfig.getState().setConfig({
+            lastOpenedProject: `u${filter}-Untitled`,
         });
 
         if (lastVersion !== version) {
@@ -148,10 +137,16 @@ export const createProjectSlice: StateCreator<
                 kaplayConfig: {},
                 mode: filter,
                 kaplayVersion: version,
-                isDefault: exampleIndex ? true : false,
+                isDefault: demo ? true : false,
                 id: id,
             },
         }));
+
+        // Editor stuff
+        useEditor.getState().updateAndRun();
+    },
+    createNewProjectFromDemo(demo?: string) {
+        get().createNewProject("ex", demo);
     },
     saveProject: (id: string, oldId: string) => {
         useProject.persist.setOptions({
@@ -162,15 +157,14 @@ export const createProjectSlice: StateCreator<
 
         localStorage.removeItem(oldId);
 
-        useConfig.setState({
-            config: {
-                lastOpenedProject: `${get().project.mode}-${id}`,
-            },
+        useConfig.getState().setConfig({
+            lastOpenedProject: `${get().project.mode}-${id}`,
         });
 
         set({
             project: {
                 ...get().project,
+                name: id,
                 id: `${get().project.mode}-${id}`,
             },
         });
@@ -196,11 +190,7 @@ export const createProjectSlice: StateCreator<
 
         return keys;
     },
-    loadDefaultExample: (exampleIndex) => {
-        debug(0, "Loading default example", exampleIndex);
-        get().createNewProject("ex", exampleIndex);
-    },
-    loadDefaultSetup: (mode, files, assets) => {
+    setDefaultProjectFiles: (mode, files, assets) => {
         if (mode === "pj") {
             defaultProject.files.forEach((file) => {
                 files.set(file.path, file);
@@ -209,24 +199,63 @@ export const createProjectSlice: StateCreator<
                 assets.set(asset.path, asset);
             });
         } else {
-            files.set("main.js", defaultProject.files[1]);
+            files.set("main.js", {
+                kind: "main",
+                language: "javascript",
+                name: "main.js",
+                path: "main.js",
+                value: defaultExampleFile,
+            });
         }
     },
-    loadProject(project: string) {
+    // Should be used to load already created projects
+    // If not, createProject or createProjectFromExample should be used
+    loadProject(projectId: string, replaceProject?: Project) {
         useProject.persist.setOptions({
-            name: project,
+            name: projectId,
         });
+
+        if (replaceProject) {
+            set({
+                project: {
+                    ...replaceProject,
+                },
+            });
+        }
 
         useProject.persist.rehydrate();
 
-        useEditor.getState().runtime.editor?.setScrollTop(0);
-        useEditor.getState().update();
-        useEditor.getState().run();
-
         useConfig.getState().setConfig({
-            lastOpenedProject: project,
+            lastOpenedProject: projectId,
         });
 
         set({});
+
+        // Editor stuff
+        useEditor.getState().updateAndRun();
+    },
+    loadSharedDemo(sharedCode: string) {
+        get().loadProject("ex-shared", {
+            assets: new Map(),
+            files: new Map([
+                [
+                    "main.js",
+                    {
+                        kind: "main",
+                        language: "javascript",
+                        name: "main.js",
+                        path: "main.js",
+                        value: sharedCode,
+                    },
+                ],
+            ]),
+            mode: "ex",
+            id: "ex-shared",
+            kaplayConfig: {},
+            kaplayVersion: DEFAULT_KAPLAY_VERSION,
+            name: "Shared Example",
+            version: "2.0.0",
+            isDefault: false,
+        });
     },
 });

@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 type Config = {
     lastOpenedProject: string | null;
+    debugLevel: number | null;
 };
 
 type Store = {
@@ -14,6 +15,7 @@ type Store = {
 export const useConfig = create<Store>()(persist((set, get) => ({
     config: {
         lastOpenedProject: null,
+        debugLevel: null,
     },
     setConfig: (config) => {
         set(() => ({

@@ -1,7 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import type { Example } from "../../data/examples";
-import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 
@@ -18,8 +17,7 @@ const imagesPerDifficulty: Record<string, string> = {
 };
 
 export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
-    const { loadDefaultExample } = useEditor();
-    const { loadProject } = useProject();
+    const { createNewProjectFromDemo, loadProject } = useProject();
 
     const handleClick = () => {
         const dialog = document.querySelector<HTMLDialogElement>(
@@ -31,13 +29,13 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
         if (isProject) {
             loadProject(example.name);
         } else {
-            loadDefaultExample(example.index);
+            createNewProjectFromDemo(example.index);
         }
     };
 
     return (
         <article
-            className="bg-base-200 p-4 rounded-lg flex flex-col gap-2 cursor-pointer"
+            className="bg-base-200 p-4 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20"
             onClick={handleClick}
         >
             <div>

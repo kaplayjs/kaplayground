@@ -1,6 +1,35 @@
 import type { Asset } from "../stores/storage/assets";
 import { type File, wrapKAPLAYConfig } from "../stores/storage/files";
 
+export const defaultExampleFile = `
+// Starts a new game
+kaplay();
+
+// Load a bean
+loadBean();
+
+// Add the bean
+const bean = add([
+    sprite("bean"), // add sprite
+    pos(center()), // set position, center of the screen
+    scale(2), // set scale
+    anchor("center"), // set anchor, pivot
+    rotate(0), // set rotation
+]);
+
+// Add the text
+add([
+    text("Hello, KAWORLD!"), // add text
+    pos(center().add(0, -80)), // set position
+    anchor("center"), // set anchor, pivot
+]);
+
+// Run a function every frame
+onUpdate(() => {
+    bean.angle += dt() * 90; // rotate the bean
+});
+`;
+
 export const defaultProject: {
     resources: Asset[];
     files: File[];

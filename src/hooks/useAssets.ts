@@ -17,7 +17,6 @@ export const useAssets: UseAssetsHook = ({ kind }) => {
         assetsLastId,
         removeAsset,
         addAsset,
-        orderAssets,
         project: { assets },
     } = useProject();
 
@@ -33,7 +32,6 @@ export const useAssets: UseAssetsHook = ({ kind }) => {
         addAsset,
         removeAsset,
         assetsLastId,
-        orderAssets,
         assets: filteredAssets,
     };
 };

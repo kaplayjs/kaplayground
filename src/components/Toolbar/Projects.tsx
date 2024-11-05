@@ -9,7 +9,7 @@ import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project, createNewProject, importProject } = useProject();
+    const { project: project, createNewProject, loadProject } = useProject();
     const { update, run, showNotification } = useEditor();
 
     const handleDownload = () => {
@@ -55,7 +55,7 @@ const Projects: FC = () => {
                 assetMap.set(asset[0], asset[1]);
             });
 
-            importProject({
+            loadProject(project.state.project.id, {
                 ...project.state.project,
                 files: fileMap,
                 assets: assetMap,

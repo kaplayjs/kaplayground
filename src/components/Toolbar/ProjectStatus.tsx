@@ -28,7 +28,7 @@ const ProjectStatus = () => {
     return (
         <div className="flex flex-row gap-2">
             <div className="uppercase | badge badge-lg badge-primary">
-                {getProject().mode}
+                {getProject().mode === "pj" ? "Project" : "Example"}
             </div>
 
             <div>

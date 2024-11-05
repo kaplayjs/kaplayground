@@ -1,19 +1,21 @@
 import type { ChangeEvent, FC } from "react";
 import { examples } from "../../data/examples";
-import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 
 const ExampleList: FC = () => {
-    const { getSavedProjects, loadProject } = useProject();
-    const { loadDefaultExample } = useEditor();
+    const {
+        getSavedProjects,
+        loadProject,
+        createNewProjectFromDemo,
+    } = useProject();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
-        const exampleIndex = ev.target.selectedOptions[0].getAttribute(
+        const demoIndex = ev.target.selectedOptions[0].getAttribute(
             "data-def-example",
         );
 
-        if (exampleIndex) {
-            loadDefaultExample(exampleIndex);
+        if (demoIndex) {
+            createNewProjectFromDemo(demoIndex);
         } else {
             loadProject(ev.target.value);
         }
@@ -27,7 +29,7 @@ const ExampleList: FC = () => {
                 defaultValue={"none"}
             >
                 <option className="text-md" disabled value="none">
-                    Projects
+                    My Projects
                 </option>
 
                 {getSavedProjects("pj").map((project) => (
@@ -37,7 +39,7 @@ const ExampleList: FC = () => {
                 ))}
 
                 <option className="text-md" disabled value="none">
-                    User Examples
+                    KAPLAY Demos
                 </option>
 
                 {getSavedProjects("ex").map((project) => (
@@ -46,7 +48,7 @@ const ExampleList: FC = () => {
                     </option>
                 ))}
 
-                <option className="text-md" disabled>KAPLAY Examples</option>
+                <option className="text-md" disabled>KAPLAY Demos</option>
 
                 {examples.map((example) => (
                     <option key={example.name} data-def-example={example.index}>

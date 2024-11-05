@@ -13,7 +13,7 @@ export const ConfigProject = () => {
     const [packageInfo, setPackageInfo] = useState<Packument | null>(
         null,
     );
-    const { project } = useProject();
+    const { project: project } = useProject();
 
     useEffect(() => {
         async function fetchPackageInfo() {

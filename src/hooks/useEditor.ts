@@ -32,7 +32,7 @@ type EditorStore = {
     updateImageDecorations: () => void;
     showNotification: (message: string) => void;
     setEditorValue: (value: string) => void;
-    loadDefaultExample: (example: string) => void;
+    updateAndRun: () => void;
 };
 
 export const useEditor = create<EditorStore>((set, get) => ({
@@ -163,9 +163,10 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 "",
             ).replace(";", "");
 
-            const projectAsset = useProject.getState().project.assets.get(
-                normalizedUrl.replace("assets/", ""),
-            );
+            const projectAsset = useProject.getState().project.assets
+                .get(
+                    normalizedUrl.replace("assets/", ""),
+                );
 
             if (projectAsset) {
                 return linesRange.push({
@@ -202,8 +203,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         editor.setValue(value);
     },
-    loadDefaultExample(exampleIndex) {
-        useProject.getState().loadDefaultExample(exampleIndex);
+    updateAndRun() {
+        get().getRuntime().editor?.setScrollTop(0);
         get().update();
         get().run();
     },

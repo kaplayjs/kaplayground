@@ -43,7 +43,7 @@ const FileButton: FC<{
 };
 
 export const FileEntry: FC<Props> = ({ file }) => {
-    const { removeFile, project, setProject } = useProject();
+    const { removeFile, project: project, setProject } = useProject();
     const { getRuntime, setCurrentFile } = useEditor();
 
     const handleClick: MouseEventHandler = () => {

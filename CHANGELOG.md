@@ -2,6 +2,10 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
+## 2.0.1 (3/11/2024)
+
+- Renamed examples to demos
+
 ## 2.0.0 (31/10/2024) Spooky Edition
 
 - todo()
