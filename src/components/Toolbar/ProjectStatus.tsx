@@ -39,6 +39,9 @@ const ProjectStatus = () => {
             <button
                 className="btn btn-ghost btn-xs rounded-sm px-1"
                 onClick={handleEditName}
+                data-tooltip-id="global"
+                data-tooltip-html={`Edit name`}
+                data-tooltip-place="bottom-end"
             >
                 <img
                     src={assets.pointer.outlined}
@@ -49,6 +52,9 @@ const ProjectStatus = () => {
             <button
                 className="btn btn-ghost btn-xs rounded-sm px-1"
                 onClick={handleSaveProject}
+                data-tooltip-id="global"
+                data-tooltip-html={`Save project`}
+                data-tooltip-place="bottom-end"
             >
                 <img
                     src={assets.save.outlined}

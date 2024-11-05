@@ -1,5 +1,5 @@
 import kaplaygroundLogo from "../../assets/kaplayground.png";
-import { CHANGELOG, REPO, VERSION } from "../../config/common";
+import { REPO, VERSION } from "../../config/common";
 
 export const AboutDialog = () => {
     return (
