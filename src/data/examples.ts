@@ -458,7 +458,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "restitution": {
         formatedName: "Restitution",
-        description: "Bounciness."
+        description: "Bounciness.",
         tags: ["physics"],
         difficulty: "easy",
         version: VERSION_4000,
