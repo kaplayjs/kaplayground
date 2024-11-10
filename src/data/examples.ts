@@ -220,6 +220,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         description: "Slipperiness.",
         tags: ["physics"],
         difficulty: "easy",
+        version: VERSION_4000,
     },
     "gamepad": {
         formatedName: "Gamepad",
@@ -460,6 +461,7 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         description: "Bounciness."
         tags: ["physics"],
         difficulty: "easy",
+        version: VERSION_4000,
     },
     "rect": {
         formatedName: "Rectangle",
