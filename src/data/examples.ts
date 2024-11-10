@@ -413,17 +413,15 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "raycastObject": {
         formatedName: "Raycasts objects",
-        description: "How to shoot a raycast and make it bounce.",
+        description: "How to shoot a raycast and make it bounce off the bounding boxes of objects.",
         tags: ["math"],
         difficulty: "medium",
     },
-    // TODO: i think these two are the same
     "raycastShape": {
         formatedName: "Raycasts shapes",
-        description: "How to shoot a raycast and make it bounce.",
+        description: "How to shoot a raycast and make it bounce off the actual shapes of objects.",
         tags: ["math"],
         difficulty: "medium",
-        hidden: true,
     },
     "raycaster3d": {
         formatedName: "3D Raycaster",
@@ -530,8 +528,8 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "weirdTextTags": {
         formatedName: "Weird text tags",
-        description: "How to use weird text tags.",
-        tags: ["ui"],
+        description: "How to insert text with brackets without messing up formatting.",
+        tags: ["testing"],
         difficulty: "easy",
     },
 };
