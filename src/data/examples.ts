@@ -215,6 +215,13 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["game", "ui"],
         difficulty: "medium",
     },
+    "friction": {
+        formatedName: "Friction",
+        description: "Slipperiness.",
+        tags: ["physics"],
+        difficulty: "easy",
+        version: VERSION_4000,
+    },
     "gamepad": {
         formatedName: "Gamepad",
         description: "How to use gamepads in your game.",
@@ -366,6 +373,20 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         tags: ["math"],
         difficulty: "hard",
     },
+    "platformBox": {
+        formatedName: "Odd Uses of platformEffector()",
+        description: "How to allow the player to decide whether they want to push something.",
+        tags: ["physics"],
+        difficulty: "medium",
+        version: VERSION_4000,
+    },
+    "platformEffector": {
+        formatedName: "Jump-Through Platforms",
+        description: "How to make platforms that the player can jump through going up and down at will.",
+        tags: ["physics"],
+        difficulty: "medium",
+        version: VERSION_4000,
+    },
     "platformer": {
         formatedName: "Platformer",
         description: "How to make a platformer game.",
@@ -377,6 +398,12 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
         description: "How to draw a polygon.",
         tags: ["math"],
         difficulty: "medium",
+    },
+    "prettyDebug": {
+        formatedName: "Nice debug.log()",
+        description: "How debug.log() can help you.",
+        tags: ["testing"],
+        difficulty: "easy",
     },
     // TODO: Not sure what this is
     "polygonuv": {
@@ -413,23 +440,28 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "raycastObject": {
         formatedName: "Raycasts objects",
-        description: "How to shoot a raycast and make it bounce.",
+        description: "How to shoot a raycast and make it bounce off the bounding boxes of objects.",
         tags: ["math"],
         difficulty: "medium",
     },
-    // TODO: i think these two are the same
     "raycastShape": {
         formatedName: "Raycasts shapes",
-        description: "How to shoot a raycast and make it bounce.",
+        description: "How to shoot a raycast and make it bounce off the actual shapes of objects.",
         tags: ["math"],
         difficulty: "medium",
-        hidden: true,
     },
     "raycaster3d": {
         formatedName: "3D Raycaster",
         description: "Basically, how to make 3D in KAPLAY.",
         tags: ["math", "effects"],
         difficulty: "hard",
+    },
+    "restitution": {
+        formatedName: "Restitution",
+        description: "Bounciness.",
+        tags: ["physics"],
+        difficulty: "easy",
+        version: VERSION_4000,
     },
     "rect": {
         formatedName: "Rectangle",
@@ -530,8 +562,8 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "weirdTextTags": {
         formatedName: "Weird text tags",
-        description: "How to use weird text tags.",
-        tags: ["ui"],
+        description: "How to insert text with brackets without messing up formatting.",
+        tags: ["testing"],
         difficulty: "easy",
     },
 };
