@@ -1,6 +1,6 @@
 import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { createRef, type MutableRefObject } from "react";
+import { createRef, type RefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { wrapGame } from "../util/compiler";
@@ -12,7 +12,7 @@ type EditorRuntime = {
     monaco: Monaco | null;
     currentFile: string;
     gylphDecorations: editor.IEditorDecorationsCollection | null;
-    iframe: MutableRefObject<HTMLIFrameElement>;
+    iframe: HTMLIFrameElement | null;
 };
 
 type EditorStore = {
@@ -21,7 +21,7 @@ type EditorStore = {
         monaco: Monaco | null;
         currentFile: string;
         gylphDecorations: editor.IEditorDecorationsCollection | null;
-        iframe: MutableRefObject<HTMLIFrameElement>;
+        iframe: HTMLIFrameElement | null;
     };
     update: (value?: string) => void;
     run: () => void;
@@ -41,7 +41,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         monaco: null,
         currentFile: "main.js",
         gylphDecorations: null,
-        iframe: createRef() as MutableRefObject<HTMLIFrameElement>,
+        iframe: null,
         isDefaultExample: false,
     },
     setRuntime: (runtime) => {

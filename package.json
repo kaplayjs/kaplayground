@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "bin": "scripts/cli.js",
   "scripts": {
-    "install": "git submodule update --init --recursive && cd kaplay && pnpm i",
+    "install": "cd kaplay && pnpm i",
     "dev": "vite dev",
     "start": "vite dev",
     "build": "vite build",

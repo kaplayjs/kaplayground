@@ -10,7 +10,7 @@ import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
     const { project: project, createNewProject, loadProject } = useProject();
-    const { update, run, showNotification } = useEditor();
+    const { update, run, showNotification, getRuntime } = useEditor();
 
     const handleDownload = () => {
         const projectLocal = localStorage.getItem(project.id);
@@ -26,6 +26,21 @@ const Projects: FC = () => {
 
         downloadBlob(blob, `${project.name}.kaplay`);
         showNotification("Exporting the project, check downloads...");
+    };
+
+    const handleExportHTML = () => {
+        const projectCode = getRuntime().iframe?.srcdoc;
+
+        if (!projectCode) {
+            showNotification("No project to export... Remember to save!");
+            return;
+        }
+
+        const blob = new Blob([projectCode], {
+            type: "text/html",
+        });
+
+        downloadBlob(blob, `${project.name}.html`);
     };
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +80,14 @@ const Projects: FC = () => {
         reader.readAsText(file);
     };
 
-    const handleProjectReset = () => {
+    const handleNewProject = () => {
         createNewProject("pj");
+        update();
+        run();
+    };
+
+    const handleNewExample = () => {
+        createNewProject("ex");
         update();
         run();
     };
@@ -91,6 +112,13 @@ const Projects: FC = () => {
                     </button>
                 </li>
                 <li>
+                    <button
+                        onClick={handleExportHTML}
+                    >
+                        Export project as .html
+                    </button>
+                </li>
+                <li>
                     <label>
                         <input
                             type="file"
@@ -103,9 +131,16 @@ const Projects: FC = () => {
                 </li>
                 <li>
                     <button
-                        onClick={handleProjectReset}
+                        onClick={handleNewProject}
                     >
                         Create new project
+                    </button>
+                </li>
+                <li>
+                    <button
+                        onClick={handleNewExample}
+                    >
+                        Create new example
                     </button>
                 </li>
             </ul>
