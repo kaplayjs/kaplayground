@@ -55,7 +55,7 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
 };
 
 export const parseAssets = (code: string) => {
-    const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*\)/g;
+    const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*/g;
     const regexComment = /\/\/\s*kaplay-transformation-asset\s*(.*)/g;
 
     const codeTransformed = transformAssetUrl(
