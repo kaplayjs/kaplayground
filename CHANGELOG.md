@@ -6,7 +6,7 @@ Format: Major.Minor.Patch (D/M/Y)
 
 ### Changed
 
-- Now version selector doesn't lie about the version!
+- Now version selector doesn't lie about the version! - @lajbel
 
 ## 2.0.1 (3/11/2024)
 
