@@ -2,7 +2,7 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
-## [2.1.0] - 2025-01-15
+## [2.0.2] - 2025-01-15
 
 ### Changed
 
