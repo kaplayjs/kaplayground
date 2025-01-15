@@ -37,7 +37,11 @@ export const ConfigProject = () => {
                 <select
                     id="version-selector"
                     className="select select-bordered"
+                    defaultValue={"none"}
                 >
+                    <option disabled value={"none"}>
+                        Select a version
+                    </option>
                     {packageInfo
                         && Object.keys(packageInfo.versions).reverse().map((
                             version,

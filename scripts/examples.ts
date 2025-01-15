@@ -3,6 +3,14 @@
 
 import fs from "fs";
 import path from "path";
+import type { Packument } from "query-registry";
+
+async function getPackageInfo(name: string): Promise<Packument> {
+    const endpoint = `https://registry.npmjs.org/${name}`;
+    const res = await fetch(endpoint);
+    const data = await res.json();
+    return data;
+}
 
 const defaultExamplesPath = path.join(
     import.meta.dirname,
@@ -13,6 +21,11 @@ const defaultExamplesPath = path.join(
 const distPath = path.join(import.meta.dirname, "..", "src", "data");
 
 export const generateExamples = async (examplesPath = defaultExamplesPath) => {
+    const defaultVersion = Object.keys(
+        (await getPackageInfo("kaplay")).versions,
+    ).reverse().find((v) => {
+        return v.startsWith("3001");
+    });
     let exampleCount = 0;
 
     const examples = fs.readdirSync(examplesPath).map((file) => {
@@ -22,7 +35,12 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
         const code = fs.readFileSync(filePath, "utf-8");
         const name = file.replace(".js", "");
 
-        return { name, code, index: (exampleCount++).toString() };
+        return {
+            name,
+            code,
+            index: (exampleCount++).toString(),
+            version: defaultVersion,
+        };
     });
 
     // Write a JSON file with the examples

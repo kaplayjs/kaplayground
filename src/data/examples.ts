@@ -1,4 +1,3 @@
-import { DEFAULT_KAPLAY_VERSION } from "../config/common";
 import examplesList from "./exampleList.json";
 
 export type Tag =
@@ -375,14 +374,16 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "platformBox": {
         formatedName: "Odd Uses of platformEffector()",
-        description: "How to allow the player to decide whether they want to push something.",
+        description:
+            "How to allow the player to decide whether they want to push something.",
         tags: ["physics"],
         difficulty: "medium",
         version: VERSION_4000,
     },
     "platformEffector": {
         formatedName: "Jump-Through Platforms",
-        description: "How to make platforms that the player can jump through going up and down at will.",
+        description:
+            "How to make platforms that the player can jump through going up and down at will.",
         tags: ["physics"],
         difficulty: "medium",
         version: VERSION_4000,
@@ -440,13 +441,15 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "raycastObject": {
         formatedName: "Raycasts objects",
-        description: "How to shoot a raycast and make it bounce off the bounding boxes of objects.",
+        description:
+            "How to shoot a raycast and make it bounce off the bounding boxes of objects.",
         tags: ["math"],
         difficulty: "medium",
     },
     "raycastShape": {
         formatedName: "Raycasts shapes",
-        description: "How to shoot a raycast and make it bounce off the actual shapes of objects.",
+        description:
+            "How to shoot a raycast and make it bounce off the actual shapes of objects.",
         tags: ["math"],
         difficulty: "medium",
     },
@@ -562,7 +565,8 @@ export const examplesMetaData: Record<string, Partial<Example>> = {
     },
     "weirdTextTags": {
         formatedName: "Weird text tags",
-        description: "How to insert text with brackets without messing up formatting.",
+        description:
+            "How to insert text with brackets without messing up formatting.",
         tags: ["testing"],
         difficulty: "easy",
     },
@@ -579,6 +583,6 @@ export const examples = examplesList.filter((example) =>
         tags: examplesMetaData[example.name]?.tags ?? [],
         difficulty: examplesMetaData[example.name]?.difficulty ?? "medium",
         version: examplesMetaData[example.name]?.version
-            ?? DEFAULT_KAPLAY_VERSION,
+            ?? example.version,
     };
 });

@@ -2,6 +2,12 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
+## [2.1.0] - 2025-01-15
+
+### Changed
+
+- Now version selector doesn't lie about the version!
+
 ## 2.0.1 (3/11/2024)
 
 - Renamed examples to demos

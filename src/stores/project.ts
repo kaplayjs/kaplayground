@@ -1,8 +1,8 @@
 import type { KAPLAYOpt } from "kaplay";
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
-import { DEFAULT_KAPLAY_VERSION } from "../config/common";
 import { defaultExampleFile, defaultProject } from "../config/defaultProject";
+import examplesList from "../data/exampleList.json";
 import { examples } from "../data/examples";
 import { useConfig } from "../hooks/useConfig";
 import { useEditor } from "../hooks/useEditor";
@@ -56,7 +56,7 @@ export const createProjectSlice: StateCreator<
         assets: new Map(),
         kaplayConfig: {},
         mode: "pj",
-        kaplayVersion: DEFAULT_KAPLAY_VERSION,
+        kaplayVersion: examplesList[0].version,
         id: `upj-Untitled`,
     },
     getProject: () => {
@@ -75,7 +75,7 @@ export const createProjectSlice: StateCreator<
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
 
-        let version = DEFAULT_KAPLAY_VERSION;
+        let version = examplesList[0].version;
         let id = `u${filter}-Untitled`;
 
         if (filter === "pj") {
@@ -252,7 +252,7 @@ export const createProjectSlice: StateCreator<
             mode: "ex",
             id: "ex-shared",
             kaplayConfig: {},
-            kaplayVersion: DEFAULT_KAPLAY_VERSION,
+            kaplayVersion: examplesList[0].version,
             name: "Shared Example",
             version: "2.0.0",
             isDefault: false,
