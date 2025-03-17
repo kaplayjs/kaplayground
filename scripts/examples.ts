@@ -37,7 +37,10 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
 
         return {
             name,
-            code,
+            code: code.replace("// @ts-check\n\n", "").replace(
+                "// @ts-check\n",
+                "",
+            ),
             index: (exampleCount++).toString(),
             version: defaultVersion,
         };

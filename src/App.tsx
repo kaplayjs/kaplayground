@@ -4,7 +4,7 @@ import "allotment/dist/style.css";
 import "./styles/index.css";
 import "./styles/toast.css";
 import "./util/hotkeys.js";
-import "@fontsource-variable/rubik";
+import "@fontsource/outfit";
 
 export const App = () => {
     return <Playground />;

@@ -40,7 +40,9 @@ export const FileFold: FC<Props> = (props) => {
                             src={logoByKind[props.kind]}
                             className="w-4"
                         />
-                        <h2 className="text-lg font-medium">{props.title}</h2>
+                        <h2 className="font-bold uppercase">
+                            {props.title}
+                        </h2>
                     </div>
                 )}
 

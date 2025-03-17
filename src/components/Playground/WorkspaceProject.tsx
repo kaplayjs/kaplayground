@@ -34,7 +34,11 @@ export const WorkspaceProject: FC<Props> = (props) => {
                             <FileTree />
                         </Allotment.Pane>
                         <Allotment.Pane snap>
-                            <Allotment vertical defaultSizes={[2, 1]}>
+                            <Allotment
+                                vertical
+                                defaultSizes={[2, 1]}
+                                className="p-0.5"
+                            >
                                 <Allotment.Pane>
                                     <MonacoEditor
                                         onMount={props.onMount}

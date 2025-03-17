@@ -1,4 +1,4 @@
-import kaplaygroundLogo from "/pg.png";
+import { assets } from "@kaplayjs/crew";
 import ExampleList from "./ExampleList";
 import ProjectStatus from "./ProjectStatus";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
@@ -6,7 +6,7 @@ import ToolbarToolsMenu from "./ToolbarToolsMenu";
 export const Toolbar = () => {
     return (
         <div
-            className="flex flex-1 justify-between items-center bg-base-300"
+            className="flex flex-1 justify-between items-center bg-base-300 rounded-b-xl"
             role="toolbar"
         >
             <a
@@ -16,7 +16,8 @@ export const Toolbar = () => {
                 <figure>
                     <img
                         alt="Logo"
-                        src={kaplaygroundLogo}
+                        // @ts-ignore
+                        src={assets.ka.outlined}
                         className="h-8"
                         draggable={false}
                     />

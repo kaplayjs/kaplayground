@@ -21,6 +21,7 @@ export const GameView: FC<GameViewProps> = ({ onLoad }) => {
             id="game-view"
             tabIndex={0}
             onLoad={onLoad}
+            className="rounded-xl p-0.5"
             style={{
                 border: "none",
                 width: "100%",

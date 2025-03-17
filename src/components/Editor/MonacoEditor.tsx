@@ -95,23 +95,25 @@ export const MonacoEditor: FC<Props> = (props) => {
     };
 
     return (
-        <Editor
-            defaultLanguage="javascript"
-            defaultValue={getFile(getRuntime().currentFile)?.value}
-            beforeMount={handleEditorBeforeMount}
-            onMount={handleEditorMount}
-            theme={localStorage.getItem("theme") || "Spiker"}
-            language="javascript"
-            options={{
-                fontSize: 20,
-                glyphMargin: true,
-                lineNumbersMinChars: 2,
-                folding: false,
-                minimap: {
-                    enabled: false,
-                },
-            }}
-            path={getRuntime().currentFile}
-        />
+        <div className="h-full rounded-xl relatie p-0.5">
+            <Editor
+                defaultLanguage="javascript"
+                defaultValue={getFile(getRuntime().currentFile)?.value}
+                beforeMount={handleEditorBeforeMount}
+                onMount={handleEditorMount}
+                theme={localStorage.getItem("theme") || "Spiker"}
+                language="javascript"
+                options={{
+                    fontSize: 20,
+                    glyphMargin: true,
+                    lineNumbersMinChars: 2,
+                    folding: false,
+                    minimap: {
+                        enabled: false,
+                    },
+                }}
+                path={getRuntime().currentFile}
+            />
+        </div>
     );
 };

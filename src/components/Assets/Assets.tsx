@@ -5,8 +5,11 @@ import AssetsTab from "./AssetsTab";
 
 export const Assets = () => {
     return (
-        <Tabs.Root className="flex flex-col h-full" defaultValue="Sprites">
-            <Tabs.List className="tabs tabs-bordered bg-base-200 w-full">
+        <Tabs.Root
+            className="flex flex-col h-full rounded-xl"
+            defaultValue="Sprites"
+        >
+            <Tabs.List className="tabs tabs-lifted bg-base-200 w-full rounded-xl">
                 <AssetsTab label="Sprites" icon={assets.mark.outlined} />
                 <AssetsTab label="Sounds" icon={assets.sounds.outlined} />
                 <AssetsTab label="Fonts" icon={assets.fonts.outlined} />

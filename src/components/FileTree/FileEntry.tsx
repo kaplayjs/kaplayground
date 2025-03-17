@@ -16,7 +16,7 @@ export const logoByKind: Record<FileKind, string> = {
     scene: assets.art.outlined,
     main: assets.play.outlined,
     assets: assets.assetbrew.outlined,
-    obj: assets.burpman.outlined,
+    obj: assets.grass.outlined,
     util: assets.toolbox.outlined,
 };
 
@@ -116,7 +116,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
     return (
         <div
             className={cn(
-                "file | btn btn-sm w-full justify-start rounded-none px-2",
+                "file | btn btn-sm w-full justify-start  px-2",
                 {
                     "btn-primary": getRuntime().currentFile === file.path,
                     "btn-ghost": getRuntime().currentFile !== file.path,
