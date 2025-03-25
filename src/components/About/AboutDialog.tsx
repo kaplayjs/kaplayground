@@ -1,4 +1,4 @@
-import kaplaygroundLogo from "../../assets/kaplayground.png";
+import { assets } from "@kaplayjs/crew";
 import { REPO, VERSION } from "../../config/common";
 
 export const AboutDialog = () => {
@@ -8,7 +8,7 @@ export const AboutDialog = () => {
                 <header className="flex items-center justify-center">
                     <img
                         alt="KAPLAY"
-                        src={kaplaygroundLogo}
+                        src={assets.kaplay.outlined}
                         className="h-32 object-scale-down"
                     >
                     </img>

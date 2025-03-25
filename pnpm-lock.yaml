@@ -11,12 +11,15 @@ importers:
       '@fontsource-variable/rubik':
         specifier: ^5.1.0
         version: 5.1.0
+      '@fontsource/outfit':
+        specifier: ^5.2.5
+        version: 5.2.5
       '@formkit/drag-and-drop':
         specifier: ^0.0.38
         version: 0.0.38
       '@kaplayjs/crew':
-        specifier: ^1.6.1
-        version: 1.6.1(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)
+        specifier: 2.0.0-beta.2
+        version: 2.0.0-beta.2(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.48.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -460,6 +463,9 @@ packages:
   '@fontsource-variable/rubik@5.1.0':
     resolution: {integrity: sha512-gmh3xts3ARd0ktWW/VX+MVxhJr6TxHVeGLsQEaQXDVxvuNjn5WRucfKfXK3EVN2BcgRxUe1Fctv/v9zgEd0DUg==}
 
+  '@fontsource/outfit@5.2.5':
+    resolution: {integrity: sha512-MoQRZDQ8nKOYxJXJNXzcDaBfw+k6IQ0+O/fQaBh5zJRb1/n7JNqxnc7iLK46YlMaFEGh8rjjF0Pp6o8Qc8JSJw==}
+
   '@formkit/drag-and-drop@0.0.38':
     resolution: {integrity: sha512-3uJFcqz1xL7x/5pClDnyqEDfyFRDFH+75MFpJYXnVF17oekxLrwbUaOBN7ttKGn1jW2MdojRw4WMnSN1iLryvw==}
 
@@ -491,8 +497,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@kaplayjs/crew@1.6.1':
-    resolution: {integrity: sha512-P5jYieeWc5prYCjnBr5PZY2KQZ1gnnCyrPl5ddYAOetQyIel/9n3o+Obs1jnja9dny80QrhL4a3w75gMIqsZxA==}
+  '@kaplayjs/crew@2.0.0-beta.2':
+    resolution: {integrity: sha512-sCjyJojv6pgfulcNI3R/0sx3d96RXrtEltcFx/q278fRoO8elqcEgLwoN8tCzk3eHsaDP8ykHmjm8lGtYuZ3Ug==}
     peerDependencies:
       typescript: ^5.0.0
 
@@ -2408,6 +2414,8 @@ snapshots:
 
   '@fontsource-variable/rubik@5.1.0': {}
 
+  '@fontsource/outfit@5.2.5': {}
+
   '@formkit/drag-and-drop@0.0.38': {}
 
   '@isaacs/cliui@8.0.2':
@@ -2444,7 +2452,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@kaplayjs/crew@1.6.1(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)':
+  '@kaplayjs/crew@2.0.0-beta.2(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)':
     dependencies:
       typescript: 5.6.3
       vite: 5.4.8(@types/node@22.7.5)(terser@5.34.1)

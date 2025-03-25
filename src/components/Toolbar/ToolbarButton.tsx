@@ -26,7 +26,7 @@ const ToolbarButton = forwardRef<Ref, Props>((props, ref) => {
             {...props}
         >
             <span className="hidden lg:block">{props.text}</span>
-            <img src={props.icon} alt={props.text} className="h-6 lg:h-4" />
+            <img src={props.icon} alt={props.text} className="h-6" />
         </button>
     );
 });

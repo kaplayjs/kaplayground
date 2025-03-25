@@ -8,7 +8,7 @@ export type ViewProps = PropsWithChildren<
         padding?: 2 | 4 | 8;
         justify?: "center" | "start" | "end" | "between" | "around";
         height?: "full" | "screen";
-        rounded?: "lg" | "md" | "sm";
+        rounded?: "xl" | "lg" | "md" | "sm";
         cursor?: "pointer" | "default";
         className?: string;
         id?: string;
@@ -56,6 +56,7 @@ export const View: FC<ViewProps> = (props) => {
                 "justify-around": justify === "around",
                 "h-full": height === "full",
                 "h-screen": height === "screen",
+                "rounded-xl": rounded === "xl",
                 "rounded-lg": rounded === "lg",
                 "rounded-md": rounded === "md",
                 "rounded-sm": rounded === "sm",

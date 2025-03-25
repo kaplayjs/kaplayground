@@ -7,7 +7,6 @@ import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { compressCode } from "../../util/compressCode";
 import Projects from "./Projects";
-import ThemeToggler from "./ThemeToggler";
 import ToolbarButton from "./ToolbarButton";
 
 const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
@@ -27,6 +26,7 @@ const ToolbarToolsMenu: FC = () => {
 
         if (isDefault) {
             const exampleParam = encodeURIComponent(getProject().id);
+
             const url = `${window.location.origin}/?example=${exampleParam}`;
 
             navigator.clipboard.writeText(url).then(() => {
@@ -39,7 +39,11 @@ const ToolbarToolsMenu: FC = () => {
         const mainFile = getMainFile();
         const compressedCode = compressCode(mainFile?.value!);
         const codeParam = encodeURIComponent(compressedCode);
-        const url = `${window.location.origin}/?code=${codeParam}`;
+        const exampleVersion = encodeURIComponent(
+            getProject().kaplayVersion,
+        );
+        const url =
+            `${window.location.origin}/?code=${codeParam}&version=${exampleVersion}`;
 
         if (url.length <= 2048) {
             navigator.clipboard.writeText(url).then(() => {
@@ -71,10 +75,6 @@ const ToolbarToolsMenu: FC = () => {
                     />
                 </ToolbarToolItem>
             )}
-
-            <ToolbarToolItem>
-                <ThemeToggler />
-            </ToolbarToolItem>
 
             <ToolbarToolItem>
                 <Projects />

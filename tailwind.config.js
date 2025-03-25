@@ -12,7 +12,8 @@ export default {
             {
                 "Spiker": {
                     ...require("daisyui/src/theming/themes")["dim"],
-                    primary: "#6ba672",
+                    primary: "#abdd64",
+                    "--animation-btn": 0,
                 },
                 "Ghostiny": {
                     ...require("daisyui/src/theming/themes")["emerald"],

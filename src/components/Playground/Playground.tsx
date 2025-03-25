@@ -47,9 +47,9 @@ const Playground = () => {
         setLoadingEditor(false);
     };
 
-    const loadShare = (sharedCode: string) => {
+    const loadShare = (sharedCode: string, sharedVersion?: string) => {
         debug(0, "Importing shared code...", decompressCode(sharedCode));
-        loadSharedDemo(decompressCode(sharedCode));
+        loadSharedDemo(decompressCode(sharedCode), sharedVersion);
         setLoadingProject(false);
     };
 
@@ -88,10 +88,11 @@ const Playground = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const lastOpenedPj = useConfig.getState().getConfig().lastOpenedProject;
         const sharedCode = urlParams.get("code");
+        const sharedVersion = urlParams.get("version");
         const exampleName = urlParams.get("example");
 
         if (sharedCode) {
-            loadShare(sharedCode);
+            loadShare(sharedCode, sharedVersion ?? undefined);
         } else if (exampleName) {
             loadDemo(exampleName);
         } else if (lastOpenedPj) {

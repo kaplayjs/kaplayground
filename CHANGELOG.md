@@ -2,6 +2,17 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
+## [2.1.0] - 2025-03-25
+
+### Added
+
+- Now share links have version
+- Now you can select `master` version for using latest commit
+
+### Changed
+
+- First part of redesign making style be more similar to website
+
 ## [2.0.2] - 2025-01-15
 
 ### Changed

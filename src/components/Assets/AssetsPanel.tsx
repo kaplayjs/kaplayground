@@ -41,7 +41,7 @@ const AssetsPanel: React.FC<Props> = (props) => {
 
     return (
         <Tabs.Content
-            className={cn("w-full h-full", {
+            className={cn("w-full h-full bg-base-100 rounded-xl", {
                 "dragging-border": isDragging,
             })}
             value={props.value}
