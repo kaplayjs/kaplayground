@@ -1,6 +1,16 @@
 import { useProject } from "../hooks/useProject";
 import { debug } from "./logs";
 
+export const getVersion = () => {
+    const version = useProject.getState().project.kaplayVersion;
+
+    if (version == "master") {
+        return `https://kaplayjs.com/lib/kaplay.master.js`;
+    } else {
+        return `https://unpkg.com/kaplay@${version}/dist/kaboom.js`;
+    }
+};
+
 // Wraps the game in an acceptable format for iFrame
 export const wrapGame = (code: string) => `
 <!DOCTYPE html>
@@ -24,7 +34,7 @@ body {
         </style>
 </head>
 <body>
-<script src="https://unpkg.com/kaplay@${useProject.getState().project.kaplayVersion}/dist/kaboom.js"></script>
+<script src="${getVersion()}"></script>
 <script>
     ${parseAssets(code)}
 </script>

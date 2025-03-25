@@ -35,7 +35,7 @@ export interface ProjectSlice {
     getSavedProjects: (filter?: ProjectMode) => string[];
     saveProject: (newProjectId: string, oldProjectId: string) => void;
     loadProject: (projectId: string, replaceProject?: Project) => void;
-    loadSharedDemo: (sharedCode: string) => void;
+    loadSharedDemo: (sharedCode: string, sharedVersion?: string) => void;
     setDefaultProjectFiles: (
         mode: ProjectMode,
         files: Map<string, File>,
@@ -234,7 +234,7 @@ export const createProjectSlice: StateCreator<
         // Editor stuff
         useEditor.getState().updateAndRun();
     },
-    loadSharedDemo(sharedCode: string) {
+    loadSharedDemo(sharedCode: string, sharedVersion?: string) {
         get().loadProject("ex-shared", {
             assets: new Map(),
             files: new Map([
@@ -252,7 +252,7 @@ export const createProjectSlice: StateCreator<
             mode: "ex",
             id: "ex-shared",
             kaplayConfig: {},
-            kaplayVersion: examplesList[0].version,
+            kaplayVersion: sharedVersion ?? examplesList[0].version,
             name: "Shared Example",
             version: "2.0.0",
             isDefault: false,

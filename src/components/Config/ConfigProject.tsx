@@ -42,6 +42,9 @@ export const ConfigProject = () => {
                     <option disabled value={"none"}>
                         Select a version
                     </option>
+                    <option value={"master"}>
+                        master
+                    </option>
                     {packageInfo
                         && Object.keys(packageInfo.versions).reverse().map((
                             version,
@@ -55,6 +58,7 @@ export const ConfigProject = () => {
                     <span className="label-text">
                         Current version: {project.kaplayVersion}
                     </span>
+                    <span>Now you can share links with version!</span>
                 </div>
             </label>
         </>
