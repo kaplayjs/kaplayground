@@ -62,6 +62,10 @@ const ProjectStatus = () => {
                     className="h-4"
                 />
             </button>
+
+            <div className="uppercase | badge badge-lg">
+                {getProject().kaplayVersion}
+            </div>
         </div>
     );
 };
