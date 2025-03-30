@@ -1,3 +1,4 @@
+import { assets } from "@kaplayjs/crew";
 import { useProject } from "../hooks/useProject";
 import { debug } from "./logs";
 
@@ -34,8 +35,27 @@ body {
         </style>
 </head>
 <body>
-<script src="${getVersion()}"></script>
 <script>
+    (function() {
+        if (window.top && window.top.console) {
+            const topConsole = window.top.console;
+
+            window.console = {
+                log: (...args) => topConsole.log("[game]", ...args),
+                warn: (...args) => topConsole.warn("[game]", ...args),
+                error: (...args) => topConsole.error("[game]", ...args),
+                info: (...args) => topConsole.info("[game]", ...args),
+                debug: (...args) => topConsole.debug("[game]", ...args),
+                trace: (...args) => topConsole.trace("[game]", ...args),
+                clear: () => topConsole.clear(),
+            };
+            
+        }
+    })();
+</script>
+
+<script src="${getVersion()}"></script>
+<script type="module">
     ${parseAssets(code)}
 </script>
 </body>
@@ -46,18 +66,45 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
 
     const x = code.replace(regex, (match, asset: string) => {
         debug(0, "Transforming urls, asset matched", asset);
+        let transformedAsset = asset;
 
         // remove first / and last / from asset, also remove "assets" from asset
-        const normalizeAsset = asset.replace(/^\/|\/$/g, "").replace(
+        const resource = asset.replace(/^\/|\/$/g, "").replace(
             "assets/",
             "",
         ).replace(/"/g, "");
 
-        debug(0, "Resource found:", resources.get(normalizeAsset)?.url);
+        if (resources.has(resource)) {
+            debug(0, "Resource found:", resources.get(resource)?.url);
+            transformedAsset = resources.get(resource)?.url!;
+        } else {
+            debug(0, "No resource found for", resource);
+        }
+
+        const crewResource = asset.replace(/^\/|\/$/g, "").replace(
+            "crew/",
+            "",
+        ).replace(/"/g, "").replace(".png", "");
+
+        const crewResourceWithoutOutlineIndicator = crewResource.replace(
+            "-o",
+            "",
+        );
+        const prop = crewResource.endsWith("-o") ? "outlined" : "sprite";
+
+        const assetResource =
+            assets[crewResourceWithoutOutlineIndicator as keyof typeof assets];
+
+        if (assetResource) {
+            debug(0, "[assets] Crew found for", crewResource);
+            transformedAsset = assetResource[prop]!;
+        } else {
+            debug(0, "[assets] Crew not found for", crewResource);
+        }
 
         return match.replace(
             asset,
-            resources.get(normalizeAsset)?.url ?? asset,
+            transformedAsset,
         );
     });
 

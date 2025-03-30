@@ -10,7 +10,7 @@ export const Toolbar = () => {
             role="toolbar"
         >
             <a
-                className="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+                className="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full rounded-bl-xl"
                 href="/"
             >
                 <figure>

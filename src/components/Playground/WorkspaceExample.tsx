@@ -1,6 +1,8 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
 import { cn } from "../../util/cn";
+import { AssetBrew } from "../Assets/AssetBrew.tsx";
+import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
 import { MonacoEditor } from "../Editor/MonacoEditor";
 import { Toolbar } from "../Toolbar";
 import ExampleList from "../Toolbar/ExampleList";
@@ -30,12 +32,34 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     defaultSizes={[0.5, 0.5]}
                 >
                     <Allotment.Pane snap>
-                        <MonacoEditor
-                            onMount={props.onMount}
-                        />
+                        <Allotment vertical defaultSizes={[2, 0.2]}>
+                            <Allotment.Pane className="p-0.5">
+                                <MonacoEditor
+                                    onMount={props.onMount}
+                                />
+                            </Allotment.Pane>
+                            <Allotment.Pane
+                                className="p-0.5"
+                                snap
+                                maxSize={100}
+                                minSize={80}
+                            >
+                                <AssetBrew />
+                            </Allotment.Pane>
+                        </Allotment>
                     </Allotment.Pane>
                     <Allotment.Pane snap>
-                        <GameView />
+                        <Allotment vertical defaultSizes={[1, 0.3]}>
+                            <Allotment.Pane className="p-0.5">
+                                <GameView />
+                            </Allotment.Pane>
+                            <Allotment.Pane
+                                className="p-0.5"
+                                snap
+                            >
+                                <ConsoleView />
+                            </Allotment.Pane>
+                        </Allotment>
                     </Allotment.Pane>
                 </Allotment>
             </main>

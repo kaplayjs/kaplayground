@@ -1,6 +1,8 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
+import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
 import { type FC } from "react";
+import { useConfig } from "../../hooks/useConfig.ts";
 import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { debug } from "../../util/logs";
@@ -20,6 +22,7 @@ export const MonacoEditor: FC<Props> = (props) => {
         getRuntime,
         setRuntime,
     } = useEditor();
+    const { getConfig } = useConfig();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -31,6 +34,22 @@ export const MonacoEditor: FC<Props> = (props) => {
     ) => {
         setRuntime({ editor, monaco });
         const currentFile = getRuntime().currentFile;
+
+        // Create canvas
+        const canvas = document.createElement("canvas") as HTMLCanvasElement & {
+            confetti: confetti.CreateTypes;
+        };
+        canvas.style.position = "absolute";
+        canvas.style.pointerEvents = "none"; // Prevent interactions
+        canvas.style.top = "0";
+        canvas.style.left = "0";
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+
+        document.getElementById("monaco-editor-wrapper")!.appendChild(canvas);
+
+        // Confetti thing setup
+        canvas.confetti = confetti.create(canvas, { resize: true });
 
         props.onMount?.();
         editor.setValue(getFile(currentFile)?.value ?? "");
@@ -75,6 +94,10 @@ export const MonacoEditor: FC<Props> = (props) => {
             contextMenuOrder: 1.5,
             run: () => {
                 run();
+
+                if (getConfig().autoFormat) {
+                    editor.getAction("format-kaplay")?.run();
+                }
             },
         });
 
@@ -88,6 +111,43 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
+        editor.addAction({
+            id: "format-kaplay",
+            label: "Format file using KAPLAYGROUND",
+            contextMenuGroupId: "navigation",
+            contextMenuOrder: 1.5,
+            run: () => {
+                editor.getAction("editor.action.formatDocument")?.run();
+
+                if (!getConfig().funFormat) return;
+
+                var duration = 0.5 * 1000;
+                var animationEnd = Date.now() + duration;
+
+                (function frame() {
+                    var timeLeft = animationEnd - Date.now();
+
+                    canvas.confetti({
+                        particleCount: 3,
+                        spread: 1,
+                        origin: {
+                            x: Math.random(),
+                            y: -0.05,
+                        },
+                        angle: 270,
+                        startVelocity: 10,
+                        gravity: 0.5,
+                        ticks: 50,
+                        colors: ["#fcef8d", "#abdd64", "#d46eb3"],
+                    });
+
+                    if (timeLeft > 0) {
+                        requestAnimationFrame(frame);
+                    }
+                })();
+            },
+        });
+
         let decorations = editor.createDecorationsCollection([]);
         getRuntime().gylphDecorations = decorations;
 
@@ -95,7 +155,7 @@ export const MonacoEditor: FC<Props> = (props) => {
     };
 
     return (
-        <div className="h-full rounded-xl relatie p-0.5">
+        <div id="monaco-editor-wrapper" className="h-full rounded-xl relative">
             <Editor
                 defaultLanguage="javascript"
                 defaultValue={getFile(getRuntime().currentFile)?.value}

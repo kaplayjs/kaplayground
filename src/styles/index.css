@@ -11,6 +11,10 @@ html, body, #root {
     font-family: 'Outfit Variable', sans-serif;
 }
 
+:root {
+    --separator-border: rgba(0, 0, 0, 0);
+}
+
 /* temp */
 
 .monaco-glyph-margin {
@@ -27,6 +31,7 @@ html, body, #root {
     height: 20px;
     content:"";
 }
+
 
 .monaco-editor {
     @apply rounded-xl;

@@ -1,22 +1,26 @@
 import { assets } from "@kaplayjs/crew";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useEditor } from "../../hooks/useEditor.ts";
 import { useProject } from "../../hooks/useProject";
+import { cn } from "../../util/cn.ts";
 
 const ProjectStatus = () => {
-    const { saveProject, getProject, projectIsSaved } = useProject();
+    const { saveProject, getProject, projectIsSaved, setProject } =
+        useProject();
+    const { runtime } = useEditor();
     const [name, setName] = useState(getProject().name);
+    const [version, setVersion] = useState(getProject().kaplayVersion);
 
     const handleSaveProject = () => {
+        setProject({
+            version: version,
+        });
+
         saveProject(name, getProject().id);
     };
 
-    const handleEditName = () => {
-        const projectName = prompt("New project name?");
-        if (!projectName) return;
-
-        setName(projectName);
-        toast("Project name updated, remember save now!");
+    const isSaved = () => {
+        return projectIsSaved(name, getProject().mode);
     };
 
     useEffect(() => {
@@ -24,51 +28,68 @@ const ProjectStatus = () => {
     }, [getProject().name]);
 
     return (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 items-center h-full">
             {!getProject().isDefault && (
                 <>
-                    <div className="uppercase | badge badge-lg badge-primary">
+                    <div className="uppercase | badge badge-sm p-2 rounded-md">
                         {getProject().mode === "pj" ? "Project" : "Example"}
                     </div>
 
-                    <div>
-                        {name}
-                        {!projectIsSaved(name, getProject().mode) && (
-                            <span>*</span>
-                        )}
-                    </div>
-
-                    <button
-                        className="btn btn-ghost btn-xs rounded-sm px-1"
-                        onClick={handleEditName}
-                        data-tooltip-id="global"
-                        data-tooltip-html={`Edit name`}
-                        data-tooltip-place="bottom-end"
+                    <input
+                        id="projectNameInput"
+                        className="input input-xs"
+                        defaultValue={name}
+                        onChange={(t) => {
+                            const newName = t.target.value;
+                            if (newName) setName(newName);
+                        }}
                     >
-                        <img
-                            src={assets.pointer.outlined}
-                            alt="Save Project"
-                            className="h-4"
-                        />
-                    </button>
-                    <button
-                        className="btn btn-ghost btn-xs rounded-sm px-1"
-                        onClick={handleSaveProject}
-                        data-tooltip-id="global"
-                        data-tooltip-html={`Save project`}
-                        data-tooltip-place="bottom-end"
-                    >
-                        <img
-                            src={assets.save.outlined}
-                            alt="Save Project"
-                            className="h-4"
-                        />
-                    </button>
+                    </input>
                 </>
             )}
-            <div className="uppercase | badge badge-lg">
-                {getProject().kaplayVersion}
-            </div>
+
+            <button
+                className={cn(
+                    "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full",
+                )}
+                onClick={handleSaveProject}
+                data-tooltip-id="global"
+                data-tooltip-html={`Save project`}
+                data-tooltip-place="bottom-end"
+                disabled={isSaved()}
+            >
+                <img
+                    src={assets.save.outlined}
+                    alt="Save Project"
+                    className={cn("w-6 h-6 transition-all p-[3px]", {
+                        "grayscale opacity-30": projectIsSaved(
+                            name,
+                            getProject().mode,
+                        ),
+                    })}
+                />
+            </button>
+
+            <div className="divider divider-horizontal mx-0 px-0"></div>
+
+            <select
+                className="select select-xs"
+                onChange={(e) => {
+                    console.log(e.target.value);
+                    setVersion((e.target as HTMLSelectElement).value);
+                }}
+                defaultValue={"now"}
+            >
+                <option value={"now"} disabled key={"now"}>
+                    {getProject().kaplayVersion}
+                </option>
+                <option value={"master"} key={"XDD"}>master</option>
+                {runtime.kaplayVersions.map((v, i) => (
+                    <>
+                        <option value={v} key={v + i}>{v}</option>
+                    </>
+                ))}
+            </select>
         </div>
     );
 };

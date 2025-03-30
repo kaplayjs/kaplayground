@@ -1,6 +1,5 @@
 import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { createRef, type RefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { wrapGame } from "../util/compiler";
@@ -13,16 +12,12 @@ type EditorRuntime = {
     currentFile: string;
     gylphDecorations: editor.IEditorDecorationsCollection | null;
     iframe: HTMLIFrameElement | null;
+    console: Console | null;
+    kaplayVersions: string[];
 };
 
 type EditorStore = {
-    runtime: {
-        editor: editor.IStandaloneCodeEditor | null;
-        monaco: Monaco | null;
-        currentFile: string;
-        gylphDecorations: editor.IEditorDecorationsCollection | null;
-        iframe: HTMLIFrameElement | null;
-    };
+    runtime: EditorRuntime;
     update: (value?: string) => void;
     run: () => void;
     getRuntime: () => EditorRuntime;
@@ -42,7 +37,9 @@ export const useEditor = create<EditorStore>((set, get) => ({
         currentFile: "main.js",
         gylphDecorations: null,
         iframe: null,
+        console: null,
         isDefaultExample: false,
+        kaplayVersions: [],
     },
     setRuntime: (runtime) => {
         set((state) => ({
@@ -63,7 +60,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
     },
     update: (customValue?: string) => {
         if (customValue) {
-            debug(0, "Editor value updated with custom value");
+            debug(0, "[codeEditor] Editor value updated with custom value");
 
             get().setEditorValue(customValue);
             return;

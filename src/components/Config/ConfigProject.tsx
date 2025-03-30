@@ -1,5 +1,6 @@
 import { type Packument } from "query-registry";
 import { useEffect, useState } from "react";
+import { useEditor } from "../../hooks/useEditor.ts";
 import { useProject } from "../../hooks/useProject";
 
 async function getPackageInfo(name: string): Promise<Packument> {
@@ -14,11 +15,15 @@ export const ConfigProject = () => {
         null,
     );
     const { project: project } = useProject();
+    const { setRuntime } = useEditor();
 
     useEffect(() => {
         async function fetchPackageInfo() {
             const info = await getPackageInfo("kaplay");
             setPackageInfo(info);
+            setRuntime({
+                kaplayVersions: Object.keys(info.versions).reverse(),
+            });
         }
 
         fetchPackageInfo();
