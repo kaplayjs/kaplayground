@@ -18,8 +18,8 @@ importers:
         specifier: ^0.0.38
         version: 0.0.38
       '@kaplayjs/crew':
-        specifier: 2.0.0-beta.2
-        version: 2.0.0-beta.2(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)
+        specifier: 2.0.0-beta.3
+        version: 2.0.0-beta.3(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.48.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -563,8 +563,8 @@ packages:
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
-  '@kaplayjs/crew@2.0.0-beta.2':
-    resolution: {integrity: sha512-sCjyJojv6pgfulcNI3R/0sx3d96RXrtEltcFx/q278fRoO8elqcEgLwoN8tCzk3eHsaDP8ykHmjm8lGtYuZ3Ug==}
+  '@kaplayjs/crew@2.0.0-beta.3':
+    resolution: {integrity: sha512-p70mJV39fMRvZ9oAqgoBAeTbu7cikUNBVvNvr7NCl+Wc1LFIwVabib7Ib/w7VQ7sJ9ZaI3lYlepN0ewRVlg5kw==}
     peerDependencies:
       typescript: ^5.0.0
 
@@ -2717,7 +2717,7 @@ snapshots:
 
   '@juggle/resize-observer@3.4.0': {}
 
-  '@kaplayjs/crew@2.0.0-beta.2(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)':
+  '@kaplayjs/crew@2.0.0-beta.3(@types/node@22.7.5)(terser@5.34.1)(typescript@5.6.3)':
     dependencies:
       typescript: 5.6.3
       vite: 5.4.8(@types/node@22.7.5)(terser@5.34.1)
