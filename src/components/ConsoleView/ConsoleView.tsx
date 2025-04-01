@@ -32,7 +32,7 @@ export const ConsoleView = () => {
             id="console-wrapper"
             className="h-full w-full bg-base-300 rounded-xl overflow-hidden"
         >
-            <div className="h-full w-full overflow-auto scrollbar-thin">
+            <div className="flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin">
                 <Console logs={logs} variant="dark" />
             </div>
         </div>
