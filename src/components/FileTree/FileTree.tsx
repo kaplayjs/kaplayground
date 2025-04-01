@@ -3,7 +3,7 @@ import { FileFold } from "./FileFold";
 
 export const FileTree = () => {
     return (
-        <View el={"div"} className="bg-base-100 p-0.5" height="full">
+        <View el={"div"} height="full">
             <View
                 direction={"column"}
                 justify="between"

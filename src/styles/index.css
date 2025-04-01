@@ -13,6 +13,7 @@ html, body, #root {
 
 :root {
     --separator-border: rgba(0, 0, 0, 0);
+    --focus-border: rgb(171, 220, 100);
 }
 
 :root .react-tooltip {
@@ -24,6 +25,24 @@ html, body, #root {
     .bg-base-50 {
         @apply bg-[rgb(50,56,68)];
     }
+
+    .scrollbar-thin {
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color:
+            color-mix(in oklch, currentColor 20%, transparent)
+            transparent;
+    }
+}
+
+.sash-vertical {
+    height: calc(100% - 1rem) !important;
+    @apply mt-2 before:rounded-sm;
+}
+
+.sash-horizontal {
+    width: calc(100% - 1rem) !important;
+    @apply ml-2 before:rounded-sm;
 }
 
 /* temp */

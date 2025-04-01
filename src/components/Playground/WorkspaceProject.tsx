@@ -17,9 +17,12 @@ export const WorkspaceProject: FC<Props> = (props) => {
     return (
         <>
             <div
-                className={cn("h-screen w-screen flex flex-col", {
-                    "hidden": props.editorIsLoading,
-                })}
+                className={cn(
+                    "h-screen w-screen flex flex-col gap-px bg-base-50",
+                    {
+                        "hidden": props.editorIsLoading,
+                    },
+                )}
             >
                 <header className="h-9 flex">
                     <Toolbar />
@@ -29,15 +32,16 @@ export const WorkspaceProject: FC<Props> = (props) => {
                     <Allotment
                         defaultSizes={[0.5, 2, 2]}
                         vertical={props.isPortrait}
+                        className="p-px pt-0"
                     >
-                        <Allotment.Pane snap minSize={200}>
+                        <Allotment.Pane snap minSize={200} className="pr-px">
                             <FileTree />
                         </Allotment.Pane>
                         <Allotment.Pane snap>
                             <Allotment
                                 vertical
                                 defaultSizes={[2, 1]}
-                                className="p-0.5"
+                                className="pr-px"
                             >
                                 <Allotment.Pane>
                                     <MonacoEditor

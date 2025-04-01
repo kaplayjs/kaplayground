@@ -18,7 +18,7 @@ type Props = {
 export const WorkspaceExample: FC<Props> = (props) => {
     return (
         <div
-            className={cn("h-full w-screen flex flex-col", {
+            className={cn("h-full w-screen flex flex-col gap-px bg-base-50", {
                 "hidden": props.editorIsLoading,
             })}
         >
@@ -32,29 +32,37 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     defaultSizes={[0.5, 0.5]}
                 >
                     <Allotment.Pane snap>
-                        <Allotment vertical defaultSizes={[2, 0.2]}>
-                            <Allotment.Pane className="p-0.5">
+                        <Allotment
+                            vertical
+                            defaultSizes={[2, 0.2]}
+                            className="p-px pt-0"
+                        >
+                            <Allotment.Pane>
                                 <MonacoEditor
                                     onMount={props.onMount}
                                 />
                             </Allotment.Pane>
                             <Allotment.Pane
-                                className="p-0.5"
+                                className="pt-px"
                                 snap
-                                maxSize={100}
-                                minSize={80}
+                                maxSize={80}
+                                minSize={72}
                             >
                                 <AssetBrew />
                             </Allotment.Pane>
                         </Allotment>
                     </Allotment.Pane>
                     <Allotment.Pane snap>
-                        <Allotment vertical defaultSizes={[1, 0.3]}>
-                            <Allotment.Pane className="p-0.5">
+                        <Allotment
+                            vertical
+                            defaultSizes={[1, 0.3]}
+                            className="pr-px pb-px"
+                        >
+                            <Allotment.Pane>
                                 <GameView />
                             </Allotment.Pane>
                             <Allotment.Pane
-                                className="p-0.5"
+                                className="pt-px"
                                 snap
                             >
                                 <ConsoleView />
