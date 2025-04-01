@@ -15,6 +15,17 @@ html, body, #root {
     --separator-border: rgba(0, 0, 0, 0);
 }
 
+:root .react-tooltip {
+    --rt-color-dark: rgba(23, 27, 34, 0.95);
+    @apply rounded-md;
+}
+
+@layer utilities {
+    .bg-base-50 {
+        @apply bg-[rgb(50,56,68)];
+    }
+}
+
 /* temp */
 
 .monaco-glyph-margin {

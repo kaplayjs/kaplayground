@@ -11,7 +11,7 @@ import ToolbarButton from "./ToolbarButton";
 
 const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
     return (
-        <li className="h-full">
+        <li className="h-full group">
             {children}
         </li>
     );
