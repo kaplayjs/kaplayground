@@ -27,7 +27,7 @@ html, body, #root {
     background-size: 24px;
 	background-repeat: no-repeat;
     display: inline-block;
-    width: 40px; 
+    width: 40px;
     height: 20px;
     content:"";
 }
