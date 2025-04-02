@@ -64,6 +64,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                             <Allotment.Pane
                                 className="pt-px"
                                 snap
+                                minSize={34}
                             >
                                 <ConsoleView />
                             </Allotment.Pane>
