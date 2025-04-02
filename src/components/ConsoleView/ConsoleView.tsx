@@ -34,6 +34,24 @@ export const ConsoleView = () => {
             className="relative h-full w-full bg-base-300 rounded-xl overflow-hidden"
         >
             <div className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin ">
+                {logs.length > 0 && (
+                    <div className="sticky flex items-end self-end bottom-0.5 right-0.5 h-0 overflow-visible z-20">
+                        <button
+                            className="btn btn-ghost btn-xs p-1 h-auto rounded-lg"
+                            onClick={() => setLogs([])}
+                            data-tooltip-id="global"
+                            data-tooltip-html={"Clear console"}
+                            data-tooltip-place="top-end"
+                        >
+                            <img
+                                src={assets.trash.outlined}
+                                alt={"Clear console"}
+                                className="h-5 p-px"
+                            />
+                        </button>
+                    </div>
+                )}
+
                 <Console
                     logs={logs}
                     variant="dark"
@@ -57,6 +75,13 @@ export const ConsoleView = () => {
                         OBJECT_VALUE_STRING_COLOR: "rgb(233 150 122)",
                     }}
                 />
+
+                {logs.length == 0 && (
+                    <div className="px-4 py-2 text-xs font-mono opacity-70">
+                        <span className="mr-3">&gt;</span>
+                        Console is empty
+                    </div>
+                )}
             </div>
         </div>
     );

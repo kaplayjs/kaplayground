@@ -164,13 +164,24 @@ export const MonacoEditor: FC<Props> = (props) => {
                 theme={localStorage.getItem("theme") || "Spiker"}
                 language="javascript"
                 options={{
-                    fontSize: 20,
+                    fontSize: 17,
+                    lineHeight: 25,
+                    padding: {
+                        top: 10,
+                    },
                     glyphMargin: true,
                     lineNumbersMinChars: 2,
-                    folding: false,
+                    folding: true,
                     minimap: {
                         enabled: false,
                     },
+                    scrollbar: {
+                        useShadows: false,
+                        verticalScrollbarSize: 12,
+                        horizontalScrollbarSize: 12,
+                    },
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
                 }}
                 path={getRuntime().currentFile}
             />
