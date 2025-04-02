@@ -65,7 +65,12 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
     const { project: { assets: resources } } = useProject.getState();
 
     const x = code.replace(regex, (match, asset: string) => {
-        debug(0, "Transforming urls, asset matched", asset);
+        debug(
+            0,
+            "[compiler] Transforming urls, asset matched:",
+            asset.slice(0, 25),
+        );
+
         let transformedAsset = asset;
 
         // remove first / and last / from asset, also remove "assets" from asset
@@ -75,10 +80,14 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
         ).replace(/"/g, "");
 
         if (resources.has(resource)) {
-            debug(0, "Resource found:", resources.get(resource)?.url);
+            debug(
+                0,
+                "[compiler] Resource found:",
+                resources.get(resource)?.url.slice(0, 25) + "...",
+            );
             transformedAsset = resources.get(resource)?.url!;
         } else {
-            debug(0, "No resource found for", resource);
+            debug(0, "No resource found for", resource.slice(0, 25) + "...");
         }
 
         const crewResource = asset.replace(/^\/|\/$/g, "").replace(
@@ -120,7 +129,7 @@ export const parseAssets = (code: string) => {
         transformAssetUrl(regexComment, code),
     );
 
-    debug(2, "Code with assets", codeTransformed);
+    // debug(2, "[compiler] Compiled, new code:", codeTransformed);
 
     return codeTransformed;
 };

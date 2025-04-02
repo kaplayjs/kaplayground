@@ -4,9 +4,11 @@ import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import { useConfig } from "../../hooks/useConfig";
+import { useEditor } from "../../hooks/useEditor.ts";
 import { useProject } from "../../hooks/useProject";
 import { decompressCode } from "../../util/compressCode";
 import { debug } from "../../util/logs";
+import { getPackageInfo } from "../../util/npm.ts";
 import { AboutDialog } from "../About";
 import ConfigDialog from "../Config/ConfigDialog";
 import { ProjectBrowser } from "../ProjectBrowser";
@@ -39,6 +41,7 @@ const Playground = () => {
         createNewProjectFromDemo,
         loadSharedDemo,
     } = useProject();
+    const { setRuntime } = useEditor();
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
@@ -66,7 +69,7 @@ const Playground = () => {
     };
 
     const loadLastOpenedProject = (lastOpenedProjectId: string) => {
-        debug(0, "Loading last opened project...");
+        debug(0, "[project] Loading last opened project...");
         loadProject(lastOpenedProjectId);
         setLoadingProject(false);
     };
@@ -82,6 +85,15 @@ const Playground = () => {
             "data-theme",
             defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
         );
+
+        async function fetchPackageInfo() {
+            const info = await getPackageInfo("kaplay");
+            setRuntime({
+                kaplayVersions: Object.keys(info.versions).reverse(),
+            });
+        }
+
+        fetchPackageInfo();
     }, []);
 
     useEffect(() => {

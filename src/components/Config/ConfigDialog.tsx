@@ -1,28 +1,16 @@
 import { type Config, useConfig } from "../../hooks/useConfig";
-import { useProject } from "../../hooks/useProject";
-import { debug } from "../../util/logs";
+import { stringToValue } from "../../util/stringToValue.ts";
 import { Dialog } from "../UI/Dialog";
 import { ConfigEditor } from "./ConfigEditor.tsx";
-import { ConfigProject } from "./ConfigProject";
 
-const stringToValue = (value: string) => {
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (!isNaN(Number(value))) return Number(value);
-    return value;
-};
-
+// Handle the change of options in the Configuration dialog
 const ConfigDialog = () => {
-    const { setProject } = useProject();
     const { setConfigKey } = useConfig();
 
     const handleSave = () => {
-        const versionEl = document.querySelector<HTMLSelectElement>(
-            "#version-selector",
-        );
-
         const configElList = document.querySelectorAll("*[data-config]") ?? [];
 
+        // Reproduce saved options in configuration state
         configElList.forEach((el) => {
             const configEl = el as HTMLSelectElement | HTMLInputElement;
             const configKey = configEl.dataset["config"] as keyof Config;
@@ -30,23 +18,10 @@ const ConfigDialog = () => {
 
             setConfigKey(configKey, configValue);
         });
-
-        if (versionEl) {
-            const version = versionEl.value;
-
-            if (version) {
-                setProject({ kaplayVersion: version });
-            }
-
-            debug(0, "[config] KAPLAY.js version set to", version);
-        }
-
-        console.log(useConfig.getState().config);
     };
 
     return (
         <Dialog id="config" onSave={handleSave}>
-            <ConfigProject />
             <div className="divider"></div>
             <ConfigEditor />
         </Dialog>

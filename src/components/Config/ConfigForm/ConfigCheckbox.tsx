@@ -1,13 +1,17 @@
 import { type Config, useConfig } from "../../../hooks/useConfig.ts";
 
+type OnlyBooleans<T> = {
+    [K in keyof T as T[K] extends boolean ? K : never]: T[K];
+};
+
 export interface ConfigCheckboxProps {
     label: string;
-    configKey: keyof Config;
+    configKey: keyof OnlyBooleans<Config>;
 }
 
-// TODO: FIX THIS
 export const ConfigCheckbox = (props: ConfigCheckboxProps) => {
     const { config } = useConfig();
+    const defaultChecked = config[props.configKey];
 
     return (
         <label className="label cursor-pointer">
@@ -16,15 +20,13 @@ export const ConfigCheckbox = (props: ConfigCheckboxProps) => {
             <input
                 type="checkbox"
                 className="checkbox checkbox-primary"
-                defaultChecked={String(config[props.configKey]) == "true"
-                    ? true
-                    : false}
+                defaultChecked={defaultChecked}
                 data-config={props.configKey}
                 data-checkbox
                 data-value={String(config[props.configKey])}
                 onChange={(e) => {
-                    const value = e.target.value == "on" ? "true" : "false";
-                    e.target.setAttribute("value", value);
+                    const value = e.target.checked;
+                    e.target.setAttribute("data-value", String(value));
                 }}
             />
         </label>

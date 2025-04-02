@@ -21,11 +21,6 @@ const defaultExamplesPath = path.join(
 const distPath = path.join(import.meta.dirname, "..", "src", "data");
 
 export const generateExamples = async (examplesPath = defaultExamplesPath) => {
-    const defaultVersion = Object.keys(
-        (await getPackageInfo("kaplay")).versions,
-    ).reverse().find((v) => {
-        return v.startsWith("3001");
-    });
     let exampleCount = 0;
 
     const examples = fs.readdirSync(examplesPath).map((file) => {
@@ -42,7 +37,7 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
                 "",
             ),
             index: (exampleCount++).toString(),
-            version: defaultVersion,
+            version: "master",
         };
     });
 

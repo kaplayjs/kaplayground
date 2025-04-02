@@ -9,13 +9,8 @@ const ProjectStatus = () => {
         useProject();
     const { runtime } = useEditor();
     const [name, setName] = useState(getProject().name);
-    const [version, setVersion] = useState(getProject().kaplayVersion);
 
     const handleSaveProject = () => {
-        setProject({
-            version: version,
-        });
-
         saveProject(name, getProject().id);
     };
 
@@ -31,7 +26,7 @@ const ProjectStatus = () => {
         <div className="flex flex-row gap-2 items-center h-full">
             {!getProject().isDefault && (
                 <>
-                    <div className="uppercase | badge badge-sm p-2 rounded-md">
+                    <div className="uppercase badge badge-sm px-2 py-[3px] h-auto font-semibold tracking-wider bg-base-50 rounded-xl">
                         {getProject().mode === "pj" ? "Project" : "Example"}
                     </div>
 
@@ -75,19 +70,22 @@ const ProjectStatus = () => {
             <select
                 className="select select-xs"
                 onChange={(e) => {
-                    console.log(e.target.value);
-                    setVersion((e.target as HTMLSelectElement).value);
+                    const target = e.target as HTMLSelectElement;
+
+                    setProject({
+                        kaplayVersion: target.value,
+                    });
+
+                    target.value = "now";
                 }}
                 defaultValue={"now"}
             >
-                <option value={"now"} disabled key={"now"}>
-                    {getProject().kaplayVersion}
+                <option id="default-option" value={"now"} disabled key={"now"}>
+                    current: {getProject().kaplayVersion}
                 </option>
                 <option value={"master"} key={"XDD"}>master</option>
                 {runtime.kaplayVersions.map((v, i) => (
-                    <>
-                        <option value={v} key={v + i}>{v}</option>
-                    </>
+                    <option value={v} key={i}>{v}</option>
                 ))}
             </select>
         </div>

@@ -71,7 +71,11 @@ export const useEditor = create<EditorStore>((set, get) => ({
         );
         if (!currentFile) return;
 
-        debug(0, "Editor value updated with", currentFile.path);
+        debug(
+            0,
+            "[monaco] Editor value updated with",
+            currentFile.path.slice(0, 25) + "...",
+        );
 
         get().setEditorValue(currentFile.value);
         get().updateImageDecorations();
@@ -129,7 +133,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         iframe.srcdoc = wrapGame(parsedFiles);
     },
     updateImageDecorations() {
-        debug(0, "Updating gylph decorations");
+        debug(0, "[monaco] Updating gylph decorations");
         const editor = get().runtime.editor;
         const monaco = get().runtime.monaco;
         const gylphDecorations = get().runtime.gylphDecorations;
@@ -196,7 +200,11 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const editor = get().runtime.editor;
         if (!editor) return;
 
-        debug(0, "Setting editor value to", value);
+        debug(
+            0,
+            "[editor] Setting editor value to",
+            value.slice(0, 25) + "...",
+        );
 
         editor.setValue(value);
     },

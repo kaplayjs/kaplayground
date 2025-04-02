@@ -15,13 +15,13 @@ export const ConfigSelect = (props: ConfigSelectProps) => {
 
             <select
                 id="debug-selector"
-                className="select select-bordered"
+                className="select select-bordered select-sm"
                 data-config={props.configKey}
                 data-value={config[props.configKey]}
                 data-select
                 onChange={(e) => {
                     const value = e.target.value;
-                    e.target.setAttribute("value", value);
+                    e.target.setAttribute("data-value", value);
                 }}
             >
                 {props.children}
