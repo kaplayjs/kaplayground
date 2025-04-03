@@ -15,7 +15,7 @@ export const ConfigCheckbox = (props: ConfigCheckboxProps) => {
 
     return (
         <label className="label cursor-pointer">
-            <span className="label-text">{props.label}</span>
+            <span className="label-text font-medium">{props.label}</span>
 
             <input
                 type="checkbox"

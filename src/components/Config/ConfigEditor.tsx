@@ -10,8 +10,10 @@ export const ConfigEditor = () => {
     };
 
     return (
-        <div className="flex flex-col gap-2">
-            <h2 className="text-2xl font-bold pb-4">Editor Configuration</h2>
+        <div className="flex flex-col -mx-1 [&>*]:px-1">
+            <h2 className="text-2xl text-white font-bold px-1 pb-4">
+                Editor Configuration
+            </h2>
 
             <ConfigCheckbox configKey="autoFormat" label="Auto Formatting" />
             <ConfigCheckbox
@@ -25,12 +27,20 @@ export const ConfigEditor = () => {
                 <option value="2">Level 3</option>
             </ConfigSelect>
 
-            <label className="flex justify-between w-full">
-                <div className="label">
-                    <span className="label-text">
+            <div className="divider my-0.5"></div>
+
+            <label className="label flex justify-between items-start w-full">
+                <span className="flex flex-col gap-1">
+                    <span className="label-text font-medium">
                         Delete all data
                     </span>
-                </div>
+
+                    <span className="label-text-alt">
+                        This will delete all saved projects, assets, and
+                        configurations
+                    </span>
+                </span>
+
                 <button
                     className="btn btn-warning btn-sm"
                     onClick={handleDeleteAllData}
