@@ -56,6 +56,8 @@ export const ConsoleView = () => {
                     logs={logs}
                     variant="dark"
                     styles={{
+                        BASE_FONT_FAMILY: "'DM Mono', monospace",
+
                         PADDING: "0.4rem 0",
 
                         LOG_BORDER: "oklch(var(--b1))",

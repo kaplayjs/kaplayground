@@ -17,6 +17,7 @@
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.5",
     "@fontsource-variable/rubik": "^5.1.0",
+    "@fontsource/dm-mono": "^5.2.5",
     "@formkit/drag-and-drop": "^0.0.38",
     "@kaplayjs/crew": "2.0.0-beta.3",
     "@monaco-editor/react": "^4.6.0",

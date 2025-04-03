@@ -22,7 +22,7 @@ export const AboutDialog = () => {
 
                     <div className="mt-4 sm:px-4 text-sm">
                         <div className="flex gap-1 justify-between flex-wrap">
-                            <span className="inline-flex items-center gap-2 font-mono bg-base-200 px-3 py-1.5 rounded-md">
+                            <span className="inline-flex items-center gap-2 font-mono text-xs bg-base-200 px-3 py-1.5 rounded-md">
                                 <span className="hidden sm:inline font-semibold">
                                     Version:
                                 </span>

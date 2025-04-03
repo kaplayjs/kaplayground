@@ -1,3 +1,5 @@
+import defaultTheme from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 export default {
     content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
@@ -5,7 +7,11 @@ export default {
         require("daisyui"),
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                mono: ["\"DM Mono\"", ...defaultTheme.fontFamily.mono],
+            },
+        },
     },
     daisyui: {
         themes: [
