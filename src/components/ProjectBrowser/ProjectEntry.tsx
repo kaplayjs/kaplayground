@@ -35,16 +35,22 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
 
     return (
         <article
-            className="bg-base-200 p-4 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20"
+            className="bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20"
             onClick={handleClick}
         >
-            <div>
-                <h2 className="text-xl font-medium">{example.formatedName}</h2>
-                {example.description && <p>{example.description}</p>}
+            <div className="flex flex-col gap-1.5 flex-1">
+                <h2 className="text-lg font-medium text-white">
+                    {example.formatedName}
+                </h2>
+                {example.description && (
+                    <p className="text-[0.94rem] leading-snug -mt-0.5">
+                        {example.description}
+                    </p>
+                )}
                 {example.difficulty && (
                     <p
                         className={cn(
-                            "font-bold uppercase flex items-center gap-2",
+                            "font-bold text-xs tracking-wider uppercase flex items-center gap-2 py-1 mb-auto",
                             {
                                 "text-primary": example.difficulty === "easy",
                                 "text-warning": example.difficulty === "medium",
@@ -53,23 +59,26 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
                             },
                         )}
                     >
-                        {example.difficulty}
-
                         <img
                             src={imagesPerDifficulty[example.difficulty]}
                             alt={example.difficulty}
-                            className="inline h-5 w-5 object-scale-down"
+                            className="inline h-[1.125rem] w-[1.125rem] object-scale-down"
                         />
+
+                        {example.difficulty}
                     </p>
                 )}
-                {example.tags?.map((tag) => (
-                    <span
-                        key={tag}
-                        className="badge badge-neutral badge-sm mx-1"
-                    >
-                        {tag}
-                    </span>
-                ))}
+
+                <div className="flex flex-wrap gap-1 -mx-1.5 mt-auto">
+                    {example.tags?.map((tag) => (
+                        <span
+                            key={tag}
+                            className="badge badge-neutral badge-sm h-auto py-0.5"
+                        >
+                            {tag}
+                        </span>
+                    ))}
+                </div>
             </div>
         </article>
     );
