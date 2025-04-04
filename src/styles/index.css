@@ -45,26 +45,35 @@ html, body, #root {
     @apply ml-2 before:rounded-sm;
 }
 
+
+#monaco-editor-wrapper .monaco-editor {
+    @apply rounded-xl;
+
+    .quick-input-widget .monaco-highlighted-label .highlight {
+        color: oklch(var(--p));
+    }
+
+    .find-widget .button:not(.disabled):hover,
+    .find-widget .codicon-find-selection:hover {
+        background-color: oklch(var(--bc) / 0.15) !important;
+    }
+}
+
 /* temp */
 
 .monaco-glyph-margin {
 	width: 40px;
 }
 
-
 .monaco-glyph-margin::after {
 	background-image: url("/assetbrew.png");
-    background-size: 24px;
+    background-size: 20px;
 	background-repeat: no-repeat;
+    background-position: center;
     display: inline-block;
     width: 40px;
     height: 20px;
     content:"";
-}
-
-
-.monaco-editor {
-    @apply rounded-xl;
 }
 
 .overflow-guard {

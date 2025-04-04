@@ -164,8 +164,12 @@ export const MonacoEditor: FC<Props> = (props) => {
                 theme={localStorage.getItem("theme") || "Spiker"}
                 language="javascript"
                 options={{
-                    fontSize: 17,
+                    fontFamily: "\"DM Mono\", monospace",
+                    fontSize: 16,
                     lineHeight: 25,
+                    tabSize: 4,
+                    insertSpaces: true,
+                    trimAutoWhitespace: true,
                     padding: {
                         top: 10,
                     },
