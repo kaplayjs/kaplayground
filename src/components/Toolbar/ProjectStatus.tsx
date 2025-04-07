@@ -7,7 +7,7 @@ import { cn } from "../../util/cn.ts";
 const ProjectStatus = () => {
     const { saveProject, getProject, projectIsSaved, setProject } =
         useProject();
-    const { runtime } = useEditor();
+    const { run, runtime } = useEditor();
     const [name, setName] = useState(getProject().name);
 
     const handleSaveProject = (newName = name) => {
@@ -88,16 +88,25 @@ const ProjectStatus = () => {
                         kaplayVersion: target.value,
                     });
 
-                    target.value = "now";
+                    run();
                 }}
-                defaultValue={"now"}
+                defaultValue={getProject().kaplayVersion}
             >
-                <option id="default-option" value={"now"} disabled key={"now"}>
-                    current: {getProject().kaplayVersion}
+                <option
+                    value={"master"}
+                    key={"XDD"}
+                    selected={getProject().kaplayVersion == "master"}
+                >
+                    master
                 </option>
-                <option value={"master"} key={"XDD"}>master</option>
                 {runtime.kaplayVersions.map((v, i) => (
-                    <option value={v} key={i}>{v}</option>
+                    <option
+                        value={v}
+                        key={i}
+                        selected={getProject().kaplayVersion == v}
+                    >
+                        {v}
+                    </option>
                 ))}
             </select>
         </div>
