@@ -33,6 +33,11 @@ html, body, #root {
             color-mix(in oklch, currentColor 20%, transparent)
             transparent;
     }
+
+    .pixelated {
+        -ms-interpolation-mode: nearest-neighbor;
+        image-rendering: pixelated;
+    }
 }
 
 .sash-vertical {
