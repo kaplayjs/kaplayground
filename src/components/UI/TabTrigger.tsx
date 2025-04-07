@@ -5,7 +5,7 @@ export type TabTriggerProps = {
     label: string;
     value: string;
     icon: string;
-    count: number;
+    count?: number;
 };
 
 export const TabTrigger: FC<TabTriggerProps> = (
@@ -14,7 +14,7 @@ export const TabTrigger: FC<TabTriggerProps> = (
     return (
         <Tabs.Trigger
             value={value}
-            className="tab px-6 data-[selected]:tab-active text-sm"
+            className="tab px-6 data-[selected]:tab-active text-sm hover:bg-base-300/70"
         >
             <div className="flex gap-2 items-center justify-center">
                 <img
@@ -25,8 +25,8 @@ export const TabTrigger: FC<TabTriggerProps> = (
 
                 <p className="inline font-medium">{label}</p>
 
-                {count && (
-                    <span className="badge badge-xs font-medium py-1 px-1.5 h-auto bg-base-content/15 border-0">
+                {!!count && (
+                    <span className="badge badge-xs font-medium py-1 px-1.5 min-w-5 h-auto bg-base-content/15 border-0">
                         {count}
                     </span>
                 )}

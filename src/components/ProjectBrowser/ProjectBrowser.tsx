@@ -67,6 +67,7 @@ export const ProjectBrowser = () => {
                     <Tabs.Content
                         value="Projects"
                         className="flex-1 p-5 pt-4 overflow-auto scrollbar-thin"
+                        tabIndex={-1}
                     >
                         <div className="examples-list gap-2 rounded-lg">
                             {filteredProjects().length > 0
@@ -94,6 +95,7 @@ export const ProjectBrowser = () => {
                     <Tabs.Content
                         value="Examples"
                         className="p-5 pt-4 overflow-auto scrollbar-thin"
+                        tabIndex={-1}
                     >
                         <div className="examples-list gap-2 rounded-lg">
                             {filteredExamples().map((example, index) => (
