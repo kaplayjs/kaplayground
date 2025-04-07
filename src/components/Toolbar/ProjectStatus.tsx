@@ -10,12 +10,25 @@ const ProjectStatus = () => {
     const { runtime } = useEditor();
     const [name, setName] = useState(getProject().name);
 
-    const handleSaveProject = () => {
-        saveProject(name, getProject().id);
+    const handleSaveProject = (newName = name) => {
+        if (isSaved(newName)) return;
+
+        saveProject(newName, getProject().id);
+        setProject({
+            isDefault: false,
+        });
     };
 
-    const isSaved = () => {
-        return projectIsSaved(name, getProject().mode);
+    const handleInputChange = (t: React.ChangeEvent<HTMLInputElement>) => {
+        const newName = t.target.value;
+        if (!newName) return;
+
+        setName(newName);
+        handleSaveProject(newName);
+    };
+
+    const isSaved = (n = name) => {
+        return projectIsSaved(n, getProject().mode);
     };
 
     useEffect(() => {
@@ -33,11 +46,9 @@ const ProjectStatus = () => {
                     <input
                         id="projectNameInput"
                         className="input input-xs"
-                        defaultValue={name}
-                        onChange={(t) => {
-                            const newName = t.target.value;
-                            if (newName) setName(newName);
-                        }}
+                        value={name}
+                        placeholder={name}
+                        onChange={handleInputChange}
                     >
                     </input>
                 </>
@@ -46,21 +57,22 @@ const ProjectStatus = () => {
             <button
                 className={cn(
                     "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full",
+                    {
+                        "hover:bg-transparent cursor-default": isSaved(),
+                    },
                 )}
-                onClick={handleSaveProject}
+                onClick={() => handleSaveProject()}
                 data-tooltip-id="global"
-                data-tooltip-html={`Save project`}
+                data-tooltip-html={isSaved()
+                    ? `Autosave Enabled`
+                    : `Save as My Project`}
                 data-tooltip-place="bottom-end"
-                disabled={isSaved()}
             >
                 <img
                     src={assets.save.outlined}
                     alt="Save Project"
                     className={cn("w-6 h-6 transition-all p-[3px]", {
-                        "grayscale opacity-30": projectIsSaved(
-                            name,
-                            getProject().mode,
-                        ),
+                        "grayscale opacity-30": isSaved(),
                     })}
                 />
             </button>
