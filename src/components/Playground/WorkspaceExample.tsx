@@ -19,6 +19,11 @@ type Props = {
 export const WorkspaceExample: FC<Props> = (props) => {
     const { getAllotmentSize, setAllotmentSize } = allotmentStorage("example");
 
+    const handleDragStart = () =>
+        document.documentElement.classList.toggle("select-none", true);
+    const handleDragEnd = () =>
+        document.documentElement.classList.toggle("select-none", false);
+
     return (
         <div
             className={cn("h-full w-screen flex flex-col gap-px bg-base-50", {
@@ -34,12 +39,16 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     vertical={props.isPortrait}
                     defaultSizes={getAllotmentSize("editor")}
                     onChange={e => setAllotmentSize("editor", e)}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
                 >
                     <Allotment.Pane snap>
                         <Allotment
                             vertical
                             defaultSizes={getAllotmentSize("brew")}
                             onChange={e => setAllotmentSize("brew", e)}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
                             className="p-px pt-0"
                         >
                             <Allotment.Pane>

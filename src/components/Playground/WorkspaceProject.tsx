@@ -17,6 +17,11 @@ type Props = {
 export const WorkspaceProject: FC<Props> = (props) => {
     const { getAllotmentSize, setAllotmentSize } = allotmentStorage("project");
 
+    const handleDragStart = () =>
+        document.documentElement.classList.toggle("select-none", true);
+    const handleDragEnd = () =>
+        document.documentElement.classList.toggle("select-none", false);
+
     return (
         <>
             <div
@@ -46,6 +51,8 @@ export const WorkspaceProject: FC<Props> = (props) => {
                                 vertical
                                 defaultSizes={getAllotmentSize("brew", [2, 1])}
                                 onChange={e => setAllotmentSize("brew", e)}
+                                onDragStart={handleDragStart}
+                                onDragEnd={handleDragEnd}
                                 className="pr-px"
                             >
                                 <Allotment.Pane>
