@@ -17,7 +17,8 @@ const imagesPerDifficulty: Record<string, string> = {
 };
 
 export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
-    const { createNewProjectFromDemo, loadProject } = useProject();
+    const { createNewProjectFromDemo, loadProject, currentSelection } =
+        useProject();
 
     const handleClick = () => {
         const dialog = document.querySelector<HTMLDialogElement>(
@@ -37,7 +38,13 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
 
     return (
         <article
-            className="bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20 hover:bg-base-content/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content transition-colors"
+            className={cn(
+                "bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20 hover:bg-base-content/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content transition-colors",
+                {
+                    "bg-base-content/10 ring-1 ring-inset ring-base-content/[4%]":
+                        currentSelection == example.name,
+                },
+            )}
             onClick={handleClick}
             onKeyUpCapture={e => e.key == "Enter" && handleClick()}
             tabIndex={0}

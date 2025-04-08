@@ -7,6 +7,7 @@ const ExampleList: FC = () => {
         getSavedProjects,
         loadProject,
         createNewProjectFromDemo,
+        currentSelection,
     } = useProject();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
@@ -26,9 +27,9 @@ const ExampleList: FC = () => {
             <select
                 className="join-item | select select-xs w-full max-w-xs"
                 onChange={handleExampleChange}
-                defaultValue={"none"}
+                value={currentSelection ?? "upj-Untitled"}
             >
-                <option className="text-md" disabled value="none">
+                <option className="text-md" disabled value="upj-Untitled">
                     My Projects
                 </option>
 
@@ -38,8 +39,8 @@ const ExampleList: FC = () => {
                     </option>
                 ))}
 
-                <option className="text-md" disabled value="none">
-                    KAPLAY Demos
+                <option className="text-md" disabled value="uex-Untitled">
+                    My Examples
                 </option>
 
                 {getSavedProjects("ex").map((project) => (
