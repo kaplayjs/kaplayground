@@ -37,7 +37,7 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
 
     return (
         <article
-            className="bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20 hover:bg-base-content/10 focus:outline-none focus:ring-2 focus:ring-base-content transition-colors"
+            className="bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20 hover:bg-base-content/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content transition-colors"
             onClick={handleClick}
             onKeyUpCapture={e => e.key == "Enter" && handleClick()}
             tabIndex={0}
