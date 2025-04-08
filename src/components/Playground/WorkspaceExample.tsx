@@ -1,5 +1,6 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
+import { allotmentStorage } from "../../util/allotmentStorage.ts";
 import { cn } from "../../util/cn";
 import { AssetBrew } from "../Assets/AssetBrew.tsx";
 import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
@@ -16,6 +17,8 @@ type Props = {
 };
 
 export const WorkspaceExample: FC<Props> = (props) => {
+    const { getAllotmentSize, setAllotmentSize } = allotmentStorage("example");
+
     return (
         <div
             className={cn("h-full w-screen flex flex-col gap-px bg-base-50", {
@@ -29,12 +32,14 @@ export const WorkspaceExample: FC<Props> = (props) => {
             <main className="h-full overflow-hidden">
                 <Allotment
                     vertical={props.isPortrait}
-                    defaultSizes={[0.5, 0.5]}
+                    defaultSizes={getAllotmentSize("editor")}
+                    onChange={e => setAllotmentSize("editor", e)}
                 >
                     <Allotment.Pane snap>
                         <Allotment
                             vertical
-                            defaultSizes={[2, 0.2]}
+                            defaultSizes={getAllotmentSize("brew")}
+                            onChange={e => setAllotmentSize("brew", e)}
                             className="p-px pt-0"
                         >
                             <Allotment.Pane>
@@ -47,6 +52,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                                 snap
                                 maxSize={80}
                                 minSize={72}
+                                preferredSize={72}
                             >
                                 <AssetBrew />
                             </Allotment.Pane>
@@ -55,7 +61,8 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     <Allotment.Pane snap>
                         <Allotment
                             vertical
-                            defaultSizes={[1, 0.3]}
+                            defaultSizes={getAllotmentSize("console")}
+                            onChange={e => setAllotmentSize("console", e)}
                             className="pr-px pb-px"
                         >
                             <Allotment.Pane>
@@ -65,6 +72,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                                 className="pt-px"
                                 snap
                                 minSize={34}
+                                preferredSize={72}
                             >
                                 <ConsoleView />
                             </Allotment.Pane>

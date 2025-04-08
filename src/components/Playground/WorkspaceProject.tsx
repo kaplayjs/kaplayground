@@ -1,5 +1,6 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
+import { allotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
 import { Assets } from "../Assets";
 import { MonacoEditor } from "../Editor/MonacoEditor";
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export const WorkspaceProject: FC<Props> = (props) => {
+    const { getAllotmentSize, setAllotmentSize } = allotmentStorage("project");
+
     return (
         <>
             <div
@@ -30,8 +33,9 @@ export const WorkspaceProject: FC<Props> = (props) => {
 
                 <main className="h-full overflow-hidden">
                     <Allotment
-                        defaultSizes={[0.5, 2, 2]}
                         vertical={props.isPortrait}
+                        defaultSizes={getAllotmentSize("editor", [0.5, 2, 2])}
+                        onChange={e => setAllotmentSize("editor", e)}
                         className="p-px pt-0"
                     >
                         <Allotment.Pane snap minSize={200} className="pr-px">
@@ -40,7 +44,8 @@ export const WorkspaceProject: FC<Props> = (props) => {
                         <Allotment.Pane snap>
                             <Allotment
                                 vertical
-                                defaultSizes={[2, 1]}
+                                defaultSizes={getAllotmentSize("brew", [2, 1])}
+                                onChange={e => setAllotmentSize("brew", e)}
                                 className="pr-px"
                             >
                                 <Allotment.Pane>
