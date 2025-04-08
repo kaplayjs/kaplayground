@@ -90,23 +90,11 @@ const ProjectStatus = () => {
 
                     run();
                 }}
-                defaultValue={getProject().kaplayVersion}
+                value={getProject().kaplayVersion}
             >
-                <option
-                    value={"master"}
-                    key={"XDD"}
-                    selected={getProject().kaplayVersion == "master"}
-                >
-                    master
-                </option>
+                <option value={"master"} key={"XDD"}>master</option>
                 {runtime.kaplayVersions.map((v, i) => (
-                    <option
-                        value={v}
-                        key={i}
-                        selected={getProject().kaplayVersion == v}
-                    >
-                        {v}
-                    </option>
+                    <option value={v} key={i}>{v}</option>
                 ))}
             </select>
         </div>
