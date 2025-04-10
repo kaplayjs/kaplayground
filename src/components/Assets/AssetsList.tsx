@@ -24,7 +24,7 @@ const AssetsList: FC<Props> = ({ kind, visibleIcon }) => {
     return (
         <ul
             ref={parent}
-            className="inline-flex flex-wrap gap-6 content-start overflow-auto max-h-44 "
+            className="inline-flex flex-wrap gap-6 content-start h-full pb-14 overflow-auto scrollbar-thin"
         >
             {draggableAssets.map((resource, i) => (
                 <AssetsItem

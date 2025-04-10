@@ -10,7 +10,7 @@ const AssetsTab: FC<TabProps> = ({ label, icon }) => {
     return (
         <Tabs.Trigger
             value={label}
-            className="tab px-12 data-[selected]:tab-active"
+            className="tab data-[selected]:tab-active !border-t-transparent !border-x-0 !rounded-t-[inherit] hover:bg-base-300/70"
         >
             <div className="flex gap-2 items-center justify-center">
                 <p className="inline font-medium">{label}</p>

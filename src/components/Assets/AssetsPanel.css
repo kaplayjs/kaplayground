@@ -1,6 +1,6 @@
 .dragging-border {
     display: block;
-    outline: 2px white dashed;
+    outline: 2px oklch(var(--bc) / 50%) dashed;
     outline-offset: -4px;
     color: white;
     border-radius: 4px;

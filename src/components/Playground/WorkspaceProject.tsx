@@ -1,4 +1,4 @@
-import { Allotment } from "allotment";
+import { Allotment, LayoutPriority } from "allotment";
 import type { FC } from "react";
 import { allotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
@@ -43,13 +43,19 @@ export const WorkspaceProject: FC<Props> = (props) => {
                         onChange={e => setAllotmentSize("editor", e)}
                         className="p-px pt-0"
                     >
-                        <Allotment.Pane snap minSize={200} className="pr-px">
+                        <Allotment.Pane
+                            snap
+                            minSize={200}
+                            preferredSize={210}
+                            priority={LayoutPriority.Low}
+                            className="pr-px"
+                        >
                             <FileTree />
                         </Allotment.Pane>
                         <Allotment.Pane snap>
                             <Allotment
                                 vertical
-                                defaultSizes={getAllotmentSize("brew", [2, 1])}
+                                defaultSizes={getAllotmentSize("brew")}
                                 onChange={e => setAllotmentSize("brew", e)}
                                 onDragStart={handleDragStart}
                                 onDragEnd={handleDragEnd}
@@ -60,7 +66,11 @@ export const WorkspaceProject: FC<Props> = (props) => {
                                         onMount={props.onMount}
                                     />
                                 </Allotment.Pane>
-                                <Allotment.Pane snap>
+                                <Allotment.Pane
+                                    snap
+                                    preferredSize={210}
+                                    className="pt-px"
+                                >
                                     <Assets />
                                 </Allotment.Pane>
                             </Allotment>
