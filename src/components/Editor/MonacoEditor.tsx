@@ -171,7 +171,7 @@ export const MonacoEditor: FC<Props> = (props) => {
                     insertSpaces: true,
                     trimAutoWhitespace: true,
                     padding: {
-                        top: 10,
+                        top: 12,
                     },
                     glyphMargin: true,
                     lineNumbersMinChars: 2,

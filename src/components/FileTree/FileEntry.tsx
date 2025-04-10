@@ -28,7 +28,7 @@ const FileButton: FC<{
 }> = (props) => {
     return (
         <button
-            className="btn btn-ghost btn-xs rounded-sm px-1"
+            className="btn btn-ghost btn-xs rounded-md px-1 [.btn-primary_&:hover]:bg-white/30"
             onClick={props.onClick}
             hidden={props.hidden}
         >
@@ -45,6 +45,8 @@ const FileButton: FC<{
 export const FileEntry: FC<Props> = ({ file }) => {
     const { removeFile, project: project, setProject } = useProject();
     const { getRuntime, setCurrentFile } = useEditor();
+
+    const isRoot = () => !file.path.includes("/");
 
     const handleClick: MouseEventHandler = () => {
         setCurrentFile(file.path);
@@ -116,8 +118,9 @@ export const FileEntry: FC<Props> = ({ file }) => {
     return (
         <div
             className={cn(
-                "file | btn btn-sm w-full justify-start  px-2",
+                "file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0",
                 {
+                    "font-normal pl-3": !isRoot(),
                     "btn-primary": getRuntime().currentFile === file.path,
                     "btn-ghost": getRuntime().currentFile !== file.path,
                 },
@@ -125,12 +128,14 @@ export const FileEntry: FC<Props> = ({ file }) => {
             onClick={handleClick}
             data-file-kind={file.kind}
         >
-            <img
-                src={logoByKind[file.kind]}
-                alt={file.kind}
-                className="w-4 h-4 ml-auto object-scale-down"
-            />
-            <span className="text-left truncate w-[50%] flex-1">
+            {isRoot() && (
+                <img
+                    src={logoByKind[file.kind]}
+                    alt={file.kind}
+                    className="w-4 h-4 ml-auto object-scale-down"
+                />
+            )}
+            <span className="text-left truncate w-[50%] flex-1 py-0.5">
                 {removeExtension(file.name)}
             </span>
             <div role="toolbar" className="file-actions hidden">

@@ -41,6 +41,8 @@ export const WorkspaceProject: FC<Props> = (props) => {
                         vertical={props.isPortrait}
                         defaultSizes={getAllotmentSize("editor", [0.5, 2, 2])}
                         onChange={e => setAllotmentSize("editor", e)}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
                         className="p-px pt-0"
                     >
                         <Allotment.Pane
