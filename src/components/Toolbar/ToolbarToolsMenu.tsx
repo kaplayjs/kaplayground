@@ -55,7 +55,7 @@ const ToolbarToolsMenu: FC = () => {
     };
 
     return (
-        <ul className="flex flex-row items-center justify-center h-full w-full md:w-fit">
+        <ul className="flex flex-row items-center justify-center h-full w-full md:w-fit bg-base-300 rounded-b-xl">
             <ToolbarToolItem>
                 <ToolbarButton
                     icon={assets.play.outlined}

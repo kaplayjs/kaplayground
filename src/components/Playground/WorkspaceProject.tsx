@@ -36,7 +36,7 @@ export const WorkspaceProject: FC<Props> = (props) => {
                     <Toolbar />
                 </header>
 
-                <main className="h-full overflow-hidden">
+                <main className="h-full min-h-0 overflow-hidden">
                     <Allotment
                         vertical={props.isPortrait}
                         defaultSizes={getAllotmentSize("editor", [0.5, 2, 2])}

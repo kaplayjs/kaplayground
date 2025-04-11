@@ -34,7 +34,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                 {props.isPortrait && <ToolbarToolsMenu /> || <Toolbar />}
             </header>
 
-            <main className="h-full overflow-hidden">
+            <main className="h-full min-h-0 overflow-hidden">
                 <Allotment
                     vertical={props.isPortrait}
                     defaultSizes={getAllotmentSize("editor")}
@@ -91,7 +91,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
             </main>
 
             {props.isPortrait && (
-                <footer className="h-10 flex justify-center items-center bg-base-300">
+                <footer className="h-10 flex justify-center items-center -mt-px bg-base-300 rounded-t-xl">
                     <ExampleList />
                 </footer>
             )}
