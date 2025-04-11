@@ -10,7 +10,7 @@ type Props = {
 
 const AssetsAddButton: FC<Props> = ({ accept, inputProps }) => {
     return (
-        <div className="flex justify-end items-center min-h-10">
+        <div className="absolute bottom-0 right-0 flex justify-end items-center min-h-10">
             <label>
                 <div className="btn btn-primary px-2">
                     <img

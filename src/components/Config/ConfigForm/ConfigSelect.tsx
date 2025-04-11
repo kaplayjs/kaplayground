@@ -11,7 +11,7 @@ export const ConfigSelect = (props: ConfigSelectProps) => {
 
     return (
         <label className="label cursor-pointer">
-            <span className="label-text">{props.label}</span>
+            <span className="label-text font-medium">{props.label}</span>
 
             <select
                 id="debug-selector"

@@ -4,7 +4,7 @@ import { cn } from "../../util/cn";
 export type ViewProps = PropsWithChildren<
     {
         direction?: "row" | "column";
-        gap?: 2 | 4 | 8;
+        gap?: 1.5 | 2 | 4 | 8;
         padding?: 2 | 4 | 8;
         justify?: "center" | "start" | "end" | "between" | "around";
         height?: "full" | "screen";
@@ -43,6 +43,7 @@ export const View: FC<ViewProps> = (props) => {
                 "flex": needsFlex,
                 "flex-col": direction === "column",
                 "flex-row": direction === "row",
+                "gap-1.5": gap === 1.5,
                 "gap-2": gap === 2,
                 "gap-4": gap === 4,
                 "gap-8": gap === 8,

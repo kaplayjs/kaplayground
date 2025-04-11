@@ -2,6 +2,29 @@
 
 Format: Major.Minor.Patch (D/M/Y)
 
+## [2.1.1] - WIP
+
+### Added
+
+- New KAPLAYGROUND logo
+- Console log pane added
+- Asset brew pane added to Example workspace
+- Project now auto-saves when renamed
+- User-friendly empty state screen for My Projects in Projects Browser added
+- Editor word wrap toggling as a command and config option
+
+### Changed
+
+- Overal design updated to match the website redesign and rebrand
+- Editor now has a custom color theme
+- Resized pane sizes are now remembered after a page reload
+- Current project is highlighted and synced across Projects Browser and select
+- Project reruns on version change
+
+### Fixed
+
+- Project naming and filtering by project type in the Projects select
+
 ## [2.1.0] - 2025-03-25
 
 ### Added

@@ -45,7 +45,7 @@ const AssetsItem: FC<ResourceProps> = ({ asset, visibleIcon }) => {
                 onDragStartCapture={handleResourceDrag}
             >
                 <li>
-                    <div className="p-2 hover:bg-base-300 cursor-grab">
+                    <div className="p-2 rounded-lg hover:bg-base-300 cursor-grab">
                         <img
                             draggable={false}
                             src={visibleIcon ?? asset.url}
@@ -60,15 +60,15 @@ const AssetsItem: FC<ResourceProps> = ({ asset, visibleIcon }) => {
             </ContextMenu.Trigger>
 
             <ContextMenu.Portal>
-                <ContextMenu.Content className="rounded-btn | bg-base-300 | flex flex-col">
+                <ContextMenu.Content className="rounded-btn p-1 bg-base-300 flex flex-col">
                     <ContextMenu.Item
-                        className="btn btn-ghost justify-start"
+                        className="btn btn-sm btn-ghost justify-start rounded-md"
                         onClick={handleResourceDelete}
                     >
                         Delete
                     </ContextMenu.Item>
                     <ContextMenu.Item
-                        className="btn btn-ghost justify-start"
+                        className="btn btn-sm btn-ghost justify-start rounded-md"
                         onClick={handleResourceLoad}
                     >
                         Load in assets.js

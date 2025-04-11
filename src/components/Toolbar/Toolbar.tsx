@@ -18,7 +18,7 @@ export const Toolbar = () => {
                         alt="Logo"
                         // @ts-ignore
                         src={assets.ka.outlined}
-                        className="h-8"
+                        className="h-6"
                         draggable={false}
                     />
                     <h1 className="sr-only">KAPLAY</h1>

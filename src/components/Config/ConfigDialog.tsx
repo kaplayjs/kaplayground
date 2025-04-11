@@ -22,7 +22,6 @@ const ConfigDialog = () => {
 
     return (
         <Dialog id="config" onSave={handleSave}>
-            <div className="divider"></div>
             <ConfigEditor />
         </Dialog>
     );

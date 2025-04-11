@@ -1,5 +1,6 @@
-import { Allotment } from "allotment";
+import { Allotment, LayoutPriority } from "allotment";
 import type { FC } from "react";
+import { allotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
 import { Assets } from "../Assets";
 import { MonacoEditor } from "../Editor/MonacoEditor";
@@ -14,37 +15,64 @@ type Props = {
 };
 
 export const WorkspaceProject: FC<Props> = (props) => {
+    const { getAllotmentSize, setAllotmentSize } = allotmentStorage("project");
+
+    const handleDragStart = () =>
+        document.documentElement.classList.toggle("select-none", true);
+    const handleDragEnd = () =>
+        document.documentElement.classList.toggle("select-none", false);
+
     return (
         <>
             <div
-                className={cn("h-screen w-screen flex flex-col", {
-                    "hidden": props.editorIsLoading,
-                })}
+                className={cn(
+                    "h-screen w-screen flex flex-col gap-px bg-base-50",
+                    {
+                        "hidden": props.editorIsLoading,
+                    },
+                )}
             >
                 <header className="h-9 flex">
                     <Toolbar />
                 </header>
 
-                <main className="h-full overflow-hidden">
+                <main className="h-full min-h-0 overflow-hidden">
                     <Allotment
-                        defaultSizes={[0.5, 2, 2]}
                         vertical={props.isPortrait}
+                        defaultSizes={getAllotmentSize("editor", [0.5, 2, 2])}
+                        onChange={e => setAllotmentSize("editor", e)}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                        className="p-px pt-0"
                     >
-                        <Allotment.Pane snap minSize={200}>
+                        <Allotment.Pane
+                            snap
+                            minSize={200}
+                            preferredSize={210}
+                            priority={LayoutPriority.Low}
+                            className="pr-px"
+                        >
                             <FileTree />
                         </Allotment.Pane>
                         <Allotment.Pane snap>
                             <Allotment
                                 vertical
-                                defaultSizes={[2, 1]}
-                                className="p-0.5"
+                                defaultSizes={getAllotmentSize("brew")}
+                                onChange={e => setAllotmentSize("brew", e)}
+                                onDragStart={handleDragStart}
+                                onDragEnd={handleDragEnd}
+                                className="pr-px"
                             >
                                 <Allotment.Pane>
                                     <MonacoEditor
                                         onMount={props.onMount}
                                     />
                                 </Allotment.Pane>
-                                <Allotment.Pane snap>
+                                <Allotment.Pane
+                                    snap
+                                    preferredSize={210}
+                                    className="pt-px"
+                                >
                                     <Assets />
                                 </Allotment.Pane>
                             </Allotment>

@@ -41,6 +41,8 @@ export interface ProjectSlice {
         files: Map<string, File>,
         assets: Map<string, Asset>,
     ) => void;
+    currentSelection: string | null;
+    setCurrentSelection: (id: string | null) => void;
 }
 
 export const createProjectSlice: StateCreator<
@@ -70,6 +72,8 @@ export const createProjectSlice: StateCreator<
             },
         }));
     },
+    currentSelection: null,
+    setCurrentSelection: (sel) => set({ currentSelection: sel }),
     createNewProject: (filter: ProjectMode, demo?: string) => {
         const files = new Map<string, File>();
         const assets = new Map<string, Asset>();
@@ -142,6 +146,8 @@ export const createProjectSlice: StateCreator<
             },
         }));
 
+        get().setCurrentSelection(get().project.id);
+
         // Editor stuff
         useEditor.getState().updateAndRun();
     },
@@ -168,23 +174,27 @@ export const createProjectSlice: StateCreator<
                 id: `${get().project.mode}-${id}`,
             },
         });
+
+        get().setCurrentSelection(get().project.id);
     },
     projectIsSaved: (name: string, filter: "pj" | "ex") => {
         return get().getSavedProjects().includes(`${filter}-${name}`);
     },
     getSavedProjects: (filter) => {
-        const prefix = filter ? `${filter}-` : "pj-";
-        const secondPrefix = "ex-";
-        let keys: string[] = [];
+        const keys: string[] = [];
 
         for (let i = 0, len = localStorage.length; i < len; ++i) {
             const localKey = localStorage.key(i);
+            if (!localKey) continue;
 
-            if (
-                (localKey && localKey.startsWith(prefix))
-                || (localKey && localKey.startsWith(secondPrefix))
-            ) {
-                keys.push(localKey);
+            if (filter) {
+                if (localKey.startsWith(`${filter}-`)) {
+                    keys.push(localKey);
+                }
+            } else {
+                if (localKey.startsWith("pj-") || localKey.startsWith("ex-")) {
+                    keys.push(localKey);
+                }
             }
         }
 
@@ -230,6 +240,8 @@ export const createProjectSlice: StateCreator<
         });
 
         set({});
+
+        get().setCurrentSelection(get().project.id);
 
         // Editor stuff
         useEditor.getState().updateAndRun();

@@ -36,7 +36,7 @@ export const FileToolbar: FC<Props> = (props) => {
     return (
         <div className="flex" role="toolbar">
             <button
-                className="btn btn-ghost btn-xs rounded-sm px-1"
+                className="btn btn-ghost btn-xs rounded-md px-1"
                 onClick={handleAddFile}
             >
                 <img

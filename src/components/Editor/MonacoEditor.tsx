@@ -22,7 +22,7 @@ export const MonacoEditor: FC<Props> = (props) => {
         getRuntime,
         setRuntime,
     } = useEditor();
-    const { getConfig } = useConfig();
+    const { getConfig, setConfigKey } = useConfig();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -148,6 +148,19 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
+        editor.addAction({
+            id: "toggle-word-wrap",
+            label: "Toggle Word Wrap",
+            keybindings: [
+                monaco.KeyMod.Alt | monaco.KeyCode.KeyZ,
+            ],
+            run: () => {
+                const isOn = editor.getRawOptions().wordWrap === "on";
+                editor.updateOptions({ wordWrap: isOn ? "off" : "on" });
+                setConfigKey("wordWrap", !isOn);
+            },
+        });
+
         let decorations = editor.createDecorationsCollection([]);
         getRuntime().gylphDecorations = decorations;
 
@@ -164,13 +177,29 @@ export const MonacoEditor: FC<Props> = (props) => {
                 theme={localStorage.getItem("theme") || "Spiker"}
                 language="javascript"
                 options={{
-                    fontSize: 20,
+                    fontFamily: "\"DM Mono\", monospace",
+                    fontSize: 16,
+                    lineHeight: 25,
+                    tabSize: 4,
+                    insertSpaces: true,
+                    trimAutoWhitespace: true,
+                    padding: {
+                        top: 12,
+                    },
                     glyphMargin: true,
                     lineNumbersMinChars: 2,
-                    folding: false,
+                    folding: true,
                     minimap: {
                         enabled: false,
                     },
+                    scrollbar: {
+                        useShadows: false,
+                        verticalScrollbarSize: 12,
+                        horizontalScrollbarSize: 12,
+                    },
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
+                    wordWrap: getConfig().wordWrap ? "on" : "off",
                 }}
                 path={getRuntime().currentFile}
             />
