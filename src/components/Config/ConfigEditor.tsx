@@ -16,10 +16,13 @@ export const ConfigEditor = () => {
             </h2>
 
             <ConfigCheckbox configKey="autoFormat" label="Auto Formatting" />
+
             <ConfigCheckbox
                 configKey="funFormat"
-                label="Format woah! effect"
+                label="Format Woah! Effect"
             />
+
+            <ConfigCheckbox configKey="wordWrap" label="Word Wrap" />
 
             <ConfigSelect configKey="debugLevel" label="Debug Level">
                 <option value="0">Level 1</option>

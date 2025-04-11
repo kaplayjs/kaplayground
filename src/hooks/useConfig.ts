@@ -14,6 +14,8 @@ export interface Config {
     autoFormat: boolean;
     /** If on formatting format will do a fun effect */
     funFormat: boolean;
+    /** Toggles editor word-wrapping */
+    wordWrap: boolean;
 }
 
 type Store = {
@@ -29,6 +31,7 @@ export const useConfig = create<Store>()(persist((set, get) => ({
         debugLevel: null,
         autoFormat: true,
         funFormat: false,
+        wordWrap: false,
     },
     setConfigKey(key, value) {
         debug(0, "[config] Setting config key", key, "to", value);
