@@ -15,8 +15,8 @@ export const AboutDialog = () => {
                 </header>
 
                 <main className="max-w-xs mx-auto py-2">
-                    <p className="sm:px-6 py-2">
-                        KAPLAYGROUND is the web editor designed for creating
+                    <p className="text-center sm:px-6 py-2">
+                        KAPLAYGROUND is a web editor designed for creating
                         KAPLAY games.
                     </p>
 
@@ -41,8 +41,7 @@ export const AboutDialog = () => {
                                     alt="KAPLAYGROUND"
                                     src={assets.marks_legend.outlined}
                                     className="h-5 object-scale-down"
-                                >
-                                </img>
+                                />
 
                                 KAPLAY Docs
                             </a>
@@ -60,8 +59,7 @@ export const AboutDialog = () => {
                                     src={assets.github.outlined}
                                     className="h-5 object-scale-down"
                                     aria-hidden="true"
-                                >
-                                </img>
+                                />
 
                                 Give a star
                             </a>
@@ -75,8 +73,7 @@ export const AboutDialog = () => {
                                     src={assets.burpman.outlined}
                                     className="h-5 object-scale-down"
                                     aria-hidden="true"
-                                >
-                                </img>
+                                />
 
                                 Report an issue
                             </a>
