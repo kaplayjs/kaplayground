@@ -6,11 +6,12 @@ import fs from "fs";
 import path from "path";
 import type { Packument } from "query-registry";
 
+// @ts-ignore
 async function getPackageInfo(name: string): Promise<Packument> {
     const endpoint = `https://registry.npmjs.org/${name}`;
     const res = await fetch(endpoint);
     const data = await res.json();
-    return data;
+    return data as Packument;
 }
 
 const defaultExamplesPath = path.join(
@@ -37,12 +38,12 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
             "",
         ).trim();
 
-        const tags: Record<string, string> = codeJsdoc[0].tags?.reduce(
+        const tags = codeJsdoc[0].tags?.reduce(
             (acc, tag) => {
                 acc[tag.tag] = tag.name + " " + tag.description;
                 return acc;
             },
-            {},
+            {} as Record<string, string>,
         );
 
         const example: Record<string, any> = {
