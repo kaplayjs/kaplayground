@@ -1,5 +1,5 @@
 import type { ChangeEvent, FC } from "react";
-import { examples } from "../../data/examples";
+import { demos } from "../../data/demos";
 import { useProject } from "../../hooks/useProject";
 
 const ExampleList: FC = () => {
@@ -11,12 +11,13 @@ const ExampleList: FC = () => {
     } = useProject();
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
-        const demoIndex = ev.target.selectedOptions[0].getAttribute(
-            "data-def-example",
+        const demoStringId = ev.target.selectedOptions[0].getAttribute(
+            "data-example-id",
         );
 
-        if (demoIndex) {
-            createNewProjectFromDemo(demoIndex);
+        if (demoStringId) {
+            const demoId = parseInt(demoStringId);
+            createNewProjectFromDemo(demoId);
         } else {
             loadProject(ev.target.value);
         }
@@ -51,8 +52,8 @@ const ExampleList: FC = () => {
 
                 <option className="text-md" disabled>KAPLAY Demos</option>
 
-                {examples.map((example) => (
-                    <option key={example.name} data-def-example={example.index}>
+                {demos.map((example) => (
+                    <option key={example.name} data-example-id={example.id}>
                         {example.name}
                     </option>
                 ))}

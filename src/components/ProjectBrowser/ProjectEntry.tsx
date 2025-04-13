@@ -1,11 +1,20 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
-import type { Example } from "../../data/examples";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 
+type LoadedProject = {
+    name: string;
+    formattedName: string;
+    description: string | null;
+    id: number;
+    difficulty?: string;
+    tags?: string[];
+    version: string;
+};
+
 type Props = {
-    example: Omit<Example, "code">;
+    project: LoadedProject;
     isProject?: boolean;
 };
 
@@ -16,7 +25,7 @@ const imagesPerDifficulty: Record<string, string> = {
     "auto": assets.ghostiny.outlined,
 };
 
-export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
+export const ProjectEntry: FC<Props> = ({ project: example, isProject }) => {
     const { createNewProjectFromDemo, loadProject, currentSelection } =
         useProject();
 
@@ -30,7 +39,7 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
         if (isProject) {
             loadProject(example.name);
         } else {
-            createNewProjectFromDemo(example.index);
+            createNewProjectFromDemo(example.id);
         }
 
         dialog?.close();
@@ -52,7 +61,7 @@ export const ExampleEntry: FC<Props> = ({ example, isProject }) => {
         >
             <div className="flex flex-col gap-1.5 flex-1">
                 <h2 className="text-lg font-medium text-white">
-                    {example.formatedName}
+                    {example.formattedName}
                 </h2>
                 {example.description && (
                     <p className="text-[0.94rem] leading-snug -mt-0.5">

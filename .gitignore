@@ -26,3 +26,4 @@ pnpm-debug.log*
 .wrangler
 public/kaboom.js
 public/kaboom.js.map
+lib.d.ts

@@ -50,6 +50,9 @@ importers:
       magic-string:
         specifier: ^0.30.11
         version: 0.30.11
+      monaco-editor:
+        specifier: 0.48.0
+        version: 0.48.0
       pako:
         specifier: ^2.1.0
         version: 2.1.0
@@ -123,15 +126,15 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
+      comment-parser:
+        specifier: ^1.4.1
+        version: 1.4.1
       dprint:
         specifier: ^0.45.1
         version: 0.45.1
       kaplay:
         specifier: 3001.0.0
         version: 3001.0.0
-      monaco-editor:
-        specifier: ^0.48.0
-        version: 0.48.0
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
@@ -1245,6 +1248,10 @@ packages:
   commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
     engines: {node: '>= 10'}
+
+  comment-parser@1.4.1:
+    resolution: {integrity: sha512-buhp5kePrmda3vhc5B9t7pUQXAb2Tnd0qgpkIhPhkHXxJpiPJ11H0ZEU0oBpJ2QztSbzG/ZxMj/CHsYJqRHmyg==}
+    engines: {node: '>= 12.0.0'}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -3362,6 +3369,8 @@ snapshots:
   commander@5.1.0: {}
 
   commander@7.2.0: {}
+
+  comment-parser@1.4.1: {}
 
   concat-map@0.0.1: {}
 

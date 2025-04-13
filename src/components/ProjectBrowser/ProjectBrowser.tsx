@@ -1,6 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { examples, type Tag } from "../../data/examples";
-import { ExampleEntry } from "./ProjectEntry";
+import { demos } from "../../data/demos";
+import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
 import { useCallback, useState } from "react";
@@ -17,8 +17,8 @@ export const ProjectBrowser = () => {
     const [filter, setFilter] = useState("");
     const filteredExamples = useCallback(
         () =>
-            examples.filter((example) =>
-                example.formatedName
+            demos.filter((example) =>
+                example.formattedName
                     .toLowerCase()
                     .includes(filter.toLowerCase())
             ),
@@ -88,21 +88,24 @@ export const ProjectBrowser = () => {
                                 <div className="examples-list gap-2 rounded-lg">
                                     {filteredProjects().length > 0
                                         && filteredProjects().map((project) => (
-                                            <ExampleEntry
-                                                example={{
-                                                    description: null,
-                                                    formatedName: project.slice(
-                                                        3,
-                                                    ),
+                                            <ProjectEntry
+                                                project={{
+                                                    formattedName: project
+                                                        .slice(
+                                                            3,
+                                                        ),
                                                     name: project,
-                                                    index: "0",
                                                     tags: [
                                                         ...project.startsWith(
                                                                 "pj-",
                                                             )
-                                                            ? ["project"] as Tag[]
-                                                            : ["example"] as Tag[],
+                                                            ? ["project"]
+                                                            : ["example"],
                                                     ],
+                                                    description: "",
+                                                    id: 0,
+                                                    version: "2.0.0",
+                                                    difficulty: "",
                                                 }}
                                                 isProject
                                                 key={project}
@@ -166,7 +169,7 @@ export const ProjectBrowser = () => {
                     >
                         <div className="examples-list gap-2 rounded-lg">
                             {filteredExamples().map((example, index) => (
-                                <ExampleEntry example={example} key={index} />
+                                <ProjectEntry project={example} key={index} />
                             ))}
                         </div>
                     </Tabs.Content>

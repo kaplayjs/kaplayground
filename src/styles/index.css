@@ -66,15 +66,12 @@ html, body, #root {
 
 /* temp */
 
-.monaco-glyph-margin {
+.monaco-glyph-margin-preview-image {
 	width: 40px;
-}
-
-.monaco-glyph-margin::after {
-	background-image: url("/assetbrew.png");
     background-size: 20px;
 	background-repeat: no-repeat;
     background-position: center;
+    background-image: var(--image);
     display: inline-block;
     width: 40px;
     height: 20px;

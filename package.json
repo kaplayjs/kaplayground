@@ -4,15 +4,16 @@
   "version": "2.1.0",
   "bin": "scripts/cli.js",
   "scripts": {
-    "install": "cd kaplay && pnpm i",
     "dev": "vite dev",
     "start": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "generate:examples": "node --experimental-strip-types scripts/examples.ts",
+    "generate:lib": "node --experimental-strip-types scripts/types.ts",
     "fmt": "dprint fmt",
     "check": "tsc --noEmit --p tsconfig.app.json",
-    "dev:bin": "node scripts/cli.js --examples=fakeExamples"
+    "dev:bin": "node scripts/cli.js --examples=fakeExamples",
+    "prepare": "cd kaplay && pnpm i && cd .. && npm run generate:lib && npm run generate:examples"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.5",
@@ -29,6 +30,7 @@
     "console-feed": "^3.8.0",
     "daisyui": "^4.12.13",
     "magic-string": "^0.30.11",
+    "monaco-editor": "0.48.0",
     "pako": "^2.1.0",
     "query-registry": "^3.0.1",
     "react": "^18.3.1",
@@ -55,9 +57,9 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
+    "comment-parser": "^1.4.1",
     "dprint": "^0.45.1",
     "kaplay": "3001.0.0",
-    "monaco-editor": "^0.48.0",
     "postcss": "^8.4.47",
     "vite": "^5.4.8",
     "vite-plugin-custom-env": "^1.0.3",

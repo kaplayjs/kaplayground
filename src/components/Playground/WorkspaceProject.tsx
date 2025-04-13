@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { allotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
 import { Assets } from "../Assets";
+import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
 import { MonacoEditor } from "../Editor/MonacoEditor";
 import { FileTree } from "../FileTree";
 import { Toolbar } from "../Toolbar";
@@ -78,7 +79,24 @@ export const WorkspaceProject: FC<Props> = (props) => {
                             </Allotment>
                         </Allotment.Pane>
                         <Allotment.Pane snap>
-                            <GameView />
+                            <Allotment
+                                vertical
+                                defaultSizes={getAllotmentSize("console")}
+                                onChange={e => setAllotmentSize("console", e)}
+                                className="pr-px pb-px"
+                            >
+                                <Allotment.Pane>
+                                    <GameView />
+                                </Allotment.Pane>
+                                <Allotment.Pane
+                                    className="pt-px"
+                                    snap
+                                    minSize={34}
+                                    preferredSize={72}
+                                >
+                                    <ConsoleView />
+                                </Allotment.Pane>
+                            </Allotment>
                         </Allotment.Pane>
                     </Allotment>
                 </main>

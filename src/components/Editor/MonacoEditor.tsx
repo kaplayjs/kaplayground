@@ -83,6 +83,22 @@ export const MonacoEditor: FC<Props> = (props) => {
             updateImageDecorations();
         });
 
+        editor.onDidChangeModelDecorations(() => {
+            const decorations = document.querySelectorAll<HTMLElement>(
+                ".monaco-glyph-margin-preview-image",
+            );
+
+            decorations.forEach((e, i) => {
+                const decRange = getRuntime().gylphDecorations?.getRange(i);
+                const dec = editor.getDecorationsInRange(decRange!)?.[0];
+                const realImage = dec?.options.hoverMessage!;
+
+                if (!Array.isArray(realImage)) {
+                    e.style.setProperty("--image", `url("${realImage.value}")`);
+                }
+            });
+        });
+
         // Editor Shortcuts
         editor.addAction({
             id: "run-game",

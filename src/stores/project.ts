@@ -2,8 +2,8 @@ import type { KAPLAYOpt } from "kaplay";
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
 import { defaultExampleFile, defaultProject } from "../config/defaultProject";
+import { demos } from "../data/demos";
 import examplesList from "../data/exampleList.json";
-import { examples } from "../data/examples";
 import { useConfig } from "../hooks/useConfig";
 import { useEditor } from "../hooks/useEditor";
 import { useProject } from "../hooks/useProject";
@@ -29,8 +29,14 @@ export interface ProjectSlice {
     project: Project;
     getProject(): Project;
     setProject(project: Partial<Project>): void;
-    createNewProject: (mode: ProjectMode, example?: string) => void;
-    createNewProjectFromDemo: (demo: string) => void;
+    /**
+     * Creates a new project inside KAPLAYGROUND
+     *
+     * @param mode - Project mode, example or project
+     * @param demoId - Optional demo id to load a demo (as a fallback of createNewProjectFromDemo)
+     */
+    createNewProject: (mode: ProjectMode, demoId?: number) => void;
+    createNewProjectFromDemo: (demoId: number) => void;
     projectIsSaved: (id: string, mode: ProjectMode) => boolean;
     getSavedProjects: (filter?: ProjectMode) => string[];
     saveProject: (newProjectId: string, oldProjectId: string) => void;
@@ -74,7 +80,7 @@ export const createProjectSlice: StateCreator<
     },
     currentSelection: null,
     setCurrentSelection: (sel) => set({ currentSelection: sel }),
-    createNewProject: (filter: ProjectMode, demo?: string) => {
+    createNewProject: (filter: ProjectMode, demoId?: number) => {
         const files = new Map<string, File>();
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
@@ -86,14 +92,14 @@ export const createProjectSlice: StateCreator<
             // Create a new project with default files and assets
             get().setDefaultProjectFiles("pj", files, assets);
             debug(2, "Default files loaded");
-        } else if (demo) {
+        } else if (demoId) {
             // Load a demo
-            const foundDemo = examples.filter(example =>
-                example.index === demo || example.name === demo
-            )[0];
+            const foundDemo = demos.find((demo) => {
+                return demo.id === demoId;
+            });
 
             if (!foundDemo) {
-                debug(2, "Demo not found", demo);
+                debug(2, `[project] Demo with id ${demoId} not found`);
                 return;
             }
 
@@ -108,7 +114,7 @@ export const createProjectSlice: StateCreator<
             id = foundDemo.name;
             version = foundDemo.version;
 
-            debug(0, "Demo loaded", foundDemo.name);
+            debug(0, "[project] Demo loaded", foundDemo.name);
         } else {
             // Create a new project with default files and assets for examples
             get().setDefaultProjectFiles("ex", files, assets);
@@ -141,7 +147,7 @@ export const createProjectSlice: StateCreator<
                 kaplayConfig: {},
                 mode: filter,
                 kaplayVersion: version,
-                isDefault: demo ? true : false,
+                isDefault: demoId ? true : false,
                 id: id,
             },
         }));
@@ -151,8 +157,8 @@ export const createProjectSlice: StateCreator<
         // Editor stuff
         useEditor.getState().updateAndRun();
     },
-    createNewProjectFromDemo(demo?: string) {
-        get().createNewProject("ex", demo);
+    createNewProjectFromDemo(demoId: number) {
+        get().createNewProject("ex", demoId);
     },
     saveProject: (id: string, oldId: string) => {
         useProject.persist.setOptions({
