@@ -34,7 +34,7 @@ export default defineConfig({
             targets: [
                 {
                     src: "kaplay/examples/**",
-                    dest: "/public/**",
+                    dest: "",
                 },
             ],
         }),
