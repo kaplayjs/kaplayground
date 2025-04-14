@@ -2,6 +2,7 @@ import { Allotment } from "allotment";
 import type { FC } from "react";
 import { allotmentStorage } from "../../util/allotmentStorage.ts";
 import { cn } from "../../util/cn";
+import { scrollbarSize } from "../../util/scrollbarSize.ts";
 import { AssetBrew } from "../Assets/AssetBrew.tsx";
 import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
 import { MonacoEditor } from "../Editor/MonacoEditor";
@@ -18,6 +19,9 @@ type Props = {
 
 export const WorkspaceExample: FC<Props> = (props) => {
     const { getAllotmentSize, setAllotmentSize } = allotmentStorage("example");
+
+    const { scrollbarThinHeight } = scrollbarSize();
+    const assetBrewHeight = 72 + scrollbarThinHeight();
 
     const handleDragStart = () =>
         document.documentElement.classList.toggle("select-none", true);
@@ -59,9 +63,9 @@ export const WorkspaceExample: FC<Props> = (props) => {
                             <Allotment.Pane
                                 className="pt-px"
                                 snap
-                                maxSize={80}
-                                minSize={72}
-                                preferredSize={72}
+                                maxSize={assetBrewHeight + 1}
+                                minSize={assetBrewHeight}
+                                preferredSize={assetBrewHeight}
                             >
                                 <AssetBrew />
                             </Allotment.Pane>
@@ -81,7 +85,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                                 className="pt-px"
                                 snap
                                 minSize={34}
-                                preferredSize={72}
+                                preferredSize={34}
                             >
                                 <ConsoleView />
                             </Allotment.Pane>
