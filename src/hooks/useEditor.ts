@@ -1,6 +1,5 @@
 import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { createRef, type RefObject } from "react";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { wrapGame } from "../util/compiler";
@@ -13,23 +12,23 @@ type EditorRuntime = {
     currentFile: string;
     gylphDecorations: editor.IEditorDecorationsCollection | null;
     iframe: HTMLIFrameElement | null;
+    console: Console | null;
+    kaplayVersions: string[];
 };
 
 type EditorStore = {
-    runtime: {
-        editor: editor.IStandaloneCodeEditor | null;
-        monaco: Monaco | null;
-        currentFile: string;
-        gylphDecorations: editor.IEditorDecorationsCollection | null;
-        iframe: HTMLIFrameElement | null;
-    };
+    runtime: EditorRuntime;
     update: (value?: string) => void;
     run: () => void;
     getRuntime: () => EditorRuntime;
     setRuntime: (runtime: Partial<EditorRuntime>) => void;
     setCurrentFile: (currentFile: string) => void;
     setTheme: (theme: string) => void;
+    /**
+     * Update Gylph image decorations for loadXXXX functions
+     */
     updateImageDecorations: () => void;
+    updateModelMarkers: () => void;
     showNotification: (message: string) => void;
     setEditorValue: (value: string) => void;
     updateAndRun: () => void;
@@ -42,7 +41,9 @@ export const useEditor = create<EditorStore>((set, get) => ({
         currentFile: "main.js",
         gylphDecorations: null,
         iframe: null,
+        console: null,
         isDefaultExample: false,
+        kaplayVersions: [],
     },
     setRuntime: (runtime) => {
         set((state) => ({
@@ -63,7 +64,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
     },
     update: (customValue?: string) => {
         if (customValue) {
-            debug(0, "Editor value updated with custom value");
+            debug(0, "[codeEditor] Editor value updated with custom value");
 
             get().setEditorValue(customValue);
             return;
@@ -74,7 +75,11 @@ export const useEditor = create<EditorStore>((set, get) => ({
         );
         if (!currentFile) return;
 
-        debug(0, "Editor value updated with", currentFile.path);
+        debug(
+            0,
+            "[monaco] Editor value updated with",
+            currentFile.path.slice(0, 25) + "...",
+        );
 
         get().setEditorValue(currentFile.value);
         get().updateImageDecorations();
@@ -132,7 +137,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         iframe.srcdoc = wrapGame(parsedFiles);
     },
     updateImageDecorations() {
-        debug(0, "Updating gylph decorations");
+        debug(0, "[monaco] Updating gylph decorations");
         const editor = get().runtime.editor;
         const monaco = get().runtime.monaco;
         const gylphDecorations = get().runtime.gylphDecorations;
@@ -181,16 +186,75 @@ export const useEditor = create<EditorStore>((set, get) => ({
             });
         });
 
-        gylphDecorations.set(linesRange.map(({ image, line }) => ({
-            range: new monaco.Range(line, 1, line, 1),
-            options: {
-                glyphMarginClassName: "monaco-glyph-margin",
-                glyphMarginHoverMessage: {
-                    value: `![image](${image})`,
-                    isTrusted: true,
-                },
+        const decorations = linesRange.map(
+            ({ image, line }) => {
+                return {
+                    range: new monaco.Range(line, 1, line, 1),
+                    options: {
+                        glyphMarginClassName:
+                            "monaco-glyph-margin-preview-image",
+                        glyphMarginHoverMessage: {
+                            value: `![image](${image})`,
+                            isTrusted: true,
+                        },
+                        hoverMessage: {
+                            value: image,
+                        },
+                    },
+                } satisfies editor.IModelDeltaDecoration;
             },
-        })));
+        );
+
+        gylphDecorations.set(decorations);
+    },
+    updateModelMarkers() {
+        debug(0, "[monaco] Updating gylph decorations");
+        const editor = get().runtime.editor;
+        const monaco = get().runtime.monaco;
+        const model = editor?.getModel();
+
+        if (!editor || !monaco || !model) return;
+
+        const regexAdd = /add\(\[[^"]\]\)/g;
+
+        // for each every line
+        const lines = editor.getModel()?.getLinesContent() ?? [];
+
+        let linesRange: {
+            image: string;
+            line: number;
+        }[] = [];
+
+        lines.forEach((line, index) => {
+            const match = line.match(regexAdd);
+            if (!match) return;
+
+            const url = line.replace(regexAdd, (_, url) => {
+                return url;
+            });
+
+            const normalizedUrl = url.replace(/^\/|\/$/g, "").replace(
+                /"/g,
+                "",
+            ).replace(";", "");
+
+            const projectAsset = useProject.getState().project.assets
+                .get(
+                    normalizedUrl.replace("assets/", ""),
+                );
+
+            if (projectAsset) {
+                return linesRange.push({
+                    image: projectAsset.url,
+                    line: index + 1,
+                });
+            }
+
+            linesRange.push({
+                image: `http://localhost:5173/${normalizedUrl}`,
+                line: index + 1,
+            });
+        });
     },
     showNotification(message) {
         toast(message);
@@ -199,7 +263,11 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const editor = get().runtime.editor;
         if (!editor) return;
 
-        debug(0, "Setting editor value to", value);
+        debug(
+            0,
+            "[editor] Setting editor value to",
+            value.slice(0, 25) + "...",
+        );
 
         editor.setValue(value);
     },

@@ -1,13 +1,20 @@
 // Debug levels represent how verbose the log is
 // 0: Normal log
 // 1: Internal and long log
+// 2: Ultra internal and long log
+// 3: Is traced
 
 import { useConfig } from "../hooks/useConfig";
 
-// 2: Ultra internal and long log
 export const debug = (level: number = 0, ...msg: any[]) => {
-    const configDebugLevel = useConfig.getState().config.debugLevel;
-    if (configDebugLevel === null || configDebugLevel < level) return;
+    let debugLevel = useConfig.getState().config.debugLevel;
+
+    if (import.meta.env.DEV) {
+        debugLevel = 3;
+    }
+
+    // TODO: Remove null, debugLevel should be a number
+    if (debugLevel === null || debugLevel < level) return;
 
     if (level === 0) {
         // For info acceptable to know for the user

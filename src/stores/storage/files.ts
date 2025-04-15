@@ -76,7 +76,7 @@ export const createFilesSlice: StateCreator<
     },
 
     updateFile(path, value) {
-        debug(0, "Updating file", path);
+        debug(0, "[files] Updating file", path);
         const files = get().project.files;
 
         const foundFile = files.has(path) ? files.get(path) : null;

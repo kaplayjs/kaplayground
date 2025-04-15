@@ -3,18 +3,27 @@ on:
 
 jobs:
   deploy:
-    name: "Deploy KAPLAYGROUND on Cloudflare Workers"
+    name: "Deploy website on Cloudflare"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Setup PNPM
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build app
+        run: pnpm build
       - name: Deploy app
         uses: cloudflare/wrangler-action@v3
         with:
           packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_WORKERS_KEY }}
           command: pages deploy dist --project-name=kaplay
-          preCommands: "pnpm i && pnpm build"

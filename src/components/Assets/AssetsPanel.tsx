@@ -41,7 +41,7 @@ const AssetsPanel: React.FC<Props> = (props) => {
 
     return (
         <Tabs.Content
-            className={cn("w-full h-full bg-base-100 rounded-xl", {
+            className={cn("flex-1 w-full min-h-0 bg-base-100 rounded-b-xl", {
                 "dragging-border": isDragging,
             })}
             value={props.value}
@@ -68,7 +68,7 @@ const AssetsPanel: React.FC<Props> = (props) => {
                         className="h-full p-2"
                         {...getRootProps()}
                     >
-                        <div className="h-full flex flex-col justify-between">
+                        <div className="relative h-full flex flex-col justify-between overflow-hidden">
                             <AssetsList
                                 kind={props.kind}
                                 visibleIcon={props.visibleIcon}

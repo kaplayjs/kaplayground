@@ -11,7 +11,7 @@ import ToolbarButton from "./ToolbarButton";
 
 const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
     return (
-        <li className="h-full">
+        <li className="h-full group">
             {children}
         </li>
     );
@@ -55,7 +55,7 @@ const ToolbarToolsMenu: FC = () => {
     };
 
     return (
-        <ul className="flex flex-row items-center justify-center h-full w-full md:w-fit">
+        <ul className="flex flex-row items-center justify-center h-full w-full md:w-fit bg-base-300 rounded-b-xl">
             <ToolbarToolItem>
                 <ToolbarButton
                     icon={assets.play.outlined}

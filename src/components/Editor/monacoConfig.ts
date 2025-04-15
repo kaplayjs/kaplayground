@@ -1,25 +1,14 @@
 import type { Monaco } from "@monaco-editor/react";
-import globalTs from "../../../node_modules/kaplay/dist/declaration/global.d.ts?raw";
-import docTs from "../../../node_modules/kaplay/dist/doc.d.ts?raw";
+import docTs from "../../../lib.d.ts?raw";
 import { DATA_URL_REGEX } from "../../util/regex";
+import { addCompletion } from "./completionProviders.ts";
 import { themes } from "./config/themes";
 
 export const configMonaco = (monaco: Monaco) => {
     // Add global KAPLAY types
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        globalTs,
-        "global.d.ts",
-    );
-
-    // Add the KAPLAY module
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(
         docTs,
         "kaplay.d.ts",
-    );
-
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        docTs,
-        "types.d.ts",
     );
 
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
@@ -295,7 +284,12 @@ export const configMonaco = (monaco: Monaco) => {
         },
     });
 
+    monaco.languages.registerCompletionItemProvider("javascript", {
+        provideCompletionItems(...args) {
+            return addCompletion(...args);
+        },
+    });
+
     // Themes
     monaco.editor.defineTheme("Spiker", themes.Spiker);
-    monaco.editor.defineTheme("Ghostiny", themes.Ghostiny);
 };

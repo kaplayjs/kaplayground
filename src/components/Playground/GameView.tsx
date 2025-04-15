@@ -13,7 +13,10 @@ export const GameView: FC<GameViewProps> = ({ onLoad }) => {
             "game-view",
         ) as HTMLIFrameElement;
 
-        setRuntime({ iframe: iframe });
+        const iframeWindow = iframe.contentWindow?.window;
+        (window as any).iframeWindow = iframeWindow;
+
+        setRuntime({ iframe: iframe, console: iframeWindow?.console });
     }, []);
 
     return (
@@ -21,13 +24,13 @@ export const GameView: FC<GameViewProps> = ({ onLoad }) => {
             id="game-view"
             tabIndex={0}
             onLoad={onLoad}
-            className="rounded-xl p-0.5"
+            className="rounded-xl"
             style={{
                 border: "none",
                 width: "100%",
                 height: "100%",
             }}
-            sandbox="allow-scripts"
+            sandbox="allow-scripts allow-same-origin"
         />
     );
 };

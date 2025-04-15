@@ -10,7 +10,7 @@ export const Toolbar = () => {
             role="toolbar"
         >
             <a
-                className="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full"
+                className="hidden lg:flex btn btn-sm btn-ghost px-2 rounded-sm items-center justify-center h-full rounded-bl-xl"
                 href="/"
             >
                 <figure>
@@ -18,7 +18,7 @@ export const Toolbar = () => {
                         alt="Logo"
                         // @ts-ignore
                         src={assets.ka.outlined}
-                        className="h-8"
+                        className="h-6"
                         draggable={false}
                     />
                     <h1 className="sr-only">KAPLAY</h1>
