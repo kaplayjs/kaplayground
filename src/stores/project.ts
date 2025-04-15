@@ -36,7 +36,7 @@ export interface ProjectSlice {
      * @param demoId - Optional demo id to load a demo (as a fallback of createNewProjectFromDemo)
      */
     createNewProject: (mode: ProjectMode, demoId?: number) => void;
-    createNewProjectFromDemo: (demoId: number) => void;
+    createNewProjectFromDemo: (demoId: number | string) => void;
     projectIsSaved: (id: string, mode: ProjectMode) => boolean;
     getSavedProjects: (filter?: ProjectMode) => string[];
     saveProject: (newProjectId: string, oldProjectId: string) => void;
@@ -157,7 +157,14 @@ export const createProjectSlice: StateCreator<
         // Editor stuff
         useEditor.getState().updateAndRun();
     },
-    createNewProjectFromDemo(demoId: number) {
+    createNewProjectFromDemo(demoId: number | string) {
+        if (typeof demoId === "string") {
+            const demoIndex = demos.findIndex((d) => {
+                return d.name == demoId;
+            });
+
+            demoId = demoIndex;
+        }
         get().createNewProject("ex", demoId);
     },
     saveProject: (id: string, oldId: string) => {
