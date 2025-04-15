@@ -1,0 +1,11 @@
+.folded-icon[data-folded="true"] {
+  transform: rotate(0deg);
+}
+
+.folded-icon[data-folded="false"] {
+  transform: rotate(90deg);
+}
+
+.file:has(.file-dots-active) {
+  pointer-events: none;
+}

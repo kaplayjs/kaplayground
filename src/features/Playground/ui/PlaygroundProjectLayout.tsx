@@ -1,25 +1,24 @@
-import { Allotment } from "allotment";
+import { Allotment, LayoutPriority } from "allotment";
 import { type FC, useEffect } from "react";
 import { useAllotmentStorage } from "../../../util/allotmentStorage.ts";
 import { cn } from "../../../util/cn.ts";
-import { scrollbarSize } from "../../../util/scrollbarSize.ts";
+import { FileTree } from "../../FileTree/ui/FileTree.tsx";
 import { useProjects } from "../../Project/stores/useProjects.ts";
 import { Toolbar } from "../../Toolbar/ui/Toolbar.tsx";
 
-interface PlaygroundExampleLayout {
+interface PlaygroundProjectLayoutProps {
     editorIsLoading: boolean;
     isPortrait: boolean;
     onMount?: () => void;
 }
 
-export const PlaygroundExampleLayout: FC<PlaygroundExampleLayout> = (props) => {
+export const PlaygroundProjectLayout: FC<PlaygroundProjectLayoutProps> = (
+    props,
+) => {
     const projects = useProjects();
     const { getAllotmentSize, setAllotmentSize } = useAllotmentStorage(
         "example",
     );
-
-    const { scrollbarThinHeight } = scrollbarSize();
-    const assetBrewHeight = 72 + scrollbarThinHeight();
 
     const handleDragStart = () =>
         document.documentElement.classList.toggle("select-none", true);
@@ -47,11 +46,21 @@ export const PlaygroundExampleLayout: FC<PlaygroundExampleLayout> = (props) => {
             <main className="h-full min-h-0 overflow-hidden">
                 <Allotment
                     vertical={props.isPortrait}
-                    defaultSizes={getAllotmentSize("editor")}
+                    defaultSizes={getAllotmentSize("editor", [0.5, 2, 2])}
                     onChange={e => setAllotmentSize("editor", e)}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
+                    className="p-px pt-0"
                 >
+                    <Allotment.Pane
+                        snap
+                        minSize={200}
+                        preferredSize={210}
+                        priority={LayoutPriority.Low}
+                        className="pr-px"
+                    >
+                        <FileTree />
+                    </Allotment.Pane>
                     <Allotment.Pane snap>
                         <Allotment
                             vertical
@@ -59,17 +68,15 @@ export const PlaygroundExampleLayout: FC<PlaygroundExampleLayout> = (props) => {
                             onChange={e => setAllotmentSize("brew", e)}
                             onDragStart={handleDragStart}
                             onDragEnd={handleDragEnd}
-                            className="p-px pt-0"
+                            className="pr-px"
                         >
                             <Allotment.Pane>
                                 <div></div>
                             </Allotment.Pane>
                             <Allotment.Pane
-                                className="pt-px"
                                 snap
-                                maxSize={assetBrewHeight + 1}
-                                minSize={assetBrewHeight}
-                                preferredSize={assetBrewHeight}
+                                preferredSize={210}
+                                className="pt-px"
                             >
                                 <div></div>
                             </Allotment.Pane>

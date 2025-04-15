@@ -1,11 +1,11 @@
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
-import { PlaygroundExampleLayout } from "./PlaygroundExampleLayout.tsx";
+import { PlaygroundProjectLayout } from "./PlaygroundProjectLayout.tsx";
 
 export const Playground = () => {
     return (
         <>
-            <PlaygroundExampleLayout
+            <PlaygroundProjectLayout
                 editorIsLoading={false}
                 isPortrait={false}
             />
