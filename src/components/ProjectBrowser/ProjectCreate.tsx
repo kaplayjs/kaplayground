@@ -1,7 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import { useProject } from "../../hooks/useProject";
-import type { ProjectMode } from "../../stores/project";
+import type { ProjectMode } from "../../shared/stores/project";
 
 type Props = {
     mode: ProjectMode;

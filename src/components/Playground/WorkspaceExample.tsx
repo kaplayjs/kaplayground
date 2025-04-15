@@ -1,6 +1,6 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
-import { allotmentStorage } from "../../util/allotmentStorage.ts";
+import { useAllotmentStorage } from "../../util/allotmentStorage.ts";
 import { cn } from "../../util/cn";
 import { scrollbarSize } from "../../util/scrollbarSize.ts";
 import { AssetBrew } from "../Assets/AssetBrew.tsx";
@@ -18,7 +18,9 @@ type Props = {
 };
 
 export const WorkspaceExample: FC<Props> = (props) => {
-    const { getAllotmentSize, setAllotmentSize } = allotmentStorage("example");
+    const { getAllotmentSize, setAllotmentSize } = useAllotmentStorage(
+        "example",
+    );
 
     const { scrollbarThinHeight } = scrollbarSize();
     const assetBrewHeight = 72 + scrollbarThinHeight();

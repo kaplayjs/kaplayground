@@ -2,13 +2,13 @@ import * as Tabs from "@radix-ui/react-tabs";
 import * as React from "react";
 import Dropzone from "react-dropzone";
 import { useAssets } from "../../hooks/useAssets";
-import type { AssetKind } from "../../stores/storage/assets";
+import type { AssetKind } from "../../shared/stores/storage/assets";
 import { fileToBase64 } from "../../util/fileToBase64";
 import AssetsAddButton from "./AssetsAddButton";
 import AssetsList from "./AssetsList";
 import "./AssetsPanel.css";
-import { useEditor } from "../../hooks/useEditor";
 import { cn } from "../../util/cn";
+import { useEditor } from "../Editor/hooks/useEditor";
 
 type Props = {
     value: string;

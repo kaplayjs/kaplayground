@@ -1,8 +1,8 @@
 import { assets } from "@kaplayjs/crew";
 import { useEffect, useState } from "react";
-import { useEditor } from "../../hooks/useEditor.ts";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn.ts";
+import { useEditor } from "../Editor/hooks/useEditor.ts";
 
 const ProjectStatus = () => {
     const { saveProject, getProject, projectIsSaved, setProject } =

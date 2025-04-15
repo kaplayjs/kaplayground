@@ -6,7 +6,7 @@ import { assets } from "@kaplayjs/crew";
 import { useCallback, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import { useProject } from "../../hooks/useProject";
-import type { ProjectMode } from "../../stores/project";
+import type { ProjectMode } from "../../shared/stores/project";
 import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
 import { ProjectCreate } from "./ProjectCreate";

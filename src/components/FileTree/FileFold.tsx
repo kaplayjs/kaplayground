@@ -4,7 +4,7 @@ import { cn } from "../../util/cn";
 import { FileToolbar } from "./FileToolbar";
 import "./FileFolder.css";
 import { useProject } from "../../hooks/useProject";
-import type { FileFolder, FileKind } from "../../stores/storage/files";
+import type { FileFolder, FileKind } from "../../shared/stores/storage/files";
 import { FileEntry, logoByKind } from "./FileEntry";
 
 type Props = PropsWithChildren<{

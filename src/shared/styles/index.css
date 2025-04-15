@@ -82,3 +82,28 @@ html, body, #root {
     @apply rounded-xl;
 }
 
+.colorpicker-color-decoration {
+    border-radius: 0.25rem;
+    border: 0em solid #eee !important;
+    width: .7rem !important;
+    height: .7rem !important;
+    line-height: .5em !important;
+}
+
+.monaco-hover {
+    border-radius: 1rem;
+    font-family: 'Outfit Variable', sans-serif;
+    font-size: 0.875rem;
+}
+
+.saturation-box {
+    border-radius: 0.5rem;
+}
+
+#floating {
+    position: absolute;
+    padding: 4px;
+    box-sizing: border-box;
+    background-color: #abdd64;
+}
+  

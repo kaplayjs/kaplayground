@@ -4,7 +4,7 @@ const getAllotmentKey = (prefix: string, id: Allotments): string => {
     return `allotment-${prefix}-${id}`;
 };
 
-export const allotmentStorage = (prefix: string) => ({
+export const useAllotmentStorage = (prefix: string) => ({
     getAllotmentSize: (id: Allotments, initial: number[] = []): number[] =>
         JSON.parse(
             localStorage.getItem(getAllotmentKey(prefix, id))

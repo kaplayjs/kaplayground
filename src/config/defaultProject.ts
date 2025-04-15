@@ -1,5 +1,5 @@
-import type { Asset } from "../stores/storage/assets";
-import { type File, wrapKAPLAYConfig } from "../stores/storage/files";
+import type { Asset } from "../shared/stores/storage/assets";
+import { type File, wrapKAPLAYConfig } from "../shared/stores/storage/files";
 
 export const defaultExampleFile = `
 // Starts a new game

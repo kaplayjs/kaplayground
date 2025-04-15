@@ -1,5 +1,5 @@
 import type { StateCreator } from "zustand";
-import { debug } from "../../util/logs";
+import { debug } from "../../../util/logs";
 import type { KAPLAYConfigSlice } from "../kaplayConfig";
 import type { ProjectSlice } from "../project";
 

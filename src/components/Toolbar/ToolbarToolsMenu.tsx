@@ -3,9 +3,9 @@ import type { FC, PropsWithChildren } from "react";
 import { toast } from "react-toastify";
 import AboutButton from "../../components/About/AboutButton";
 import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
-import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { compressCode } from "../../util/compressCode";
+import { useEditor } from "../Editor/hooks/useEditor";
 import Projects from "./Projects";
 import ToolbarButton from "./ToolbarButton";
 

@@ -1,8 +1,14 @@
 import type { Monaco } from "@monaco-editor/react";
 import docTs from "../../../lib.d.ts?raw";
-import { DATA_URL_REGEX } from "../../util/regex";
-import { addCompletion } from "./completionProviders.ts";
+import {
+    COLOR_HEX_STRING,
+    COLOR_RGB_FUNC,
+    DATA_URL_REGEX,
+} from "../../util/regex";
+import { objPreviewCodeLens } from "../ObjPreview/provider/objPreviewCodeLens.ts";
 import { themes } from "./config/themes";
+import { addCompletion } from "./providers/completion/addCompletion.ts";
+import { goCompletion } from "./providers/completion/goCompletion.ts";
 
 export const configMonaco = (monaco: Monaco) => {
     // Add global KAPLAY types
@@ -289,6 +295,86 @@ export const configMonaco = (monaco: Monaco) => {
             return addCompletion(...args);
         },
     });
+
+    monaco.languages.registerCompletionItemProvider("javascript", {
+        provideCompletionItems(...args) {
+            return goCompletion(...args);
+        },
+    });
+
+    monaco.languages.registerColorProvider("javascript", {
+        provideColorPresentations: (_model, colorInfo) => {
+            const color = colorInfo.color;
+            const red256 = Math.round(color.red * 255);
+            const green256 = Math.round(color.green * 255);
+            const blue256 = Math.round(color.blue * 255);
+
+            let label;
+
+            label = "rgb(" + red256 + ", " + green256 + ", " + blue256
+                + ")";
+
+            return [
+                {
+                    label: label,
+                },
+            ];
+        },
+
+        provideDocumentColors: (model) => {
+            const code = model.getValue();
+            const hexColors = code.matchAll(COLOR_HEX_STRING);
+            const rgbColors = code.matchAll(COLOR_RGB_FUNC);
+
+            const colorRanges = [];
+
+            for (const color of hexColors) {
+                const lineNumber = model.getPositionAt(color.index!).lineNumber;
+                const startColumn = model.getPositionAt(color.index!).column;
+                const endColumn = startColumn + color[0].length;
+
+                colorRanges.push({
+                    color: {
+                        red: parseInt(color[2].slice(1, 3), 16) / 255,
+                        green: parseInt(color[2].slice(3, 5), 16) / 255,
+                        blue: parseInt(color[2].slice(5, 7), 16) / 255,
+                        alpha: 1,
+                    },
+                    range: {
+                        startLineNumber: lineNumber,
+                        startColumn,
+                        endLineNumber: lineNumber,
+                        endColumn,
+                    },
+                });
+            }
+
+            for (const color of rgbColors) {
+                const lineNumber = model.getPositionAt(color.index!).lineNumber;
+                const startColumn = model.getPositionAt(color.index!).column;
+                const endColumn = startColumn + color[0].length;
+
+                colorRanges.push({
+                    color: {
+                        red: parseInt(color[1]) / 255,
+                        green: parseInt(color[2]) / 255,
+                        blue: parseInt(color[3]) / 255,
+                        alpha: 1,
+                    },
+                    range: {
+                        startLineNumber: lineNumber,
+                        startColumn,
+                        endLineNumber: lineNumber,
+                        endColumn,
+                    },
+                });
+            }
+
+            return colorRanges;
+        },
+    });
+
+    monaco.languages.registerCodeLensProvider("javascript", objPreviewCodeLens);
 
     // Themes
     monaco.editor.defineTheme("Spiker", themes.Spiker);

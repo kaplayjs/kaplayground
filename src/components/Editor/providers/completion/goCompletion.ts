@@ -1,13 +1,15 @@
 import { languages } from "monaco-editor";
+import { SCENE_NAME_REGEX } from "../../../../util/regex.ts";
 import { useEditor } from "../../hooks/useEditor.ts";
-import { compMap } from "./snippets/compSnippets.ts";
 
 type CompletionProviderFunc =
     languages.CompletionItemProvider["provideCompletionItems"];
 
-export const addCompletion: CompletionProviderFunc = (model, pos) => {
+export const goCompletion: CompletionProviderFunc = (model, pos) => {
     const monaco = useEditor.getState().runtime.monaco!;
     const suggestions: languages.CompletionItem[] = [];
+    const code = model.getValue();
+    const scenes = [...code.matchAll(SCENE_NAME_REGEX)].map(match => match[1]);
 
     const textBeforeCursor = model.getValueInRange({
         startLineNumber: 1,
@@ -23,15 +25,14 @@ export const addCompletion: CompletionProviderFunc = (model, pos) => {
         endColumn: model.getLineMaxColumn(model.getLineCount()),
     });
 
-    // Look for something like "add([" or "k.add(["
-    const addCallMatch = /(?:\b(?:k\.)?add\s*\(\s*\[)[^\]]*$/.test(
+    const goCallMatch = /(?:\b(?:k\.)?go\s*\(\s*)[^\]]*$/.test(
         textBeforeCursor,
     );
 
     // Make sure the array closes *after* the cursor
-    const arrayIsOpen = /^[^\]]*\]/.test(textAfterCursor);
+    const bracketsAreOpen = /^[^\]]*\)/.test(textAfterCursor);
 
-    if (addCallMatch && arrayIsOpen) {
+    if (goCallMatch && bracketsAreOpen) {
         const word = model.getWordUntilPosition(pos);
         const range = new monaco.Range(
             pos.lineNumber,
@@ -40,27 +41,15 @@ export const addCompletion: CompletionProviderFunc = (model, pos) => {
             word.endColumn,
         );
 
-        Object.keys(compMap).forEach((compId, i) => {
-            const comp = compMap[compId];
-
+        scenes.forEach((scene, i) => {
             suggestions.push({
-                label: `${comp.prettyName} - ${comp.description}`,
-                documentation: {
-                    value:
-                        `${comp.description}\n\n[Check in KAPLAY Docs](https://kaplayjs.com/doc/ctx/${compId})`,
-                    isTrusted: true,
-                },
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: comp.template,
+                label: `${scene}`,
+                kind: monaco.languages.CompletionItemKind.Value,
+                insertText: `"${scene}"`,
                 insertTextRules: monaco.languages.CompletionItemInsertTextRule
                     .InsertAsSnippet,
                 range,
                 sortText: "000" + i,
-                command: {
-                    id: "editor.action.triggerSuggest",
-                    title: "Re-trigger completions",
-                    tooltip: "Re-trigger completions",
-                },
             });
         });
     }

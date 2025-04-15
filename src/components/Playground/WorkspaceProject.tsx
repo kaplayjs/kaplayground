@@ -1,11 +1,12 @@
 import { Allotment, LayoutPriority } from "allotment";
 import type { FC } from "react";
-import { allotmentStorage } from "../../util/allotmentStorage";
+import { useAllotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
 import { Assets } from "../Assets";
 import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
 import { MonacoEditor } from "../Editor/MonacoEditor";
 import { FileTree } from "../FileTree";
+import { ObjPreview } from "../ObjPreview/ObjPreview.tsx";
 import { Toolbar } from "../Toolbar";
 import { GameView } from "./GameView";
 
@@ -16,7 +17,9 @@ type Props = {
 };
 
 export const WorkspaceProject: FC<Props> = (props) => {
-    const { getAllotmentSize, setAllotmentSize } = allotmentStorage("project");
+    const { getAllotmentSize, setAllotmentSize } = useAllotmentStorage(
+        "project",
+    );
 
     const handleDragStart = () =>
         document.documentElement.classList.toggle("select-none", true);
@@ -101,6 +104,8 @@ export const WorkspaceProject: FC<Props> = (props) => {
                     </Allotment>
                 </main>
             </div>
+
+            <ObjPreview />
         </>
     );
 };

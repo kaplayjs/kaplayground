@@ -3,10 +3,19 @@ import { persist, type StorageValue } from "zustand/middleware";
 import {
     createKaboomConfigSlice,
     type KAPLAYConfigSlice,
-} from "../stores/kaplayConfig";
-import { createProjectSlice, type ProjectSlice } from "../stores/project";
-import { type AssetsSlice, createAssetsSlice } from "../stores/storage/assets";
-import { createFilesSlice, type FilesSlice } from "../stores/storage/files";
+} from "../shared/stores/kaplayConfig";
+import {
+    createProjectSlice,
+    type ProjectSlice,
+} from "../shared/stores/project";
+import {
+    type AssetsSlice,
+    createAssetsSlice,
+} from "../shared/stores/storage/assets";
+import {
+    createFilesSlice,
+    type FilesSlice,
+} from "../shared/stores/storage/files";
 
 type Store = ProjectSlice & FilesSlice & AssetsSlice & KAPLAYConfigSlice;
 

@@ -1,6 +1,6 @@
 import type { StateCreator } from "zustand";
-import { debug } from "../../util/logs";
-import { removeExtension } from "../../util/removeExtensions";
+import { debug } from "../../../util/logs";
+import { removeExtension } from "../../../util/removeExtensions";
 import type { ProjectSlice } from "../project";
 
 /** The Assets's id */

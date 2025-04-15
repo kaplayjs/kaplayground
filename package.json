@@ -16,6 +16,8 @@
     "prepare": "cd kaplay && pnpm i && cd .. && npm run generate:lib && npm run generate:examples"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.6.13",
+    "@floating-ui/react": "^0.27.7",
     "@fontsource-variable/outfit": "^5.2.5",
     "@fontsource-variable/rubik": "^5.1.0",
     "@fontsource/dm-mono": "^5.2.5",
@@ -24,6 +26,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-context-menu": "^2.2.2",
     "@radix-ui/react-tabs": "^1.1.1",
+    "@tauri-apps/plugin-fs": "~2",
     "allotment": "^1.20.3",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
@@ -37,6 +40,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.9",
     "react-responsive": "^10.0.0",
+    "react-rnd": "^10.5.2",
     "react-sparkle": "^2.0.0",
     "react-toastify": "^10.0.5",
     "react-tooltip": "^5.28.0",

@@ -4,13 +4,13 @@ import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import { useConfig } from "../../hooks/useConfig";
-import { useEditor } from "../../hooks/useEditor.ts";
 import { useProject } from "../../hooks/useProject";
 import { decompressCode } from "../../util/compressCode";
 import { debug } from "../../util/logs";
 import { getPackageInfo } from "../../util/npm.ts";
 import { AboutDialog } from "../About";
 import ConfigDialog from "../Config/ConfigDialog";
+import { useEditor } from "../Editor/hooks/useEditor.ts";
 import { ProjectBrowser } from "../ProjectBrowser";
 import ExampleList from "../Toolbar/ExampleList";
 import { LoadingPlayground } from "./LoadingPlayground";
@@ -56,9 +56,9 @@ const Playground = () => {
         setLoadingProject(false);
     };
 
-    const loadDemo = (demo: string) => {
-        debug(0, "Loading demo...", demo);
-        createNewProjectFromDemo(demo);
+    const loadDemo = (demoId: number) => {
+        debug(0, "[playground init] Loading demo...", demoId);
+        createNewProjectFromDemo(demoId);
         setLoadingProject(false);
     };
 
@@ -106,7 +106,8 @@ const Playground = () => {
         if (sharedCode) {
             loadShare(sharedCode, sharedVersion ?? undefined);
         } else if (exampleName) {
-            loadDemo(exampleName);
+            // FIXME: Back support to examples with string
+            loadDemo(0);
         } else if (lastOpenedPj) {
             loadLastOpenedProject(lastOpenedPj);
         } else {

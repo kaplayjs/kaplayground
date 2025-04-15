@@ -3,9 +3,10 @@ import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
 import { type FC } from "react";
 import { useConfig } from "../../hooks/useConfig.ts";
-import { useEditor } from "../../hooks/useEditor";
 import { useProject } from "../../hooks/useProject";
 import { debug } from "../../util/logs";
+import { useObjPreview } from "../ObjPreview/hooks/useObjPreview.ts";
+import { useEditor } from "./hooks/useEditor.ts";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -23,6 +24,7 @@ export const MonacoEditor: FC<Props> = (props) => {
         setRuntime,
     } = useEditor();
     const { getConfig, setConfigKey } = useConfig();
+    const { updateObj, setPreviewData } = useObjPreview();
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -75,11 +77,12 @@ export const MonacoEditor: FC<Props> = (props) => {
         });
 
         editor.onDidChangeModel((ev) => {
-            debug(0, "Model changed", ev.newModelUrl);
-            editor.getModel()?.setValue(
-                getFile(getRuntime().currentFile)?.value ?? "",
-            );
+            debug(0, "[monaco] Model changed", ev.newModelUrl);
 
+            setPreviewData({
+                hidden: true,
+            });
+            updateObj();
             updateImageDecorations();
         });
 
@@ -89,7 +92,7 @@ export const MonacoEditor: FC<Props> = (props) => {
             );
 
             decorations.forEach((e, i) => {
-                const decRange = getRuntime().gylphDecorations?.getRange(i);
+                const decRange = getRuntime().decorations.gylph?.getRange(i);
                 const dec = editor.getDecorationsInRange(decRange!)?.[0];
                 const realImage = dec?.options.hoverMessage!;
 
@@ -177,8 +180,21 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
-        let decorations = editor.createDecorationsCollection([]);
-        getRuntime().gylphDecorations = decorations;
+        const runObjPreview = editor.addCommand(0, () => {
+            useObjPreview.getState().setPreviewData({ hidden: false });
+            useObjPreview.getState().runPreview();
+        }, "");
+
+        const gylphDecorations = editor.createDecorationsCollection([]);
+
+        setRuntime({
+            decorations: {
+                gylph: gylphDecorations,
+            },
+            commandIds: {
+                runObjPreview: runObjPreview,
+            },
+        });
 
         run();
     };

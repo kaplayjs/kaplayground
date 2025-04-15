@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import addSriteIcon from "../../assets/add_sprite_icon.png";
-import type { AssetKind } from "../../stores/storage/assets";
+import type { AssetKind } from "../../shared/stores/storage/assets";
 
 type Props = {
     accept: string;

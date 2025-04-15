@@ -1,13 +1,16 @@
 import type { KAPLAYOpt } from "kaplay";
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
-import { defaultExampleFile, defaultProject } from "../config/defaultProject";
-import { demos } from "../data/demos";
-import examplesList from "../data/exampleList.json";
-import { useConfig } from "../hooks/useConfig";
-import { useEditor } from "../hooks/useEditor";
-import { useProject } from "../hooks/useProject";
-import { debug } from "../util/logs";
+import { useEditor } from "../../components/Editor/hooks/useEditor";
+import {
+    defaultExampleFile,
+    defaultProject,
+} from "../../config/defaultProject";
+import { demos } from "../../data/demos";
+import examplesList from "../../data/exampleList.json";
+import { useConfig } from "../../hooks/useConfig";
+import { useProject } from "../../hooks/useProject";
+import { debug } from "../../util/logs";
 import type { Asset, AssetsSlice } from "./storage/assets";
 import type { File, FilesSlice } from "./storage/files";
 

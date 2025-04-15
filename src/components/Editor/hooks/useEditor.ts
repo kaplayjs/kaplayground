@@ -2,18 +2,26 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
-import { wrapGame } from "../util/compiler";
-import { debug } from "../util/logs";
-import { useProject } from "./useProject";
+import { useProject } from "../../../hooks/useProject";
+import { wrapGame } from "../../../util/compiler";
+import { debug } from "../../../util/logs";
+
+// This is the state for all related to the editor itself
+// (no monaco only editor)
 
 type EditorRuntime = {
     editor: editor.IStandaloneCodeEditor | null;
     monaco: Monaco | null;
     currentFile: string;
-    gylphDecorations: editor.IEditorDecorationsCollection | null;
+    decorations: {
+        gylph: editor.IEditorDecorationsCollection | null;
+    };
     iframe: HTMLIFrameElement | null;
     console: Console | null;
     kaplayVersions: string[];
+    commandIds: {
+        "runObjPreview": string | null;
+    };
 };
 
 type EditorStore = {
@@ -28,7 +36,6 @@ type EditorStore = {
      * Update Gylph image decorations for loadXXXX functions
      */
     updateImageDecorations: () => void;
-    updateModelMarkers: () => void;
     showNotification: (message: string) => void;
     setEditorValue: (value: string) => void;
     updateAndRun: () => void;
@@ -39,10 +46,15 @@ export const useEditor = create<EditorStore>((set, get) => ({
         editor: null,
         monaco: null,
         currentFile: "main.js",
-        gylphDecorations: null,
         iframe: null,
         console: null,
         isDefaultExample: false,
+        commandIds: {
+            runObjPreview: null,
+        },
+        decorations: {
+            gylph: null,
+        },
         kaplayVersions: [],
     },
     setRuntime: (runtime) => {
@@ -140,7 +152,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         debug(0, "[monaco] Updating gylph decorations");
         const editor = get().runtime.editor;
         const monaco = get().runtime.monaco;
-        const gylphDecorations = get().runtime.gylphDecorations;
+        const gylphDecorations = get().runtime.decorations.gylph;
         const model = editor?.getModel();
 
         if (!editor || !monaco || !model || !gylphDecorations) return;
@@ -206,55 +218,6 @@ export const useEditor = create<EditorStore>((set, get) => ({
         );
 
         gylphDecorations.set(decorations);
-    },
-    updateModelMarkers() {
-        debug(0, "[monaco] Updating gylph decorations");
-        const editor = get().runtime.editor;
-        const monaco = get().runtime.monaco;
-        const model = editor?.getModel();
-
-        if (!editor || !monaco || !model) return;
-
-        const regexAdd = /add\(\[[^"]\]\)/g;
-
-        // for each every line
-        const lines = editor.getModel()?.getLinesContent() ?? [];
-
-        let linesRange: {
-            image: string;
-            line: number;
-        }[] = [];
-
-        lines.forEach((line, index) => {
-            const match = line.match(regexAdd);
-            if (!match) return;
-
-            const url = line.replace(regexAdd, (_, url) => {
-                return url;
-            });
-
-            const normalizedUrl = url.replace(/^\/|\/$/g, "").replace(
-                /"/g,
-                "",
-            ).replace(";", "");
-
-            const projectAsset = useProject.getState().project.assets
-                .get(
-                    normalizedUrl.replace("assets/", ""),
-                );
-
-            if (projectAsset) {
-                return linesRange.push({
-                    image: projectAsset.url,
-                    line: index + 1,
-                });
-            }
-
-            linesRange.push({
-                image: `http://localhost:5173/${normalizedUrl}`,
-                line: index + 1,
-            });
-        });
     },
     showNotification(message) {
         toast(message);

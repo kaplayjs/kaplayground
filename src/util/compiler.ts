@@ -12,6 +12,36 @@ export const getVersion = () => {
     }
 };
 
+export const wrapObj = (code: string) => `
+<!DOCTYPE html>
+<head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body,
+html {
+    width: 100%;
+    height: 100vh;
+}
+
+body {
+    overflow: hidden;
+    background: #171212;
+}
+</style>
+</head>
+<body>
+
+<script src="${getVersion()}"></script>
+<script type="module">
+    ${parseAssets(code)}
+</script>
+</body>
+`;
+
 // Wraps the game in an acceptable format for iFrame
 export const wrapGame = (code: string) => `
 <!DOCTYPE html>

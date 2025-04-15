@@ -1,7 +1,7 @@
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { type FC, useEffect } from "react";
 import { useAssets } from "../../hooks/useAssets";
-import type { Asset, AssetKind } from "../../stores/storage/assets";
+import type { Asset, AssetKind } from "../../shared/stores/storage/assets";
 import type { ResourceProps } from "./AssetsItem";
 import AssetsItem from "./AssetsItem";
 

@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import { useEditor } from "../../hooks/useEditor";
+import { useEditor } from "../Editor/hooks/useEditor";
 import { View } from "../UI/View";
 import { FileFold } from "./FileFold";
 

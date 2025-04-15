@@ -1,5 +1,5 @@
 import { type FC, useEffect } from "react";
-import { useEditor } from "../../hooks/useEditor";
+import { useEditor } from "../Editor/hooks/useEditor";
 
 type GameViewProps = {
     onLoad?: () => void;
