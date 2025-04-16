@@ -13,7 +13,9 @@
     "fmt": "dprint fmt",
     "check": "tsc --noEmit --p tsconfig.app.json",
     "dev:bin": "node scripts/cli.js --examples=fakeExamples",
-    "prepare": "cd kaplay && pnpm i && cd .. && npm run generate:lib && npm run generate:examples"
+    "neu": "neu",
+    "prepare": "cd kaplay && pnpm i && cd .. && npm run generate:lib && npm run generate:examples && npm run neu:update",
+    "neu:update": "neu update"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.6.13",
@@ -24,9 +26,10 @@
     "@formkit/drag-and-drop": "^0.0.38",
     "@kaplayjs/crew": "2.0.0-beta.3",
     "@monaco-editor/react": "^4.6.0",
+    "@neutralinojs/lib": "^6.0.0",
     "@radix-ui/react-context-menu": "^2.2.2",
     "@radix-ui/react-tabs": "^1.1.1",
-    "@tauri-apps/plugin-fs": "~2",
+    "@tauri-apps/plugin-fs": "~2.2.1",
     "allotment": "^1.20.3",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
@@ -48,6 +51,7 @@
     "tailwindcss": "^3.4.13",
     "theme-change": "^2.5.0",
     "typescript": "^5.6.3",
+    "wouter": "^3.7.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

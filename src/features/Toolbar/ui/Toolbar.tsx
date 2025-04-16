@@ -1,5 +1,4 @@
 import { assets } from "@kaplayjs/crew";
-import { ProjectList } from "./ProjectList/ProjectList.tsx";
 import { ProjectStatus } from "./ProjectStatus/ProjectStatus.tsx";
 
 export const Toolbar = () => {
@@ -24,7 +23,8 @@ export const Toolbar = () => {
             </a>
 
             <ProjectStatus />
-            <ProjectList />
+            {/* <ProjectList />  */}
+
             <div className="badge badge-warning">Temporal XD</div>
         </div>
     );

@@ -1,16 +1,17 @@
-import { useProjects } from "../../../Project/stores/useProjects.ts";
+import { useProjectStore } from "../../../Project/store/useProject.ts";
 
 export const ProjectNameInput = () => {
-    const projects = useProjects();
-    const curProject = projects.curProject;
+    const { currentProject, updateProject } = useProjectStore();
 
-    if (!curProject) return;
+    if (!currentProject) {
+        return <div className="badge badge-error">No current project!</div>;
+    }
 
     const handleInputChange = (t: React.ChangeEvent<HTMLInputElement>) => {
         const newName = t.target.value;
         if (!newName) return;
 
-        projects.updateCurProject({
+        updateProject({
             name: newName,
         });
     };
@@ -19,9 +20,8 @@ export const ProjectNameInput = () => {
         <input
             id="projectNameInput"
             className="input input-xs"
-            defaultValue={curProject.name}
+            defaultValue={currentProject.name}
             onChange={handleInputChange}
-            placeholder={"hi"}
         >
         </input>
     );

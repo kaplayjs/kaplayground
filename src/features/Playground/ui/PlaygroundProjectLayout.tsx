@@ -2,8 +2,9 @@ import { Allotment, LayoutPriority } from "allotment";
 import { type FC, useEffect } from "react";
 import { useAllotmentStorage } from "../../../util/allotmentStorage.ts";
 import { cn } from "../../../util/cn.ts";
-import { FileTree } from "../../FileTree/ui/FileTree.tsx";
-import { useProjects } from "../../Project/stores/useProjects.ts";
+import { FileSystemProjectRepository } from "../../Project/adapters/FileSystemProjectRepository.ts";
+import { LocalStorageProjectRepository } from "../../Project/adapters/LocalStorageProjectRepository.ts";
+import { useProjectStore } from "../../Project/store/useProject.ts";
 import { Toolbar } from "../../Toolbar/ui/Toolbar.tsx";
 
 interface PlaygroundProjectLayoutProps {
@@ -15,7 +16,8 @@ interface PlaygroundProjectLayoutProps {
 export const PlaygroundProjectLayout: FC<PlaygroundProjectLayoutProps> = (
     props,
 ) => {
-    const projects = useProjects();
+    const projects = useProjectStore();
+
     const { getAllotmentSize, setAllotmentSize } = useAllotmentStorage(
         "example",
     );
@@ -26,12 +28,19 @@ export const PlaygroundProjectLayout: FC<PlaygroundProjectLayoutProps> = (
         document.documentElement.classList.toggle("select-none", false);
 
     useEffect(() => {
+        const projectRepository = "NL_MODE" in globalThis
+            ? new FileSystemProjectRepository()
+            : new LocalStorageProjectRepository();
+
+        console.log("NL_MODE" in globalThis, projectRepository);
+
+        projects.setProjectRepository(projectRepository);
         projects.init();
     }, []);
 
     useEffect(() => {
-        console.log(projects.curProject);
-    }, [projects.curProject]);
+        console.log(projects.currentProject);
+    }, [projects.currentProject]);
 
     return (
         <div
@@ -59,7 +68,7 @@ export const PlaygroundProjectLayout: FC<PlaygroundProjectLayoutProps> = (
                         priority={LayoutPriority.Low}
                         className="pr-px"
                     >
-                        <FileTree />
+                        <div></div>
                     </Allotment.Pane>
                     <Allotment.Pane snap>
                         <Allotment

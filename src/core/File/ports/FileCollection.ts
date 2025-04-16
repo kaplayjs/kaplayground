@@ -21,21 +21,14 @@ export interface FileCollection {
         newFile: Partial<File>,
     ): File | null;
     /**
-     * Save file in persistent data
-     *
-     * @param projectName The name of the project to get file
-     * @param filePath The path of the file
-     */
-    save(projectName: string, file: File): File | null;
-    /**
-     * Get a file in persistent data
+     * Get a file
      *
      * @param projectName The name of the project to get file
      * @param filePath The path of the file
      */
     get(projectName: string, filePath: string): File | null;
     /**
-     * Check if file exists in persistent data
+     * Check if file exists
      *
      * @param projectName The name of the project to check file
      * @param filePath The path of the file
