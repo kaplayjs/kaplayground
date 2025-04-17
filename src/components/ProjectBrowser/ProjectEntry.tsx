@@ -1,4 +1,5 @@
 import { assets } from "@kaplayjs/crew";
+import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import type { FC } from "react";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
@@ -16,6 +17,7 @@ type LoadedProject = {
 type Props = {
     project: LoadedProject;
     isProject?: boolean;
+    toggleTag?: Function;
 };
 
 const imagesPerDifficulty: Record<string, string> = {
@@ -25,7 +27,9 @@ const imagesPerDifficulty: Record<string, string> = {
     "auto": assets.ghostiny.outlined,
 };
 
-export const ProjectEntry: FC<Props> = ({ project: example, isProject }) => {
+export const ProjectEntry: FC<Props> = (
+    { project: example, isProject, toggleTag },
+) => {
     const { createNewProjectFromDemo, loadProject, currentSelection } =
         useProject();
 
@@ -48,7 +52,7 @@ export const ProjectEntry: FC<Props> = ({ project: example, isProject }) => {
     return (
         <article
             className={cn(
-                "bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-20 hover:bg-base-content/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content transition-colors",
+                "group bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-[90px] hover:bg-base-content/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content transition-colors",
                 {
                     "bg-base-content/10 ring-1 ring-inset ring-base-content/[4%]":
                         currentSelection == example.name,
@@ -96,16 +100,53 @@ export const ProjectEntry: FC<Props> = ({ project: example, isProject }) => {
                     )}
 
                     {!!example?.tags?.length && (
-                        <div className="flex flex-wrap gap-1 -mx-1.5">
-                            {example.tags?.map((tag) => (
-                                <span
-                                    key={tag}
-                                    className="badge badge-neutral badge-sm h-auto py-0.5"
+                        toggleTag
+                            ? (
+                                <ToggleGroup.Root
+                                    className="flex flex-wrap gap-1 -mx-1.5"
+                                    type="multiple"
                                 >
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
+                                    {example.tags?.map((tag) => (
+                                        <ToggleGroup.Item
+                                            value="tag"
+                                            key={tag}
+                                            className={cn(
+                                                "btn btn-xs btn-ghost bg-base-content/10 h-auto py-0.5 font-medium rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 [.group:hover_&:not(:hover)]:bg-base-200 transition-colors",
+                                                {
+                                                    "bg-base-200":
+                                                        currentSelection
+                                                            == example.name,
+                                                },
+                                            )}
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                toggleTag(tag);
+                                            }}
+                                        >
+                                            {tag}
+                                        </ToggleGroup.Item>
+                                    ))}
+                                </ToggleGroup.Root>
+                            )
+                            : (
+                                <div className="flex flex-wrap gap-1 -mx-1.5">
+                                    {example.tags?.map((tag) => (
+                                        <span
+                                            key={tag}
+                                            className={cn(
+                                                "badge bg-base-content/10 badge-xs font-medium h-auto px-2 py-1.5 border-none [.group:hover_&:not(:hover)]:bg-base-200",
+                                                {
+                                                    "bg-base-200":
+                                                        currentSelection
+                                                            == example.name,
+                                                },
+                                            )}
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            )
                     )}
                 </div>
             </div>

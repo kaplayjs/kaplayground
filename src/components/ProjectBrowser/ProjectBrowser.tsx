@@ -10,27 +10,73 @@ import type { ProjectMode } from "../../stores/project";
 import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
 import { ProjectCreate } from "./ProjectCreate";
+import { TagsFilter } from "./TagsFilter";
 
 export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
     const { getSavedProjects } = useProject();
     const [filter, setFilter] = useState("");
+    const [filterTags, setFilterTags] = useState<string[]>([]);
+
+    const projects = useCallback(() =>
+        getSavedProjects().map(project => ({
+            formattedName: project
+                .slice(
+                    3,
+                ),
+            name: project,
+            tags: [
+                ...project.startsWith(
+                        "pj-",
+                    )
+                    ? ["project"]
+                    : ["example"],
+            ],
+            description: "",
+            id: 0,
+            version: "2.0.0",
+            difficulty: "",
+        })), [getSavedProjects]);
+
     const filteredExamples = useCallback(
         () =>
             demos.filter((example) =>
                 example.formattedName
                     .toLowerCase()
                     .includes(filter.toLowerCase())
+                && (!filterTags.length
+                    || example.tags.some(tag => filterTags.includes(tag)))
             ),
-        [filter],
+        [filter, filterTags],
     );
     const filteredProjects = useCallback(
         () =>
-            getSavedProjects().filter((project) =>
-                project.toLowerCase().includes(filter.toLowerCase())
+            projects().filter((project) =>
+                project.name.toLowerCase().includes(filter.toLowerCase())
+                && (!filterTags.length
+                    || project.tags.some(tag => filterTags.includes(tag)))
             ),
-        [filter],
+        [filter, filterTags],
     );
+    const tags = useCallback((): string[] => {
+        const set = new Set<string>();
+        (tab == "Projects" ? projects() : demos).forEach(
+            entry => {
+                if (typeof entry !== "string") {
+                    entry?.tags?.forEach((tag: string) => set.add(tag));
+                }
+            },
+        );
+
+        return [...set];
+    }, [tab]);
+    const toggleTag = (tag: string) =>
+        setFilterTags(prev =>
+            prev.includes(tag)
+                ? prev.filter(t => t !== tag)
+                : [...prev, tag]
+        );
+
     const createButtons = Object.entries({
         pj: "With tree structure",
         ex: "Single file script",
@@ -44,7 +90,7 @@ export const ProjectBrowser = () => {
 
     return (
         <dialog id="examples-browser" className="modal bg-[#00000070]">
-            <div className="modal-box | overflow-hidden max-w-screen-md p-0 flex flex-col w-dvw h-dvh">
+            <div className="modal-box overflow-hidden max-w-screen-md p-0 flex flex-col w-dvw h-dvh max-h-[calc(100dvh-4.4rem)]">
                 <header className="grow-0 space-y-4 bg-base-200 p-4 border border-b-0 border-px border-base-100 rounded-t-2xl">
                     <h2 className="text-3xl text-white font-semibold">
                         Projects Browser
@@ -53,8 +99,16 @@ export const ProjectBrowser = () => {
                     <input
                         type="search"
                         placeholder="Search for examples/projects"
-                        className="input | input-bordered | w-full"
+                        className="input input-bordered w-full"
                         onChange={(ev) => setFilter(ev.target.value)}
+                    />
+
+                    <TagsFilter
+                        tags={tags}
+                        filterTags={filterTags}
+                        setFilterTags={setFilterTags}
+                        multipleTags={tab != "Projects"}
+                        tagsExpandingDeps={[tab]}
                     />
                 </header>
 
@@ -89,26 +143,10 @@ export const ProjectBrowser = () => {
                                     {filteredProjects().length > 0
                                         && filteredProjects().map((project) => (
                                             <ProjectEntry
-                                                project={{
-                                                    formattedName: project
-                                                        .slice(
-                                                            3,
-                                                        ),
-                                                    name: project,
-                                                    tags: [
-                                                        ...project.startsWith(
-                                                                "pj-",
-                                                            )
-                                                            ? ["project"]
-                                                            : ["example"],
-                                                    ],
-                                                    description: "",
-                                                    id: 0,
-                                                    version: "2.0.0",
-                                                    difficulty: "",
-                                                }}
+                                                project={project}
                                                 isProject
-                                                key={project}
+                                                key={project.name}
+                                                toggleTag={toggleTag}
                                             />
                                         ))}
                                     {createButtons}
@@ -169,7 +207,11 @@ export const ProjectBrowser = () => {
                     >
                         <div className="examples-list gap-2 rounded-lg">
                             {filteredExamples().map((example, index) => (
-                                <ProjectEntry project={example} key={index} />
+                                <ProjectEntry
+                                    project={example}
+                                    key={index}
+                                    toggleTag={toggleTag}
+                                />
                             ))}
                         </div>
                     </Tabs.Content>
