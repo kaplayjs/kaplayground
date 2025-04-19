@@ -23,15 +23,35 @@ export const addCompletion: CompletionProviderFunc = (model, pos) => {
         endColumn: model.getLineMaxColumn(model.getLineCount()),
     });
 
-    // Look for something like "add([" or "k.add(["
-    const addCallMatch = /(?:\b(?:k\.)?add\s*\(\s*\[)[^\]]*$/.test(
+    // Check that we're inside something like "add(["
+    const isInsideAdd = /(?:\b(?:k\.)?add\s*\(\s*\[)[^\]]*$/.test(
         textBeforeCursor,
     );
 
-    // Make sure the array closes *after* the cursor
-    const arrayIsOpen = /^[^\]]*\]/.test(textAfterCursor);
+    // Check that the array is not closed yet after the cursor
+    const isInsideArray = /^[^\]]*\]/.test(textAfterCursor);
 
-    if (addCallMatch && arrayIsOpen) {
+    // Count brackets only inside the array (after the `add([`)
+    const textInsideArray =
+        textBeforeCursor.split(/(?:\b(?:k\.)?add\s*\(\s*\[)/).pop() || "";
+
+    let openParens = 0;
+    let openBrackets = 0;
+    let openBraces = 0;
+
+    for (const char of textInsideArray) {
+        if (char === "(") openParens++;
+        if (char === ")") openParens--;
+        if (char === "[") openBrackets++;
+        if (char === "]") openBrackets--;
+        if (char === "{") openBraces++;
+        if (char === "}") openBraces--;
+    }
+
+    const isInsideNested = openParens > 0 || openBrackets > 0
+        || openBraces > 0;
+
+    if (isInsideAdd && isInsideArray && !isInsideNested) {
         const word = model.getWordUntilPosition(pos);
         const range = new monaco.Range(
             pos.lineNumber,

@@ -4,7 +4,12 @@ import { DATA_URL_REGEX } from "../../util/regex";
 import { addCompletion } from "./completionProviders.ts";
 import { themes } from "./config/themes";
 
+let providersRegistered = false;
+
 export const configMonaco = (monaco: Monaco) => {
+    if (providersRegistered) return;
+    providersRegistered = true;
+
     // Add global KAPLAY types
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
         docTs,
