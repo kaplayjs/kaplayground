@@ -1,9 +1,9 @@
 {
-  "applicationId": "js.neutralino.zero",
-  "version": "1.0.0",
+  "applicationId": "js.kaplay.kaplayground",
+  "version": "3.0.0",
   "defaultMode": "window",
   "documentRoot": "/dist/",
-  "url": "/",
+  "url": "/dist/",
   "enableServer": true,
   "enableNativeAPI": true,
   "nativeAllowList": [
@@ -25,6 +25,14 @@
     "resourcesPath": "/dist/",
     "extensionsPath": "/extensions/",
     "binaryVersion": "6.0.0",
-    "clientVersion": "6.0.0"
+    "clientVersion": "6.0.0",
+    "frontendLibrary": {
+      "patchFile": "/index.html",
+      "devUrl": "http://localhost:5173",
+      "projectPath": "/src/",
+      "initCommand": "pnpm install",
+      "devCommand": "BROWSER=none npm run dev",
+      "buildCommand": "npm run build"
+    }
   }
 }

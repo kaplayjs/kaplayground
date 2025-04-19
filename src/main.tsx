@@ -6,4 +6,6 @@ createRoot(document.getElementById("root")!).render(
     <App />,
 );
 
-init();
+if (!import.meta.env.VITE_BROWSER) {
+    init();
+}

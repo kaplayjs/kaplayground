@@ -4,8 +4,7 @@
   "version": "2.1.0",
   "bin": "scripts/cli.js",
   "scripts": {
-    "dev": "vite dev",
-    "start": "vite dev",
+    "dev": "VITE_BROWSER=yes vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "generate:examples": "node --experimental-strip-types scripts/examples.ts",

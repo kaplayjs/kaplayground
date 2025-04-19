@@ -2,6 +2,7 @@ import { Allotment, LayoutPriority } from "allotment";
 import { type FC, useEffect } from "react";
 import { useAllotmentStorage } from "../../../util/allotmentStorage.ts";
 import { cn } from "../../../util/cn.ts";
+import { FileTree } from "../../FileTree/ui/FileTree.tsx";
 import { FileSystemProjectRepository } from "../../Project/adapters/FileSystemProjectRepository.ts";
 import { LocalStorageProjectRepository } from "../../Project/adapters/LocalStorageProjectRepository.ts";
 import { useProjectStore } from "../../Project/store/useProject.ts";
@@ -68,7 +69,7 @@ export const PlaygroundProjectLayout: FC<PlaygroundProjectLayoutProps> = (
                         priority={LayoutPriority.Low}
                         className="pr-px"
                     >
-                        <div></div>
+                        <FileTree />
                     </Allotment.Pane>
                     <Allotment.Pane snap>
                         <Allotment

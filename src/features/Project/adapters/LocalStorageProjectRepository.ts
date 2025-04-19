@@ -6,22 +6,8 @@ import type { Project } from "../../../core/Project/models/Project.ts";
 import type { ProjectBase } from "../../../core/Project/models/ProjectBase.ts";
 import type { ProjectRepository } from "../../../core/Project/ports/ProjectRepository.ts";
 
-type SerializedFileNode = {
-    type: "file";
-    file: File;
-};
-
-type SerializedFolderNode = {
-    type: "folder";
-    children: SerializedCodeFiles;
-};
-
-export type SerializedCodeFiles = {
-    [key: string]: SerializedFileNode | SerializedFolderNode;
-};
-
 type SerializedProject = {
-    codeFiles: SerializedCodeFiles;
+    codeFiles: File[];
     assets: Asset[];
 } & Omit<Project, "codeFiles" | "assets">;
 
@@ -85,10 +71,38 @@ export class LocalStorageProjectRepository implements ProjectRepository {
         return `${currentCount}`;
     }
 
+    async createNew(): Promise<Project> {
+        return createProject(
+            {
+                name: "New Project",
+                mode: "project",
+            },
+            await this.generateId(),
+        );
+    }
+
+    async createFile(projectId: string, file: File): Promise<File> {
+        const projects = this.getAllProjects();
+        const serializedProject = projects[projectId];
+
+        if (!serializedProject) {
+            throw new Error(
+                `[localStorage] Project with id ${projectId} not found`,
+            );
+        }
+
+        const project = this.deserializeProject(serializedProject);
+        project.codeFiles.set(file.path, file);
+
+        await this.save(project);
+
+        return file;
+    }
+
     private serializeProject(project: Project): SerializedProject {
         const serializedProject: SerializedProject = {
             ...project,
-            codeFiles: this.serializeCodeFiles(project.codeFiles),
+            codeFiles: Array.from(project.codeFiles.values()),
             assets: Array.from(project.assets.values()),
         };
 
@@ -98,54 +112,16 @@ export class LocalStorageProjectRepository implements ProjectRepository {
     private deserializeProject(serializedProject: SerializedProject): Project {
         const project: Project = {
             ...serializedProject,
-            codeFiles: this.deserializeCodeFiles(serializedProject.codeFiles),
+            codeFiles: new Map(
+                serializedProject.codeFiles.map((file) => [file.path, file]),
+            ),
+
             assets: new Map(
                 serializedProject.assets.map((asset) => [asset.path, asset]),
             ),
         };
 
         return project;
-    }
-
-    private serializeCodeFiles(
-        codeFiles: Project["codeFiles"],
-    ): SerializedCodeFiles {
-        const serializedCodeFiles: SerializedCodeFiles = {};
-
-        for (const [path, file] of codeFiles) {
-            if (file instanceof Map) {
-                serializedCodeFiles[path] = {
-                    type: "folder",
-                    children: this.serializeCodeFiles(file),
-                };
-            } else {
-                serializedCodeFiles[path] = {
-                    type: "file",
-                    file,
-                };
-            }
-        }
-
-        return serializedCodeFiles;
-    }
-
-    private deserializeCodeFiles(
-        serializedCodeFiles: SerializedCodeFiles,
-    ): Project["codeFiles"] {
-        const codeFiles: Project["codeFiles"] = new Map();
-
-        for (const [path, node] of Object.entries(serializedCodeFiles)) {
-            if (node.type === "folder") {
-                codeFiles.set(
-                    path,
-                    this.deserializeCodeFiles(node.children),
-                );
-            } else {
-                codeFiles.set(path, node.file);
-            }
-        }
-
-        return codeFiles;
     }
 
     private getAllProjects(): Record<string, SerializedProject> {

@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { createFile } from "../../../core/File/application/createFile.ts";
+import type { File } from "../../../core/File/models/File.ts";
 import { getProject } from "../../../core/Project/application/getProject.ts";
 import { initProject } from "../../../core/Project/application/initProject.ts";
 import { isProjectAvailable } from "../../../core/Project/application/isProjectAvaible.ts";
@@ -12,6 +14,7 @@ interface RuntimeProject extends Project {
 }
 
 type ProjectStore = {
+    // #region TS: Project Mngmt
     projectRepository: ProjectRepository | null;
     currentProject: RuntimeProject | null;
     setProjectRepository: (repo: ProjectRepository) => void;
@@ -22,6 +25,11 @@ type ProjectStore = {
     saveProject: () => void;
     loadProject: (id: string) => void;
     deleteProject: (id: string) => void;
+    // #endregion
+
+    // #region TS: File Mngmt
+    createFile: (file: File) => void;
+    // #endregion
 };
 
 export const useProjectStore = create<ProjectStore>((set, get) => ({
@@ -98,4 +106,29 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
             set({ currentProject: null });
         }
     },
+
+    // #region File Mngmt
+    createFile: async (file) => {
+        const current = get().currentProject;
+        const repo = get().getProjectRepository();
+
+        if (!current) return;
+
+        const fileCreated = await createFile(repo, current.id, file.path, {
+            content: file.content,
+            kind: file.kind,
+            language: file.language,
+        });
+
+        const updated = {
+            ...current,
+            codeFiles: new Map(current.codeFiles).set(
+                fileCreated.path,
+                fileCreated,
+            ),
+        };
+
+        set({ currentProject: updated });
+    },
+    // #endregion
 }));

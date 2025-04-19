@@ -1,8 +1,9 @@
 import * as ContextMenu from "@radix-ui/react-context-menu";
-import { type FC, useRef, useState } from "react";
+import { type FC, useState } from "react";
 import type { FileKind } from "../../../core/File/models/FileKind.ts";
 import { cn } from "../../../util/cn.ts";
 import "./FileFolder.css";
+import { useProjectStore } from "../../Project/store/useProject.ts";
 
 interface FileFolderProps {
     title: string;
@@ -23,6 +24,7 @@ const paddingLevels = [
 
 export const FileFolder: FC<FileFolderProps> = (props) => {
     const [folded, setFolded] = useState(props.folded ?? false);
+    const projectStore = useProjectStore();
 
     const triggerContextMenu = (x: number, y: number) => {
         const radixTrigger = document.querySelector("#radix-trigger");
@@ -84,7 +86,18 @@ export const FileFolder: FC<FileFolderProps> = (props) => {
                 </ContextMenu.Trigger>
                 <ContextMenu.Portal>
                     <ContextMenu.Content className="rounded-btn p-1 bg-base-300 flex flex-col shadow-lg">
-                        <ContextMenu.Item className="pl-4 pr-6 btn btn-xs btn-ghost justify-start rounded-md outline-none">
+                        <ContextMenu.Item
+                            className="pl-4 pr-6 btn btn-xs btn-ghost justify-start rounded-md outline-none"
+                            onClick={() => {
+                                projectStore.createFile({
+                                    path: "objects/test.js",
+                                    content: "console.log('test')",
+                                    kind: props.kind,
+                                    language: "javascript",
+                                    name: "test.js",
+                                });
+                            }}
+                        >
                             Add file
                         </ContextMenu.Item>
                         <ContextMenu.Item className="pl-4 pr-6 btn btn-xs btn-ghost justify-start rounded-md outline-none">

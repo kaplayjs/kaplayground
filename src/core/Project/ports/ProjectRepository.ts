@@ -1,3 +1,4 @@
+import type { File } from "../../File/models/File.ts";
 import type { Project } from "../models/Project.ts";
 import type { ProjectBase } from "../models/ProjectBase.ts";
 
@@ -17,4 +18,12 @@ export interface ProjectRepository {
      * Generates a unique ID for a new project.
      */
     generateId(): Promise<string>;
+    /**
+     * Create a new project from scratch.
+     */
+    createNew(): Promise<Project>;
+
+    // #region File Managment
+    createFile(projectId: string, file: File): Promise<File>;
+    // #endregion
 }
