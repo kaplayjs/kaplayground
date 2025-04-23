@@ -1,6 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import type { FC } from "react";
+import type { Tag } from "../../data/demos";
 import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn";
 
@@ -10,7 +11,7 @@ type LoadedProject = {
     description: string | null;
     id: number;
     difficulty?: string;
-    tags?: string[];
+    tags?: Tag[];
     version: string;
 };
 
@@ -109,9 +110,9 @@ export const ProjectEntry: FC<Props> = (
                                     {example.tags?.map((tag) => (
                                         <ToggleGroup.Item
                                             value="tag"
-                                            key={tag}
+                                            key={tag.name}
                                             className={cn(
-                                                "btn btn-xs btn-ghost bg-base-content/10 h-auto py-0.5 font-medium rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 [.group:hover_&:not(:hover)]:bg-base-200 transition-colors",
+                                                "btn btn-xs btn-ghost bg-base-content/10 h-auto py-0.5 font-medium capitalize rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 [.group:hover_&:not(:hover)]:bg-base-200 transition-colors",
                                                 {
                                                     "bg-base-200":
                                                         currentSelection
@@ -120,10 +121,10 @@ export const ProjectEntry: FC<Props> = (
                                             )}
                                             onClick={e => {
                                                 e.stopPropagation();
-                                                toggleTag(tag);
+                                                toggleTag(tag.name);
                                             }}
                                         >
-                                            {tag}
+                                            {tag?.displayName ?? tag.name}
                                         </ToggleGroup.Item>
                                     ))}
                                 </ToggleGroup.Root>
@@ -132,7 +133,7 @@ export const ProjectEntry: FC<Props> = (
                                 <div className="flex flex-wrap gap-1 -mx-1.5">
                                     {example.tags?.map((tag) => (
                                         <span
-                                            key={tag}
+                                            key={tag.name}
                                             className={cn(
                                                 "badge bg-base-content/10 badge-xs font-medium h-auto px-2 py-1.5 border-none [.group:hover_&:not(:hover)]:bg-base-200",
                                                 {
@@ -142,7 +143,7 @@ export const ProjectEntry: FC<Props> = (
                                                 },
                                             )}
                                         >
-                                            {tag}
+                                            {tag?.displayName ?? tag.name}
                                         </span>
                                     ))}
                                 </div>

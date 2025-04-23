@@ -1,23 +1,29 @@
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { FC, useEffect, useRef, useState } from "react";
+import { Tooltip } from "react-tooltip";
 import tween from "tweenkie";
+import type { ExamplesDataRecord } from "../../data/demos";
 import { cn } from "../../util/cn";
 
 type Props = {
-    tags: () => string[];
+    value: () => string[];
+    tags?: ExamplesDataRecord;
     filterTags: string[];
     setFilterTags: (tags: string[]) => void;
     multipleTags: boolean;
     tagsExpandingDeps?: unknown[];
+    className?: string;
 };
 
 export const TagsFilter: FC<Props> = (
     {
-        tags,
+        value,
+        tags = {},
         filterTags,
         setFilterTags,
         multipleTags = true,
         tagsExpandingDeps = [],
+        className,
     },
 ) => {
     const tagsRef = useRef<HTMLDivElement | null>(null);
@@ -31,12 +37,12 @@ export const TagsFilter: FC<Props> = (
 
     useEffect(() => {
         if (!userToggled) {
-            setTagsExpanded(tags().length < 24 && tags().length != 0);
+            setTagsExpanded(value().length < 22 && value().length != 0);
         }
         if (filterTags.length > 0) {
-            setFilterTags(filterTags.filter(tag => tags().includes(tag)));
+            setFilterTags(filterTags.filter(tag => value().includes(tag)));
         }
-    }, [tags]);
+    }, [value]);
 
     useEffect(() => {
         const node = tagsRef?.current;
@@ -62,18 +68,24 @@ export const TagsFilter: FC<Props> = (
     }, [tagsExpanded, ...tagsExpandingDeps]);
 
     return (
-        <div className="flex justify-between gap-1">
+        <div className={cn("relative flex justify-between gap-1", className)}>
+            <Tooltip
+                id="projects-browser-tags-tooltip"
+                className="!top-auto !bottom-full mb-[19px] ml-1 !py-2.5 !bg-neutral"
+                opacity={1}
+            />
+
             <div
                 ref={tagsRef}
                 className="flex justify-between items-start gap-1 rounded-xl overflow-hidden"
                 data-collapsed-height="24"
             >
-                {tags().length > 0
+                {value().length > 0
                     ? (
                         <ToggleGroup.Root
                             className="flex flex-wrap gap-1"
                             value={filterTags}
-                            type={"multiple"}
+                            type="multiple"
                             onValueChange={(tags) => {
                                 setFilterTags(
                                     multipleTags
@@ -84,12 +96,16 @@ export const TagsFilter: FC<Props> = (
                                 );
                             }}
                         >
-                            {tags().map(tag => (
+                            {value().map(tag => (
                                 <ToggleGroup.Item
                                     key={tag}
                                     value={tag}
+                                    data-tooltip-id="projects-browser-tags-tooltip"
+                                    data-tooltip-content={tags?.[tag]
+                                        ?.description}
+                                    data-tooltip-place="top-start"
                                     className={cn(
-                                        "relative btn btn-xs btn-outline font-medium bg-base-content/10 border-base-content/10 rounded-full focus-visible:-outline-offset-2 focus-visible:z-10",
+                                        "relative btn btn-xs btn-outline font-medium capitalize bg-base-content/10 border-base-content/10 rounded-full focus-visible:-outline-offset-2 focus-visible:z-10",
                                         {
                                             "bg-primary text-neutral focus-visible:ring-[3px] ring-inset ring-neutral":
                                                 filterTags.includes(
@@ -98,7 +114,7 @@ export const TagsFilter: FC<Props> = (
                                         },
                                     )}
                                 >
-                                    {tag}
+                                    {tags?.[tag]?.displayName || tag}
                                 </ToggleGroup.Item>
                             ))}
                         </ToggleGroup.Root>
@@ -151,7 +167,7 @@ export const TagsFilter: FC<Props> = (
                     aria-expanded={tagsExpanded}
                 >
                     <span className="badge badge-xs font-medium text-[0.5rem] py-0.5 px-0.5 min-w-4 h-auto bg-base-100 border-0">
-                        {tags().length}
+                        {value().length}
                     </span>
 
                     Tags

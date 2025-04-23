@@ -1,10 +1,12 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { demos } from "../../data/demos";
+import type { ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
 import { useCallback, useState } from "react";
 import { Tooltip } from "react-tooltip";
+import examplesJson from "../../../kaplay/examples/examples.json";
 import { useProject } from "../../hooks/useProject";
 import type { ProjectMode } from "../../stores/project";
 import { TabsList } from "../UI/TabsList";
@@ -12,11 +14,19 @@ import { TabTrigger } from "../UI/TabTrigger";
 import { ProjectCreate } from "./ProjectCreate";
 import { TagsFilter } from "./TagsFilter";
 
+type ExamplesData = {
+    categories?: ExamplesDataRecord;
+    tags?: ExamplesDataRecord;
+    difficulties?: { displayName?: string }[];
+};
+
 export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
     const { getSavedProjects } = useProject();
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
+
+    const examplesData = examplesJson as ExamplesData;
 
     const projects = useCallback(() =>
         getSavedProjects().map(project => ({
@@ -29,8 +39,8 @@ export const ProjectBrowser = () => {
                 ...project.startsWith(
                         "pj-",
                     )
-                    ? ["project"]
-                    : ["example"],
+                    ? [{ name: "project", displayName: "Project" }]
+                    : [{ name: "example", displayName: "Example" }],
             ],
             description: "",
             id: 0,
@@ -45,7 +55,9 @@ export const ProjectBrowser = () => {
                     .toLowerCase()
                     .includes(filter.toLowerCase())
                 && (!filterTags.length
-                    || example.tags.some(tag => filterTags.includes(tag)))
+                    || example.tags.some(({ name }) =>
+                        filterTags.includes(name)
+                    ))
             ),
         [filter, filterTags],
     );
@@ -54,7 +66,9 @@ export const ProjectBrowser = () => {
             projects().filter((project) =>
                 project.name.toLowerCase().includes(filter.toLowerCase())
                 && (!filterTags.length
-                    || project.tags.some(tag => filterTags.includes(tag)))
+                    || project.tags.some(({ name }) =>
+                        filterTags.includes(name)
+                    ))
             ),
         [filter, filterTags],
     );
@@ -63,7 +77,7 @@ export const ProjectBrowser = () => {
         (tab == "Projects" ? projects() : demos).forEach(
             entry => {
                 if (typeof entry !== "string") {
-                    entry?.tags?.forEach((tag: string) => set.add(tag));
+                    entry?.tags?.forEach(({ name }) => set.add(name));
                 }
             },
         );
@@ -104,7 +118,8 @@ export const ProjectBrowser = () => {
                     />
 
                     <TagsFilter
-                        tags={tags}
+                        value={tags}
+                        tags={examplesData.tags}
                         filterTags={filterTags}
                         setFilterTags={setFilterTags}
                         multipleTags={tab != "Projects"}
