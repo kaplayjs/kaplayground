@@ -5,6 +5,7 @@ import { parse } from "comment-parser";
 import fs from "fs";
 import path from "path";
 import type { Packument } from "query-registry";
+import examplesData from "../kaplay/examples/examples.json";
 
 // @ts-ignore
 async function getPackageInfo(name: string): Promise<Packument> {
@@ -40,22 +41,34 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
 
         const tags = codeJsdoc[0].tags?.reduce(
             (acc, tag) => {
-                acc[tag.tag] = tag.name + " " + tag.description;
+                acc[tag.tag] = [tag.name.trim(), tag.description.trim()].filter(
+                    t => t != "",
+                ).join(" ");
                 return acc;
             },
             {} as Record<string, string>,
         );
 
+        const sortName = [
+            examplesData.categories?.[tags?.category]?.order ?? 9999,
+            tags?.category,
+            tags?.groupOrder,
+            tags?.group,
+            name,
+        ].filter(t => t != undefined).join("-");
+
         const example: Record<string, any> = {
+            id: exampleCount++,
             name,
             formattedName: tags?.file?.trim() || name,
+            sortName,
+            category: tags?.category || "",
             description: tags?.description || "",
             code: codeWithoutMeta,
             difficulty: parseInt(tags?.difficulty) ?? 4,
-            id: exampleCount++,
             version: "master",
             minVersion: (tags?.minver)?.trim() || "noset",
-            tags: tags.tags?.trim().split(", ") || "",
+            tags: tags.tags?.trim().split(", ") || [],
         };
 
         if (tags.locked) example.locked = true;
