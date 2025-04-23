@@ -92,13 +92,13 @@ export const createProjectSlice: StateCreator<
             // Create a new project with default files and assets
             get().setDefaultProjectFiles("pj", files, assets);
             debug(2, "Default files loaded");
-        } else if (demoId) {
+        } else if (demoId !== undefined) {
             // Load a demo
             const foundDemo = demos.find((demo) => {
                 return demo.id === demoId;
             });
 
-            if (!foundDemo) {
+            if (foundDemo === undefined) {
                 debug(2, `[project] Demo with id ${demoId} not found`);
                 return;
             }
