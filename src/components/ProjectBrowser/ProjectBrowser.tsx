@@ -1,6 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { demos } from "../../data/demos";
-import type { ExamplesDataRecord } from "../../data/demos";
+import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
@@ -12,6 +12,12 @@ import type { ProjectMode } from "../../stores/project";
 import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
 import { ProjectCreate } from "./ProjectCreate";
+import {
+    SortBy,
+    sortEntries,
+    sortMapExamples,
+    sortMapProjects,
+} from "./SortBy";
 import { TagsFilter } from "./TagsFilter";
 
 type ExamplesData = {
@@ -22,31 +28,32 @@ type ExamplesData = {
 
 export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
-    const { getSavedProjects } = useProject();
+    const { getSavedProjects, getProjectMetadata } = useProject();
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
+    const [projectsSort, setProjectsSort] = useState("latest");
+    const [examplesSort, setExamplesSort] = useState("topic");
 
     const examplesData = examplesJson as ExamplesData;
 
-    const projects = useCallback(() =>
-        getSavedProjects().map(project => ({
-            formattedName: project
-                .slice(
-                    3,
-                ),
-            name: project,
-            tags: [
-                ...project.startsWith(
-                        "pj-",
-                    )
-                    ? [{ name: "project", displayName: "Project" }]
-                    : [{ name: "example", displayName: "Example" }],
-            ],
-            description: "",
-            id: 0,
-            version: "2.0.0",
-            difficulty: "",
-        })), [getSavedProjects]);
+    const currentSort = useCallback(
+        () => tab == "Projects" ? projectsSort : examplesSort,
+        [tab, projectsSort, examplesSort],
+    );
+    const setCurrentSort = (value: string) => {
+        if (tab == "Projects") {
+            setProjectsSort(value);
+        } else {
+            setExamplesSort(value);
+        }
+    };
+    const sortFn = (a: Example, b: Example): number =>
+        sortEntries(currentSort(), tab, a, b);
+
+    const projects = useCallback(
+        () => getSavedProjects().map(project => getProjectMetadata(project)),
+        [getSavedProjects],
+    );
 
     const filteredExamples = useCallback(
         () =>
@@ -58,23 +65,26 @@ export const ProjectBrowser = () => {
                     || example.tags.some(({ name }) =>
                         filterTags.includes(name)
                     ))
-            ),
-        [filter, filterTags],
+            ).sort(sortFn),
+        [filter, filterTags, currentSort],
     );
     const filteredProjects = useCallback(
         () =>
-            projects().filter((project) =>
+            (projects() as Example[]).filter((project) =>
                 project.name.toLowerCase().includes(filter.toLowerCase())
                 && (!filterTags.length
                     || project.tags.some(({ name }) =>
                         filterTags.includes(name)
                     ))
-            ),
-        [filter, filterTags],
+            ).sort(sortFn),
+        [filter, filterTags, currentSort],
     );
+
     const tags = useCallback((): string[] => {
         const set = new Set<string>();
-        (tab == "Projects" ? projects() : demos).forEach(
+        ((tab == "Projects" ? projects() : demos) as Example[]).sort(
+            sortFn,
+        ).forEach(
             entry => {
                 if (typeof entry !== "string") {
                     entry?.tags?.forEach(({ name }) => set.add(name));
@@ -105,10 +115,25 @@ export const ProjectBrowser = () => {
     return (
         <dialog id="examples-browser" className="modal bg-[#00000070]">
             <div className="modal-box overflow-hidden max-w-screen-md p-0 flex flex-col w-dvw h-dvh max-h-[calc(100dvh-4.4rem)]">
-                <header className="grow-0 space-y-4 bg-base-200 p-4 border border-b-0 border-px border-base-100 rounded-t-2xl">
-                    <h2 className="text-3xl text-white font-semibold">
-                        Projects Browser
-                    </h2>
+                <header
+                    className="grow-0 space-y-4 bg-base-200 p-4 border border-b-0 border-px border-base-100 rounded-t-2xl"
+                    tabIndex={0}
+                >
+                    <div className="flex flex-wrap items-baseline justify-between gap-3">
+                        <h2 className="shrink-0 text-3xl text-white font-semibold">
+                            Projects Browser
+                        </h2>
+
+                        <SortBy
+                            value={currentSort()}
+                            onChange={setCurrentSort}
+                            options={Object.keys(
+                                tab == "Projects"
+                                    ? sortMapProjects
+                                    : sortMapExamples,
+                            )}
+                        />
+                    </div>
 
                     <input
                         type="search"

@@ -23,6 +23,8 @@ export type Project = {
     mode: ProjectMode;
     id: string;
     isDefault?: boolean;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export interface ProjectSlice {
@@ -39,6 +41,7 @@ export interface ProjectSlice {
     createNewProjectFromDemo: (demoId: number | string) => void;
     projectIsSaved: (id: string, mode: ProjectMode) => boolean;
     getSavedProjects: (filter?: ProjectMode) => string[];
+    getProjectMetadata: (id: string) => object;
     saveProject: (newProjectId: string, oldProjectId: string) => void;
     loadProject: (projectId: string, replaceProject?: Project) => void;
     loadSharedDemo: (sharedCode: string, sharedVersion?: string) => void;
@@ -66,6 +69,8 @@ export const createProjectSlice: StateCreator<
         mode: "pj",
         kaplayVersion: examplesList[0].version,
         id: `upj-Untitled`,
+        createdAt: "",
+        updatedAt: "",
     },
     getProject: () => {
         return get().project;
@@ -149,6 +154,8 @@ export const createProjectSlice: StateCreator<
                 kaplayVersion: version,
                 isDefault: demoId ? true : false,
                 id: id,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
             },
         }));
 
@@ -185,6 +192,7 @@ export const createProjectSlice: StateCreator<
                 ...get().project,
                 name: id,
                 id: `${get().project.mode}-${id}`,
+                updatedAt: new Date().toISOString(),
             },
         });
 
@@ -212,6 +220,29 @@ export const createProjectSlice: StateCreator<
         }
 
         return keys;
+    },
+    getProjectMetadata(id: string): object {
+        const data = JSON.parse(localStorage.getItem(id) ?? "")?.state
+            ?.project;
+
+        if (!data) return {};
+
+        return {
+            formattedName: data.id.slice(3),
+            name: data.id,
+            tags: [
+                ...data.id.startsWith(
+                        "pj-",
+                    )
+                    ? [{ name: "project", displayName: "Project" }]
+                    : [{ name: "example", displayName: "Example" }],
+            ],
+            description: "",
+            id: 0,
+            version: "2.0.0",
+            createdAt: data?.createdAt ?? new Date().toDateString(),
+            updatedAt: data?.updatedAt ?? new Date().toDateString(),
+        };
     },
     setDefaultProjectFiles: (mode, files, assets) => {
         if (mode === "pj") {
@@ -281,6 +312,8 @@ export const createProjectSlice: StateCreator<
             name: "Shared Example",
             version: "2.0.0",
             isDefault: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toDateString(),
         });
     },
 });

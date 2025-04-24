@@ -9,7 +9,11 @@ export default {
     theme: {
         extend: {
             fontFamily: {
+                sans: ["\"Outfit Variable\"", ...defaultTheme.fontFamily.sans],
                 mono: ["\"DM Mono\"", ...defaultTheme.fontFamily.mono],
+            },
+            backgroundPosition: {
+                "select-xs": "right 12px center, right 8px center",
             },
         },
     },

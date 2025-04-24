@@ -1,4 +1,7 @@
-import { tags } from "../../kaplay/examples/examples.json";
+import {
+    difficulties as difficultiesData,
+    tags,
+} from "../../kaplay/examples/examples.json";
 import examplesList from "./exampleList.json";
 
 export type ExamplesDataRecord = Record<string, {
@@ -22,17 +25,25 @@ export type Example = {
     version: string;
     minVersion: string;
     tags: Tag[];
-    difficulty: "easy" | "medium" | "hard" | "auto" | "unknown";
+    difficulty: {
+        level: number;
+        name: string;
+    };
+    createdAt: string;
+    updatedAt: string;
     locked?: boolean;
 };
 
 export const difficulties = [
-    "easy",
-    "medium",
-    "hard",
-    "auto",
-    "unknown",
-] as const;
+    ...difficultiesData.map(({ displayName }, index: number) => ({
+        level: index,
+        name: displayName,
+    })),
+    {
+        level: difficultiesData.length,
+        name: "Unknown",
+    },
+];
 
 export const demos = examplesList.map((example) => {
     const obj: Example = {
@@ -41,7 +52,8 @@ export const demos = examplesList.map((example) => {
             name: tag,
             ...(tags as ExamplesDataRecord)?.[tag],
         })),
-        difficulty: difficulties[example.difficulty],
+        difficulty: difficulties[example.difficulty]
+            ?? difficulties[difficulties.length - 1],
     };
 
     return obj;
