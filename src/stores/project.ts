@@ -240,8 +240,8 @@ export const createProjectSlice: StateCreator<
             description: "",
             id: 0,
             version: "2.0.0",
-            createdAt: data?.createdAt ?? new Date().toDateString(),
-            updatedAt: data?.updatedAt ?? new Date().toDateString(),
+            createdAt: data?.createdAt ?? "",
+            updatedAt: data?.updatedAt ?? "",
         };
     },
     setDefaultProjectFiles: (mode, files, assets) => {
@@ -313,7 +313,7 @@ export const createProjectSlice: StateCreator<
             version: "2.0.0",
             isDefault: false,
             createdAt: new Date().toISOString(),
-            updatedAt: new Date().toDateString(),
+            updatedAt: new Date().toISOString(),
         });
     },
 });

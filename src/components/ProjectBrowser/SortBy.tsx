@@ -13,14 +13,14 @@ export const sortMapExamples: Record<
 > = {
     topic: item => item.sortName,
     title: item => item.formattedName,
-    latest: item => new Date(item.updatedAt).getTime(),
+    latest: item => new Date(item?.updatedAt || 0).getTime(),
     difficulty: item => item.difficulty?.level ?? 0,
 };
 export const sortMapProjects: Record<
     string,
     (item: Example) => string | number
 > = {
-    latest: item => new Date(item.updatedAt).getTime(),
+    latest: item => new Date(item?.updatedAt || 0).getTime(),
     type: item => item.tags[0].name,
     title: item => item.name,
 };
