@@ -139,7 +139,7 @@ export const ProjectEntry: FC<Props> = (
                                             value="tag"
                                             key={tag.name}
                                             className={cn(
-                                                "btn btn-xs btn-ghost bg-base-content/10 h-auto py-0.5 font-medium capitalize rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 [.group:hover_&:not(:hover)]:bg-base-200 transition-colors",
+                                                "btn btn-xs btn-ghost bg-base-content/10 h-auto min-h-0 py-1 font-medium leading-none capitalize rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 focus-visible:outline-offset-0 [.group:hover_&:not(:hover)]:bg-base-200 transition-colors",
                                                 {
                                                     "bg-base-200":
                                                         currentSelection
@@ -162,7 +162,7 @@ export const ProjectEntry: FC<Props> = (
                                         <span
                                             key={tag.name}
                                             className={cn(
-                                                "badge bg-base-content/10 badge-xs font-medium h-auto px-2 py-1.5 border-none [.group:hover_&:not(:hover)]:bg-base-200",
+                                                "badge bg-base-content/10 badge-xs font-medium h-auto px-2 py-1 border-none [.group:hover_&:not(:hover)]:bg-base-200 hover:bg-base-200",
                                                 {
                                                     "bg-base-200":
                                                         currentSelection

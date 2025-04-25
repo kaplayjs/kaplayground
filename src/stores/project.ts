@@ -227,13 +227,14 @@ export const createProjectSlice: StateCreator<
 
         if (!data) return {};
 
+        const mode = data.id.split("-")[0];
+
         return {
             formattedName: data.id.slice(3),
             name: data.id,
+            type: mode == "pj" ? "Projects" : "Examples",
             tags: [
-                ...data.id.startsWith(
-                        "pj-",
-                    )
+                ...mode == "pj"
                     ? [{ name: "project", displayName: "Project" }]
                     : [{ name: "example", displayName: "Example" }],
             ],

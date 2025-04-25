@@ -4,13 +4,15 @@ import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import { useProject } from "../../hooks/useProject";
 import type { ProjectMode } from "../../stores/project";
+import { cn } from "../../util/cn";
 import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
+import { GroupBy, groupBy } from "./GroupBy";
 import { ProjectCreate } from "./ProjectCreate";
 import {
     SortBy,
@@ -20,7 +22,7 @@ import {
 } from "./SortBy";
 import { TagsFilter } from "./TagsFilter";
 
-type ExamplesData = {
+export type ExamplesData = {
     categories?: ExamplesDataRecord;
     tags?: ExamplesDataRecord;
     difficulties?: { displayName?: string }[];
@@ -33,6 +35,8 @@ export const ProjectBrowser = () => {
     const [filterTags, setFilterTags] = useState<string[]>([]);
     const [projectsSort, setProjectsSort] = useState("latest");
     const [examplesSort, setExamplesSort] = useState("topic");
+    const [projectsGroup, setProjectsGroup] = useState("type");
+    const [examplesGroup, setExamplesGroup] = useState("category");
 
     const examplesData = examplesJson as ExamplesData;
 
@@ -55,29 +59,47 @@ export const ProjectBrowser = () => {
         [getSavedProjects],
     );
 
-    const filteredExamples = useCallback(
-        () =>
-            demos.filter((example) =>
-                example.formattedName
-                    .toLowerCase()
-                    .includes(filter.toLowerCase())
-                && (!filterTags.length
-                    || example.tags.some(({ name }) =>
-                        filterTags.includes(name)
-                    ))
-            ).sort(sortFn),
-        [filter, filterTags, currentSort],
+    const currentGroup = useCallback(
+        () => tab == "Projects" ? projectsGroup : examplesGroup,
+        [tab, projectsGroup, examplesGroup],
     );
+    const setCurrentGroup = (value: string) => {
+        if (tab == "Projects") {
+            setProjectsGroup(value);
+        } else {
+            setExamplesGroup(value);
+        }
+    };
+
     const filteredProjects = useCallback(
         () =>
-            (projects() as Example[]).filter((project) =>
-                project.name.toLowerCase().includes(filter.toLowerCase())
-                && (!filterTags.length
-                    || project.tags.some(({ name }) =>
-                        filterTags.includes(name)
-                    ))
-            ).sort(sortFn),
-        [filter, filterTags, currentSort],
+            groupBy(
+                (projects() as Example[]).filter((project) =>
+                    project.name.toLowerCase().includes(filter.toLowerCase())
+                    && (!filterTags.length
+                        || project.tags.some(({ name }) =>
+                            filterTags.includes(name)
+                        ))
+                ).sort(sortFn),
+                projectsGroup,
+            ),
+        [filter, filterTags, currentSort, projectsGroup],
+    );
+    const filteredExamples = useCallback(
+        () =>
+            groupBy(
+                demos.filter((example) =>
+                    example.formattedName
+                        .toLowerCase()
+                        .includes(filter.toLowerCase())
+                    && (!filterTags.length
+                        || example.tags.some(({ name }) =>
+                            filterTags.includes(name)
+                        ))
+                ).sort(sortFn),
+                examplesGroup,
+            ),
+        [filter, filterTags, currentSort, examplesGroup],
     );
 
     const tags = useCallback((): string[] => {
@@ -100,6 +122,9 @@ export const ProjectBrowser = () => {
                 ? prev.filter(t => t !== tag)
                 : [...prev, tag]
         );
+
+    const entriesCount = (entries: object): number =>
+        Object.values(entries).reduce((sum, items) => sum + items.length, 0);
 
     const createButtons = Object.entries({
         pj: "With tree structure",
@@ -124,15 +149,29 @@ export const ProjectBrowser = () => {
                             Projects Browser
                         </h2>
 
-                        <SortBy
-                            value={currentSort()}
-                            onChange={setCurrentSort}
-                            options={Object.keys(
-                                tab == "Projects"
-                                    ? sortMapProjects
-                                    : sortMapExamples,
-                            )}
-                        />
+                        <div className="flex gap-3">
+                            <GroupBy
+                                value={currentGroup()}
+                                onChange={setCurrentGroup}
+                                options={tab == "Projects"
+                                    ? ["type", "none"]
+                                    : [
+                                        "category",
+                                        "group",
+                                        "difficulty",
+                                        "none",
+                                    ]}
+                            />
+                            <SortBy
+                                value={currentSort()}
+                                onChange={setCurrentSort}
+                                options={Object.keys(
+                                    tab == "Projects"
+                                        ? sortMapProjects
+                                        : sortMapExamples,
+                                )}
+                            />
+                        </div>
                     </div>
 
                     <input
@@ -162,35 +201,104 @@ export const ProjectBrowser = () => {
                             label="My Projects & Examples"
                             value="Projects"
                             icon={assets.api_book.outlined}
-                            count={filteredProjects().length}
+                            count={entriesCount(filteredProjects())}
                         />
                         <TabTrigger
                             label="KAPLAY Demos"
                             value="Examples"
                             icon={assets.apple.outlined}
-                            count={filteredExamples().length}
+                            count={entriesCount(filteredExamples())}
                         />
                     </TabsList>
 
                     <Tabs.Content
                         value="Projects"
-                        className="flex-1 p-5 pt-4 overflow-auto scrollbar-thin"
+                        className="flex-1 px-4 pb-5 pt-4 overflow-auto scrollbar-thin"
                         tabIndex={-1}
+                        forceMount
+                        hidden={tab !== "Projects"}
                     >
                         {getSavedProjects().length > 0
                             ? (
-                                <div className="examples-list gap-2 rounded-lg">
-                                    {filteredProjects().length > 0
-                                        && filteredProjects().map((project) => (
-                                            <ProjectEntry
-                                                project={project}
-                                                isProject
-                                                key={project.name}
-                                                toggleTag={toggleTag}
-                                            />
-                                        ))}
-                                    {createButtons}
-                                </div>
+                                <>
+                                    {Object.entries(filteredProjects()).map((
+                                        [groupName, projects],
+                                        index,
+                                    ) => (
+                                        <Fragment key={index}>
+                                            <div
+                                                className={cn(
+                                                    "rounded-lg collapse collapse-arrow px-1 first:pt-0.5",
+                                                    {
+                                                        "first:-mt-3":
+                                                            groupName != "all",
+                                                    },
+                                                )}
+                                            >
+                                                <input
+                                                    className="peer min-h-12"
+                                                    type="checkbox"
+                                                    defaultChecked
+                                                    hidden={groupName == "all"}
+                                                />
+
+                                                {groupName != "all" && (
+                                                    <>
+                                                        <div
+                                                            className={cn(
+                                                                "collapse-title flex items-center gap-1.5 font-medium capitalize px-0 py-3.5 min-h-12 after:!top-7 after:!right-2 peer-hover:text-white transition-colors",
+                                                                {
+                                                                    "text-base-content/50":
+                                                                        groupName
+                                                                            == "uncategorized",
+                                                                },
+                                                            )}
+                                                        >
+                                                            <span className="badge badge-xs font-bold text-[inherit] text-[0.625rem] py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
+                                                                {projects
+                                                                    .length}
+                                                            </span>
+                                                            {examplesData
+                                                                .categories
+                                                                ?.[groupName]
+                                                                ?.displayName
+                                                                ?? groupName}
+                                                        </div>
+                                                    </>
+                                                )}
+
+                                                <div
+                                                    className={cn(
+                                                        "examples-list gap-2 collapse-content -mx-0.5 !p-0 peer-checked:!pb-5",
+                                                        {
+                                                            "-mt-5 peer-checked:!pt-5":
+                                                                groupName
+                                                                    != "all",
+                                                        },
+                                                    )}
+                                                >
+                                                    {projects.map((project) => (
+                                                        <ProjectEntry
+                                                            project={project}
+                                                            isProject
+                                                            key={project.name}
+                                                            toggleTag={toggleTag}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="mx-1 border-b border-base-content/10">
+                                            </div>
+                                        </Fragment>
+                                    ))}
+
+                                    <div
+                                        key={"create-button"}
+                                        className="sticky -bottom-5 examples-list gap-2 -mb-5 pt-5 pb-5 px-0.5 bg-base-100"
+                                    >
+                                        {createButtons}
+                                    </div>
+                                </>
                             )
                             : (
                                 <div className="flex flex-col items-center justify-center gap-3 w-full max-w-sm mx-auto min-h-full pb-[4vh]">
@@ -231,9 +339,11 @@ export const ProjectBrowser = () => {
 
                                         Check out KAPLAY Demos
 
-                                        {!!filteredExamples().length && (
+                                        {!!entriesCount(filteredExamples()) && (
                                             <span className="badge badge-xs font-medium py-1 px-1.5 min-w-5 h-auto bg-base-content/15 border-0">
-                                                {filteredExamples().length}
+                                                {entriesCount(
+                                                    filteredExamples(),
+                                                )}
                                             </span>
                                         )}
                                     </button>
@@ -242,18 +352,92 @@ export const ProjectBrowser = () => {
                     </Tabs.Content>
                     <Tabs.Content
                         value="Examples"
-                        className="p-5 pt-4 overflow-auto scrollbar-thin"
+                        className="flex-1 px-4 pb-5 pt-4 overflow-auto scrollbar-thin"
                         tabIndex={-1}
+                        forceMount
+                        hidden={tab !== "Examples"}
                     >
-                        <div className="examples-list gap-2 rounded-lg">
-                            {filteredExamples().map((example, index) => (
-                                <ProjectEntry
-                                    project={example}
-                                    key={index}
-                                    toggleTag={toggleTag}
-                                />
-                            ))}
-                        </div>
+                        {Object.entries(filteredExamples()).map((
+                            [groupName, examples],
+                            index,
+                        ) => (
+                            <Fragment key={index}>
+                                <div
+                                    className={cn(
+                                        "rounded-lg collapse collapse-arrow px-1 first:pt-0.5",
+                                        { "first:-mt-3": groupName != "all" },
+                                    )}
+                                >
+                                    <input
+                                        className="peer min-h-12"
+                                        type="checkbox"
+                                        defaultChecked
+                                        hidden={groupName == "all"}
+                                    />
+
+                                    {groupName != "all" && (
+                                        <div
+                                            className={cn(
+                                                "collapse-title flex items-center gap-1.5 font-medium pl-0 pr-6 py-3.5 min-h-12 after:!top-7 after:!right-2 peer-hover:text-white transition-colors",
+                                                {
+                                                    "text-base-content/50":
+                                                        groupName
+                                                            == "uncategorized",
+                                                },
+                                            )}
+                                        >
+                                            <span className="badge badge-xs font-bold text-[inherit] text-[0.625rem] py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
+                                                {examples.length}
+                                            </span>
+
+                                            <div className="flex flex-wrap items-baseline gap-x-2">
+                                                <h3 className="capitalize">
+                                                    {examplesData.categories
+                                                        ?.[groupName]
+                                                        ?.displayName
+                                                        ?? groupName}
+                                                </h3>
+
+                                                {currentGroup()
+                                                        == "category"
+                                                    && examplesData
+                                                        .categories
+                                                        ?.[groupName]
+                                                        ?.description
+                                                    && (
+                                                        <p className="self-baseline font-normal text-xs tracking-wide text-base-content/80">
+                                                            {examplesData
+                                                                .categories
+                                                                ?.[groupName]
+                                                                ?.description}
+                                                        </p>
+                                                    )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div
+                                        className={cn(
+                                            "examples-list gap-2 collapse-content -mx-0.5 !p-0",
+                                            {
+                                                "-mt-5 peer-checked:!py-5":
+                                                    groupName != "all",
+                                            },
+                                        )}
+                                    >
+                                        {examples.map((example) => (
+                                            <ProjectEntry
+                                                project={example}
+                                                key={example.name}
+                                                toggleTag={toggleTag}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="mx-1 border-b border-base-content/10 last:hidden">
+                                </div>
+                            </Fragment>
+                        ))}
                     </Tabs.Content>
                 </Tabs.Root>
             </div>

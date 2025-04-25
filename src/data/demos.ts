@@ -20,6 +20,7 @@ export type Example = {
     formattedName: string;
     sortName: string;
     category: string;
+    group: string;
     description: string | null;
     code: string;
     version: string;
@@ -44,6 +45,9 @@ export const difficulties = [
         name: "Unknown",
     },
 ];
+
+export const difficultyByName = (name: string) =>
+    difficulties.find(d => d.name === name);
 
 export const demos = examplesList.map((example) => {
     const obj: Example = {

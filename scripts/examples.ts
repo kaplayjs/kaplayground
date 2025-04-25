@@ -64,6 +64,7 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
             formattedName: tags?.file?.trim() || name,
             sortName,
             category: tags?.category || "",
+            group: tags?.group || "",
             description: tags?.description || "",
             code: codeWithoutMeta,
             difficulty: parseInt(tags?.difficulty) ?? 4,
