@@ -6,7 +6,9 @@ import { parse } from "comment-parser";
 import fs from "fs";
 import path from "path";
 import type { Packument } from "query-registry";
-import examplesData from "../kaplay/examples/examples.json";
+import examplesData from "../kaplay/examples/examples.json" with {
+    type: "json",
+};
 
 // @ts-ignore
 async function getPackageInfo(name: string): Promise<Packument> {
