@@ -42,7 +42,9 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
             "",
         ).trim();
 
-        const tags = codeJsdoc[0].tags?.reduce(
+        if (!codeWithoutMeta) return null;
+
+        const tags = codeJsdoc[0]?.tags?.reduce(
             (acc, tag) => {
                 acc[tag.tag] = [tag.name.trim(), tag.description.trim()].filter(
                     t => t != "",
@@ -72,12 +74,12 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
             difficulty: parseInt(tags?.difficulty) ?? 4,
             version: "master",
             minVersion: (tags?.minver)?.trim() || "noset",
-            tags: tags.tags?.trim().split(", ") || [],
+            tags: tags?.tags?.trim().split(", ") || [],
             createdAt: getFileTimestamp(filePath),
             updatedAt: getFileTimestamp(filePath, "updated"),
         };
 
-        if (tags.locked) example.locked = true;
+        if (tags?.locked) example.locked = true;
 
         return example;
     });

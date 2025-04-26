@@ -21,7 +21,7 @@ export const sortMapProjects: Record<
     (item: Example) => string | number
 > = {
     latest: item => new Date(item?.updatedAt || 0).getTime(),
-    type: item => item.tags[0].name,
+    type: item => item?.tags[0]?.name,
     title: item => item.name,
 };
 
