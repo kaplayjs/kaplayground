@@ -4,7 +4,7 @@ import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { Fragment, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import { useProject } from "../../hooks/useProject";
@@ -225,58 +225,57 @@ export const ProjectBrowser = () => {
                                         [groupName, projects],
                                         index,
                                     ) => (
-                                        <Fragment key={index}>
-                                            <div
-                                                className={cn(
-                                                    "rounded-lg collapse collapse-arrow px-1 first:pt-0.5",
-                                                    {
-                                                        "first:-mt-3":
-                                                            groupName != "all",
-                                                    },
-                                                )}
-                                            >
-                                                <input
-                                                    className="peer min-h-12"
-                                                    type="checkbox"
-                                                    defaultChecked
-                                                    hidden={groupName == "all"}
-                                                />
+                                        <div
+                                            key={index}
+                                            className={cn(
+                                                "collapse collapse-arrow px-1 first:pt-0.5 rounded-none has-[:focus]:rounded-lg group-collapse",
+                                                {
+                                                    "first:-mt-3":
+                                                        groupName != "all",
+                                                },
+                                            )}
+                                        >
+                                            <input
+                                                className="peer min-h-12"
+                                                type="checkbox"
+                                                defaultChecked
+                                                hidden={groupName == "all"}
+                                            />
 
-                                                {groupName != "all" && (
-                                                    <>
-                                                        <div
-                                                            className={cn(
-                                                                "collapse-title flex items-center gap-1.5 font-medium capitalize px-0 py-3.5 min-h-12 after:!top-7 after:!right-2 peer-hover:text-white transition-colors",
-                                                                {
-                                                                    "text-base-content/50":
-                                                                        groupName
-                                                                            == "uncategorized",
-                                                                },
-                                                            )}
-                                                        >
-                                                            <span className="badge badge-xs font-bold text-[inherit] text-[0.625rem] py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
-                                                                {projects
-                                                                    .length}
-                                                            </span>
-                                                            {examplesData
-                                                                .categories
-                                                                ?.[groupName]
-                                                                ?.displayName
-                                                                ?? groupName}
-                                                        </div>
-                                                    </>
-                                                )}
-
+                                            {groupName != "all" && (
                                                 <div
                                                     className={cn(
-                                                        "examples-list gap-2 collapse-content -mx-0.5 !p-0 peer-checked:!pb-5",
+                                                        "collapse-title flex items-center gap-1.5 font-medium capitalize px-0 py-3.5 min-h-12 border-t border-base-content/10 group-[-collapse:first-child]:border-t-0 after:!top-7 after:!right-2 peer-hover:text-white transition-colors",
                                                         {
-                                                            "-mt-5 peer-checked:!pt-5":
+                                                            "text-base-content/50":
                                                                 groupName
-                                                                    != "all",
+                                                                    == "uncategorized",
                                                         },
                                                     )}
                                                 >
+                                                    <span className="badge badge-xs font-bold text-[inherit] text-[0.625rem] py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
+                                                        {projects
+                                                            .length}
+                                                    </span>
+                                                    {examplesData
+                                                        .categories
+                                                        ?.[groupName]
+                                                        ?.displayName
+                                                        ?? groupName}
+                                                </div>
+                                            )}
+
+                                            <div
+                                                className={cn(
+                                                    "collapse-content -mx-0.5 !p-0 peer-checked:!pb-5",
+                                                    {
+                                                        "-mt-5 peer-checked:!pt-5":
+                                                            groupName
+                                                                != "all",
+                                                    },
+                                                )}
+                                            >
+                                                <div className="examples-list gap-2">
                                                     {projects.map((project) => (
                                                         <ProjectEntry
                                                             project={project}
@@ -287,16 +286,15 @@ export const ProjectBrowser = () => {
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div className="mx-1 border-b border-base-content/10">
-                                            </div>
-                                        </Fragment>
+                                        </div>
                                     ))}
 
-                                    <div
-                                        key={"create-button"}
-                                        className="sticky -bottom-5 examples-list gap-2 -mb-5 pt-5 pb-5 px-0.5 bg-base-100"
-                                    >
-                                        {createButtons}
+                                    <div className="sticky -bottom-5 -mb-5 -mx-4 px-5 bg-base-100">
+                                        <div className="pt-5 pb-5 border-t border-base-content/10">
+                                            <div className="examples-list gap-2 -mx-0.5">
+                                                {createButtons}
+                                            </div>
+                                        </div>
                                     </div>
                                 </>
                             )
@@ -361,70 +359,71 @@ export const ProjectBrowser = () => {
                             [groupName, examples],
                             index,
                         ) => (
-                            <Fragment key={index}>
-                                <div
-                                    className={cn(
-                                        "rounded-lg collapse collapse-arrow px-1 first:pt-0.5",
-                                        { "first:-mt-3": groupName != "all" },
-                                    )}
-                                >
-                                    <input
-                                        className="peer min-h-12"
-                                        type="checkbox"
-                                        defaultChecked
-                                        hidden={groupName == "all"}
-                                    />
+                            <div
+                                key={index}
+                                className={cn(
+                                    "collapse collapse-arrow px-1 first:pt-0.5 rounded-none has-[:focus]:rounded-lg group-collapse",
+                                    { "first:-mt-3": groupName != "all" },
+                                )}
+                            >
+                                <input
+                                    className="peer min-h-12"
+                                    type="checkbox"
+                                    defaultChecked
+                                    hidden={groupName == "all"}
+                                />
 
-                                    {groupName != "all" && (
-                                        <div
-                                            className={cn(
-                                                "collapse-title flex items-center gap-1.5 font-medium pl-0 pr-6 py-3.5 min-h-12 after:!top-7 after:!right-2 peer-hover:text-white transition-colors",
-                                                {
-                                                    "text-base-content/50":
-                                                        groupName
-                                                            == "uncategorized",
-                                                },
-                                            )}
-                                        >
-                                            <span className="badge badge-xs font-bold text-[inherit] text-[0.625rem] py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
-                                                {examples.length}
-                                            </span>
-
-                                            <div className="flex flex-wrap items-baseline gap-x-2">
-                                                <h3 className="capitalize">
-                                                    {examplesData.categories
-                                                        ?.[groupName]
-                                                        ?.displayName
-                                                        ?? groupName}
-                                                </h3>
-
-                                                {currentGroup()
-                                                        == "category"
-                                                    && examplesData
-                                                        .categories
-                                                        ?.[groupName]
-                                                        ?.description
-                                                    && (
-                                                        <p className="self-baseline font-normal text-xs tracking-wide text-base-content/80">
-                                                            {examplesData
-                                                                .categories
-                                                                ?.[groupName]
-                                                                ?.description}
-                                                        </p>
-                                                    )}
-                                            </div>
-                                        </div>
-                                    )}
-
+                                {groupName != "all" && (
                                     <div
                                         className={cn(
-                                            "examples-list gap-2 collapse-content -mx-0.5 !p-0",
+                                            "collapse-title flex items-center gap-1.5 font-medium pl-0 pr-6 py-3.5 min-h-12 border-t border-base-content/10 group-[-collapse:first-child]:border-t-0 after:!top-7 after:!right-2 peer-hover:text-white transition-colors",
                                             {
-                                                "-mt-5 peer-checked:!py-5":
-                                                    groupName != "all",
+                                                "text-base-content/50":
+                                                    groupName
+                                                        == "uncategorized",
                                             },
                                         )}
                                     >
+                                        <span className="badge badge-xs font-bold text-[inherit] text-[0.625rem] py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
+                                            {examples.length}
+                                        </span>
+
+                                        <div className="flex flex-wrap items-baseline gap-x-2">
+                                            <h3 className="capitalize">
+                                                {examplesData.categories
+                                                    ?.[groupName]
+                                                    ?.displayName
+                                                    ?? groupName}
+                                            </h3>
+
+                                            {currentGroup()
+                                                    == "category"
+                                                && examplesData
+                                                    .categories
+                                                    ?.[groupName]
+                                                    ?.description
+                                                && (
+                                                    <p className="self-baseline font-normal text-xs tracking-wide text-base-content/80">
+                                                        {examplesData
+                                                            .categories
+                                                            ?.[groupName]
+                                                            ?.description}
+                                                    </p>
+                                                )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div
+                                    className={cn(
+                                        "collapse-content -mx-0.5 !p-0",
+                                        {
+                                            "-mt-5 peer-checked:!pt-5 group-[-collapse:not(:last-child)]:peer-checked:!pb-5":
+                                                groupName != "all",
+                                        },
+                                    )}
+                                >
+                                    <div className="examples-list gap-2">
                                         {examples.map((example) => (
                                             <ProjectEntry
                                                 project={example}
@@ -434,9 +433,7 @@ export const ProjectBrowser = () => {
                                         ))}
                                     </div>
                                 </div>
-                                <div className="mx-1 border-b border-base-content/10 last:hidden">
-                                </div>
-                            </Fragment>
+                            </div>
                         ))}
                     </Tabs.Content>
                 </Tabs.Root>

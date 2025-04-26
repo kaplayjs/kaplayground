@@ -82,3 +82,13 @@ html, body, #root {
     @apply rounded-xl;
 }
 
+/* daisyUI */
+
+.collapse {
+    grid-template-rows: max-content 0fr;
+
+    &:is([open], :focus:not(.collapse-close)),
+    &:not(.collapse-close):has(> input:is([type="checkbox"], [type="radio"]):checked) {
+        grid-template-rows: max-content 1fr;
+    }
+}
