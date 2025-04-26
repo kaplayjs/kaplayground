@@ -19,7 +19,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.BOT_TOKEN }}  # Use your bot token
           submodules: true
       - name: Git Submodule Update
         run: |
