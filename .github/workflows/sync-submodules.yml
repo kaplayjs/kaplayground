@@ -1,0 +1,36 @@
+# This Action is dispatched by kaplayjs/kaplay on master push
+
+name: "Sync Submodules"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    permissions: write-all
+    name: "Sync Submodules"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BOT_TOKEN }}  # Use your bot token
+          submodules: true
+      - name: Git Submodule Update
+        run: |
+          git pull --recurse-submodules
+          git submodule update --remote --recursive
+      - name: Commit and Push Changes
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          git config --global user.name "Bag Bot"
+          git config --global user.email "lajbel@kaplayjs.com"
+          git add .
+          git commit -m "chore: bump repo" || echo "No changes to commit"
+          git push https://x-access-token:$BOT_TOKEN@github.com/${{ github.repository }}.git
