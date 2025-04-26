@@ -1,10 +1,14 @@
 // A script that gets all the examples on kaplay/examples folder and generates a
 // list of examples with code and name.
 
+import { execSync } from "child_process";
 import { parse } from "comment-parser";
 import fs from "fs";
 import path from "path";
 import type { Packument } from "query-registry";
+import examplesData from "../kaplay/examples/examples.json" with {
+    type: "json",
+};
 
 // @ts-ignore
 async function getPackageInfo(name: string): Promise<Packument> {
@@ -40,22 +44,37 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
 
         const tags = codeJsdoc[0].tags?.reduce(
             (acc, tag) => {
-                acc[tag.tag] = tag.name + " " + tag.description;
+                acc[tag.tag] = [tag.name.trim(), tag.description.trim()].filter(
+                    t => t != "",
+                ).join(" ");
                 return acc;
             },
             {} as Record<string, string>,
         );
 
+        const sortName = [
+            examplesData.categories?.[tags?.category]?.order ?? 9999,
+            tags?.category,
+            tags?.group ?? "zzzz",
+            tags?.groupOrder ?? 9999,
+            name,
+        ].filter(t => t != undefined).join("-");
+
         const example: Record<string, any> = {
+            id: exampleCount++,
             name,
             formattedName: tags?.file?.trim() || name,
+            sortName,
+            category: tags?.category || "",
+            group: tags?.group || "",
             description: tags?.description || "",
             code: codeWithoutMeta,
             difficulty: parseInt(tags?.difficulty) ?? 4,
-            id: exampleCount++,
             version: "master",
             minVersion: (tags?.minver)?.trim() || "noset",
-            tags: tags.tags?.trim().split(", ") || "",
+            tags: tags.tags?.trim().split(", ") || [],
+            createdAt: getFileTimestamp(filePath),
+            updatedAt: getFileTimestamp(filePath, "updated"),
         };
 
         if (tags.locked) example.locked = true;
@@ -71,5 +90,27 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
 
     console.log("Generated exampleList.json");
 };
+
+function getFileTimestamp(
+    filePath: string,
+    type: "created" | "updated" = "created",
+) {
+    const cmd = {
+        created:
+            `git log --diff-filter=A --follow --format=%aI -1 -- "${filePath}"`,
+        updated: `git log --follow --format=%aI -1 -- "${filePath}"`,
+    };
+
+    try {
+        const stdout = execSync(cmd[type], {
+            cwd: path.join(import.meta.dirname, "..", "kaplay"),
+            encoding: "utf8",
+        });
+        return stdout.trim();
+    } catch (err) {
+        console.log(err);
+        return "";
+    }
+}
 
 generateExamples();

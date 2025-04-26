@@ -28,7 +28,7 @@ add([
 onUpdate(() => {
     bean.angle += dt() * 90; // rotate the bean
 });
-`;
+`.trimStart();
 
 export const defaultProject: {
     resources: Asset[];

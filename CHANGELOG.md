@@ -1,8 +1,17 @@
 # Changelog
 
-Format: Major.Minor.Patch (D/M/Y)
+Format: Major.Minor.Patch (Y/M/D)
 
-## [2.1.1] - WIP
+## [2.2.0] - 2025-04-26
+
+### Added
+
+- Group projects and examples by category, topic or difficulty
+- Sort projects and examples by group options, type or latest
+- Filter projects and examples by tags
+- New and Updated labels added to examples
+
+## [2.1.1] - 2025-04-15
 
 ### Added
 
