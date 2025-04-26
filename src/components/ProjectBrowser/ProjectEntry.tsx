@@ -118,7 +118,7 @@ export const ProjectEntry: FC<Props> = (
                             <img
                                 src={imagesPerDifficulty[
                                     example.difficulty.level
-                                ]}
+                                ] ?? assets.stranger.outlined}
                                 alt={example.difficulty.name}
                                 className="inline h-[1.125rem] w-[1.125rem] object-scale-down"
                             />
