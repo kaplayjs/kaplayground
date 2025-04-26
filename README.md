@@ -6,7 +6,7 @@ KAPLAYGROUND is a web based editor to create, edit and export KAPLAY projects.
 
 - Autocomplete thanks to Monaco Editor
 - Drag and drop assets to the code
-- Export & Improt projects
+- Export & Import projects
 - Autosaved project in local
 - Snapable editor
 
