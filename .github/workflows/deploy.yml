@@ -1,5 +1,10 @@
 on:
   push:
+  workflow_run:
+    workflows: ["Sync Submodules"]
+    types:
+      - completed
+  
 
 jobs:
   deploy:
