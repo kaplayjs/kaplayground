@@ -16,6 +16,7 @@ export const getVersion = () => {
 export const wrapGame = (code: string) => `
 <!DOCTYPE html>
 <head>
+<meta charset="UTF-8">
 <style>
 * {
     margin: 0;
