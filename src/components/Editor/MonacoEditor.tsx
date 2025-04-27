@@ -2,9 +2,9 @@ import { Editor, type Monaco } from "@monaco-editor/react";
 import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
 import { type FC } from "react";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig.ts";
 import { useEditor } from "../../hooks/useEditor";
-import { useProject } from "../../hooks/useProject";
 import { debug } from "../../util/logs";
 import { configMonaco } from "./monacoConfig";
 

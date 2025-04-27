@@ -1,15 +1,17 @@
-import type { KAPLAYOpt } from "kaplay";
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
-import { defaultExampleFile, defaultProject } from "../config/defaultProject";
-import { demos } from "../data/demos";
-import examplesList from "../data/exampleList.json";
-import { useConfig } from "../hooks/useConfig";
-import { useEditor } from "../hooks/useEditor";
-import { useProject } from "../hooks/useProject";
-import { debug } from "../util/logs";
-import type { Asset, AssetsSlice } from "./storage/assets";
-import type { File, FilesSlice } from "./storage/files";
+import {
+    defaultExampleFile,
+    defaultProject,
+} from "../../../../config/defaultProject";
+import { demos } from "../../../../data/demos";
+import examplesList from "../../../../data/exampleList.json";
+import { useConfig } from "../../../../hooks/useConfig";
+import { useEditor } from "../../../../hooks/useEditor";
+import { debug } from "../../../../util/logs";
+import { useProject } from "../useProject.ts";
+import type { Asset, AssetsSlice } from "./assets.ts";
+import type { File, FilesSlice } from "./files.ts";
 
 export type ProjectMode = "ex" | "pj";
 
@@ -18,7 +20,6 @@ export type Project = {
     version: string;
     assets: Map<string, Asset>;
     files: Map<string, File>;
-    kaplayConfig: KAPLAYOpt;
     kaplayVersion: string;
     mode: ProjectMode;
     id: string;
@@ -308,7 +309,6 @@ export const createProjectSlice: StateCreator<
             ]),
             mode: "ex",
             id: "ex-shared",
-            kaplayConfig: {},
             kaplayVersion: sharedVersion ?? examplesList[0].version,
             name: "Shared Example",
             version: "2.0.0",

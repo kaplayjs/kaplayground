@@ -1,20 +1,20 @@
+import { assets } from "@kaplayjs/crew";
 import { type FC } from "react";
-import addSriteIcon from "../../assets/add_sprite_icon.png";
-import type { AssetKind } from "../../stores/storage/assets";
+import type { AssetKind } from "../../features/Projects/stores/slices/assets";
 
-type Props = {
+interface AddButtonProps {
     accept: string;
     kind: AssetKind;
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-};
+}
 
-const AssetsAddButton: FC<Props> = ({ accept, inputProps }) => {
+const AssetsAddButton: FC<AddButtonProps> = ({ accept, inputProps }) => {
     return (
         <div className="absolute bottom-0 right-0 flex justify-end items-center min-h-10">
             <label>
-                <div className="btn btn-primary px-2">
+                <div className="btn px-2">
                     <img
-                        src={addSriteIcon}
+                        src={assets.plus.outlined}
                         alt="Add sprite"
                         className="w-8 h-8"
                     />

@@ -1,6 +1,6 @@
 import type { ChangeEvent, FC } from "react";
 import { demos } from "../../data/demos";
-import { useProject } from "../../hooks/useProject";
+import { useProject } from "../../features/Projects/stores/useProject";
 
 const ExampleList: FC = () => {
     const {

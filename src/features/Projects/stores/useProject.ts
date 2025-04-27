@@ -1,20 +1,15 @@
 import { create } from "zustand";
 import { persist, type StorageValue } from "zustand/middleware";
-import {
-    createKaboomConfigSlice,
-    type KAPLAYConfigSlice,
-} from "../stores/kaplayConfig";
-import { createProjectSlice, type ProjectSlice } from "../stores/project";
-import { type AssetsSlice, createAssetsSlice } from "../stores/storage/assets";
-import { createFilesSlice, type FilesSlice } from "../stores/storage/files";
+import { type AssetsSlice, createAssetsSlice } from "./slices/assets";
+import { createFilesSlice, type FilesSlice } from "./slices/files";
+import { createProjectSlice, type ProjectSlice } from "./slices/project.ts";
 
-type Store = ProjectSlice & FilesSlice & AssetsSlice & KAPLAYConfigSlice;
+export type ProjectStore = ProjectSlice & FilesSlice & AssetsSlice;
 
-export const useProject = create<Store>()(persist((...a) => ({
+export const useProject = create<ProjectStore>()(persist((...a) => ({
     ...createProjectSlice(...a),
     ...createFilesSlice(...a),
     ...createAssetsSlice(...a),
-    ...createKaboomConfigSlice(...a),
 }), {
     name: "upj-Untitled",
     storage: {
@@ -37,7 +32,7 @@ export const useProject = create<Store>()(persist((...a) => ({
                 },
             };
         },
-        setItem: (name, newValue: StorageValue<Store>) => {
+        setItem: (name, newValue: StorageValue<ProjectStore>) => {
             const str = JSON.stringify({
                 ...newValue,
                 state: {

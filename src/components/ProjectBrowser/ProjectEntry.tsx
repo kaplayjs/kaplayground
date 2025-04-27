@@ -2,7 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import type { FC } from "react";
 import type { Tag } from "../../data/demos";
-import { useProject } from "../../hooks/useProject";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { cn } from "../../util/cn";
 
 type LoadedProject = {
@@ -40,8 +40,11 @@ const colorsPerDifficulty = [
 export const ProjectEntry: FC<Props> = (
     { project: example, isProject, toggleTag },
 ) => {
-    const { createNewProjectFromDemo, loadProject, currentSelection } =
-        useProject();
+    const {
+        createNewProjectFromDemo,
+        loadProject,
+        currentSelection,
+    } = useProject();
 
     const isRecent = (timestamp: string, withinDays = 5) =>
         Math.floor(

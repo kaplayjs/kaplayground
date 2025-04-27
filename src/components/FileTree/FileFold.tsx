@@ -3,8 +3,11 @@ import { type FC, type PropsWithChildren, useMemo, useState } from "react";
 import { cn } from "../../util/cn";
 import { FileToolbar } from "./FileToolbar";
 import "./FileFolder.css";
-import { useProject } from "../../hooks/useProject";
-import type { FileFolder, FileKind } from "../../stores/storage/files";
+import type {
+    FileFolder,
+    FileKind,
+} from "../../features/Projects/stores/slices/files";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { FileEntry, logoByKind } from "./FileEntry";
 
 type Props = PropsWithChildren<{

@@ -1,5 +1,5 @@
-import type { Asset } from "../stores/storage/assets";
-import { type File, wrapKAPLAYConfig } from "../stores/storage/files";
+import type { Asset } from "../features/Projects/stores/slices/assets";
+import type { File } from "../features/Projects/stores/slices/files";
 
 export const defaultExampleFile = `
 // Starts a new game
@@ -62,7 +62,7 @@ export const defaultProject: {
             name: "kaplay.js",
             path: "kaplay.js",
             language: "javascript",
-            value: wrapKAPLAYConfig(`{}`),
+            value: `kaplay()`,
             kind: "kaplay",
         },
         {

@@ -2,6 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { debug } from "../util/logs.ts";
 
+// This interacts with the local storage to save/load data about the layout,
+// configuration and persisted data not related to the project itself.
+
 /**
  * Playground related configuration.
  */

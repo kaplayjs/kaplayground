@@ -1,7 +1,7 @@
 import type { StateCreator } from "zustand";
-import { debug } from "../../util/logs";
-import { removeExtension } from "../../util/removeExtensions";
-import type { ProjectSlice } from "../project";
+import { debug } from "../../../../util/logs";
+import { removeExtension } from "../../../../util/removeExtensions";
+import type { ProjectStore } from "../useProject.ts";
 
 /** The Assets's id */
 export type AssetId = number;
@@ -35,8 +35,6 @@ export interface AssetsSlice {
     removeAsset: (path: string) => void;
 }
 
-type Slice = ProjectSlice & AssetsSlice;
-
 const assetFuncByKind: Record<AssetKind, string> = {
     font: "loadFont",
     sprite: "loadSprite",
@@ -53,7 +51,7 @@ const loadByAsset = (
 };
 
 export const createAssetsSlice: StateCreator<
-    Slice,
+    ProjectStore,
     [],
     [],
     AssetsSlice
@@ -100,6 +98,7 @@ export const createAssetsSlice: StateCreator<
     },
     removeAsset(resourceId) {
         debug(0, "Removing asset", resourceId);
+
         const assets = get().project.assets;
 
         if (assets.has(resourceId)) {

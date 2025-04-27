@@ -1,10 +1,10 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
+import type { Asset } from "../../features/Projects/stores/slices/assets";
+import type { File } from "../../features/Projects/stores/slices/files";
+import type { Project } from "../../features/Projects/stores/slices/project";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
-import { useProject } from "../../hooks/useProject";
-import type { Project } from "../../stores/project";
-import type { Asset } from "../../stores/storage/assets";
-import type { File } from "../../stores/storage/files";
 import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 

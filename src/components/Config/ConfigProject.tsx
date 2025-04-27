@@ -1,7 +1,7 @@
 import { type Packument } from "query-registry";
 import { useEffect, useState } from "react";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
-import { useProject } from "../../hooks/useProject";
 
 async function getPackageInfo(name: string): Promise<Packument> {
     const endpoint = `https://registry.npmjs.org/${name}`;

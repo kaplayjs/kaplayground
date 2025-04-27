@@ -2,9 +2,9 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import { useProject } from "../features/Projects/stores/useProject";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
-import { useProject } from "./useProject";
 
 type EditorRuntime = {
     editor: editor.IStandaloneCodeEditor | null;

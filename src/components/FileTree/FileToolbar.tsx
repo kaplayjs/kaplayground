@@ -1,7 +1,10 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
-import { useProject } from "../../hooks/useProject";
-import { type FileKind, folderByKind } from "../../stores/storage/files";
+import {
+    type FileKind,
+    folderByKind,
+} from "../../features/Projects/stores/slices/files";
+import { useProject } from "../../features/Projects/stores/useProject";
 
 type Props = PropsWithChildren<{
     kind: FileKind;

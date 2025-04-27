@@ -1,12 +1,16 @@
 import { assets } from "@kaplayjs/crew";
 import { useEffect, useState } from "react";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
-import { useProject } from "../../hooks/useProject";
 import { cn } from "../../util/cn.ts";
 
 const ProjectStatus = () => {
-    const { saveProject, getProject, projectIsSaved, setProject } =
-        useProject();
+    const {
+        saveProject,
+        getProject,
+        projectIsSaved,
+        setProject,
+    } = useProject();
     const { run, runtime } = useEditor();
     const [name, setName] = useState(getProject().name);
 

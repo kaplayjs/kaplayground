@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import { useProject } from "../hooks/useProject";
+import { useProject } from "../features/Projects/stores/useProject";
 import { debug } from "./logs";
 
 export const getVersion = () => {

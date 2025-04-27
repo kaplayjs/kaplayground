@@ -1,10 +1,13 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
-import { useProject } from "../../hooks/useProject";
-import type { File, FileKind } from "../../stores/storage/files";
 import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
+import type {
+    File,
+    FileKind,
+} from "../../features/Projects/stores/slices/files";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 
 type Props = {

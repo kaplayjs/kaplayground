@@ -1,9 +1,9 @@
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import React, { type FC } from "react";
+import type { Asset } from "../../features/Projects/stores/slices/assets";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { useAssets } from "../../hooks/useAssets";
 import { useEditor } from "../../hooks/useEditor";
-import { useProject } from "../../hooks/useProject";
-import type { Asset } from "../../stores/storage/assets";
 
 export type ResourceProps = {
     asset: Asset;
