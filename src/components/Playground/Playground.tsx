@@ -33,18 +33,17 @@ localStorage.setItem(
 );
 
 const Playground = () => {
-    const {
-        project,
-        getProject,
-        createNewProject,
-        loadProject,
-        createNewProjectFromDemo,
-        loadSharedDemo,
-    } = useProject();
-    const { setRuntime } = useEditor();
+    const projectMode = useProject((state) => state.project.mode);
+    const createNewProject = useProject((state) => state.createNewProject);
+    const createNewProjectFromDemo = useProject((state) =>
+        state.createNewProjectFromDemo
+    );
+    const loadProject = useProject((state) => state.loadProject);
+    const loadSharedDemo = useProject((state) => state.loadSharedDemo);
+    const setRuntime = useEditor((state) => state.setRuntime);
+    const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
-    const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
 
     const handleMount = () => {
         setLoadingEditor(false);
@@ -76,27 +75,14 @@ const Playground = () => {
 
     // First paint
     useEffect(() => {
-        const defaultTheme = localStorage.getItem("theme") as string;
-        const browserPrefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)",
-        ).matches;
-
-        document.documentElement.setAttribute(
-            "data-theme",
-            defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
-        );
-
-        async function fetchPackageInfo() {
-            const info = await getPackageInfo("kaplay");
+        // Save in memory current versions
+        getPackageInfo("kaplay").then((info) => {
             setRuntime({
                 kaplayVersions: Object.keys(info.versions).reverse(),
             });
-        }
+        });
 
-        fetchPackageInfo();
-    }, []);
-
-    useEffect(() => {
+        // Loading the project, default project, shared project, etc.
         const urlParams = new URLSearchParams(window.location.search);
         const lastOpenedPj = useConfig.getState().getConfig().lastOpenedProject;
         const sharedCode = urlParams.get("code");
@@ -119,12 +105,12 @@ const Playground = () => {
             <LoadingPlayground
                 isLoading={loadingEditor}
                 isPortrait={isPortrait}
-                isProject={project.mode === "pj"}
+                isProject={projectMode === "pj"}
             />
         );
     }
 
-    if (project.mode === "pj" && isPortrait) {
+    if (projectMode === "pj" && isPortrait) {
         return (
             <div className="h-full flex flex-col items-center justify-center bg-base-300 p-4 gap-4">
                 <img src={assets.burpman.outlined} />
@@ -142,7 +128,7 @@ const Playground = () => {
 
     return (
         <>
-            {getProject().mode === "pj"
+            {projectMode === "pj"
                 ? (
                     <WorkspaceProject
                         editorIsLoading={loadingEditor}
