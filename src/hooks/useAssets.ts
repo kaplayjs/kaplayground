@@ -1,9 +1,7 @@
 import { useMemo } from "react";
-import type {
-    Asset,
-    AssetKind,
-    AssetsSlice,
-} from "../features/Projects/stores/slices/assets";
+import type { Asset } from "../features/Projects/models/Asset";
+import type { AssetKind } from "../features/Projects/models/AssetKind";
+import type { AssetsSlice } from "../features/Projects/stores/slices/assets";
 import { useProject } from "../features/Projects/stores/useProject";
 
 type UseAssetsOpt = {

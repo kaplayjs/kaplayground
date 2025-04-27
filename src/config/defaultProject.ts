@@ -1,5 +1,5 @@
-import type { Asset } from "../features/Projects/stores/slices/assets";
-import type { File } from "../features/Projects/stores/slices/files";
+import type { Asset } from "../features/Projects/models/Asset";
+import type { File } from "../features/Projects/models/File";
 
 export const defaultExampleFile = `
 // Starts a new game

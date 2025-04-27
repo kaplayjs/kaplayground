@@ -1,6 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import { type FC } from "react";
-import type { AssetKind } from "../../features/Projects/stores/slices/assets";
+import type { AssetKind } from "../../features/Projects/models/AssetKind";
 
 interface AddButtonProps {
     accept: string;

@@ -1,6 +1,6 @@
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import React, { type FC } from "react";
-import type { Asset } from "../../features/Projects/stores/slices/assets";
+import type { Asset } from "../../features/Projects/models/Asset";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useAssets } from "../../hooks/useAssets";
 import { useEditor } from "../../hooks/useEditor";

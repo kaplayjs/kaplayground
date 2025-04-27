@@ -9,24 +9,11 @@ import examplesList from "../../../../data/exampleList.json";
 import { useConfig } from "../../../../hooks/useConfig";
 import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
-import { useProject } from "../useProject.ts";
-import type { Asset, AssetsSlice } from "./assets.ts";
-import type { File, FilesSlice } from "./files.ts";
-
-export type ProjectMode = "ex" | "pj";
-
-export type Project = {
-    name: string;
-    version: string;
-    assets: Map<string, Asset>;
-    files: Map<string, File>;
-    kaplayVersion: string;
-    mode: ProjectMode;
-    id: string;
-    isDefault?: boolean;
-    createdAt: string;
-    updatedAt: string;
-};
+import type { Asset } from "../../models/Asset";
+import type { File } from "../../models/File";
+import type { Project } from "../../models/Project";
+import type { ProjectMode } from "../../models/ProjectMode";
+import { type ProjectStore, useProject } from "../useProject.ts";
 
 export interface ProjectSlice {
     project: Project;
@@ -56,7 +43,7 @@ export interface ProjectSlice {
 }
 
 export const createProjectSlice: StateCreator<
-    FilesSlice & ProjectSlice & AssetsSlice,
+    ProjectStore,
     [],
     [],
     ProjectSlice

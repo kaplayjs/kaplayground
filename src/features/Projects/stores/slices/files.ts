@@ -1,17 +1,9 @@
 import type { StateCreator } from "zustand";
 import { debug } from "../../../../util/logs";
+import type { File } from "../../models/File";
+import type { FileFolder } from "../../models/FileFolder";
+import type { FileKind } from "../../models/FileKind";
 import type { ProjectStore } from "../useProject.ts";
-
-export type FileKind = "kaplay" | "main" | "scene" | "assets" | "util" | "obj";
-export type FileFolder = "root" | "scenes" | "assets" | "utils" | "objects";
-
-export type File = {
-    name: string;
-    path: string;
-    language: string;
-    value: string;
-    kind: FileKind;
-};
 
 export const folderByKind: Record<FileKind, FileFolder> = {
     kaplay: "root",

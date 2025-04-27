@@ -6,7 +6,7 @@ import { fileToBase64 } from "../../util/fileToBase64";
 import AssetsAddButton from "./AssetsAddButton";
 import AssetsList from "./AssetsList";
 import "./AssetsPanel.css";
-import type { AssetKind } from "../../features/Projects/stores/slices/assets";
+import type { AssetKind } from "../../features/Projects/models/AssetKind";
 import { useEditor } from "../../hooks/useEditor";
 import { cn } from "../../util/cn";
 

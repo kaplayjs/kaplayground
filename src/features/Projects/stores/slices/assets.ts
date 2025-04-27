@@ -1,36 +1,12 @@
 import type { StateCreator } from "zustand";
 import { debug } from "../../../../util/logs";
 import { removeExtension } from "../../../../util/removeExtensions";
+import type { AssetKind } from "../../models/AssetKind";
+import type { UploadAsset } from "../../models/UploadAsset";
 import type { ProjectStore } from "../useProject.ts";
 
-/** The Assets's id */
-export type AssetId = number;
-/** The Assets's kind */
-export type AssetKind = "sprite" | "sound" | "font";
-
-export type UploadAsset = {
-    // name of the resource including the extension
-    name: string;
-    // the url of the resource, base64 encoded
-    url: string;
-    // the kind of the resource (will determine the folder)
-    kind: AssetKind;
-    // the final path of the resource
-    path: string;
-};
-
-export type Asset = UploadAsset & {
-    // import function for kaplay
-    importFunction: string;
-};
-
-export type AssetFile = {
-    file: File;
-    kind: AssetKind;
-};
-
 export interface AssetsSlice {
-    assetsLastId: AssetId;
+    assetsLastId: number;
     addAsset: (asset: UploadAsset) => void;
     removeAsset: (path: string) => void;
 }

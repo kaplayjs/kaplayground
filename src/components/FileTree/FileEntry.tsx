@@ -3,10 +3,8 @@ import type { FC, MouseEventHandler } from "react";
 import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
-import type {
-    File,
-    FileKind,
-} from "../../features/Projects/stores/slices/files";
+import type { File } from "../../features/Projects/models/File";
+import type { FileKind } from "../../features/Projects/models/FileKind";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 
