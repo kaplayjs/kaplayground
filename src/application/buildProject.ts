@@ -1,31 +1,56 @@
-import { getVersion } from "../util/compiler";
-import { wrapProject } from "./wrapProject";
+import { getVersion, parseAssets } from "../util/compiler";
+import { wrapCode } from "./wrapCode";
 
 const toDataUrl = (data: string) => {
-    const base64 = btoa(unescape(encodeURIComponent(data)));
+    const base64 = btoa(data);
     return `data:text/javascript;base64,${base64}`;
 };
 
 export async function buildProject() {
-    const code = wrapProject();
+    const code = wrapCode();
     const kaplayLib = await getVersion(true);
     if (!kaplayLib) {
         throw new Error("Failed to fetch the library");
     }
 
+    const kaplayLibDataUrl = toDataUrl(kaplayLib);
+
+    console.log("kaplayLib", kaplayLibDataUrl);
+    console.log("code", code);
+
     const projectCode = `
-        <html>
-            <head>
-                <script src="${kaplayLib}"></script>
-            </head>
-            <body>
-                <script type="module">
-                    import kaplay from "${toDataUrl(kaplayLib)}";
-                    ${code}
-                </script>
-            </body>
-        </html>
-    `;
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100vh;
+        }
+
+        body {
+            overflow: hidden;
+            background: #171212;
+        }
+    </style>
+</head>
+</head>
+<body>
+    <script type="module">
+        import kaplay from "${kaplayLibDataUrl}";
+        ${parseAssets(code)}
+    </script>
+</body>
+</html>`;
 
     return projectCode;
 }

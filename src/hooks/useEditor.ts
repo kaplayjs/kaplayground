@@ -2,9 +2,8 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
-import { wrapProject } from "../application/wrapProject";
+import { wrapGame } from "../application/wrapGame";
 import { useProject } from "../features/Projects/stores/useProject";
-import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
 
 type EditorRuntime = {
@@ -120,7 +119,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
             if (event.data.type === "READY") {
                 debug(0, "[editor] Iframe is ready");
 
-                const code = wrapGame(wrapProject());
+                const code = wrapGame();
 
                 iframeContentWindow.postMessage(
                     {

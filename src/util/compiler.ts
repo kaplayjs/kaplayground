@@ -41,11 +41,6 @@ export const getVersion = (fetchIt = false) => {
     }
 };
 
-export const wrapGame = (code: string) => `
-import kaplay from \"${getVersion()}\"
-${parseAssets(code)}
-`;
-
 const transformAssetUrl = (regex: RegExp, code: string) => {
     const { project: { assets: resources } } = useProject.getState();
 

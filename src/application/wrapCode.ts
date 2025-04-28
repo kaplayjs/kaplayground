@@ -1,6 +1,6 @@
 import { useProject } from "../features/Projects/stores/useProject";
 
-export function wrapProject() {
+export function wrapCode() {
     let mainFile = useProject.getState().getMainFile()?.value ?? "";
     let parsedFiles = "";
 
