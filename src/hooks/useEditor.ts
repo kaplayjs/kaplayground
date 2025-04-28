@@ -100,45 +100,34 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const code = wrapGame(wrapProject());
 
         // Refresh the iframe
-        iframe.remove();
+        const iframeContentWindow = iframe.contentWindow;
+        if (!iframeContentWindow) {
+            return console.log("No iframe content window");
+        }
 
-        const gameViewWrappepr = document.querySelector(
-            "#game-view-wrapper",
-        ) as HTMLDivElement;
+        iframeContentWindow.postMessage(
+            {
+                type: "REFRESH",
+            },
+            "*",
+        );
 
-        const newIframe = document.createElement("iframe");
-        newIframe.id = "game-view";
-        newIframe.src = "https://master.iframe-kaplay.pages.dev/";
-        newIframe.tabIndex = 0;
-        newIframe.className = "rounded-xl";
-        newIframe.style.border = "none";
-        newIframe.style.width = "100%";
-        newIframe.style.height = "100%";
-        newIframe.sandbox = "allow-scripts allow-same-origin";
+        // Listen to reeady message from the iframe
+        window.addEventListener("message", (event) => {
+            if (event.data.type === "READY") {
+                debug(0, "[editor] Iframe is ready");
 
-        gameViewWrappepr.appendChild(newIframe);
-
-        // Wait for the iframe to load
-        newIframe.addEventListener("load", () => {
-            debug(0, "[editor] Iframe loaded");
-
-            // Send message of type "UPDATE_CODE" to iframe, with the gameCode
-            const iframeContentWindow = newIframe.contentWindow;
-            if (!iframeContentWindow) {
-                return console.log("F");
+                iframeContentWindow.postMessage(
+                    {
+                        type: "UPDATE_CODE",
+                        code: code,
+                    },
+                    "*",
+                );
             }
 
-            iframeContentWindow.postMessage(
-                {
-                    type: "UPDATE_CODE",
-                    code: code,
-                },
-                "*",
-            );
-        });
-
-        useEditor.getState().setRuntime({
-            iframe: newIframe,
+            event.stopPropagation();
+            event.stopImmediatePropagation();
         });
     },
     updateImageDecorations() {

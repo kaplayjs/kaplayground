@@ -16,19 +16,17 @@ export const GameView: FC = () => {
     }, []);
 
     return (
-        <div id="game-view-wrapper" className="w-full h-full">
-            <iframe
-                id="game-view"
-                tabIndex={0}
-                src="https://master.iframe-kaplay.pages.dev/"
-                className="rounded-xl"
-                style={{
-                    border: "none",
-                    width: "100%",
-                    height: "100%",
-                }}
-                sandbox="allow-scripts allow-same-origin"
-            />
-        </div>
+        <iframe
+            id="game-view"
+            tabIndex={0}
+            src="https://master.iframe-kaplay.pages.dev/"
+            className="rounded-xl"
+            style={{
+                border: "none",
+                width: "100%",
+                height: "100%",
+            }}
+            sandbox="allow-scripts allow-same-origin"
+        />
     );
 };

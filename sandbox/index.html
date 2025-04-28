@@ -46,10 +46,55 @@
         window.addEventListener("message", (event) => {
             const { type, code } = event.data;
 
-            if (type === 'UPDATE_CODE') {
+            if (type == "UPDATE_CODE") {
+                console.log("[sandbox] Received code update");
                 executeCode(code);
             }
+
+            if (type == "REFRESH") {
+                console.log("[sandbox] Refreshing the page");
+                document.location.href = document.location.href
+            }
         });
+
+        window.addEventListener("load", () => {
+            window.parent.postMessage({ type: "READY" }, "*");
+        });
+
+        const originalLog = console.log;
+
+        console.log = function (...args) {
+            originalLog.apply(console, args);
+            window.parent.postMessage({ type: "CONSOLE_LOG", data: args }, "*");
+        };
+
+        const originalError = console.error;
+
+        console.error = function (...args) {
+            originalError.apply(console, args);
+            window.parent.postMessage({ type: "CONSOLE_ERROR", data: args }, "*");
+        };
+
+        const originalWarn = console.warn;
+
+        console.warn = function (...args) {
+            originalWarn.apply(console, args);
+            window.parent.postMessage({ type: "CONSOLE_WARN", data: args }, "*");
+        };
+
+        const originalInfo = console.info;
+
+        console.info = function (...args) {
+            originalInfo.apply(console, args);
+            window.parent.postMessage({ type: "CONSOLE_INFO", data: args }, "*");
+        };
+
+        const originalDebug = console.debug;
+
+        console.debug = function (...args) {
+            originalDebug.apply(console, args);
+            window.parent.postMessage({ type: "CONSOLE_DEBUG", data: args }, "*");
+        };
     </script>
 </body>
 
