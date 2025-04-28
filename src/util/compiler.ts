@@ -7,7 +7,7 @@ export const getVersion = (fetchIt = false) => {
     let libVersion;
 
     if (version == "master") {
-        libVersion = `https://cdn.kaplayjs.com/versions/kaplay.master.mjs`;
+        libVersion = `https://unpkg.com/kaplay@next/dist/kaplay.mjs`;
     } else {
         const versionSplit = version.split(".");
         const major = Number(versionSplit[0]);
