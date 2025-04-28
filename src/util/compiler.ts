@@ -7,7 +7,8 @@ export const getVersion = (fetchIt = false) => {
     let libVersion;
 
     if (version == "master") {
-        libVersion = `https://unpkg.com/kaplay@next/dist/kaplay.mjs`;
+        libVersion =
+            "https://kaplay-cdn-worker.lajbel.workers.dev/versions/kaplay.master.mjs";
     } else {
         const versionSplit = version.split(".");
         const major = Number(versionSplit[0]);
@@ -25,7 +26,14 @@ export const getVersion = (fetchIt = false) => {
     }
 
     if (fetchIt) {
-        return fetch(libVersion)
+        return fetch(libVersion, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/javascript",
+            },
+            mode: "cors",
+            credentials: "same-origin",
+        })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Failed to fetch the library");
