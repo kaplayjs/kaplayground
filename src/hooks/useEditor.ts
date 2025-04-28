@@ -34,8 +34,6 @@ export interface EditorStore {
     updateAndRun: () => void;
 }
 
-let eventExists = false;
-
 export const useEditor = create<EditorStore>((set, get) => ({
     runtime: {
         editor: null,
