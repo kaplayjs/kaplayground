@@ -2,7 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import { useProject } from "../features/Projects/stores/useProject";
 import { debug } from "./logs";
 
-export const getVersion = async () => {
+export const getVersion = (fetchIt = false) => {
     const version = useProject.getState().project.kaplayVersion;
     let libVersion;
 
@@ -25,12 +25,24 @@ export const getVersion = async () => {
         }
     }
 
-    return libVersion;
+    if (fetchIt) {
+        return fetch(libVersion)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch the library");
+                }
+                return res.text();
+            })
+            .catch((err) => {
+                debug(0, "[compiler] Error fetching library:", err);
+            });
+    } else {
+        return libVersion;
+    }
 };
 
-// Wraps the game in an acceptable format for iFrame
-export const wrapGame = async (code: string) => `
-import kaplay from \"${await getVersion()}\"
+export const wrapGame = (code: string) => `
+import kaplay from \"${getVersion()}\"
 ${parseAssets(code)}
 `;
 

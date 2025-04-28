@@ -2,6 +2,7 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import { wrapProject } from "../application/wrapProject";
 import { useProject } from "../features/Projects/stores/useProject";
 import { wrapGame } from "../util/compiler";
 import { debug } from "../util/logs";
@@ -16,7 +17,7 @@ type EditorRuntime = {
     kaplayVersions: string[];
 };
 
-type EditorStore = {
+export interface EditorStore {
     runtime: EditorRuntime;
     update: (value?: string) => void;
     run: () => void;
@@ -32,7 +33,7 @@ type EditorStore = {
     showNotification: (message: string) => void;
     setEditorValue: (value: string) => void;
     updateAndRun: () => void;
-};
+}
 
 export const useEditor = create<EditorStore>((set, get) => ({
     runtime: {
@@ -96,85 +97,48 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const iframe = document.querySelector<HTMLIFrameElement>("#game-view");
         if (!iframe) return;
 
-        const {
-            getKAPLAYFile,
-            getMainFile,
-            getAssetsFile,
-            getProject,
-        } = useProject.getState();
-        if (!iframe) return;
+        const code = wrapGame(wrapProject());
 
-        let mainFile = getMainFile()?.value ?? "";
-        let parsedFiles = "";
+        // Refresh the iframe
+        iframe.remove();
 
-        if (getProject().mode === "ex") {
-            parsedFiles = mainFile;
-        } else {
-            let sceneFiles = "";
-            let objectFiles = "";
-            let utilFiles = "";
-            let KAPLAYFile = getKAPLAYFile()?.value ?? "";
-            let assetsFile = getAssetsFile()?.value ?? "";
+        const gameViewWrappepr = document.querySelector(
+            "#game-view-wrapper",
+        ) as HTMLDivElement;
 
-            getProject().files.forEach((file) => {
-                if (file.kind == "scene") {
-                    sceneFiles += `\n${file.value}\n`;
-                } else if (file.kind == "obj") {
-                    objectFiles += `\n${file.value}\n`;
-                } else if (file.kind == "util") {
-                    utilFiles += `\n${file.value}\n`;
-                }
-            });
+        const newIframe = document.createElement("iframe");
+        newIframe.id = "game-view";
+        newIframe.src = "https://master.iframe-kaplay.pages.dev/";
+        newIframe.tabIndex = 0;
+        newIframe.className = "rounded-xl";
+        newIframe.style.border = "none";
+        newIframe.style.width = "100%";
+        newIframe.style.height = "100%";
+        newIframe.sandbox = "allow-scripts allow-same-origin";
 
-            parsedFiles = `${KAPLAYFile}\n\n 
-            ${assetsFile}\n\n 
-            ${utilFiles}\n\n
-            ${objectFiles}\n\n
-            ${sceneFiles}\n\n 
-            ${mainFile}`;
-        }
+        gameViewWrappepr.appendChild(newIframe);
 
-        wrapGame(parsedFiles).then((code) => {
-            // Refresh the iframe
-            iframe.remove();
-            const gameViewWrappepr = document.querySelector(
-                "#game-view-wrapper",
-            ) as HTMLDivElement;
+        // Wait for the iframe to load
+        newIframe.addEventListener("load", () => {
+            debug(0, "[editor] Iframe loaded");
 
-            const newIframe = document.createElement("iframe");
-            newIframe.id = "game-view";
-            newIframe.src = "https://master.iframe-kaplay.pages.dev/";
-            newIframe.tabIndex = 0;
-            newIframe.className = "rounded-xl";
-            newIframe.style.border = "none";
-            newIframe.style.width = "100%";
-            newIframe.style.height = "100%";
-            newIframe.sandbox = "allow-scripts allow-same-origin";
+            // Send message of type "UPDATE_CODE" to iframe, with the gameCode
+            const iframeContentWindow = newIframe.contentWindow;
+            if (!iframeContentWindow) {
+                return console.log("F");
+            }
 
-            gameViewWrappepr.appendChild(newIframe);
+            iframeContentWindow.postMessage(
+                {
+                    type: "UPDATE_CODE",
+                    code: code,
+                },
+                "*",
+            );
+        });
 
-            // Wait for the iframe to load
-            newIframe.addEventListener("load", () => {
-                debug(0, "[editor] Iframe loaded");
-
-                // Send message of type "UPDATE_CODE" to iframe, with the gameCode
-                const iframeContentWindow = newIframe.contentWindow;
-                if (!iframeContentWindow) {
-                    return console.log("F");
-                }
-
-                iframeContentWindow.postMessage(
-                    {
-                        type: "UPDATE_CODE",
-                        code: code,
-                    },
-                    "*",
-                );
-            });
-
-            get().setRuntime({
-                iframe: newIframe,
-            });
+        useEditor.getState().setRuntime({
+            iframe: newIframe,
         });
     },
     updateImageDecorations() {

@@ -1,5 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
+import { buildProject } from "../../application/buildProject";
 import type { Asset } from "../../features/Projects/models/Asset";
 import type { File } from "../../features/Projects/models/File";
 import type { Project } from "../../features/Projects/models/Project";
@@ -9,8 +10,12 @@ import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const { project: project, createNewProject, loadProject } = useProject();
-    const { update, run, showNotification, getRuntime } = useEditor();
+    const project = useProject((state) => state.project);
+    const createNewProject = useProject((state) => state.createNewProject);
+    const loadProject = useProject((state) => state.loadProject);
+    const update = useEditor((state) => state.update);
+    const run = useEditor((state) => state.run);
+    const showNotification = useEditor((state) => state.showNotification);
 
     const handleDownload = () => {
         const projectLocal = localStorage.getItem(project.id);
@@ -28,11 +33,12 @@ const Projects: FC = () => {
         showNotification("Exporting the project, check downloads...");
     };
 
-    const handleExportHTML = () => {
-        const projectCode = getRuntime().iframe?.srcdoc;
+    const handleExportHTML = async () => {
+        // get content from sandbox iframe
+        const projectCode = await buildProject();
 
         if (!projectCode) {
-            showNotification("No project to export... Remember to save!");
+            showNotification("Failed to export project as HTML");
             return;
         }
 
