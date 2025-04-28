@@ -99,40 +99,23 @@ export const useEditor = create<EditorStore>((set, get) => ({
         if (!iframe) return;
 
         // Refresh the iframe
-        const iframeContentWindow = iframe.contentWindow;
-        if (!iframeContentWindow) {
-            return console.log("No iframe content window");
-        }
+        iframe.src = iframe.src;
 
-        iframeContentWindow.postMessage(
-            {
-                type: "REFRESH",
-            },
-            "*",
-        );
+        iframe.onload = () => {
+            console.log("[game] iframe loaded");
+            const code = wrapGame();
+            const iframeContentWindow = iframe.contentWindow;
 
-        // Listen to reeady message from the iframe
-        if (eventExists) return;
-        eventExists = true;
+            if (!iframeContentWindow) return;
 
-        window.addEventListener("message", (event) => {
-            if (event.data.type === "READY") {
-                debug(0, "[editor] Iframe is ready");
-
-                const code = wrapGame();
-
-                iframeContentWindow.postMessage(
-                    {
-                        type: "UPDATE_CODE",
-                        code: code,
-                    },
-                    "*",
-                );
-            }
-
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-        });
+            iframeContentWindow.postMessage(
+                {
+                    type: "UPDATE_CODE",
+                    code: code,
+                },
+                "*",
+            );
+        };
     },
     updateImageDecorations() {
         debug(0, "[monaco] Updating gylph decorations");
