@@ -35,6 +35,8 @@ export interface EditorStore {
     updateAndRun: () => void;
 }
 
+let eventExists = false;
+
 export const useEditor = create<EditorStore>((set, get) => ({
     runtime: {
         editor: null,
@@ -97,8 +99,6 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const iframe = document.querySelector<HTMLIFrameElement>("#game-view");
         if (!iframe) return;
 
-        const code = wrapGame(wrapProject());
-
         // Refresh the iframe
         const iframeContentWindow = iframe.contentWindow;
         if (!iframeContentWindow) {
@@ -113,9 +113,14 @@ export const useEditor = create<EditorStore>((set, get) => ({
         );
 
         // Listen to reeady message from the iframe
+        if (eventExists) return;
+        eventExists = true;
+
         window.addEventListener("message", (event) => {
             if (event.data.type === "READY") {
                 debug(0, "[editor] Iframe is ready");
+
+                const code = wrapGame(wrapProject());
 
                 iframeContentWindow.postMessage(
                     {

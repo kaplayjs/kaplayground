@@ -47,7 +47,7 @@
             const { type, code } = event.data;
 
             if (type == "UPDATE_CODE") {
-                console.log("[sandbox] Received code update");
+                console.log("[sandbox] Received code update", code);
                 executeCode(code);
             }
 

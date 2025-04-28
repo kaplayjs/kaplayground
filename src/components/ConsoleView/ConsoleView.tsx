@@ -16,6 +16,13 @@ export const ConsoleView = () => {
             false,
         );
 
+        window.addEventListener("message", (event) => {
+            if (event.data?.type === "CONSOLE_LOG") {
+                const log = event.data;
+                console.log("f", log);
+            }
+        });
+
         return () => {
             Unhook(hookedConsole);
         };
