@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100vh;
+        }
+
+        body {
+            overflow: hidden;
+            background: #171212;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        const executeCode = (code) => {
+            const previousScripts = document.querySelectorAll('script[type="module"]');
+            previousScripts.forEach(script => {
+                script.remove();
+            });
+
+            try {
+                const script = document.createElement('script');
+                script.type = "module";
+                script.textContent = code;
+                document.body.appendChild(script);
+            } catch (error) {
+                console.error("Error executing code:", error);
+            }
+        };
+
+        window.addEventListener("message", (event) => {
+            const { type, code } = event.data;
+
+            if (type === 'UPDATE_CODE') {
+                executeCode(code);
+            }
+        });
+    </script>
+</body>
+
+</html>

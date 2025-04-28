@@ -134,7 +134,48 @@ export const useEditor = create<EditorStore>((set, get) => ({
             ${mainFile}`;
         }
 
-        iframe.srcdoc = wrapGame(parsedFiles);
+        wrapGame(parsedFiles).then((code) => {
+            // Refresh the iframe
+            iframe.remove();
+            const gameViewWrappepr = document.querySelector(
+                "#game-view-wrapper",
+            ) as HTMLDivElement;
+
+            const newIframe = document.createElement("iframe");
+            newIframe.id = "game-view";
+            newIframe.src = "https://master.iframe-kaplay.pages.dev/";
+            newIframe.tabIndex = 0;
+            newIframe.className = "rounded-xl";
+            newIframe.style.border = "none";
+            newIframe.style.width = "100%";
+            newIframe.style.height = "100%";
+            newIframe.sandbox = "allow-scripts allow-same-origin";
+
+            gameViewWrappepr.appendChild(newIframe);
+
+            // Wait for the iframe to load
+            newIframe.addEventListener("load", () => {
+                debug(0, "[editor] Iframe loaded");
+
+                // Send message of type "UPDATE_CODE" to iframe, with the gameCode
+                const iframeContentWindow = newIframe.contentWindow;
+                if (!iframeContentWindow) {
+                    return console.log("F");
+                }
+
+                iframeContentWindow.postMessage(
+                    {
+                        type: "UPDATE_CODE",
+                        code: code,
+                    },
+                    "*",
+                );
+            });
+
+            get().setRuntime({
+                iframe: newIframe,
+            });
+        });
     },
     updateImageDecorations() {
         debug(0, "[monaco] Updating gylph decorations");

@@ -2,64 +2,36 @@ import { assets } from "@kaplayjs/crew";
 import { useProject } from "../features/Projects/stores/useProject";
 import { debug } from "./logs";
 
-export const getVersion = () => {
+export const getVersion = async () => {
     const version = useProject.getState().project.kaplayVersion;
+    let libVersion;
 
     if (version == "master") {
-        return `https://kaplayjs.com/lib/kaplay.master.js`;
+        // FIXME: Fix this lol
+        libVersion = `https://unpkg.com/kaplay@latest/dist/kaplay.mjs`;
     } else {
-        return `https://unpkg.com/kaplay@${version}/dist/kaboom.js`;
+        const versionSplit = version.split(".");
+        const major = Number(versionSplit[0]);
+        const patch = Number(versionSplit[2]);
+
+        if (major == 3001 && patch > 12) {
+            libVersion = `https://unpkg.com/kaplay@${version}/dist/kaplay.mjs`;
+        } else if (major == 3001) {
+            libVersion = `https://unpkg.com/kaplay@${version}/dist/kaboom.mjs`;
+        } else if (major == 4000) {
+            libVersion = `https://unpkg.com/kaplay@${version}/dist/kaplay.mjs`;
+        } else {
+            libVersion = `https://unpkg.com/kaplay@${version}/dist/kaplay.mjs`;
+        }
     }
+
+    return libVersion;
 };
 
 // Wraps the game in an acceptable format for iFrame
-export const wrapGame = (code: string) => `
-<!DOCTYPE html>
-<head>
-<meta charset="UTF-8">
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-body,
-html {
-    width: 100%;
-    height: 100vh;
-}
-
-body {
-            overflow: hidden;
-            background: #171212;
-        }
-        </style>
-</head>
-<body>
-<script>
-    (function() {
-        if (window.top && window.top.console) {
-            const topConsole = window.top.console;
-
-            window.console = {
-                log: (...args) => topConsole.log("[game]", ...args),
-                warn: (...args) => topConsole.warn("[game]", ...args),
-                error: (...args) => topConsole.error("[game]", ...args),
-                info: (...args) => topConsole.info("[game]", ...args),
-                debug: (...args) => topConsole.debug("[game]", ...args),
-                trace: (...args) => topConsole.trace("[game]", ...args),
-                clear: () => topConsole.clear(),
-            };
-            
-        }
-    })();
-</script>
-
-<script src="${getVersion()}"></script>
-<script type="module">
-    ${parseAssets(code)}
-</script>
-</body>
+export const wrapGame = async (code: string) => `
+import kaplay from \"${await getVersion()}\"
+${parseAssets(code)}
 `;
 
 const transformAssetUrl = (regex: RegExp, code: string) => {

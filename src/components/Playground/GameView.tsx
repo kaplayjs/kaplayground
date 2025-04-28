@@ -1,12 +1,8 @@
 import { type FC, useEffect } from "react";
 import { useEditor } from "../../hooks/useEditor";
 
-type GameViewProps = {
-    onLoad?: () => void;
-};
-
-export const GameView: FC<GameViewProps> = ({ onLoad }) => {
-    const { setRuntime } = useEditor();
+export const GameView: FC = () => {
+    const setRuntime = useEditor((state) => state.setRuntime);
 
     useEffect(() => {
         const iframe = document.getElementById(
@@ -20,17 +16,19 @@ export const GameView: FC<GameViewProps> = ({ onLoad }) => {
     }, []);
 
     return (
-        <iframe
-            id="game-view"
-            tabIndex={0}
-            onLoad={onLoad}
-            className="rounded-xl"
-            style={{
-                border: "none",
-                width: "100%",
-                height: "100%",
-            }}
-            sandbox="allow-scripts allow-same-origin"
-        />
+        <div id="game-view-wrapper" className="w-full h-full">
+            <iframe
+                id="game-view"
+                tabIndex={0}
+                src="https://master.iframe-kaplay.pages.dev/"
+                className="rounded-xl"
+                style={{
+                    border: "none",
+                    width: "100%",
+                    height: "100%",
+                }}
+                sandbox="allow-scripts allow-same-origin"
+            />
+        </div>
     );
 };
