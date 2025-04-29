@@ -1,6 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
-import { buildProject } from "../../application/buildProject";
+import { buildProject } from "../../features/Projects/application/buildProject";
 import type { Asset } from "../../features/Projects/models/Asset";
 import type { File } from "../../features/Projects/models/File";
 import type { Project } from "../../features/Projects/models/Project";

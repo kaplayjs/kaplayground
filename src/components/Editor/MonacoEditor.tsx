@@ -90,10 +90,12 @@ export const MonacoEditor: FC<Props> = (props) => {
 
             decorations.forEach((e, i) => {
                 const decRange = getRuntime().gylphDecorations?.getRange(i);
-                const dec = editor.getDecorationsInRange(decRange!)?.[0];
+                if (!decRange) return;
+
+                const dec = editor.getDecorationsInRange(decRange)?.[0];
                 const realImage = dec?.options.hoverMessage!;
 
-                if (!Array.isArray(realImage)) {
+                if (!Array.isArray(realImage) && realImage?.value) {
                     e.style.setProperty("--image", `url("${realImage.value}")`);
                 }
             });

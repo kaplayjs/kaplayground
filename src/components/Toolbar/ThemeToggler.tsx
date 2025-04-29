@@ -1,7 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
 import { useEditor } from "../../hooks/useEditor";
-import { themes } from "../Editor/config/themes";
+import { themes } from "../Editor/themes/themes";
 import ToolbarButton from "./ToolbarButton";
 
 const ThemeToggler: FC = () => {

@@ -127,14 +127,6 @@ export const themes = {
             "pickerGroup.foreground": "#abdd64",
         },
     },
-    "Ghostiny": {
-        base: "vs",
-        inherit: true,
-        rules: [],
-        colors: {
-            "editor.background": "#F2F2F2",
-        },
-    },
 } satisfies {
     [key: string]: editor.IStandaloneThemeData;
 };

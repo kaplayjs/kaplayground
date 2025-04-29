@@ -1,4 +1,4 @@
-import { useProject } from "../features/Projects/stores/useProject";
+import { useProject } from "../stores/useProject";
 
 export function wrapCode() {
     let mainFile = useProject.getState().getMainFile()?.value ?? "";
