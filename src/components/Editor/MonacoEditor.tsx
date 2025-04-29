@@ -6,6 +6,7 @@ import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig.ts";
 import { useEditor } from "../../hooks/useEditor";
 import { debug } from "../../util/logs";
+import { formatAction } from "./actions/format";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -14,15 +15,15 @@ type Props = {
 };
 
 export const MonacoEditor: FC<Props> = (props) => {
-    const { updateFile, getFile } = useProject();
-    const {
-        run,
-        update,
-        updateImageDecorations,
-        getRuntime,
-        setRuntime,
-    } = useEditor();
-    const { getConfig, setConfigKey } = useConfig();
+    const updateFile = useProject((s) => s.updateFile);
+    const getFile = useProject((s) => s.getFile);
+    const run = useEditor((s) => s.run);
+    const update = useEditor((s) => s.update);
+    const updateImageDecorations = useEditor((s) => s.updateImageDecorations);
+    const setRuntime = useEditor((s) => s.setRuntime);
+    const getRuntime = useEditor((s) => s.getRuntime);
+    const getConfig = useConfig((s) => s.getConfig);
+    const setConfigKey = useConfig((s) => s.setConfigKey);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -83,6 +84,10 @@ export const MonacoEditor: FC<Props> = (props) => {
             updateImageDecorations();
         });
 
+        editor.onDidScrollChange(() => {
+            updateImageDecorations();
+        });
+
         editor.onDidChangeModelDecorations(() => {
             const decorations = document.querySelectorAll<HTMLElement>(
                 ".monaco-glyph-margin-preview-image",
@@ -90,10 +95,12 @@ export const MonacoEditor: FC<Props> = (props) => {
 
             decorations.forEach((e, i) => {
                 const decRange = getRuntime().gylphDecorations?.getRange(i);
-                const dec = editor.getDecorationsInRange(decRange!)?.[0];
+                if (!decRange) return;
+
+                const dec = editor.getDecorationsInRange(decRange)?.[0];
                 const realImage = dec?.options.hoverMessage!;
 
-                if (!Array.isArray(realImage)) {
+                if (!Array.isArray(realImage) && realImage?.value) {
                     e.style.setProperty("--image", `url("${realImage.value}")`);
                 }
             });
@@ -127,42 +134,7 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
-        editor.addAction({
-            id: "format-kaplay",
-            label: "Format file using KAPLAYGROUND",
-            contextMenuGroupId: "navigation",
-            contextMenuOrder: 1.5,
-            run: () => {
-                editor.getAction("editor.action.formatDocument")?.run();
-
-                if (!getConfig().funFormat) return;
-
-                var duration = 0.5 * 1000;
-                var animationEnd = Date.now() + duration;
-
-                (function frame() {
-                    var timeLeft = animationEnd - Date.now();
-
-                    canvas.confetti({
-                        particleCount: 3,
-                        spread: 1,
-                        origin: {
-                            x: Math.random(),
-                            y: -0.05,
-                        },
-                        angle: 270,
-                        startVelocity: 10,
-                        gravity: 0.5,
-                        ticks: 50,
-                        colors: ["#fcef8d", "#abdd64", "#d46eb3"],
-                    });
-
-                    if (timeLeft > 0) {
-                        requestAnimationFrame(frame);
-                    }
-                })();
-            },
-        });
+        editor.addAction(formatAction(editor, getConfig(), canvas));
 
         editor.addAction({
             id: "toggle-word-wrap",
@@ -178,8 +150,12 @@ export const MonacoEditor: FC<Props> = (props) => {
         });
 
         let decorations = editor.createDecorationsCollection([]);
-        getRuntime().gylphDecorations = decorations;
 
+        setRuntime({
+            gylphDecorations: decorations,
+        });
+
+        updateImageDecorations();
         run();
     };
 

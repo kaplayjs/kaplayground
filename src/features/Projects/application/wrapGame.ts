@@ -1,4 +1,4 @@
-import { getVersion, parseAssets } from "../util/compiler";
+import { getVersion, parseAssets } from "../../../util/compiler";
 import { wrapCode } from "./wrapCode";
 
 export function wrapGame() {

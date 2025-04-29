@@ -2,7 +2,7 @@ import type { Monaco } from "@monaco-editor/react";
 import docTs from "../../../lib.d.ts?raw";
 import { DATA_URL_REGEX } from "../../util/regex";
 import { addCompletion } from "./completionProviders.ts";
-import { themes } from "./config/themes";
+import { themes } from "./themes/themes.ts";
 
 let providersRegistered = false;
 

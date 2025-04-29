@@ -1,6 +1,7 @@
-import { assets } from "@kaplayjs/crew";
 import { useProject } from "../features/Projects/stores/useProject";
+import { parseAssetPath } from "./assetsParsing";
 import { debug } from "./logs";
+import { MATCH_ASSET_URL_REGEX } from "./regex";
 
 export const getVersion = (fetchIt = false) => {
     const version = useProject.getState().project.kaplayVersion;
@@ -49,74 +50,23 @@ export const getVersion = (fetchIt = false) => {
 };
 
 const transformAssetUrl = (regex: RegExp, code: string) => {
-    const { project: { assets: resources } } = useProject.getState();
-
-    const x = code.replace(regex, (match, asset: string) => {
-        debug(
-            0,
-            "[compiler] Transforming urls, asset matched:",
-            asset.slice(0, 25),
-        );
-
-        let transformedAsset = asset;
-
-        // remove first / and last / from asset, also remove "assets" from asset
-        const resource = asset.replace(/^\/|\/$/g, "").replace(
-            "assets/",
-            "",
-        ).replace(/"/g, "");
-
-        if (resources.has(resource)) {
-            debug(
-                0,
-                "[compiler] Resource found:",
-                resources.get(resource)?.url.slice(0, 25) + "...",
-            );
-            transformedAsset = resources.get(resource)?.url!;
-        } else {
-            debug(0, "No resource found for", resource.slice(0, 25) + "...");
-        }
-
-        const crewResource = asset.replace(/^\/|\/$/g, "").replace(
-            "crew/",
-            "",
-        ).replace(/"/g, "").replace(".png", "");
-
-        const crewResourceWithoutOutlineIndicator = crewResource.replace(
-            "-o",
-            "",
-        );
-        const prop = crewResource.endsWith("-o") ? "outlined" : "sprite";
-
-        const assetResource =
-            assets[crewResourceWithoutOutlineIndicator as keyof typeof assets];
-
-        if (assetResource) {
-            debug(0, "[assets] Crew found for", crewResource);
-            transformedAsset = assetResource[prop]!;
-        } else {
-            debug(0, "[assets] Crew not found for", crewResource);
-        }
-
+    const parsed = code.replace(regex, (match, asset: string) => {
         return match.replace(
             asset,
-            transformedAsset,
+            parseAssetPath(asset),
         );
     });
 
-    return x;
+    return parsed;
 };
 
 export const parseAssets = (code: string) => {
-    const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*/g;
     const regexComment = /\/\/\s*kaplay-transformation-asset\s*(.*)/g;
 
     const codeTransformed = transformAssetUrl(
-        regexLoad,
+        MATCH_ASSET_URL_REGEX,
         transformAssetUrl(regexComment, code),
     );
-
-    // debug(2, "[compiler] Compiled, new code:", codeTransformed);
 
     return codeTransformed;
 };

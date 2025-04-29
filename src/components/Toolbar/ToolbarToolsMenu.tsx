@@ -1,13 +1,12 @@
 import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
-import { toast } from "react-toastify";
-import AboutButton from "../../components/About/AboutButton";
-import ConfigOpenDialog from "../../components/Config/ConfigOpenDialog";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
-import { compressCode } from "../../util/compressCode";
 import Projects from "./Projects";
 import ToolbarButton from "./ToolbarButton";
+import { AboutButton } from "./ToolButtons/AboutButton";
+import { ConfigButton } from "./ToolButtons/ConfigButton";
+import { ShareButton } from "./ToolButtons/ShareButton";
 
 const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
     return (
@@ -18,41 +17,8 @@ const ToolbarToolItem: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const ToolbarToolsMenu: FC = () => {
-    const { getProject, getMainFile } = useProject();
-    const { run } = useEditor();
-
-    const handleShare = () => {
-        const isDefault = getProject().isDefault;
-
-        if (isDefault) {
-            const exampleParam = encodeURIComponent(getProject().id);
-
-            const url = `${window.location.origin}/?example=${exampleParam}`;
-
-            navigator.clipboard.writeText(url).then(() => {
-                toast("Example shared, URL copied to clipboard!");
-            });
-
-            return;
-        }
-
-        const mainFile = getMainFile();
-        const compressedCode = compressCode(mainFile?.value!);
-        const codeParam = encodeURIComponent(compressedCode);
-        const exampleVersion = encodeURIComponent(
-            getProject().kaplayVersion,
-        );
-        const url =
-            `${window.location.origin}/?code=${codeParam}&version=${exampleVersion}`;
-
-        if (url.length <= 2048) {
-            navigator.clipboard.writeText(url).then(() => {
-                toast("Project shared, URL copied to clipboard!");
-            });
-        } else {
-            alert("Code too long to encode in URL");
-        }
-    };
+    const projectMode = useProject((state) => state.project.mode);
+    const run = useEditor((state) => state.run);
 
     return (
         <ul className="flex flex-row items-center justify-center h-full w-full md:w-fit bg-base-300 rounded-b-xl">
@@ -65,14 +31,9 @@ const ToolbarToolsMenu: FC = () => {
                     keys={["ctrl", "s"]}
                 />
             </ToolbarToolItem>
-            {getProject().mode == "ex" && (
+            {projectMode == "ex" && (
                 <ToolbarToolItem>
-                    <ToolbarButton
-                        icon={assets.bag.outlined}
-                        text="Share"
-                        onClick={handleShare}
-                        tip="Share Project"
-                    />
+                    <ShareButton />
                 </ToolbarToolItem>
             )}
 
@@ -85,7 +46,7 @@ const ToolbarToolsMenu: FC = () => {
             </ToolbarToolItem>
 
             <ToolbarToolItem>
-                <ConfigOpenDialog />
+                <ConfigButton />
             </ToolbarToolItem>
         </ul>
     );
