@@ -14,15 +14,15 @@ type Props = {
 };
 
 export const MonacoEditor: FC<Props> = (props) => {
-    const { updateFile, getFile } = useProject();
-    const {
-        run,
-        update,
-        updateImageDecorations,
-        getRuntime,
-        setRuntime,
-    } = useEditor();
-    const { getConfig, setConfigKey } = useConfig();
+    const updateFile = useProject((s) => s.updateFile);
+    const getFile = useProject((s) => s.getFile);
+    const run = useEditor((s) => s.run);
+    const update = useEditor((s) => s.update);
+    const updateImageDecorations = useEditor((s) => s.updateImageDecorations);
+    const setRuntime = useEditor((s) => s.setRuntime);
+    const getRuntime = useEditor((s) => s.getRuntime);
+    const getConfig = useConfig((s) => s.getConfig);
+    const setConfigKey = useConfig((s) => s.setConfigKey);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -80,6 +80,10 @@ export const MonacoEditor: FC<Props> = (props) => {
                 getFile(getRuntime().currentFile)?.value ?? "",
             );
 
+            updateImageDecorations();
+        });
+
+        editor.onDidScrollChange(() => {
             updateImageDecorations();
         });
 
@@ -180,8 +184,12 @@ export const MonacoEditor: FC<Props> = (props) => {
         });
 
         let decorations = editor.createDecorationsCollection([]);
-        getRuntime().gylphDecorations = decorations;
 
+        setRuntime({
+            gylphDecorations: decorations,
+        });
+
+        updateImageDecorations();
         run();
     };
 

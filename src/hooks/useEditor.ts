@@ -4,7 +4,9 @@ import { toast } from "react-toastify";
 import { create } from "zustand";
 import { wrapGame } from "../features/Projects/application/wrapGame";
 import { useProject } from "../features/Projects/stores/useProject";
+import { parseAssetPath } from "../util/assetsParsing";
 import { debug } from "../util/logs";
+import { MATCH_ASSET_URL_REGEX } from "../util/regex";
 
 type EditorRuntime = {
     editor: editor.IStandaloneCodeEditor | null;
@@ -124,8 +126,6 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         if (!editor || !monaco || !model || !gylphDecorations) return;
 
-        const regexLoad = /load\w+\(\s*"[^"]*",\s*"([^"]*)"\s*\)/g;
-
         // for each every line
         const lines = editor.getModel()?.getLinesContent() ?? [];
 
@@ -135,32 +135,13 @@ export const useEditor = create<EditorStore>((set, get) => ({
         }[] = [];
 
         lines.forEach((line, index) => {
-            const match = line.match(regexLoad);
-            if (!match) return;
+            const match = [...line.matchAll(MATCH_ASSET_URL_REGEX)]?.[0];
+            const url = match?.[1];
 
-            const url = line.replace(regexLoad, (_, url) => {
-                return url;
-            });
-
-            const normalizedUrl = url.replace(/^\/|\/$/g, "").replace(
-                /"/g,
-                "",
-            ).replace(";", "");
-
-            const projectAsset = useProject.getState().project.assets
-                .get(
-                    normalizedUrl.replace("assets/", ""),
-                );
-
-            if (projectAsset) {
-                return linesRange.push({
-                    image: projectAsset.url,
-                    line: index + 1,
-                });
-            }
+            if (!url) return;
 
             linesRange.push({
-                image: `http://localhost:5173/${normalizedUrl}`,
+                image: parseAssetPath(url),
                 line: index + 1,
             });
         });
