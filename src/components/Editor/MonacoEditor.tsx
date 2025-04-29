@@ -6,6 +6,7 @@ import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig.ts";
 import { useEditor } from "../../hooks/useEditor";
 import { debug } from "../../util/logs";
+import { formatAction } from "./actions/format";
 import { configMonaco } from "./monacoConfig";
 
 type Props = {
@@ -133,42 +134,7 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
-        editor.addAction({
-            id: "format-kaplay",
-            label: "Format file using KAPLAYGROUND",
-            contextMenuGroupId: "navigation",
-            contextMenuOrder: 1.5,
-            run: () => {
-                editor.getAction("editor.action.formatDocument")?.run();
-
-                if (!getConfig().funFormat) return;
-
-                var duration = 0.5 * 1000;
-                var animationEnd = Date.now() + duration;
-
-                (function frame() {
-                    var timeLeft = animationEnd - Date.now();
-
-                    canvas.confetti({
-                        particleCount: 3,
-                        spread: 1,
-                        origin: {
-                            x: Math.random(),
-                            y: -0.05,
-                        },
-                        angle: 270,
-                        startVelocity: 10,
-                        gravity: 0.5,
-                        ticks: 50,
-                        colors: ["#fcef8d", "#abdd64", "#d46eb3"],
-                    });
-
-                    if (timeLeft > 0) {
-                        requestAnimationFrame(frame);
-                    }
-                })();
-            },
-        });
+        editor.addAction(formatAction(editor, getConfig(), canvas));
 
         editor.addAction({
             id: "toggle-word-wrap",
