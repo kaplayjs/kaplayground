@@ -23,6 +23,7 @@ export const GameView: FC = () => {
             className="rounded-xl"
             style={{
                 border: "none",
+                outline: "none",
                 width: "100%",
                 height: "100%",
             }}
