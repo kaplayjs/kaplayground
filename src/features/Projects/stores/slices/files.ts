@@ -79,6 +79,10 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
                 value,
             });
 
+            get().setProject({
+                updatedAt: new Date().toISOString(),
+            });
+
             set({});
         },
 
