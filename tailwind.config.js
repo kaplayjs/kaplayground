@@ -23,6 +23,7 @@ export default {
                 "Spiker": {
                     ...require("daisyui/src/theming/themes")["dim"],
                     primary: "#abdd64",
+                    error: "#ea6262",
                     "--animation-btn": 0,
                 },
                 "Ghostiny": {

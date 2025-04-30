@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
@@ -12,7 +12,17 @@ const ProjectStatus = () => {
         setProject,
     } = useProject();
     const { run, runtime } = useEditor();
+    const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(getProject().name);
+    const [initialName, setInitialName] = useState(() => name);
+    const [value, setValue] = useState(() => initialName);
+
+    const isSaved = (n = name) => {
+        return projectIsSaved(n, getProject().mode);
+    };
+
+    const projectHasSwitched = () =>
+        !isEditing && getProject().name != initialName;
 
     const handleSaveProject = (newName = name) => {
         if (isSaved(newName)) return;
@@ -24,19 +34,48 @@ const ProjectStatus = () => {
     };
 
     const handleInputChange = (t: React.ChangeEvent<HTMLInputElement>) => {
-        const newName = t.target.value;
-        if (!newName) return;
+        const newValue = t.target.value;
+        const newName = newValue || initialName;
 
+        setValue(newValue);
         setName(newName);
         handleSaveProject(newName);
     };
 
-    const isSaved = (n = name) => {
-        return projectIsSaved(n, getProject().mode);
+    const handleInputBlur = () => {
+        if (!isEditing) return;
+
+        const newName = error ? initialName : name;
+        setValue(value || newName);
+        setInitialName(newName);
+        setIsEditing(false);
+        handleSaveProject(newName);
     };
 
+    const resetValue = () => {
+        setName(initialName);
+        setValue(initialName);
+        handleSaveProject(initialName);
+        setIsEditing(false);
+        setTimeout(blur);
+    };
+
+    const blur = () => (document.activeElement as HTMLElement | null)?.blur();
+
+    const error = useMemo(() => {
+        if (projectHasSwitched()) return "";
+        return (value && value != getProject().name
+            ? "Project with that name already exists!"
+            : "");
+    }, [value, getProject().name]);
+
     useEffect(() => {
-        setName(getProject().name);
+        if (!projectHasSwitched()) return;
+
+        const newName = getProject().name;
+        setName(newName);
+        setInitialName(newName);
+        setValue(newName);
     }, [getProject().name]);
 
     return (
@@ -49,10 +88,27 @@ const ProjectStatus = () => {
 
                     <input
                         id="projectNameInput"
-                        className="input input-xs"
-                        value={name}
-                        placeholder={name}
+                        className={cn(
+                            "input input-xs placeholder:text-base-content/45",
+                            {
+                                "border-error focus-visible:outline-error":
+                                    error,
+                            },
+                        )}
+                        value={value}
+                        placeholder={initialName}
                         onChange={handleInputChange}
+                        onFocus={() => setIsEditing(true)}
+                        onBlur={handleInputBlur}
+                        data-tooltip-id="global-open"
+                        data-tooltip-content={error}
+                        data-tooltip-hidden={!error}
+                        data-tooltip-variant="error"
+                        data-tooltip-place="bottom-start"
+                        onKeyUpCapture={e => {
+                            if (e.key === "Escape") resetValue();
+                            else if (e.key === "Enter" && !error) blur();
+                        }}
                     >
                     </input>
                 </>

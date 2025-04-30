@@ -64,6 +64,10 @@ html, body, #root {
     }
 }
 
+.react-tooltip {
+    --rt-color-error: color-mix(in oklch, oklch(var(--er)) 94%, #000);
+}
+
 /* temp */
 
 .monaco-glyph-margin-preview-image {
