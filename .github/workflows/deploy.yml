@@ -4,12 +4,13 @@ on:
     workflows: ["Sync Submodules"]
     types:
       - completed
-  
+
 
 jobs:
   deploy:
     name: "Deploy website on Cloudflare"
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'kaplayjs'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
