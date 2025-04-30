@@ -17,41 +17,41 @@ export const ConsoleView = () => {
         );
 
         window.addEventListener("message", (event) => {
+            if (
+                event.data?.type?.startsWith("CONSOLE_")
+                && String(event.data?.data?.[0])?.startsWith("[sandbox]")
+            ) return;
+
             if (event.data?.type === "CONSOLE_LOG") {
-                const log: string[] = event.data.data;
-                if (log[0]?.startsWith("[sandbox]")) return;
+                const log: string[] = event.data?.data;
 
                 console.log(
                     "[game]",
                     ...log,
                 );
             } else if (event.data?.type === "CONSOLE_ERROR") {
-                const log: string[] = event.data.data;
-                if (log[0]?.startsWith("[sandbox]")) return;
+                const log: string[] = event.data?.data;
 
                 console.error(
                     "[game]",
                     ...log,
                 );
             } else if (event.data?.type === "CONSOLE_WARN") {
-                const log: string[] = event.data.data;
-                if (log[0]?.startsWith("[sandbox]")) return;
+                const log: string[] = event.data?.data;
 
                 console.warn(
                     "[game]",
                     ...log,
                 );
             } else if (event.data?.type === "CONSOLE_DEBUG") {
-                const log: string[] = event.data.data;
-                if (log[0]?.startsWith("[sandbox]")) return;
+                const log: string[] = event.data?.data;
 
                 console.debug(
                     "[game]",
                     ...log,
                 );
             } else if (event.data?.type === "CONSOLE_INFO") {
-                const log: string[] = event.data.data;
-                if (log[0]?.startsWith("[sandbox]")) return;
+                const log: string[] = event.data?.data;
 
                 console.info(
                     "[game]",
