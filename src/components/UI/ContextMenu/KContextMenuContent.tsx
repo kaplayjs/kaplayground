@@ -13,10 +13,10 @@ export const KContextMenuContent: FC<ContextMenuContentProps> = forwardRef((
     return (
         <ContextMenu.Content
             ref={ref}
-            className="rounded-btn p-1 bg-base-200 flex flex-col shadow-xl"
+            className="rounded-btn p-1 bg-base-100 flex flex-col shadow-xl"
             {...props}
         >
-            <div className="font-bold px-10 text-left pl-1">
+            <div className="font-semibold tracking-wide text-sm px-10 text-left pl-1.5 py-1">
                 {title}
             </div>
 
