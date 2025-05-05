@@ -2,6 +2,12 @@
 
 Format: Major.Minor.Patch (Y/M/D)
 
+## [2.2.1] - 2025-05-5
+
+### Fixed
+
+- Fixed bugs in the editor
+
 ## [2.2.0] - 2025-04-26
 
 ### Added
