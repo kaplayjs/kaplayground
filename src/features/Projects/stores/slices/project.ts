@@ -115,6 +115,7 @@ export const createProjectSlice: StateCreator<
         }
 
         useEditor.getState().update(files.get("main.js")?.value);
+        useEditor.getState().setCurrentFile("main.js");
 
         useProject.persist.setOptions({
             name: `u${filter}-Untitled`,
