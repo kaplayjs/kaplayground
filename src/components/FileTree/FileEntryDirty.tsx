@@ -1,5 +1,12 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { cn } from "../../util/cn";
 
 type FileEntryDirtyProps = {
     folder: string;
@@ -28,6 +35,7 @@ export const FileEntryDirty = forwardRef<
     const internalRef = useRef<HTMLInputElement>(null);
     const fileName = useRef<string>("");
     const [error, setError] = useState("");
+    const [triedToSave, setTriedToSave] = useState(false);
     const files = useProject(s => s.project.files);
 
     const checkErrors = (fileName: string) => {
@@ -51,11 +59,22 @@ export const FileEntryDirty = forwardRef<
         return internalRef.current as HTMLInputElement;
     });
 
+    useEffect(() => {
+        setTimeout(() => {
+            setTriedToSave(false);
+        }, 500);
+    }, [triedToSave]);
+
     return (
         <div className="join w-full">
             <input
                 ref={internalRef}
-                className="input input-xs join-item active:outline-none text-left truncate w-full flex-1 py-0.5 h-[1.875rem] min-h-0"
+                className={cn(
+                    "input input-xs join-item active:outline-none text-left truncate w-full flex-1 py-0.5 h-[1.875rem] min-h-0",
+                    {
+                        "animate-shake": triedToSave,
+                    },
+                )}
                 type="text"
                 autoFocus={true}
                 tabIndex={0}
@@ -71,7 +90,12 @@ export const FileEntryDirty = forwardRef<
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {
                         e.preventDefault();
-                        e.currentTarget.blur();
+
+                        if (error != "") {
+                            setTriedToSave(true);
+                        } else {
+                            e.currentTarget.blur();
+                        }
                     }
                 }}
                 onChange={(e) => {

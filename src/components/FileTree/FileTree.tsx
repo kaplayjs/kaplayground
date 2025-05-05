@@ -51,6 +51,7 @@ export const FileTree = () => {
                     <FileFold
                         folder="root"
                         level={0}
+                        kind={null}
                     />
                 </View>
 

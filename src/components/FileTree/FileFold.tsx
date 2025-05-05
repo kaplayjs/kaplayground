@@ -23,7 +23,7 @@ type Props = PropsWithChildren<{
     title?: string;
     toolbar?: boolean;
     /** Kind of files on Folder */
-    kind: FileKind;
+    kind: FileKind | null;
     /** Folder */
     folder: FileFolder;
     folded?: boolean;
@@ -54,6 +54,8 @@ export const FileFold: FC<Props> = (props) => {
     ] = useDragAndDrop<HTMLUListElement, File>([]);
 
     const handleCreateFile = (e: React.FocusEvent<HTMLInputElement>) => {
+        if (!props.kind) return;
+
         const name = e.currentTarget.value.trim();
         if (!name) return;
         const isValid = newFileInputRef.current?.dataset.valid;
@@ -119,14 +121,16 @@ export const FileFold: FC<Props> = (props) => {
                     )}
 
                     {draggableFiles.length == 0
-                        ? (
-                            <ul>
-                                <li className="inline-flex items-center text-gray-500 text-xs pl-3.5 min-h-[1.875rem]">
-                                    Create {props.kind === "obj" ? "an" : "a"}
-                                    {" "}
-                                    {props.kind} to start
-                                </li>
-                            </ul>
+                        ? !creatingFile && (
+                            (
+                                <ul>
+                                    <li className="inline-flex items-center text-gray-500 text-xs pl-3.5 min-h-[1.875rem]">
+                                        Create{" "}
+                                        {props.kind === "obj" ? "an" : "a"}{" "}
+                                        {props.kind} to start
+                                    </li>
+                                </ul>
+                            )
                         )
                         : (
                             <ul
