@@ -14,6 +14,7 @@ import type { Folder, RealFile } from "../../features/Projects/models/File";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { KContextMenuContent } from "../UI/ContextMenu/KContextMenuContent";
 import { KContextMenuItem } from "../UI/ContextMenu/KContextMenuItem";
+import { KContextMenuSeparator } from "../UI/ContextMenu/KContextMenuSeparator";
 import { FileEntry } from "./FileEntry";
 import { FileTreeItemDirty } from "./FileTreeItemDirty";
 
@@ -109,9 +110,18 @@ export const FileFold: FC<Props> = ({ icon, ...props }) => {
                 <ContextMenu.Trigger
                     id={props.path}
                 >
-                    <div className="flex justify-between items-center">
+                    <div
+                        className={cn("flex justify-between items-center", {
+                            "-mb-1.5": props.level < 2,
+                        })}
+                    >
                         <div
-                            className="file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0 btn-ghost"
+                            className={cn(
+                                "file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0 btn-ghost",
+                                {
+                                    "pl-3": !icon,
+                                },
+                            )}
                             onClick={() => {
                                 setFolded(!folded);
                             }}
@@ -123,7 +133,12 @@ export const FileFold: FC<Props> = ({ icon, ...props }) => {
                                 />
                             )}
 
-                            <h2 className="font-bold text-xs uppercase tracking-wider">
+                            <h2
+                                className={cn("font-semibold", {
+                                    "font-bold text-xs uppercase tracking-wider":
+                                        props.level == 1,
+                                })}
+                            >
                                 {props.title}
                             </h2>
                         </div>
@@ -135,13 +150,12 @@ export const FileFold: FC<Props> = ({ icon, ...props }) => {
                 className={cn(
                     "space-y-px",
                     {
-                        "mt-1 border-l border-base-content/10": props.level,
+                        "pl-3 border-l border-base-content/10": props.level,
+                        "ml-2": props.level == 1,
+                        "ml-3": props.level > 1,
                         "hidden": folded,
                     },
                 )}
-                style={{
-                    paddingLeft: `${0.5 * props.level}rem`,
-                }}
             >
                 {creatingItem && (
                     <FileTreeItemDirty
@@ -220,14 +234,14 @@ export const FileFold: FC<Props> = ({ icon, ...props }) => {
                     >
                         New folder
                     </KContextMenuItem>
-                    <ContextMenu.Separator className="divider my-0" />
+                    <KContextMenuSeparator />
                     <KContextMenuItem
                         disabled={isRoot()}
                         onClick={handleDeleteFolder}
                     >
                         Delete folder
                     </KContextMenuItem>
-                    <ContextMenu.Separator className="divider my-0" />
+                    <KContextMenuSeparator />
                     <KContextMenuItem
                         onClick={() => {
                             setFolded(false);

@@ -21,10 +21,10 @@ export const FileTree = () => {
                 <View
                     direction={"column"}
                     padding={2}
-                    gap={1.5}
+                    gap={2}
                     el="div"
                     rounded={"xl"}
-                    className="mt-1"
+                    className="mt-px"
                 >
                     <FileFold
                         level={1}

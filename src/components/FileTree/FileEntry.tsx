@@ -36,7 +36,7 @@ export const FileEntry: FC<FileEntryProps> = ({ file, icon }) => {
                         "file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0",
                         {
                             "font-normal pl-3": !isRoot(),
-                            "bg-base-100 hover:bg-base-100":
+                            "bg-base-100 border-base-100 hover:bg-base-100 hover:border-base-100":
                                 getRuntime().currentFile === file.path,
                             "btn-ghost": getRuntime().currentFile !== file.path,
                         },
