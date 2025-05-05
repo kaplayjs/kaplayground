@@ -68,6 +68,7 @@ export const createProjectSlice: StateCreator<
             project: {
                 ...get().project,
                 ...project,
+                updatedAt: new Date().toISOString(),
             },
         }));
     },

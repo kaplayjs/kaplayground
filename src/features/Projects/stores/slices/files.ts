@@ -40,9 +40,10 @@ kaplay(${config});
 export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
     (set, get) => ({
         addFile(file) {
-            debug(0, "Adding file", file.path);
+            debug(0, "[files] Adding file", file.path);
+
             get().project.files.set(file.path, file);
-            set({});
+            get().setProject({});
         },
 
         removeFile(path) {
@@ -53,7 +54,7 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
             if (!foundFile) return console.debug("File not found", path);
 
             get().project.files.delete(path);
-            set({});
+            get().setProject({});
         },
 
         getFile(path) {
