@@ -8,11 +8,12 @@ import {
 import { useProject } from "../../features/Projects/stores/useProject";
 import { cn } from "../../util/cn";
 
-type FileEntryDirtyProps = {
+type FileTreeItemDirtyProps = {
     folder: string;
+    createFolder?: boolean;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
-type FileEntryDirtyRef = HTMLInputElement;
+type FileTreeItemDirtyRef = HTMLInputElement;
 
 const undertaleNames: Record<string, string> = {
     sans: "nope.",
@@ -25,11 +26,11 @@ const undertaleNames: Record<string, string> = {
     ghosty: "Please don't.",
 };
 
-export const FileEntryDirty = forwardRef<
-    FileEntryDirtyRef,
-    FileEntryDirtyProps
+export const FileTreeItemDirty = forwardRef<
+    FileTreeItemDirtyRef,
+    FileTreeItemDirtyProps
 >((
-    { onBlur, folder },
+    { onBlur, folder, createFolder = false },
     ref: React.Ref<HTMLInputElement>,
 ) => {
     const internalRef = useRef<HTMLInputElement>(null);
@@ -84,6 +85,7 @@ export const FileEntryDirty = forwardRef<
                 data-tooltip-variant="error"
                 data-tooltip-place="bottom-start"
                 data-valid={error == ""}
+                data-kind={createFolder ? "folder" : "file"}
                 onBlur={(e) => {
                     onBlur?.(e);
                 }}
@@ -109,9 +111,11 @@ export const FileEntryDirty = forwardRef<
                 }}
             >
             </input>
-            <div className="join-item py-0.5 h-[1.875rem] min-h-0 px-2 bg-base-200">
-                .js
-            </div>
+            {!createFolder && (
+                <div className="join-item py-0.5 h-[1.875rem] min-h-0 px-2 bg-base-200">
+                    .js
+                </div>
+            )}
         </div>
     );
 });

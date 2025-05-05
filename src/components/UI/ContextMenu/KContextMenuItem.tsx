@@ -10,7 +10,7 @@ export const KContextMenuItem: FC<ContextMenuItemProps> = forwardRef((
 ) => {
     return (
         <ContextMenu.Item
-            className="btn btn-xs btn-ghost text-left justify-start pl-1 rounded-md px-10 hover:outline-none"
+            className="btn btn-xs btn-ghost text-left justify-start pl-1 rounded-md px-10 hover:outline-none aria-disabled:btn-disabled"
             ref={ref}
             {...props}
         >

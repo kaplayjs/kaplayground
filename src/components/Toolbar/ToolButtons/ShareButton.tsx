@@ -6,7 +6,7 @@ import ToolbarButton from "../ToolbarButton";
 
 export const ShareButton = () => {
     const getProject = useProject((s) => s.getProject);
-    const getMainFile = useProject((s) => s.getMainFile);
+    const getFile = useProject((s) => s.getFile);
     const handleShare = () => {
         const isDefault = getProject().isDefault;
 
@@ -22,7 +22,7 @@ export const ShareButton = () => {
             return;
         }
 
-        const mainFile = getMainFile();
+        const mainFile = getFile("main.js");
         const compressedCode = compressCode(mainFile?.value!);
         const codeParam = encodeURIComponent(compressedCode);
         const exampleVersion = encodeURIComponent(

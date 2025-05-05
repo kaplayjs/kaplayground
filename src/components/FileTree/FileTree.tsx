@@ -17,7 +17,6 @@ export const FileTree = () => {
                 justify="between"
                 height="full"
                 el={"div"}
-                className=""
             >
                 <View
                     direction={"column"}
@@ -30,28 +29,25 @@ export const FileTree = () => {
                     <FileFold
                         level={1}
                         title="Scenes"
-                        folder="scenes"
-                        kind="scene"
-                        toolbar
+                        path="scenes"
+                        icon={assets.art.outlined}
                     />
                     <FileFold
                         level={1}
                         title="Game Objs"
-                        folder="objects"
-                        kind="obj"
-                        toolbar
+                        path="objects"
+                        icon={assets.grass.outlined}
                     />
                     <FileFold
                         level={1}
                         title="Utils"
-                        folder="utils"
-                        kind="util"
-                        toolbar
+                        path="utils"
+                        icon={assets.toolbox.outlined}
                     />
                     <FileFold
-                        folder="root"
                         level={0}
-                        kind={null}
+                        path="root"
+                        folded={false}
                     />
                 </View>
 

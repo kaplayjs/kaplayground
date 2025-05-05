@@ -8,160 +8,239 @@ import {
 import { cn } from "../../util/cn";
 import "./FileFolder.css";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
+import { assets } from "@kaplayjs/crew";
 import * as ContextMenu from "@radix-ui/react-context-menu";
-import type { File } from "../../features/Projects/models/File";
-import type { FileFolder } from "../../features/Projects/models/FileFolder";
-import type { FileKind } from "../../features/Projects/models/FileKind";
+import type { Folder, RealFile } from "../../features/Projects/models/File";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { KContextMenuContent } from "../UI/ContextMenu/KContextMenuContent";
 import { KContextMenuItem } from "../UI/ContextMenu/KContextMenuItem";
-import { FileEntry, logoByKind } from "./FileEntry";
-import { FileEntryDirty } from "./FileEntryDirty";
+import { FileEntry } from "./FileEntry";
+import { FileTreeItemDirty } from "./FileTreeItemDirty";
 
 type Props = PropsWithChildren<{
-    level: 0 | 1 | 2;
+    level: number;
+    path: string;
     title?: string;
-    toolbar?: boolean;
-    /** Kind of files on Folder */
-    kind: FileKind | null;
-    /** Folder */
-    folder: FileFolder;
+    icon?: string;
     folded?: boolean;
 }>;
 
-const paddingLevels = {
-    0: "pl-0",
-    1: "pl-2.5",
-    2: "pl-5",
+const iconByPath: Record<string, any> = {
+    "main.js": assets.play.outlined,
+    "assets.js": assets.assetbrew.outlined,
+    "kaplay.js": assets.ka.outlined,
 };
 
-export const FileFold: FC<Props> = (props) => {
+export const FileFold: FC<Props> = ({ icon, ...props }) => {
     const [folded, setFolded] = useState(props.folded ?? false);
-    const [creatingFile, setCreatingFile] = useState(false);
     const project = useProject((s) => s.project);
-    const getFilesByFolder = useProject((s) => s.getFilesByFolder);
+    const getTreeByPath = useProject((s) => s.getTreeByPath);
     const addFile = useProject((s) => s.addFile);
-    const newFileInputRef = useRef<HTMLInputElement>(null);
+    const removeFile = useProject((s) => s.removeFile);
+    const [creatingItem, setCreatingItem] = useState<"folder" | "file" | null>(
+        null,
+    );
+    const newItemRef = useRef<HTMLInputElement>(null);
+
+    const isRoot = () => !props.path.includes("/");
 
     useEffect(() => {
-        setDraggableFiles(getFilesByFolder(props.folder));
+        const tree = getTreeByPath(props.path);
+        const files = tree.filter((file) => file.kind !== "folder");
+        const folders = tree.filter((file) => file.kind === "folder");
+
+        setFiles(files);
+        setFolders(folders);
     }, [project]);
 
     const [
-        draggableParent,
-        draggableFiles,
-        setDraggableFiles,
-    ] = useDragAndDrop<HTMLUListElement, File>([]);
+        filesParent,
+        files,
+        setFiles,
+    ] = useDragAndDrop<HTMLUListElement, RealFile>([]);
 
-    const handleCreateFile = (e: React.FocusEvent<HTMLInputElement>) => {
-        if (!props.kind) return;
+    const [
+        foldersParent,
+        folders,
+        setFolders,
+    ] = useDragAndDrop<HTMLUListElement, Folder>([]);
 
+    const handleCreate = (e: React.FocusEvent<HTMLInputElement>) => {
         const name = e.currentTarget.value.trim();
         if (!name) return;
-        const isValid = newFileInputRef.current?.dataset.valid;
+
+        const kind = e.currentTarget.dataset.kind as "file" | "folder";
+        if (!kind) return;
+
+        const isValid = newItemRef.current?.dataset.valid;
 
         if (isValid === "true") {
-            const file: File = {
-                name: `${name}.js`,
-                kind: props.kind,
-                language: "javascript",
-                path: `${props.folder}/${name}`,
-                value: "",
-            };
+            if (kind === "folder") {
+                const file: Folder = {
+                    name: `${name}`,
+                    kind: kind,
+                    path: `${props.path}/${name}`,
+                };
 
-            addFile(file);
+                addFile(file);
+            } else {
+                const file: RealFile = {
+                    name: `${name}.js`,
+                    kind: kind,
+                    language: "javascript",
+                    path: `${props.path}/${name}.js`,
+                    value: "",
+                };
+
+                addFile(file);
+            }
         }
 
-        setCreatingFile(false);
+        setCreatingItem(null);
+    };
+
+    const handleDeleteFolder = () => {
+        removeFile(props.path);
     };
 
     return (
         <ContextMenu.Root>
-            <div className={cn("mb-2", { "ml-2": props.level })}>
+            {props.title && (
                 <ContextMenu.Trigger
-                    draggable={false}
-                    id={props.folder}
+                    id={props.path}
                 >
                     <div className="flex justify-between items-center">
-                        {props.title && props.kind && (
-                            <div
-                                className="file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0 btn-ghost"
-                                onClick={() => {
-                                    setFolded(!folded);
-                                }}
-                            >
+                        <div
+                            className="file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0 btn-ghost"
+                            onClick={() => {
+                                setFolded(!folded);
+                            }}
+                        >
+                            {icon && (
                                 <img
-                                    src={logoByKind[props.kind]}
+                                    src={icon}
                                     className="w-4"
                                 />
-                                <h2 className="font-bold text-xs uppercase tracking-wider">
-                                    {props.title}
-                                </h2>
-                            </div>
-                        )}
+                            )}
+
+                            <h2 className="font-bold text-xs uppercase tracking-wider">
+                                {props.title}
+                            </h2>
+                        </div>
                     </div>
                 </ContextMenu.Trigger>
+            )}
 
-                <div
-                    className={cn(
-                        paddingLevels[props.level],
-                        "space-y-px",
-                        {
-                            "mt-1 border-l border-base-content/10": props.level,
-                            "hidden": folded,
-                        },
-                    )}
-                >
-                    {creatingFile && (
-                        <FileEntryDirty
-                            folder={props.folder}
-                            ref={newFileInputRef}
-                            onBlur={handleCreateFile}
-                        />
-                    )}
+            <div
+                className={cn(
+                    "space-y-px",
+                    {
+                        "mt-1 border-l border-base-content/10": props.level,
+                        "hidden": folded,
+                    },
+                )}
+                style={{
+                    paddingLeft: `${0.5 * props.level}rem`,
+                }}
+            >
+                {creatingItem && (
+                    <FileTreeItemDirty
+                        folder={props.path}
+                        ref={newItemRef}
+                        onBlur={handleCreate}
+                        createFolder={creatingItem === "folder"}
+                    />
+                )}
 
-                    {draggableFiles.length == 0
-                        ? !creatingFile && (
-                            (
-                                <ul>
-                                    <li className="inline-flex items-center text-gray-500 text-xs pl-3.5 min-h-[1.875rem]">
-                                        Create{" "}
-                                        {props.kind === "obj" ? "an" : "a"}{" "}
-                                        {props.kind} to start
-                                    </li>
-                                </ul>
-                            )
-                        )
-                        : (
-                            <ul
-                                ref={draggableParent}
-                            >
-                                {draggableFiles.map((file) => (
-                                    <li key={file.name}>
-                                        <FileEntry
-                                            file={{ ...file }}
-                                        />
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                </div>
+                {files.length == 0 && folders.length == 0 && !creatingItem && (
+                    <ul>
+                        <li className="inline-flex items-center text-gray-500 text-xs pl-3.5 min-h-[1.875rem]">
+                            No files or folders
+                        </li>
+                    </ul>
+                )}
+
+                {folders.length > 0 && (
+                    <ul
+                        ref={foldersParent}
+                        className="flex flex-col gap-px"
+                    >
+                        {folders.map((folder) => (
+                            <li key={folder.name}>
+                                <FileFold
+                                    path={`${props.path}/${folder.name}`}
+                                    title={folder.name}
+                                    level={props.level + 1}
+                                    icon={iconByPath[folder.name]}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
+                {files.length > 0 && (
+                    <ul
+                        ref={filesParent}
+                        className="flex flex-col gap-px"
+                    >
+                        {files.map((file) => (
+                            <li key={file.name}>
+                                <FileEntry
+                                    file={file}
+                                    icon={iconByPath[file.name]}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
 
             <ContextMenu.Portal>
                 <KContextMenuContent
-                    title={props.folder.charAt(0).toUpperCase()
-                        + props.folder.slice(1) + " folder"}
+                    title={props.path.charAt(0).toUpperCase()
+                        + props.path.slice(1) + " folder"}
                 >
                     <KContextMenuItem
                         onClick={() => {
-                            setCreatingFile(true);
+                            setCreatingItem("file");
                             setTimeout(() => {
-                                newFileInputRef.current?.focus();
+                                newItemRef.current?.focus();
                             }, 0);
                         }}
                     >
                         New file
+                    </KContextMenuItem>
+                    <KContextMenuItem
+                        onClick={() => {
+                            setCreatingItem("folder");
+                            setTimeout(() => {
+                                newItemRef.current?.focus();
+                            }, 0);
+                        }}
+                    >
+                        New folder
+                    </KContextMenuItem>
+                    <ContextMenu.Separator className="divider my-0" />
+                    <KContextMenuItem
+                        disabled={isRoot()}
+                        onClick={handleDeleteFolder}
+                    >
+                        Delete folder
+                    </KContextMenuItem>
+                    <ContextMenu.Separator className="divider my-0" />
+                    <KContextMenuItem
+                        onClick={() => {
+                            setFolded(false);
+                        }}
+                    >
+                        Expand all
+                    </KContextMenuItem>
+                    <KContextMenuItem
+                        onClick={() => {
+                            setFolded(true);
+                        }}
+                    >
+                        Collapse all
                     </KContextMenuItem>
                 </KContextMenuContent>
             </ContextMenu.Portal>

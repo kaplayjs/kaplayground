@@ -1,24 +1,28 @@
 import { useProject } from "../stores/useProject";
 
 export function wrapCode() {
-    let mainFile = useProject.getState().getMainFile()?.value ?? "";
+    const projectState = useProject.getState();
+
+    const mainFile = projectState.getFile("main.js")?.value ?? "";
     let parsedFiles = "";
 
-    if (useProject.getState().getProject().mode === "ex") {
+    if (projectState.project.mode === "ex") {
         parsedFiles = mainFile;
     } else {
         let sceneFiles = "";
         let objectFiles = "";
         let utilFiles = "";
-        let KAPLAYFile = useProject.getState().getKAPLAYFile()?.value ?? "";
-        let assetsFile = useProject.getState().getAssetsFile()?.value ?? "";
+        let KAPLAYFile = projectState.getFile("kaplay.js")?.value ?? "";
+        let assetsFile = projectState.getFile("assets.js")?.value ?? "";
 
-        useProject.getState().getProject().files.forEach((file) => {
-            if (file.kind == "scene") {
+        projectState.project.files.forEach((file) => {
+            if (file.kind === "folder") return;
+
+            if (file.path.startsWith("scenes/")) {
                 sceneFiles += `\n${file.value}\n`;
-            } else if (file.kind == "obj") {
+            } else if (file.path.startsWith("objects/")) {
                 objectFiles += `\n${file.value}\n`;
-            } else if (file.kind == "util") {
+            } else if (file.path.startsWith("utils/")) {
                 utilFiles += `\n${file.value}\n`;
             }
         });

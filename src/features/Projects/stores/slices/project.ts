@@ -98,7 +98,7 @@ export const createProjectSlice: StateCreator<
             }
 
             files.set("main.js", {
-                kind: "main",
+                kind: "file",
                 language: "javascript",
                 name: "main.js",
                 path: "main.js",
@@ -115,7 +115,7 @@ export const createProjectSlice: StateCreator<
             debug(1, "New files for the new example project", files, assets);
         }
 
-        useEditor.getState().update(files.get("main.js")?.value);
+        useEditor.getState().update(get().getFile("main.js")?.value);
 
         useProject.persist.setOptions({
             name: `u${filter}-Untitled`,
@@ -244,7 +244,7 @@ export const createProjectSlice: StateCreator<
             });
         } else {
             files.set("main.js", {
-                kind: "main",
+                kind: "file",
                 language: "javascript",
                 name: "main.js",
                 path: "main.js",
@@ -287,7 +287,7 @@ export const createProjectSlice: StateCreator<
                 [
                     "main.js",
                     {
-                        kind: "main",
+                        kind: "file",
                         language: "javascript",
                         name: "main.js",
                         path: "main.js",

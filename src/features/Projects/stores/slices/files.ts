@@ -1,18 +1,7 @@
 import type { StateCreator } from "zustand";
 import { debug } from "../../../../util/logs";
-import type { File } from "../../models/File";
-import type { FileFolder } from "../../models/FileFolder";
-import type { FileKind } from "../../models/FileKind";
+import type { File, RealFile } from "../../models/File";
 import type { ProjectStore } from "../useProject.ts";
-
-export const folderByKind: Record<FileKind, FileFolder> = {
-    kaplay: "root",
-    main: "root",
-    scene: "scenes",
-    assets: "assets",
-    util: "utils",
-    obj: "objects",
-};
 
 export interface FilesSlice {
     /** Add a file. */
@@ -21,16 +10,10 @@ export interface FilesSlice {
     removeFile: (path: string) => void;
     /** Update a file with the path. */
     updateFile: (path: string, value: string) => void;
-    /** Get the KAPLAY file */
-    getKAPLAYFile: () => File | null;
-    /** Get the assets file */
-    getAssetsFile: () => File | null;
-    /** Get the main file */
-    getMainFile: () => File | null;
     /** Get a file */
-    getFile: (path: string) => File | null;
-    /** Get files by folder */
-    getFilesByFolder: (folder: FileFolder) => File[];
+    getFile: (path: string) => RealFile | null;
+    /** Get all tree for a path */
+    getTreeByPath: (path: "root" | string & {}) => File[];
 }
 
 export const wrapKAPLAYConfig = (config: string) => `
@@ -58,14 +41,20 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
         },
 
         getFile(path) {
-            return get().project.files.get(path) ?? null;
+            const extension = path.split(".").pop();
+            if (!extension) {
+                throw new Error(
+                    "Invalid file path, it should have an extension",
+                );
+            }
+
+            return get().project.files.get(path) as RealFile | null;
         },
 
         updateFile(path, value) {
             debug(0, "[files] Updating file", path);
-            const files = get().project.files;
 
-            const foundFile = files.has(path) ? files.get(path) : null;
+            const foundFile = get().getFile(path);
             if (!foundFile) return debug(2, "File not found", path);
 
             if (get().getProject().isDefault) {
@@ -77,7 +66,7 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
 
             get().addFile({
                 ...foundFile,
-                value,
+                value: value,
             });
 
             get().setProject({
@@ -87,29 +76,24 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
             set({});
         },
 
-        getKAPLAYFile() {
-            return get().getFile("kaplay.js");
-        },
+        getTreeByPath(path) {
+            const tree: File[] = [];
+            const files = get().project.files;
 
-        getMainFile() {
-            return get().getFile("main.js");
-        },
+            Array.from(files.values()).forEach((entry) => {
+                const entryPath = entry.path.split("/");
 
-        getAssetsFile() {
-            return get().getFile("assets.js");
-        },
+                if (entryPath.length === 1 && path === "root") {
+                    tree.push(entry);
+                } else {
+                    const folderPath = entryPath.slice(0, -1).join("/");
 
-        getFilesByFolder(folder) {
-            if (folder === "root") {
-                return Array.from(get().project.files.values()).filter(
-                    (file) =>
-                        file.kind === "kaplay" || file.kind === "main"
-                        || file.kind === "assets",
-                );
-            }
+                    if (folderPath === path) {
+                        tree.push(entry);
+                    }
+                }
+            });
 
-            return Array.from(get().project.files.values()).filter(
-                (file) => file.path.startsWith(folder),
-            );
+            return tree;
         },
     });

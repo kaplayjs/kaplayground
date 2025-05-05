@@ -1,9 +1,15 @@
-import type { FileKind } from "./FileKind";
-
-export type File = {
-    name: string;
+export type RealFile = {
+    kind: "file";
     path: string;
+    name: string;
     language: string;
     value: string;
-    kind: FileKind;
 };
+
+export type Folder = {
+    kind: "folder";
+    path: string;
+    name: string;
+};
+
+export type File = RealFile | Folder;
