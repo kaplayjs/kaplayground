@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const ProjectCreate: FC<Props> = ({ mode, tooltipContent }) => {
-    const { createNewProject } = useProject();
+    const createNewProject = useProject((s) => s.createNewProject);
 
     const handleClick = () => {
         const dialog = document.querySelector<HTMLDialogElement>(

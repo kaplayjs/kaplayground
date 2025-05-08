@@ -44,8 +44,11 @@ const FileButton: FC<{
 };
 
 export const FileEntry: FC<Props> = ({ file }) => {
-    const { removeFile, project: project, setProject } = useProject();
-    const { getRuntime, setCurrentFile } = useEditor();
+    const removeFile = useProject((s) => s.removeFile);
+    const projectFiles = useProject((s) => s.project.files);
+    const setProject = useProject((s) => s.setProject);
+    const getRuntime = useEditor((s) => s.getRuntime);
+    const setCurrentFile = useEditor((s) => s.setCurrentFile);
 
     const isRoot = () => !file.path.includes("/");
 
@@ -70,7 +73,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         e.stopPropagation();
 
         // order the map with the file one step up
-        const files = project.files;
+        const files = projectFiles;
         const order = Array.from(files.keys());
         const index = order.indexOf(file.path);
 
@@ -86,7 +89,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         );
 
         setProject({
-            ...project,
+            ...projectFiles,
             files: newFiles,
         });
     };
@@ -95,7 +98,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         e.stopPropagation();
 
         // order the map with the file one step down
-        const files = project.files;
+        const files = projectFiles;
         const order = Array.from(files.keys());
         const index = order.indexOf(file.path);
 
@@ -111,7 +114,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         );
 
         setProject({
-            ...project,
+            ...projectFiles,
             files: newFiles,
         });
     };

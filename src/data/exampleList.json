@@ -384,7 +384,7 @@
         "category": "games",
         "group": "",
         "description": "Celebrate Kaboom.js v2000 and back to the old days.",
-        "code": "// bean is holding a concert to celebrate kaboom2000!\n\nkaplay({\n    scale: 0.7,\n    background: [128, 180, 255],\n    font: \"happy\",\n});\n\n// Adds bean and all of this friends\nloadBean();\nloadSprite(\"bag\", `/sprites/bag.png`);\nloadSprite(\"ghosty\", \"/sprites/ghosty.png\");\nloadSprite(\"bobo\", `/sprites/bobo.png`);\nloadSprite(\"gigagantrum\", \"/sprites/gigagantrum.png\");\nloadSprite(\"tga\", \"/sprites/dino.png\");\nloadSprite(\"ghostiny\", \"/sprites/ghostiny.png\");\nloadSprite(\"note\", \"/sprites/note.png\");\nloadSprite(\"grass\", \"/sprites/grass.png\");\nloadSprite(\"cloud\", \"/sprites/cloud.png\");\nloadSprite(\"sun\", \"/sprites/sun.png\");\nloadSound(\"bell\", \"/sounds/bell.mp3\");\nloadSound(\"kaboom2000\", \"/sounds/kaboom2000.mp3\");\nloadBitmapFont(\"happy\", \"/fonts/happy_28x36.png\", 28, 36);\n\n// An array of friends\nconst friends = [\n    \"bag\",\n    \"bobo\",\n    \"ghosty\",\n    \"gigagantrum\",\n    \"tga\",\n    \"ghostiny\",\n];\n\nconst FLOOR_HEIGHT = 64;\nconst JUMP_FORCE = 1320;\nconst CAPTION_SPEED = 220;\nconst PLAYER_SPEED = 640;\n\nlet started = false;\nlet music = null;\nlet burping = false;\n\n// define gravity\nsetGravity(2400);\n\n// add a game object to screen\nconst player = add([\n    // list of components\n    sprite(\"bean\"),\n    pos(width() / 2, height() - FLOOR_HEIGHT),\n    area(),\n    body(),\n    anchor(\"bot\"),\n    z(100),\n]);\n\nconst gw = 200;\nconst gh = 140;\nconst maxRow = 4;\nconst notes = [0, 2, 4, 5, 6, 7, 8, 9, 11, 12];\n\nfor (let i = 1; i <= maxRow; i++) {\n    for (let j = 0; j < i; j++) {\n        const n = i * (i - 1) / 2 + j;\n        const w = (i - 1) * gw + 64;\n        add([\n            sprite(\"note\"),\n            pos(\n                j * gw + (width() - w) / 2 + 32,\n                height() - FLOOR_HEIGHT + 24 - (maxRow - i + 1) * gh,\n            ),\n            area(),\n            body({ isStatic: true }),\n            anchor(\"bot\"),\n            color(hsl2rgb((n * 20) / 255, 0.6, 0.7)),\n            bounce(),\n            scale(1),\n            n === 0 ? \"burp\" : \"note\",\n            { detune: notes[9 - n] * 100 + -800 },\n        ]);\n    }\n}\n\nfunction bounce() {\n    let bouncing = false;\n    let timer = 0;\n    return {\n        id: \"bounce\",\n        require: [\"scale\"],\n        update() {\n            if (bouncing) {\n                timer += dt() * 20;\n                const w = Math.sin(timer) * 0.1;\n                if (w < 0) {\n                    bouncing = false;\n                    timer = 0;\n                }\n                else {\n                    this.scale = vec2(1 + w);\n                }\n            }\n        },\n        bounce() {\n            bouncing = true;\n        },\n    };\n}\n\n// floor\nfor (let x = 0; x < width(); x += 64) {\n    add([\n        pos(x, height()),\n        sprite(\"grass\"),\n        anchor(\"botleft\"),\n        area(),\n        body({ isStatic: true }),\n    ]);\n}\n\nfunction jump() {\n    if (player.isGrounded()) {\n        player.jump(JUMP_FORCE);\n    }\n}\n\n// jump when user press space\nonKeyPress(\"space\", jump);\nonKeyDown(\"left\", () => player.move(-PLAYER_SPEED, 0));\nonKeyDown(\"right\", () => player.move(PLAYER_SPEED, 0));\n\nplayer.onHeadbutt((block) => {\n    if (block.is(\"note\")) {\n        play(\"bell\", {\n            detune: block.detune,\n            volume: 0.1,\n        });\n        addKaboom(block.pos);\n        shake(1);\n        block.bounce();\n        if (!started) {\n            started = true;\n            caption.hidden = false;\n            caption.paused = false;\n            music = play(\"kaboom2000\");\n        }\n    }\n    else if (block.is(\"burp\")) {\n        burp();\n        shake(480);\n        if (music) music.paused = true;\n        burping = true;\n        player.paused = true;\n    }\n});\n\nonUpdate(() => {\n    if (!burping) return;\n    setCamPos(getCamPos().lerp(player.pos, dt() * 3));\n    setCamScale(getCamScale().lerp(vec2(5), dt() * 3));\n});\n\nconst lyrics =\n    \"kaboom2000 is out today, i have to go and try it out now... oh it's so fun it's so fun it's so fun...... it's so fun it's so fun it's so fun!\";\n\nconst caption = add([\n    text(lyrics, {\n        transform(idx) {\n            return {\n                color: hsl2rgb(\n                    ((time() * 60 + idx * 20) % 255) / 255,\n                    0.9,\n                    0.6,\n                ),\n                scale: wave(1.4, 1.6, time() * 3 + idx),\n                angle: wave(-9, 9, time() * 3 + idx),\n            };\n        },\n    }),\n    pos(width(), 32),\n    move(LEFT, CAPTION_SPEED),\n]);\n\ncaption.hidden = true;\ncaption.paused = true;\n\nfunction funky() {\n    let timer = 0;\n    return {\n        id: \"funky\",\n        require: [\"pos\", \"rotate\"],\n        update() {\n            timer += dt();\n            this.angle = wave(-9, 9, timer * 4);\n        },\n    };\n}\n\nfunction spawnCloud() {\n    const dir = choose([LEFT, RIGHT]);\n\n    add([\n        sprite(\"cloud\", { flipX: dir.eq(LEFT) }),\n        move(dir, rand(20, 60)),\n        offscreen({ destroy: true }),\n        pos(dir.eq(LEFT) ? width() : 0, rand(-20, 480)),\n        anchor(\"top\"),\n        area(),\n        z(-50),\n    ]);\n\n    wait(rand(6, 12), spawnCloud);\n}\n\nfunction spawnFriend() {\n    const friend = choose(friends);\n    const dir = choose([LEFT, RIGHT]);\n\n    add([\n        sprite(friend, { flipX: dir.eq(LEFT) }),\n        move(dir, rand(120, 320)),\n        offscreen({ destroy: true }),\n        pos(dir.eq(LEFT) ? width() : 0, height() - FLOOR_HEIGHT),\n        area(),\n        rotate(),\n        funky(),\n        anchor(\"bot\"),\n        z(50),\n    ]);\n\n    wait(rand(1, 3), spawnFriend);\n}\n\nspawnCloud();\nspawnFriend();\n\nconst sun = add([\n    sprite(\"sun\"),\n    anchor(\"center\"),\n    pos(width() - 90, 90),\n    rotate(),\n    z(-100),\n]);\n\nsun.onUpdate(() => {\n    sun.angle += dt() * 12;\n});",
+        "code": "// bean is holding a concert to celebrate kaboom2000!\n\nkaplay({\n    scale: 0.7,\n    background: [128, 180, 255],\n    font: \"happy\",\n});\n\n// Adds bean and all of this friends\nloadBean();\nloadSprite(\"bag\", `/sprites/bag.png`);\nloadSprite(\"ghosty\", \"/sprites/ghosty.png\");\nloadSprite(\"bobo\", `/sprites/bobo.png`);\nloadSprite(\"gigagantrum\", \"/sprites/gigagantrum.png\");\nloadSprite(\"tga\", \"/sprites/tga.png\");\nloadSprite(\"ghostiny\", \"/sprites/ghostiny.png\");\nloadSprite(\"note\", \"/sprites/note.png\");\nloadSprite(\"grass\", \"/sprites/grass.png\");\nloadSprite(\"cloud\", \"/sprites/cloud.png\");\nloadSprite(\"sun\", \"/sprites/sun.png\");\nloadSound(\"bell\", \"/sounds/bell.mp3\");\nloadSound(\"kaboom2000\", \"/sounds/kaboom2000.mp3\");\nloadBitmapFont(\"happy\", \"/fonts/happy_28x36.png\", 28, 36);\n\n// An array of friends\nconst friends = [\n    \"bag\",\n    \"bobo\",\n    \"ghosty\",\n    \"gigagantrum\",\n    \"tga\",\n    \"ghostiny\",\n];\n\nconst FLOOR_HEIGHT = 64;\nconst JUMP_FORCE = 1320;\nconst CAPTION_SPEED = 220;\nconst PLAYER_SPEED = 640;\n\nlet started = false;\nlet music = null;\nlet burping = false;\n\n// define gravity\nsetGravity(2400);\n\n// add a game object to screen\nconst player = add([\n    // list of components\n    sprite(\"bean\"),\n    pos(width() / 2, height() - FLOOR_HEIGHT),\n    area(),\n    body(),\n    anchor(\"bot\"),\n    z(100),\n]);\n\nconst gw = 200;\nconst gh = 140;\nconst maxRow = 4;\nconst notes = [0, 2, 4, 5, 6, 7, 8, 9, 11, 12];\n\nfor (let i = 1; i <= maxRow; i++) {\n    for (let j = 0; j < i; j++) {\n        const n = i * (i - 1) / 2 + j;\n        const w = (i - 1) * gw + 64;\n        add([\n            sprite(\"note\"),\n            pos(\n                j * gw + (width() - w) / 2 + 32,\n                height() - FLOOR_HEIGHT + 24 - (maxRow - i + 1) * gh,\n            ),\n            area(),\n            body({ isStatic: true }),\n            anchor(\"bot\"),\n            color(hsl2rgb((n * 20) / 255, 0.6, 0.7)),\n            bounce(),\n            scale(1),\n            n === 0 ? \"burp\" : \"note\",\n            { detune: notes[9 - n] * 100 + -800 },\n        ]);\n    }\n}\n\nfunction bounce() {\n    let bouncing = false;\n    let timer = 0;\n    return {\n        id: \"bounce\",\n        require: [\"scale\"],\n        update() {\n            if (bouncing) {\n                timer += dt() * 20;\n                const w = Math.sin(timer) * 0.1;\n                if (w < 0) {\n                    bouncing = false;\n                    timer = 0;\n                }\n                else {\n                    this.scale = vec2(1 + w);\n                }\n            }\n        },\n        bounce() {\n            bouncing = true;\n        },\n    };\n}\n\n// floor\nfor (let x = 0; x < width(); x += 64) {\n    add([\n        pos(x, height()),\n        sprite(\"grass\"),\n        anchor(\"botleft\"),\n        area(),\n        body({ isStatic: true }),\n    ]);\n}\n\nfunction jump() {\n    if (player.isGrounded()) {\n        player.jump(JUMP_FORCE);\n    }\n}\n\n// jump when user press space\nonKeyPress(\"space\", jump);\nonKeyDown(\"left\", () => player.move(-PLAYER_SPEED, 0));\nonKeyDown(\"right\", () => player.move(PLAYER_SPEED, 0));\n\nplayer.onHeadbutt((block) => {\n    if (block.is(\"note\")) {\n        play(\"bell\", {\n            detune: block.detune,\n            volume: 0.1,\n        });\n        addKaboom(block.pos);\n        shake(1);\n        block.bounce();\n        if (!started) {\n            started = true;\n            caption.hidden = false;\n            caption.paused = false;\n            music = play(\"kaboom2000\");\n        }\n    }\n    else if (block.is(\"burp\")) {\n        burp();\n        shake(480);\n        if (music) music.paused = true;\n        burping = true;\n        player.paused = true;\n    }\n});\n\nonUpdate(() => {\n    if (!burping) return;\n    setCamPos(getCamPos().lerp(player.pos, dt() * 3));\n    setCamScale(getCamScale().lerp(vec2(5), dt() * 3));\n});\n\nconst lyrics =\n    \"kaboom2000 is out today, i have to go and try it out now... oh it's so fun it's so fun it's so fun...... it's so fun it's so fun it's so fun!\";\n\nconst caption = add([\n    text(lyrics, {\n        transform(idx) {\n            return {\n                color: hsl2rgb(\n                    ((time() * 60 + idx * 20) % 255) / 255,\n                    0.9,\n                    0.6,\n                ),\n                scale: wave(1.4, 1.6, time() * 3 + idx),\n                angle: wave(-9, 9, time() * 3 + idx),\n            };\n        },\n    }),\n    pos(width(), 32),\n    move(LEFT, CAPTION_SPEED),\n]);\n\ncaption.hidden = true;\ncaption.paused = true;\n\nfunction funky() {\n    let timer = 0;\n    return {\n        id: \"funky\",\n        require: [\"pos\", \"rotate\"],\n        update() {\n            timer += dt();\n            this.angle = wave(-9, 9, timer * 4);\n        },\n    };\n}\n\nfunction spawnCloud() {\n    const dir = choose([LEFT, RIGHT]);\n\n    add([\n        sprite(\"cloud\", { flipX: dir.eq(LEFT) }),\n        move(dir, rand(20, 60)),\n        offscreen({ destroy: true }),\n        pos(dir.eq(LEFT) ? width() : 0, rand(-20, 480)),\n        anchor(\"top\"),\n        area(),\n        z(-50),\n    ]);\n\n    wait(rand(6, 12), spawnCloud);\n}\n\nfunction spawnFriend() {\n    const friend = choose(friends);\n    const dir = choose([LEFT, RIGHT]);\n\n    add([\n        sprite(friend, { flipX: dir.eq(LEFT) }),\n        move(dir, rand(120, 320)),\n        offscreen({ destroy: true }),\n        pos(dir.eq(LEFT) ? width() : 0, height() - FLOOR_HEIGHT),\n        area(),\n        rotate(),\n        funky(),\n        anchor(\"bot\"),\n        z(50),\n    ]);\n\n    wait(rand(1, 3), spawnFriend);\n}\n\nspawnCloud();\nspawnFriend();\n\nconst sun = add([\n    sprite(\"sun\"),\n    anchor(\"center\"),\n    pos(width() - 90, 90),\n    rotate(),\n    z(-100),\n]);\n\nsun.onUpdate(() => {\n    sun.angle += dt() * 12;\n});",
         "difficulty": 1,
         "version": "master",
         "minVersion": "3001.0",
@@ -392,7 +392,7 @@
             "game"
         ],
         "createdAt": "2021-10-21T04:11:44-04:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-04T23:04:38+02:00"
     },
     {
         "id": 21,
@@ -715,7 +715,7 @@
         "category": "games",
         "group": "",
         "description": "A survival game about hunting ghosts",
-        "code": "kaplay({\n    width: 1024,\n    height: 768,\n    letterbox: true,\n});\n\nloadSprite(\"bean\", \"./sprites/bean.png\");\nloadSprite(\"gun\", \"./sprites/gun.png\");\nloadSprite(\"ghosty\", \"./sprites/ghosty.png\");\nloadSprite(\"hexagon\", \"./sprites/particle_hexagon_filled.png\");\nloadSprite(\"star\", \"./sprites/particle_star_filled.png\");\n\nconst nav = new NavMesh();\n// Hallway\nnav.addPolygon([vec2(20, 20), vec2(1004, 20), vec2(620, 120), vec2(20, 120)]);\n// Living room\nnav.addPolygon([\n    vec2(620, 120),\n    vec2(1004, 20),\n    vec2(1004, 440),\n    vec2(620, 140),\n]);\nnav.addPolygon([vec2(20, 140), vec2(620, 140), vec2(1004, 440), vec2(20, 440)]);\n// Kitchen\nnav.addPolygon([vec2(20, 460), vec2(320, 460), vec2(320, 748), vec2(20, 748)]);\nnav.addPolygon([\n    vec2(320, 440),\n    vec2(420, 440),\n    vec2(420, 748),\n    vec2(320, 748),\n]);\nnav.addPolygon([\n    vec2(420, 460),\n    vec2(620, 460),\n    vec2(620, 748),\n    vec2(420, 748),\n]);\n// Storage room\nnav.addPolygon([\n    vec2(640, 460),\n    vec2(720, 460),\n    vec2(720, 748),\n    vec2(640, 748),\n]);\nnav.addPolygon([\n    vec2(720, 440),\n    vec2(820, 440),\n    vec2(820, 748),\n    vec2(720, 748),\n]);\nnav.addPolygon([\n    vec2(820, 460),\n    vec2(1004, 460),\n    vec2(1004, 748),\n    vec2(820, 748),\n]);\n\n// Border\nadd([\n    pos(0, 0),\n    rect(20, height()),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(0, 0),\n    rect(width(), 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(width() - 20, 0),\n    rect(20, height()),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(0, height() - 20),\n    rect(width(), 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Hallway\nadd([\n    pos(20, 20),\n    rect(600, 100),\n    color(rgb(128, 64, 64)),\n    \"floor\",\n]);\nadd([\n    pos(20, 120),\n    rect(600, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Living room\nadd([\n    pos(20, 140),\n    rect(600, 300),\n    color(rgb(64, 64, 128)),\n    \"floor\",\n]);\nadd([\n    pos(620, 20),\n    rect(384, 420),\n    color(rgb(64, 64, 128)),\n    \"floor\",\n]);\nadd([\n    pos(20, 440),\n    rect(300, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(420, 440),\n    rect(300, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(820, 440),\n    rect(300, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Kitchen\nadd([\n    pos(320, 440),\n    rect(100, 20),\n    color(rgb(128, 128, 64)),\n    \"floor\",\n]);\nadd([\n    pos(20, 460),\n    rect(600, 288),\n    color(rgb(128, 128, 64)),\n    \"floor\",\n]);\nadd([\n    pos(620, 460),\n    rect(20, 288),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Storage\nadd([\n    pos(720, 440),\n    rect(100, 20),\n    color(rgb(64, 128, 64)),\n    \"floor\",\n]);\nadd([\n    pos(640, 460),\n    rect(364, 288),\n    color(rgb(64, 128, 64)),\n    \"floor\",\n]);\n\nconst player = add([\n    pos(50, 50),\n    sprite(\"bean\"),\n    anchor(vec2(0, 0)),\n    area(),\n    body(),\n    \"player\",\n]);\n\nconst gun = player.add([\n    sprite(\"gun\"),\n    anchor(vec2(-2, 0)),\n    rotate(0),\n    \"player\",\n]);\n\nfunction addEnemy(p) {\n    const enemy = add([\n        {\n            add() {\n                this.onHurt(() => {\n                    this.opacity = this.hp() / 100;\n                });\n                this.onDeath(() => {\n                    const rect = this.localArea();\n                    rect.pos = rect.pos.sub(rect.width / 2, rect.height / 2);\n                    const dissipate = add([\n                        pos(this.pos),\n                        particles({\n                            max: 20,\n                            speed: [50, 100],\n                            angle: [0, 360],\n                            angularVelocity: [45, 90],\n                            lifeTime: [1.0, 1.5],\n                            colors: [rgb(128, 128, 255), WHITE],\n                            opacities: [0.1, 1.0, 0.0],\n                            texture: getSprite(\"star\").data.tex,\n                            quads: [getSprite(\"star\").data.frames[0]],\n                        }, {\n                            lifetime: 1.5,\n                            shape: rect,\n                            rate: 0,\n                            direction: -90,\n                            spread: 0,\n                        }),\n                    ]);\n                    dissipate.emit(20);\n                    dissipate.onEnd(() => {\n                        destroy(dissipate);\n                    });\n                    destroy(this);\n                });\n                this.onObjectsSpotted(objects => {\n                    const playerSeen = objects.some(o => o.is(\"player\"));\n                    if (playerSeen) {\n                        enemy.action = \"pursuit\";\n                        enemy.waypoints = null;\n                    }\n                });\n                this.onPatrolFinished(() => {\n                    enemy.action = \"observe\";\n                });\n            },\n        },\n        pos(p),\n        sprite(\"ghosty\"),\n        opacity(1),\n        anchor(vec2(0, 0)),\n        area(),\n        body(),\n        // Health provides properties and methods to keep track of the enemies health\n        health(100),\n        // Sentry makes it easy to check for visibility of the player\n        sentry({ include: \"player\" }, {\n            lineOfSight: true,\n            raycastExclude: [\"enemy\"],\n        }),\n        // Patrol can make the enemy follow a computed path\n        patrol({ speed: 100 }),\n        // Pathfinder can compute a path given a graph\n        pathfinder({\n            graph: nav,\n            navigationOpt: {\n                type: \"edges\",\n            },\n        }),\n        \"enemy\",\n        { action: \"observing\", waypoint: null },\n    ]);\n    return enemy;\n}\n\naddEnemy(vec2(width() * 3 / 4, height() / 2));\naddEnemy(vec2(width() * 1 / 4, height() / 2));\naddEnemy(vec2(width() * 1 / 4, height() * 2 / 3));\naddEnemy(vec2(width() * 0.8, height() * 2 / 3));\n\nlet path;\nonUpdate(\"enemy\", enemy => {\n    switch (enemy.action) {\n        case \"observe\": {\n            break;\n        }\n        case \"pursuit\": {\n            if (enemy.hasLineOfSight(player)) {\n                // We can see the player, just go straight to their location\n                enemy.moveTo(player.pos, 100);\n            }\n            else {\n                // We can't see the player, but we know where they are, plot a path\n                path = enemy.navigateTo(player.pos);\n                // enemy.waypoint = path[1];\n                enemy.waypoints = path;\n                enemy.action = \"observe\";\n            }\n            break;\n        }\n    }\n});\n\nconst SPEED = 200;\n\nconst dirs = {\n    \"left\": LEFT,\n    \"right\": RIGHT,\n    \"up\": UP,\n    \"down\": DOWN,\n    \"a\": LEFT,\n    \"d\": RIGHT,\n    \"w\": UP,\n    \"s\": DOWN,\n};\n\nfor (const dir in dirs) {\n    onKeyDown(dir, () => {\n        player.move(dirs[dir].scale(SPEED));\n    });\n}\n\nonMouseMove(() => {\n    gun.angle = mousePos().sub(player.pos).angle();\n    gun.flipY = Math.abs(gun.angle) > 90;\n});\n\nonMousePress(() => {\n    const flash = gun.add([\n        pos(\n            getSprite(\"gun\").data.width * 1.5,\n            Math.abs(gun.angle) > 90 ? 7 : -7,\n        ),\n        circle(10),\n        color(YELLOW),\n        opacity(0.5),\n    ]);\n    flash.fadeOut(0.5).then(() => {\n        destroy(flash);\n    });\n\n    const dir = mousePos().sub(player.pos).unit().scale(1024);\n    const hit = raycast(player.pos, dir, [\n        \"player\",\n    ]);\n    if (hit) {\n        const splatter = add([\n            pos(hit.point),\n            particles({\n                max: 20,\n                speed: [200, 250],\n                lifeTime: [0.2, 0.75],\n                colors: [WHITE],\n                opacities: [1.0, 0.0],\n                angle: [0, 360],\n                texture: getSprite(\"hexagon\").data.tex,\n                quads: [getSprite(\"hexagon\").data.frames[0]],\n            }, {\n                lifetime: 0.75,\n                rate: 0,\n                direction: dir.scale(-1).angle(),\n                spread: 45,\n            }),\n        ]);\n        splatter.emit(10);\n        splatter.onEnd(() => {\n            destroy(splatter);\n        });\n        if (hit.object && hit.object.is(\"enemy\")) {\n            hit.object.moveBy(dir.unit().scale(10));\n            hit.object.hurt(20);\n        }\n    }\n});",
+        "code": "kaplay({\n    width: 1024,\n    height: 768,\n    letterbox: true,\n});\n\nloadSprite(\"bean\", \"./sprites/bean.png\");\nloadSprite(\"gun\", \"./sprites/gun.png\");\nloadSprite(\"ghosty\", \"./sprites/ghosty.png\");\nloadSprite(\"hexagon\", \"./sprites/particle_hexagon_filled.png\");\nloadSprite(\"star\", \"./sprites/particle_star_filled.png\");\n\nconst nav = new NavMesh();\n// Hallway\nnav.addPolygon([vec2(20, 20), vec2(1004, 20), vec2(620, 120), vec2(20, 120)]);\n// Living room\nnav.addPolygon([\n    vec2(620, 120),\n    vec2(1004, 20),\n    vec2(1004, 440),\n    vec2(620, 140),\n]);\nnav.addPolygon([vec2(20, 140), vec2(620, 140), vec2(1004, 440), vec2(20, 440)]);\n// Kitchen\nnav.addPolygon([vec2(20, 460), vec2(320, 460), vec2(320, 748), vec2(20, 748)]);\nnav.addPolygon([\n    vec2(320, 440),\n    vec2(420, 440),\n    vec2(420, 748),\n    vec2(320, 748),\n]);\nnav.addPolygon([\n    vec2(420, 460),\n    vec2(620, 460),\n    vec2(620, 748),\n    vec2(420, 748),\n]);\n// Storage room\nnav.addPolygon([\n    vec2(640, 460),\n    vec2(720, 460),\n    vec2(720, 748),\n    vec2(640, 748),\n]);\nnav.addPolygon([\n    vec2(720, 440),\n    vec2(820, 440),\n    vec2(820, 748),\n    vec2(720, 748),\n]);\nnav.addPolygon([\n    vec2(820, 460),\n    vec2(1004, 460),\n    vec2(1004, 748),\n    vec2(820, 748),\n]);\n\n// Border\nadd([\n    pos(0, 0),\n    rect(20, height()),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(0, 0),\n    rect(width(), 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(width() - 20, 0),\n    rect(20, height()),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(0, height() - 20),\n    rect(width(), 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Hallway\nadd([\n    pos(20, 20),\n    rect(600, 100),\n    color(rgb(128, 64, 64)),\n    \"floor\",\n]);\nadd([\n    pos(20, 120),\n    rect(600, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Living room\nadd([\n    pos(20, 140),\n    rect(600, 300),\n    color(rgb(64, 64, 128)),\n    \"floor\",\n]);\nadd([\n    pos(620, 20),\n    rect(384, 420),\n    color(rgb(64, 64, 128)),\n    \"floor\",\n]);\nadd([\n    pos(20, 440),\n    rect(300, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(420, 440),\n    rect(300, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\nadd([\n    pos(820, 440),\n    rect(300, 20),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Kitchen\nadd([\n    pos(320, 440),\n    rect(100, 20),\n    color(rgb(128, 128, 64)),\n    \"floor\",\n]);\nadd([\n    pos(20, 460),\n    rect(600, 288),\n    color(rgb(128, 128, 64)),\n    \"floor\",\n]);\nadd([\n    pos(620, 460),\n    rect(20, 288),\n    area(),\n    body({ isStatic: true }),\n    color(rgb(128, 128, 128)),\n    \"wall\",\n]);\n// Storage\nadd([\n    pos(720, 440),\n    rect(100, 20),\n    color(rgb(64, 128, 64)),\n    \"floor\",\n]);\nadd([\n    pos(640, 460),\n    rect(364, 288),\n    color(rgb(64, 128, 64)),\n    \"floor\",\n]);\n\nconst player = add([\n    pos(50, 50),\n    sprite(\"bean\"),\n    anchor(vec2(0, 0)),\n    area(),\n    body(),\n    \"player\",\n]);\n\nconst gun = player.add([\n    sprite(\"gun\"),\n    anchor(vec2(-2, 0)),\n    rotate(0),\n    \"player\",\n]);\n\nfunction addEnemy(p) {\n    const enemy = add([\n        {\n            add() {\n                this.onHurt(() => {\n                    this.opacity = this.hp / 100;\n                });\n                this.onDeath(() => {\n                    const rect = this.localArea();\n                    rect.pos = rect.pos.sub(rect.width / 2, rect.height / 2);\n                    const dissipate = add([\n                        pos(this.pos),\n                        particles({\n                            max: 20,\n                            speed: [50, 100],\n                            angle: [0, 360],\n                            angularVelocity: [45, 90],\n                            lifeTime: [1.0, 1.5],\n                            colors: [rgb(128, 128, 255), WHITE],\n                            opacities: [0.1, 1.0, 0.0],\n                            texture: getSprite(\"star\").data.tex,\n                            quads: [getSprite(\"star\").data.frames[0]],\n                        }, {\n                            lifetime: 1.5,\n                            shape: rect,\n                            rate: 0,\n                            direction: -90,\n                            spread: 0,\n                        }),\n                    ]);\n                    dissipate.emit(20);\n                    dissipate.onEnd(() => {\n                        destroy(dissipate);\n                    });\n                    destroy(this);\n                });\n                this.onObjectsSpotted(objects => {\n                    const playerSeen = objects.some(o => o.is(\"player\"));\n                    if (playerSeen) {\n                        enemy.action = \"pursuit\";\n                        enemy.waypoints = null;\n                    }\n                });\n                this.onPatrolFinished(() => {\n                    enemy.action = \"observe\";\n                });\n            },\n        },\n        pos(p),\n        sprite(\"ghosty\"),\n        opacity(1),\n        anchor(vec2(0, 0)),\n        area(),\n        body(),\n        // Health provides properties and methods to keep track of the enemies health\n        health(100),\n        // Sentry makes it easy to check for visibility of the player\n        sentry({ include: \"player\" }, {\n            lineOfSight: true,\n            raycastExclude: [\"enemy\"],\n        }),\n        // Patrol can make the enemy follow a computed path\n        patrol({ speed: 100 }),\n        // Pathfinder can compute a path given a graph\n        pathfinder({\n            graph: nav,\n            navigationOpt: {\n                type: \"edges\",\n            },\n        }),\n        \"enemy\",\n        { action: \"observing\", waypoint: null },\n    ]);\n    return enemy;\n}\n\naddEnemy(vec2(width() * 3 / 4, height() / 2));\naddEnemy(vec2(width() * 1 / 4, height() / 2));\naddEnemy(vec2(width() * 1 / 4, height() * 2 / 3));\naddEnemy(vec2(width() * 0.8, height() * 2 / 3));\n\nlet path;\nonUpdate(\"enemy\", enemy => {\n    switch (enemy.action) {\n        case \"observe\": {\n            break;\n        }\n        case \"pursuit\": {\n            if (enemy.hasLineOfSight(player)) {\n                // We can see the player, just go straight to their location\n                enemy.moveTo(player.pos, 100);\n            }\n            else {\n                // We can't see the player, but we know where they are, plot a path\n                path = enemy.navigateTo(player.pos);\n                // enemy.waypoint = path[1];\n                enemy.waypoints = path;\n                enemy.action = \"observe\";\n            }\n            break;\n        }\n    }\n});\n\nconst SPEED = 200;\n\nconst dirs = {\n    \"left\": LEFT,\n    \"right\": RIGHT,\n    \"up\": UP,\n    \"down\": DOWN,\n    \"a\": LEFT,\n    \"d\": RIGHT,\n    \"w\": UP,\n    \"s\": DOWN,\n};\n\nfor (const dir in dirs) {\n    onKeyDown(dir, () => {\n        player.move(dirs[dir].scale(SPEED));\n    });\n}\n\nonMouseMove(() => {\n    gun.angle = mousePos().sub(player.pos).angle();\n    gun.flipY = Math.abs(gun.angle) > 90;\n});\n\nonMousePress(() => {\n    const flash = gun.add([\n        pos(\n            getSprite(\"gun\").data.width * 1.5,\n            Math.abs(gun.angle) > 90 ? 7 : -7,\n        ),\n        circle(10),\n        color(YELLOW),\n        opacity(0.5),\n    ]);\n    flash.fadeOut(0.5).then(() => {\n        destroy(flash);\n    });\n\n    const dir = mousePos().sub(player.pos).unit().scale(1024);\n    const hit = raycast(player.pos, dir, [\n        \"player\",\n    ]);\n    if (hit) {\n        const splatter = add([\n            pos(hit.point),\n            particles({\n                max: 20,\n                speed: [200, 250],\n                lifeTime: [0.2, 0.75],\n                colors: [WHITE],\n                opacities: [1.0, 0.0],\n                angle: [0, 360],\n                texture: getSprite(\"hexagon\").data.tex,\n                quads: [getSprite(\"hexagon\").data.frames[0]],\n            }, {\n                lifetime: 0.75,\n                rate: 0,\n                direction: dir.scale(-1).angle(),\n                spread: 45,\n            }),\n        ]);\n        splatter.emit(10);\n        splatter.onEnd(() => {\n            destroy(splatter);\n        });\n        if (hit.object && hit.object.is(\"enemy\")) {\n            hit.object.moveBy(dir.unit().scale(10));\n            hit.object.hp -= 20;\n        }\n    }\n});",
         "difficulty": 2,
         "version": "master",
         "minVersion": "4000.0",
@@ -725,7 +725,7 @@
             "ai"
         ],
         "createdAt": "2024-06-26T21:43:07+09:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-05-07T10:22:35-04:00"
     },
     {
         "id": 39,
@@ -748,6 +748,24 @@
     },
     {
         "id": 40,
+        "name": "health",
+        "formattedName": "Health",
+        "sortName": "1-concepts-zzzz-9999-health",
+        "category": "concepts",
+        "group": "",
+        "description": "How to use health to manage the health points of entities",
+        "code": "kaplay({\n    font: \"happy\",\n    background: \"4a3052\",\n});\n\n// Let's load some assets\nloadBean();\nloadHappy();\nloadSprite(\"gun\", \"sprites/gun.png\");\nloadSprite(\"zombean\", \"sprites/zombean.png\");\nloadSound(\"hit\", \"sounds/hit.mp3\");\n\nconst controlText = add([\n    text(\"Press SPACE to shoot!\", { font: \"happy\", size: 25 }),\n    pos(25),\n    anchor(\"left\"),\n    color(WHITE),\n]);\n\nconst bean = add([\n    sprite(\"bean\"),\n    pos(250, 315),\n    scale(2),\n    // This will make it so bean has an initial HP of 100, since maxHP is not specified\n    // It will be the same as the initial HP\n    health(100),\n    area(),\n    anchor(\"center\"),\n    color(),\n    \"bean\",\n]);\n\nconst gun = bean.add([\n    sprite(\"gun\"),\n    pos(15, -10),\n]);\n\n// We'll make a basic text that displays bean's HP\nconst hpText = bean.add([\n    text(`${bean.hp}/${bean.maxHP}`, { size: 15 }),\n    pos(-40, -50),\n]);\n\n// And we'll update it every frame\nbean.onUpdate(() => {\n    hpText.text = `${bean.hp}/${bean.maxHP}`;\n});\n\nbean.onKeyPress(\"space\", () => {\n    // Adds bullets when pressing space to hurt the evil zombeans\n    const bullet = add([\n        rect(20, 20, { radius: 5 }),\n        color(YELLOW),\n        outline(5, BLACK),\n        move(1, 600),\n        pos(bean.pos.add(100, -5)),\n        area(),\n        offscreen({ destroy: true }), // Destroy them on offscreen to avoid lag\n        \"bullet\",\n    ]);\n\n    bullet.onCollide(() => {\n        bullet.destroy();\n    });\n});\n\n// When bean collides with a zombie, the zombie will bump off bean and bean will take damage\nbean.onCollide(\"zombie\", (zombie) => {\n    zombie.pos.x += 50;\n    bean.hp -= 10;\n});\n\n// When bean loses HP, onHurt() will run, this will play a \"hit\" sound and make bean RED for a bit\nbean.onHurt(() => {\n    play(\"hit\");\n    tween(RED, WHITE, 0.15, (p) => bean.color = p);\n});\n\n// When bean's dead he will be turned into a zombie D:\n// You can check if an object is dead by checking \"obj.dead\"\nbean.onDeath(() => {\n    bean.destroy();\n    const newZombie = add([\n        sprite(\"zombean\"),\n        pos(bean.pos),\n        anchor(\"center\"),\n        scale(0),\n        offscreen({ destroy: true }),\n    ]);\n\n    tween(vec2(0), vec2(2), 0.15, (p) => newZombie.scale = p);\n\n    newZombie.onUpdate(() => {\n        newZombie.move(-80, 0);\n    });\n});\n\n// We'll create the evil zombean here\nconst zombean = add([\n    sprite(\"zombean\"),\n    pos(900, 315),\n    scale(2),\n    health(100, 100),\n    anchor(\"center\"),\n    area(),\n    color(),\n    rotate(),\n    offscreen({ destroy: true }),\n    \"zombie\",\n]);\n\n// We'll make a basic text that displays zombeans's HP\nconst zombeanHPText = zombean.add([\n    text(`${zombean.hp}/${zombean.maxHP}`, { size: 15 }),\n    pos(-35, -50),\n]);\n\n// We'll update the text and move zombean -80 X pixels every frame\nzombean.onUpdate(() => {\n    zombeanHPText.text = `${zombean.hp}/${zombean.maxHP}`;\n    zombean.move(-80, 0);\n});\n\n// When zombean collides with a bullet, zombean will lose 10 HP\nzombean.onCollide(\"bullet\", () => {\n    zombean.hp -= 10;\n    zombean.pos.x += 40;\n});\n\n// When zombean loses HP, onHurt() gets triggered\nzombean.onHurt(() => {\n    play(\"hit\");\n    tween(RED, WHITE, 0.15, (p) => zombean.color = p);\n    tween(rand(-10, 10), 0, 0.15, (p) => zombean.angle = p);\n});\n\n// When zombean dies, he will be tweened to death\nzombean.onDeath(() => {\n    zombeanHPText.destroy();\n    zombean.area.scale = vec2(0); // Disables its collisions\n    tween(0, 90, 1, (p) => zombean.angle = p, easings.easeOutCirc);\n    tween(\n        zombean.pos.y,\n        height() + 50,\n        1,\n        (p) => zombean.pos.y = p,\n        easings.easeOutCirc,\n    ).onEnd(() => {\n        zombean.destroy();\n    });\n});",
+        "difficulty": 0,
+        "version": "master",
+        "minVersion": "4000.0",
+        "tags": [
+            "basics"
+        ],
+        "createdAt": "2025-05-04T18:18:52-05:00",
+        "updatedAt": "2025-05-04T18:18:52-05:00"
+    },
+    {
+        "id": 41,
         "name": "hover",
         "formattedName": "Hover",
         "sortName": "0-basics-zzzz-9999-hover",
@@ -765,7 +783,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 41,
+        "id": 42,
         "name": "kaboom",
         "formattedName": "Kaboom!",
         "sortName": "0-basics-zzzz-9999-kaboom",
@@ -784,7 +802,26 @@
         "updatedAt": "2025-05-01T18:12:12-03:00"
     },
     {
-        "id": 42,
+        "id": 43,
+        "name": "kaplayLogoAnim",
+        "formattedName": "KAPLAY Logo Animation",
+        "sortName": "1-concepts-zzzz-9999-kaplayLogoAnim",
+        "category": "concepts",
+        "group": "",
+        "description": "Multiple animations using animate(), lerp() and modulo",
+        "code": "kaplay();\n\nloadSprite(\"kaplay-dino\", \"/sprites/kaplay-dino.png\");\nloadSprite(\"dino\", \"/sprites/dino.png\");\n\nconst BGs = [\"#8465ec\", \"#873e84\", \"#c97373\", \"#5ba675\"];\nconst tileSize = 90;\nconst tilesSpeed = 60; // px per second\nlet tilesOffset = 0; // current offset over time\n\nonDraw(() => {\n    lerpBackgroundColor(BGs);\n\n    // Update tiles offset each frame before drawing the pattern\n    // Modulo (%) wraps tileOffset to be between 0 and tileSize,\n    // instead of increasing number yet keeping smooth loop\n    tilesOffset = (tilesOffset + tilesSpeed * dt()) % tileSize;\n    drawPattern();\n});\n\nconst logo = add([\n    sprite(\"kaplay-dino\", { width: Math.min(600, width() - 60) }),\n    pos(center().sub(0, 45)),\n    anchor(\"center\"),\n    scale(1),\n    rotate(0),\n    animate({ relative: true }),\n]);\n\n// Animate properties easily thanks to animate() comp\nlogo.animate(\"pos\", [vec2(0, -50), vec2(0), vec2(0, -50)], {\n    duration: 5,\n    easing: easings.easeInOutQuad,\n});\nlogo.animate(\"scale\", [vec2(1), vec2(1.1), vec2(1)], {\n    duration: 2.5,\n    easing: easings.easeInOutQuad,\n});\nlogo.animate(\"angle\", [2, -2], {\n    duration: 1.25,\n    direction: \"ping-pong\",\n    easing: easings.easeInOutQuad,\n});\nlogo.animation.seek(2.5); // starts at the bottom and 0 angle\n\n// Loops BGs[] smoothly using lerp and modulo (%) to wrap from last to first\n// over time, used in onDraw()\nfunction lerpBackgroundColor(BGs, speed = 0.3) {\n    const t = time() * speed;\n    const i = Math.floor(t) % BGs.length;\n    setBackground(\n        lerp(\n            rgb(BGs[i]),\n            rgb(BGs[(i + 1) % BGs.length]),\n            t % 1, // normalized progress between each color index\n        ),\n    );\n}\n\n// Draws background pattern, used in onDraw()\nfunction drawPattern() {\n    // Create rows/cols slightly larger than screen for seamless pattern scrolling\n    for (let y = -tileSize; y < Math.ceil(height() / tileSize) + 2; y++) {\n        for (let x = -tileSize; x < Math.ceil(width() / tileSize) + 2; x++) {\n            // Draw tile only in even cells\n            if ((x + y) % 2 == 0) {\n                drawSprite({\n                    sprite: \"dino\",\n                    anchor: \"center\",\n                    height: tileSize,\n                    // Set pos of tile in grid cell of tileSize\n                    // Apply offset, wrapped to [0, tileSize] using modulo (%)\n                    pos: vec2(\n                        x * tileSize - (tilesOffset % tileSize), // negative scrolls left\n                        y * tileSize + (tilesOffset % tileSize), // positive scrolls down\n                    ),\n                    color: BLACK,\n                    opacity: 0.1,\n                });\n            }\n        }\n    }\n}",
+        "difficulty": 1,
+        "version": "master",
+        "minVersion": "3001.0",
+        "tags": [
+            "animation",
+            "effects"
+        ],
+        "createdAt": "2025-05-05T00:12:02+02:00",
+        "updatedAt": "2025-05-05T00:12:02+02:00"
+    },
+    {
+        "id": 44,
         "name": "layer",
         "formattedName": "Layer",
         "sortName": "0-basics-zzzz-9999-layer",
@@ -804,7 +841,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 43,
+        "id": 45,
         "name": "layers",
         "formattedName": "Layers",
         "sortName": "0-basics-zzzz-9999-layers",
@@ -824,7 +861,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 44,
+        "id": 46,
         "name": "lerp",
         "formattedName": "Lerp",
         "sortName": "1-concepts-zzzz-9999-lerp",
@@ -843,7 +880,7 @@
         "updatedAt": "2025-04-27T12:50:27-05:00"
     },
     {
-        "id": 45,
+        "id": 47,
         "name": "level",
         "formattedName": "Level",
         "sortName": "0-basics-zzzz-9999-level",
@@ -862,7 +899,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 46,
+        "id": 48,
         "name": "levelRaycast",
         "formattedName": "Level Raycast",
         "sortName": "0-basics-zzzz-9999-levelRaycast",
@@ -881,7 +918,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 47,
+        "id": 49,
         "name": "levelcomp",
         "formattedName": "Level component",
         "sortName": "1-concepts-zzzz-9999-levelcomp",
@@ -900,7 +937,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 48,
+        "id": 50,
         "name": "lifespan",
         "formattedName": "Lifespan",
         "sortName": "0-basics-zzzz-9999-lifespan",
@@ -919,7 +956,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 49,
+        "id": 51,
         "name": "linecap",
         "formattedName": "Lines",
         "sortName": "1-concepts-zzzz-9999-linecap",
@@ -937,7 +974,7 @@
         "updatedAt": "2025-04-28T17:07:05+09:00"
     },
     {
-        "id": 50,
+        "id": 52,
         "name": "linejoin",
         "formattedName": "Line join",
         "sortName": "1-concepts-zzzz-9999-linejoin",
@@ -955,7 +992,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 51,
+        "id": 53,
         "name": "livequery",
         "formattedName": "Live query",
         "sortName": "1-concepts-zzzz-9999-livequery",
@@ -973,7 +1010,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 52,
+        "id": 54,
         "name": "loadingScreen",
         "formattedName": "Custom Loading Screen",
         "sortName": "1-concepts-zzzz-9999-loadingScreen",
@@ -992,7 +1029,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 53,
+        "id": 55,
         "name": "maze",
         "formattedName": "Maze",
         "sortName": "1-concepts-zzzz-9999-maze",
@@ -1011,7 +1048,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 54,
+        "id": 56,
         "name": "mazeRaycastedLight",
         "formattedName": "Maze Raycasted Light",
         "sortName": "1-concepts-zzzz-9999-mazeRaycastedLight",
@@ -1031,7 +1068,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 55,
+        "id": 57,
         "name": "movement",
         "formattedName": "Movement",
         "sortName": "1-concepts-zzzz-9999-movement",
@@ -1050,7 +1087,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 56,
+        "id": 58,
         "name": "onLoadError",
         "formattedName": "Load Error",
         "sortName": "9999-zzzz-9999-onLoadError",
@@ -1068,7 +1105,7 @@
         "updatedAt": "2025-04-23T09:46:17-03:00"
     },
     {
-        "id": 57,
+        "id": 59,
         "name": "out",
         "formattedName": "Out",
         "sortName": "9999-zzzz-9999-out",
@@ -1086,7 +1123,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 58,
+        "id": 60,
         "name": "overlap",
         "formattedName": "Overlap",
         "sortName": "1-concepts-zzzz-9999-overlap",
@@ -1104,7 +1141,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 59,
+        "id": 61,
         "name": "particle",
         "formattedName": "Particle",
         "sortName": "1-concepts-particles-0-particle",
@@ -1122,7 +1159,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 60,
+        "id": 62,
         "name": "particleTrail",
         "formattedName": "Particle Trail",
         "sortName": "1-concepts-particles-1-particleTrail",
@@ -1140,7 +1177,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 61,
+        "id": 63,
         "name": "patrol",
         "formattedName": "Patrol",
         "sortName": "1-concepts-zzzz-9999-patrol",
@@ -1158,7 +1195,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 62,
+        "id": 64,
         "name": "pauseMenu",
         "formattedName": "Pause Menu",
         "sortName": "1-concepts-zzzz-9999-pauseMenu",
@@ -1176,7 +1213,7 @@
         "updatedAt": "2025-04-22T17:04:48-03:00"
     },
     {
-        "id": 63,
+        "id": 65,
         "name": "picture",
         "formattedName": "Picture",
         "sortName": "1-concepts-zzzz-9999-picture",
@@ -1196,7 +1233,7 @@
         "updatedAt": "2025-04-26T13:48:50-03:00"
     },
     {
-        "id": 64,
+        "id": 66,
         "name": "platformEffector",
         "formattedName": "One-way platforms 2",
         "sortName": "1-concepts-zzzz-9999-platformEffector",
@@ -1215,7 +1252,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 65,
+        "id": 67,
         "name": "platformer",
         "formattedName": "Platformer",
         "sortName": "2-games-zzzz-9999-platformer",
@@ -1234,7 +1271,7 @@
         "updatedAt": "2025-05-01T20:31:48+09:00"
     },
     {
-        "id": 66,
+        "id": 68,
         "name": "polygon",
         "formattedName": "Polygon",
         "sortName": "1-concepts-zzzz-9999-polygon",
@@ -1253,7 +1290,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 67,
+        "id": 69,
         "name": "pong",
         "formattedName": "Pong",
         "sortName": "2-games-zzzz-9999-pong",
@@ -1272,7 +1309,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 68,
+        "id": 70,
         "name": "postEffect",
         "formattedName": "Post-Effect",
         "sortName": "1-concepts-zzzz-9999-postEffect",
@@ -1290,7 +1327,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 69,
+        "id": 71,
         "name": "query",
         "formattedName": "Query",
         "sortName": "1-concepts-zzzz-9999-query",
@@ -1308,7 +1345,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 70,
+        "id": 72,
         "name": "raycastObject",
         "formattedName": "Raycast Object",
         "sortName": "1-concepts-zzzz-9999-raycastObject",
@@ -1326,7 +1363,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 71,
+        "id": 73,
         "name": "raycastShape",
         "formattedName": "Raycast Shape",
         "sortName": "1-concepts-zzzz-9999-raycastShape",
@@ -1344,7 +1381,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 72,
+        "id": 74,
         "name": "raycaster3d",
         "formattedName": "3D",
         "sortName": "2-games-zzzz-9999-raycaster3d",
@@ -1363,7 +1400,7 @@
         "updatedAt": "2025-04-26T14:20:03-03:00"
     },
     {
-        "id": 73,
+        "id": 75,
         "name": "restitution",
         "formattedName": "Restitution",
         "sortName": "1-concepts-zzzz-9999-restitution",
@@ -1381,7 +1418,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 74,
+        "id": 76,
         "name": "rpg",
         "formattedName": "RPG",
         "sortName": "2-games-zzzz-9999-rpg",
@@ -1400,7 +1437,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 75,
+        "id": 77,
         "name": "runner",
         "formattedName": "Runner",
         "sortName": "2-games-zzzz-9999-runner",
@@ -1419,7 +1456,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 76,
+        "id": 78,
         "name": "scenes",
         "formattedName": "Scenes",
         "sortName": "0-basics-zzzz-9999-scenes",
@@ -1437,7 +1474,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 77,
+        "id": 79,
         "name": "shader",
         "formattedName": "Shaders",
         "sortName": "0-basics-zzzz-9999-shader",
@@ -1456,7 +1493,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 78,
+        "id": 80,
         "name": "shapeRect",
         "formattedName": "Rect",
         "sortName": "0-basics-zzzz-9999-shapeRect",
@@ -1475,14 +1512,14 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 79,
+        "id": 81,
         "name": "shooter",
         "formattedName": "Shooter",
         "sortName": "2-games-zzzz-9999-shooter",
         "category": "games",
         "group": "",
         "description": "2D top-down space shooter game",
-        "code": "kaplay({\n    background: [74, 48, 82],\n});\n\nconst objs = [\n    \"apple\",\n    \"lightening\",\n    \"coin\",\n    \"egg\",\n    \"key\",\n    \"door\",\n    \"meat\",\n    \"mushroom\",\n];\n\nfor (const obj of objs) {\n    loadSprite(obj, `/sprites/${obj}.png`);\n}\n\nloadBean();\nloadSound(\"hit\", \"/sounds/hit.mp3\");\nloadSound(\"shoot\", \"/sounds/shoot.mp3\");\nloadSound(\"explode\", \"/sounds/explode.mp3\");\nloadSound(\"OtherworldlyFoe\", \"/sounds/OtherworldlyFoe.mp3\");\n\nscene(\"battle\", () => {\n    const BULLET_SPEED = 1200;\n    const TRASH_SPEED = 120;\n    const BOSS_SPEED = 48;\n    const PLAYER_SPEED = 480;\n    const STAR_SPEED = 120;\n    const BOSS_HEALTH = 1000;\n    const OBJ_HEALTH = 4;\n\n    const bossName = choose(objs);\n\n    let insaneMode = false;\n\n    const music = play(\"OtherworldlyFoe\");\n\n    volume(0.5);\n\n    function grow(rate) {\n        return {\n            update() {\n                const n = rate * dt();\n                this.scale.x += n;\n                this.scale.y += n;\n            },\n        };\n    }\n\n    function late(t) {\n        let timer = 0;\n        return {\n            add() {\n                this.hidden = true;\n            },\n            update() {\n                timer += dt();\n                if (timer >= t) {\n                    this.hidden = false;\n                }\n            },\n        };\n    }\n\n    add([\n        text(\"KILL\", { size: 160 }),\n        pos(width() / 2, height() / 2),\n        anchor(\"center\"),\n        opacity(),\n        lifespan(1),\n        fixed(),\n    ]);\n\n    add([\n        text(\"THE\", { size: 80 }),\n        pos(width() / 2, height() / 2),\n        anchor(\"center\"),\n        opacity(),\n        lifespan(2),\n        late(1),\n        fixed(),\n    ]);\n\n    add([\n        text(bossName.toUpperCase(), { size: 120 }),\n        pos(width() / 2, height() / 2),\n        anchor(\"center\"),\n        opacity(),\n        lifespan(4),\n        late(2),\n        fixed(),\n    ]);\n\n    const sky = add([\n        rect(width(), height()),\n        color(0, 0, 0),\n        opacity(0),\n    ]);\n\n    sky.onUpdate(() => {\n        if (insaneMode) {\n            const t = time() * 10;\n            sky.color.r = wave(127, 255, t);\n            sky.color.g = wave(127, 255, t + 1);\n            sky.color.b = wave(127, 255, t + 2);\n            sky.opacity = 1;\n        }\n        else {\n            sky.color = rgb(0, 0, 0);\n            sky.opacity = 0;\n        }\n    });\n\n    // \tadd([\n    // \t\tsprite(\"stars\"),\n    // \t\tscale(width() / 240, height() / 240),\n    // \t\tpos(0, 0),\n    // \t\t\"stars\",\n    // \t])\n\n    // \tadd([\n    // \t\tsprite(\"stars\"),\n    // \t\tscale(width() / 240, height() / 240),\n    // \t\tpos(0, -height()),\n    // \t\t\"stars\",\n    // \t])\n\n    // \tonUpdate(\"stars\", (r) => {\n    // \t\tr.move(0, STAR_SPEED * (insaneMode ? 10 : 1))\n    // \t\tif (r.pos.y >= height()) {\n    // \t\t\tr.pos.y -= height() * 2\n    // \t\t}\n    // \t})\n\n    const player = add([\n        sprite(\"bean\"),\n        area(),\n        pos(width() / 2, height() - 64),\n        anchor(\"center\"),\n    ]);\n\n    onKeyDown(\"left\", () => {\n        player.move(-PLAYER_SPEED, 0);\n        if (player.pos.x < 0) {\n            player.pos.x = width();\n        }\n    });\n\n    onKeyDown(\"right\", () => {\n        player.move(PLAYER_SPEED, 0);\n        if (player.pos.x > width()) {\n            player.pos.x = 0;\n        }\n    });\n\n    onKeyPress(\"up\", () => {\n        insaneMode = true;\n        music.speed = 2;\n    });\n\n    onKeyRelease(\"up\", () => {\n        insaneMode = false;\n        music.speed = 1;\n    });\n\n    player.onCollide(\"enemy\", (e) => {\n        destroy(e);\n        destroy(player);\n        shake(120);\n        play(\"explode\");\n        music.detune = -1200;\n        addExplode(center(), 12, 120, 30);\n        wait(1, () => {\n            music.paused = true;\n            go(\"battle\");\n        });\n    });\n\n    function addExplode(p, n, rad, size) {\n        for (let i = 0; i < n; i++) {\n            wait(rand(n * 0.1), () => {\n                for (let i = 0; i < 2; i++) {\n                    add([\n                        pos(p.add(rand(vec2(-rad), vec2(rad)))),\n                        rect(4, 4),\n                        scale(1 * size, 1 * size),\n                        opacity(),\n                        lifespan(0.1),\n                        grow(rand(48, 72) * size),\n                        anchor(\"center\"),\n                    ]);\n                }\n            });\n        }\n    }\n\n    function spawnBullet(p) {\n        add([\n            rect(12, 48),\n            area(),\n            pos(p),\n            anchor(\"center\"),\n            color(127, 127, 255),\n            outline(4),\n            move(UP, BULLET_SPEED),\n            offscreen({ destroy: true }),\n            // strings here means a tag\n            \"bullet\",\n        ]);\n    }\n\n    onUpdate(\"bullet\", (b) => {\n        if (insaneMode) {\n            b.color = rand(rgb(0, 0, 0), rgb(255, 255, 255));\n        }\n    });\n\n    onKeyPress(\"space\", () => {\n        spawnBullet(player.pos.sub(16, 0));\n        spawnBullet(player.pos.add(16, 0));\n        play(\"shoot\", {\n            volume: 0.3,\n            detune: rand(-1200, 1200),\n        });\n    });\n\n    function spawnTrash() {\n        const name = choose(objs.filter(n => n != bossName));\n        add([\n            sprite(name),\n            area(),\n            pos(rand(0, width()), 0),\n            health(OBJ_HEALTH),\n            anchor(\"bot\"),\n            \"trash\",\n            \"enemy\",\n            { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },\n        ]);\n        wait(insaneMode ? 0.1 : 0.3, spawnTrash);\n    }\n\n    const boss = add([\n        sprite(bossName),\n        area(),\n        pos(width() / 2, 40),\n        health(BOSS_HEALTH),\n        scale(3),\n        anchor(\"top\"),\n        \"enemy\",\n        {\n            dir: 1,\n        },\n    ]);\n\n    on(\"death\", \"enemy\", (e) => {\n        destroy(e);\n        shake(2);\n        addKaboom(e.pos);\n    });\n\n    on(\"hurt\", \"enemy\", (e) => {\n        shake(1);\n        play(\"hit\", {\n            detune: rand(-1200, 1200),\n            speed: rand(0.2, 2),\n        });\n    });\n\n    const timer = add([\n        text(\"0\"),\n        pos(12, 32),\n        fixed(),\n        { time: 0 },\n    ]);\n\n    timer.onUpdate(() => {\n        timer.time += dt();\n        timer.text = timer.time.toFixed(2);\n    });\n\n    onCollide(\"bullet\", \"enemy\", (b, e) => {\n        destroy(b);\n        e.hurt(insaneMode ? 10 : 1);\n        addExplode(b.pos, 1, 24, 1);\n    });\n\n    onUpdate(\"trash\", (t) => {\n        t.move(0, t.speed * (insaneMode ? 5 : 1));\n        if (t.pos.y - t.height > height()) {\n            destroy(t);\n        }\n    });\n\n    boss.onUpdate((p) => {\n        boss.move(BOSS_SPEED * boss.dir * (insaneMode ? 3 : 1), 0);\n        if (boss.dir === 1 && boss.pos.x >= width() - 20) {\n            boss.dir = -1;\n        }\n        if (boss.dir === -1 && boss.pos.x <= 20) {\n            boss.dir = 1;\n        }\n    });\n\n    boss.onHurt(() => {\n        healthbar.set(boss.hp());\n    });\n\n    boss.onDeath(() => {\n        music.stop();\n        go(\"win\", {\n            time: timer.time,\n            boss: bossName,\n        });\n    });\n\n    const healthbar = add([\n        rect(width(), 24),\n        pos(0, 0),\n        color(107, 201, 108),\n        fixed(),\n        {\n            max: BOSS_HEALTH,\n            set(hp) {\n                this.width = width() * hp / this.max;\n                this.flash = true;\n            },\n        },\n    ]);\n\n    healthbar.onUpdate(() => {\n        if (healthbar.flash) {\n            healthbar.color = rgb(255, 255, 255);\n            healthbar.flash = false;\n        }\n        else {\n            healthbar.color = rgb(127, 255, 127);\n        }\n    });\n\n    add([\n        text(\"UP: insane mode\", { width: width() / 2, size: 32 }),\n        anchor(\"botleft\"),\n        pos(24, height() - 24),\n    ]);\n\n    spawnTrash();\n});\n\nscene(\"win\", ({ time, boss }) => {\n    const b = burp({\n        loop: true,\n    });\n\n    loop(0.5, () => {\n        b.detune = rand(-1200, 1200);\n    });\n\n    add([\n        sprite(boss),\n        color(255, 0, 0),\n        anchor(\"center\"),\n        scale(8),\n        pos(width() / 2, height() / 2),\n    ]);\n\n    add([\n        text(time.toFixed(2), 24),\n        anchor(\"center\"),\n        pos(width() / 2, height() / 2),\n    ]);\n});\n\ngo(\"battle\");",
+        "code": "kaplay({\n    background: [74, 48, 82],\n});\n\nconst objs = [\n    \"apple\",\n    \"lightening\",\n    \"coin\",\n    \"egg\",\n    \"key\",\n    \"door\",\n    \"meat\",\n    \"mushroom\",\n];\n\nfor (const obj of objs) {\n    loadSprite(obj, `/sprites/${obj}.png`);\n}\n\nloadBean();\nloadSound(\"hit\", \"/sounds/hit.mp3\");\nloadSound(\"shoot\", \"/sounds/shoot.mp3\");\nloadSound(\"explode\", \"/sounds/explode.mp3\");\nloadSound(\"OtherworldlyFoe\", \"/sounds/OtherworldlyFoe.mp3\");\n\nscene(\"battle\", () => {\n    const BULLET_SPEED = 1200;\n    const TRASH_SPEED = 120;\n    const BOSS_SPEED = 48;\n    const PLAYER_SPEED = 480;\n    const STAR_SPEED = 120;\n    const BOSS_HEALTH = 1000;\n    const OBJ_HEALTH = 4;\n\n    const bossName = choose(objs);\n\n    let insaneMode = false;\n\n    const music = play(\"OtherworldlyFoe\");\n\n    setVolume(0.5);\n\n    function grow(rate) {\n        return {\n            update() {\n                const n = rate * dt();\n                this.scale.x += n;\n                this.scale.y += n;\n            },\n        };\n    }\n\n    function late(t) {\n        let timer = 0;\n        return {\n            add() {\n                this.hidden = true;\n            },\n            update() {\n                timer += dt();\n                if (timer >= t) {\n                    this.hidden = false;\n                }\n            },\n        };\n    }\n\n    add([\n        text(\"KILL\", { size: 160 }),\n        pos(width() / 2, height() / 2),\n        anchor(\"center\"),\n        opacity(),\n        lifespan(1),\n        fixed(),\n    ]);\n\n    add([\n        text(\"THE\", { size: 80 }),\n        pos(width() / 2, height() / 2),\n        anchor(\"center\"),\n        opacity(),\n        lifespan(2),\n        late(1),\n        fixed(),\n    ]);\n\n    add([\n        text(bossName.toUpperCase(), { size: 120 }),\n        pos(width() / 2, height() / 2),\n        anchor(\"center\"),\n        opacity(),\n        lifespan(4),\n        late(2),\n        fixed(),\n    ]);\n\n    const sky = add([\n        rect(width(), height()),\n        color(0, 0, 0),\n        opacity(0),\n    ]);\n\n    sky.onUpdate(() => {\n        if (insaneMode) {\n            const t = time() * 10;\n            sky.color.r = wave(127, 255, t);\n            sky.color.g = wave(127, 255, t + 1);\n            sky.color.b = wave(127, 255, t + 2);\n            sky.opacity = 1;\n        }\n        else {\n            sky.color = rgb(0, 0, 0);\n            sky.opacity = 0;\n        }\n    });\n\n    // \tadd([\n    // \t\tsprite(\"stars\"),\n    // \t\tscale(width() / 240, height() / 240),\n    // \t\tpos(0, 0),\n    // \t\t\"stars\",\n    // \t])\n\n    // \tadd([\n    // \t\tsprite(\"stars\"),\n    // \t\tscale(width() / 240, height() / 240),\n    // \t\tpos(0, -height()),\n    // \t\t\"stars\",\n    // \t])\n\n    // \tonUpdate(\"stars\", (r) => {\n    // \t\tr.move(0, STAR_SPEED * (insaneMode ? 10 : 1))\n    // \t\tif (r.pos.y >= height()) {\n    // \t\t\tr.pos.y -= height() * 2\n    // \t\t}\n    // \t})\n\n    const player = add([\n        sprite(\"bean\"),\n        area(),\n        pos(width() / 2, height() - 64),\n        anchor(\"center\"),\n    ]);\n\n    onKeyDown(\"left\", () => {\n        player.move(-PLAYER_SPEED, 0);\n        if (player.pos.x < 0) {\n            player.pos.x = width();\n        }\n    });\n\n    onKeyDown(\"right\", () => {\n        player.move(PLAYER_SPEED, 0);\n        if (player.pos.x > width()) {\n            player.pos.x = 0;\n        }\n    });\n\n    onKeyPress(\"up\", () => {\n        insaneMode = true;\n        music.speed = 2;\n    });\n\n    onKeyRelease(\"up\", () => {\n        insaneMode = false;\n        music.speed = 1;\n    });\n\n    player.onCollide(\"enemy\", (e) => {\n        destroy(e);\n        destroy(player);\n        shake(120);\n        play(\"explode\");\n        music.detune = -1200;\n        addExplode(center(), 12, 120, 30);\n        wait(1, () => {\n            music.paused = true;\n            go(\"battle\");\n        });\n    });\n\n    function addExplode(p, n, rad, size) {\n        for (let i = 0; i < n; i++) {\n            wait(rand(n * 0.1), () => {\n                for (let i = 0; i < 2; i++) {\n                    add([\n                        pos(p.add(rand(vec2(-rad), vec2(rad)))),\n                        rect(4, 4),\n                        scale(1 * size, 1 * size),\n                        opacity(),\n                        lifespan(0.1),\n                        grow(rand(48, 72) * size),\n                        anchor(\"center\"),\n                    ]);\n                }\n            });\n        }\n    }\n\n    function spawnBullet(p) {\n        add([\n            rect(12, 48),\n            area(),\n            pos(p),\n            anchor(\"center\"),\n            color(127, 127, 255),\n            outline(4),\n            move(UP, BULLET_SPEED),\n            offscreen({ destroy: true }),\n            // strings here means a tag\n            \"bullet\",\n        ]);\n    }\n\n    onUpdate(\"bullet\", (b) => {\n        if (insaneMode) {\n            b.color = rand(rgb(0, 0, 0), rgb(255, 255, 255));\n        }\n    });\n\n    onKeyPress(\"space\", () => {\n        spawnBullet(player.pos.sub(16, 0));\n        spawnBullet(player.pos.add(16, 0));\n        play(\"shoot\", {\n            volume: 0.3,\n            detune: rand(-1200, 1200),\n        });\n    });\n\n    function spawnTrash() {\n        const name = choose(objs.filter(n => n != bossName));\n        add([\n            sprite(name),\n            area(),\n            pos(rand(0, width()), 0),\n            health(OBJ_HEALTH),\n            anchor(\"bot\"),\n            \"trash\",\n            \"enemy\",\n            { speed: rand(TRASH_SPEED * 0.5, TRASH_SPEED * 1.5) },\n        ]);\n        wait(insaneMode ? 0.1 : 0.3, spawnTrash);\n    }\n\n    const boss = add([\n        sprite(bossName),\n        area(),\n        pos(width() / 2, 40),\n        health(BOSS_HEALTH),\n        scale(3),\n        anchor(\"top\"),\n        \"enemy\",\n        {\n            dir: 1,\n        },\n    ]);\n\n    on(\"death\", \"enemy\", (e) => {\n        destroy(e);\n        shake(2);\n        addKaboom(e.pos);\n    });\n\n    on(\"hurt\", \"enemy\", (e) => {\n        shake(1);\n        play(\"hit\", {\n            detune: rand(-1200, 1200),\n            speed: rand(0.2, 2),\n        });\n    });\n\n    const timer = add([\n        text(\"0\"),\n        pos(12, 32),\n        fixed(),\n        { time: 0 },\n    ]);\n\n    timer.onUpdate(() => {\n        timer.time += dt();\n        timer.text = timer.time.toFixed(2);\n    });\n\n    onCollide(\"bullet\", \"enemy\", (b, e) => {\n        destroy(b);\n        e.hp -= insaneMode ? 10 : 1;\n        addExplode(b.pos, 1, 24, 1);\n    });\n\n    onUpdate(\"trash\", (t) => {\n        t.move(0, t.speed * (insaneMode ? 5 : 1));\n        if (t.pos.y - t.height > height()) {\n            destroy(t);\n        }\n    });\n\n    boss.onUpdate((p) => {\n        boss.move(BOSS_SPEED * boss.dir * (insaneMode ? 3 : 1), 0);\n        if (boss.dir === 1 && boss.pos.x >= width() - 20) {\n            boss.dir = -1;\n        }\n        if (boss.dir === -1 && boss.pos.x <= 20) {\n            boss.dir = 1;\n        }\n    });\n\n    boss.onHurt(() => {\n        healthbar.set(boss.hp);\n    });\n\n    boss.onDeath(() => {\n        music.stop();\n        go(\"win\", {\n            time: timer.time,\n            boss: bossName,\n        });\n    });\n\n    const healthbar = add([\n        rect(width(), 24),\n        pos(0, 0),\n        color(107, 201, 108),\n        fixed(),\n        {\n            max: BOSS_HEALTH,\n            set(hp) {\n                this.width = width() * hp / this.max;\n                this.flash = true;\n            },\n        },\n    ]);\n\n    healthbar.onUpdate(() => {\n        if (healthbar.flash) {\n            healthbar.color = rgb(255, 255, 255);\n            healthbar.flash = false;\n        }\n        else {\n            healthbar.color = rgb(127, 255, 127);\n        }\n    });\n\n    add([\n        text(\"UP: insane mode\", { width: width() / 2, size: 32 }),\n        anchor(\"botleft\"),\n        pos(24, height() - 24),\n    ]);\n\n    spawnTrash();\n});\n\nscene(\"win\", ({ time, boss }) => {\n    const b = burp({\n        loop: true,\n    });\n\n    loop(0.5, () => {\n        b.detune = rand(-1200, 1200);\n    });\n\n    add([\n        sprite(boss),\n        color(255, 0, 0),\n        anchor(\"center\"),\n        scale(8),\n        pos(width() / 2, height() / 2),\n    ]);\n\n    add([\n        text(time.toFixed(2), 24),\n        anchor(\"center\"),\n        pos(width() / 2, height() / 2),\n    ]);\n});\n\ngo(\"battle\");",
         "difficulty": 1,
         "version": "master",
         "minVersion": "3001.0",
@@ -1491,10 +1528,10 @@
             "game"
         ],
         "createdAt": "2021-03-12T00:08:17-05:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-05-07T10:22:35-04:00"
     },
     {
-        "id": 80,
+        "id": 82,
         "name": "size",
         "formattedName": "Keep Aspect Ratio",
         "sortName": "0-basics-zzzz-9999-size",
@@ -1512,7 +1549,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 81,
+        "id": 83,
         "name": "slice9",
         "formattedName": "Slice-9",
         "sortName": "1-concepts-zzzz-9999-slice9",
@@ -1531,7 +1568,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 82,
+        "id": 84,
         "name": "sokoban",
         "formattedName": "Sokoban",
         "sortName": "2-games-zzzz-9999-sokoban",
@@ -1549,14 +1586,14 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 83,
+        "id": 85,
         "name": "sprite",
         "formattedName": "Sprites",
         "sortName": "0-basics-zzzz-9999-sprite",
         "category": "basics",
         "group": "",
         "description": "How to load and animate sprites",
-        "code": "// Sprite animation\n\n// Start a kaboom game\nkaplay({\n    // Scale the whole game up\n    scale: 4,\n    // Set the default font\n    font: \"monospace\",\n});\n\n// Loading a multi-frame sprite\nloadSprite(\"dino\", \"/sprites/dino.png\", {\n    // The image contains 9 frames layed out horizontally, slice it into individual frames\n    sliceX: 9,\n    // Define animations\n    anims: {\n        \"idle\": {\n            // Starts from frame 0, ends at frame 3\n            from: 0,\n            to: 3,\n            // Frame per second\n            speed: 5,\n            loop: true,\n        },\n        \"run\": {\n            from: 4,\n            to: 7,\n            speed: 10,\n            loop: true,\n        },\n        // This animation only has 1 frame\n        \"jump\": 8,\n    },\n});\n\nconst SPEED = 120;\nconst JUMP_FORCE = 240;\n\nsetGravity(640);\n\n// Add our player character\nconst player = add([\n    sprite(\"dino\"),\n    pos(center()),\n    anchor(\"center\"),\n    area(),\n    body(),\n]);\n\n// .play is provided by sprite() component, it starts playing the specified animation (the animation information of \"idle\" is defined above in loadSprite)\nplayer.play(\"idle\");\n\n// Add a platform\nadd([\n    rect(width(), 24),\n    area(),\n    outline(1),\n    pos(0, height() - 24),\n    body({ isStatic: true }),\n]);\n\n// Switch to \"idle\" or \"run\" animation when player hits ground\nplayer.onGround(() => {\n    if (!isKeyDown(\"left\") && !isKeyDown(\"right\")) {\n        player.play(\"idle\");\n    }\n    else {\n        player.play(\"run\");\n    }\n});\n\nplayer.onAnimEnd((anim) => {\n    if (anim === \"idle\") {\n        // You can also register an event that runs when certain anim ends\n    }\n});\n\nonKeyPress(\"space\", () => {\n    if (player.isGrounded()) {\n        player.jump(JUMP_FORCE);\n        player.play(\"jump\");\n    }\n});\n\nonKeyDown(\"left\", () => {\n    player.move(-SPEED, 0);\n    player.flipX = true;\n    // .play() will reset to the first frame of the anim, so we want to make sure it only runs when the current animation is not \"run\"\n    if (player.isGrounded() && player.curAnim() !== \"run\") {\n        player.play(\"run\");\n    }\n});\n\nonKeyDown(\"right\", () => {\n    player.move(SPEED, 0);\n    player.flipX = false;\n    if (player.isGrounded() && player.curAnim() !== \"run\") {\n        player.play(\"run\");\n    }\n});\n[\"left\", \"right\"].forEach((key) => {\n    onKeyRelease(key, () => {\n        // Only reset to \"idle\" if player is not holding any of these keys\n        if (player.isGrounded() && !isKeyDown(\"left\") && !isKeyDown(\"right\")) {\n            player.play(\"idle\");\n        }\n    });\n});\n\nconst getInfo = () =>\n    `\nAnim: ${player.curAnim()}\nFrame: ${player.frame}\n`.trim();\n\n// Add some text to show the current animation\nconst label = add([\n    text(getInfo(), { size: 12 }),\n    color(0, 0, 0),\n    pos(4),\n]);\n\nlabel.onUpdate(() => {\n    label.text = getInfo();\n});\n\n// Check out https://kaboomjs.com#SpriteComp for everything sprite() provides",
+        "code": "// Sprite animation\n\n// Start a kaboom game\nkaplay({\n    // Scale the whole game up\n    scale: 4,\n    // Set the default font\n    font: \"monospace\",\n});\n\n// Loading a multi-frame sprite\nloadSprite(\"dino\", \"/sprites/dungeon-dino.png\", {\n    // The image contains 9 frames layed out horizontally, slice it into individual frames\n    sliceX: 9,\n    // Define animations\n    anims: {\n        \"idle\": {\n            // Starts from frame 0, ends at frame 3\n            from: 0,\n            to: 3,\n            // Frame per second\n            speed: 5,\n            loop: true,\n        },\n        \"run\": {\n            from: 4,\n            to: 7,\n            speed: 10,\n            loop: true,\n        },\n        // This animation only has 1 frame\n        \"jump\": 8,\n    },\n});\n\nconst SPEED = 120;\nconst JUMP_FORCE = 240;\n\nsetGravity(640);\n\n// Add our player character\nconst player = add([\n    sprite(\"dino\"),\n    pos(center()),\n    anchor(\"center\"),\n    area(),\n    body(),\n]);\n\n// .play is provided by sprite() component, it starts playing the specified animation (the animation information of \"idle\" is defined above in loadSprite)\nplayer.play(\"idle\");\n\n// Add a platform\nadd([\n    rect(width(), 24),\n    area(),\n    outline(1),\n    pos(0, height() - 24),\n    body({ isStatic: true }),\n]);\n\n// Switch to \"idle\" or \"run\" animation when player hits ground\nplayer.onGround(() => {\n    if (!isKeyDown(\"left\") && !isKeyDown(\"right\")) {\n        player.play(\"idle\");\n    }\n    else {\n        player.play(\"run\");\n    }\n});\n\nplayer.onAnimEnd((anim) => {\n    if (anim === \"idle\") {\n        // You can also register an event that runs when certain anim ends\n    }\n});\n\nonKeyPress(\"space\", () => {\n    if (player.isGrounded()) {\n        player.jump(JUMP_FORCE);\n        player.play(\"jump\");\n    }\n});\n\nonKeyDown(\"left\", () => {\n    player.move(-SPEED, 0);\n    player.flipX = true;\n    // .play() will reset to the first frame of the anim, so we want to make sure it only runs when the current animation is not \"run\"\n    if (player.isGrounded() && player.curAnim() !== \"run\") {\n        player.play(\"run\");\n    }\n});\n\nonKeyDown(\"right\", () => {\n    player.move(SPEED, 0);\n    player.flipX = false;\n    if (player.isGrounded() && player.curAnim() !== \"run\") {\n        player.play(\"run\");\n    }\n});\n[\"left\", \"right\"].forEach((key) => {\n    onKeyRelease(key, () => {\n        // Only reset to \"idle\" if player is not holding any of these keys\n        if (player.isGrounded() && !isKeyDown(\"left\") && !isKeyDown(\"right\")) {\n            player.play(\"idle\");\n        }\n    });\n});\n\nconst getInfo = () =>\n    `\nAnim: ${player.curAnim()}\nFrame: ${player.frame}\n`.trim();\n\n// Add some text to show the current animation\nconst label = add([\n    text(getInfo(), { size: 12 }),\n    color(0, 0, 0),\n    pos(4),\n]);\n\nlabel.onUpdate(() => {\n    label.text = getInfo();\n});\n\n// Check out https://kaboomjs.com#SpriteComp for everything sprite() provides",
         "difficulty": 0,
         "version": "master",
         "minVersion": "3001.0",
@@ -1565,10 +1602,10 @@
             "animation"
         ],
         "createdAt": "2021-03-12T00:08:17-05:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-04T23:04:38+02:00"
     },
     {
-        "id": 84,
+        "id": 86,
         "name": "spriteatlas",
         "formattedName": "Sprite-Atlas",
         "sortName": "1-concepts-zzzz-9999-spriteatlas",
@@ -1586,7 +1623,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 85,
+        "id": 87,
         "name": "text",
         "formattedName": "Text",
         "sortName": "0-basics-zzzz-9999-text",
@@ -1605,7 +1642,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 86,
+        "id": 88,
         "name": "textInput",
         "formattedName": "Text Input",
         "sortName": "0-basics-zzzz-9999-textInput",
@@ -1624,7 +1661,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 87,
+        "id": 89,
         "name": "tiled",
         "formattedName": "Tiled",
         "sortName": "1-concepts-zzzz-9999-tiled",
@@ -1643,7 +1680,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 88,
+        "id": 90,
         "name": "timer",
         "formattedName": "Timer",
         "sortName": "1-concepts-zzzz-9999-timer",
@@ -1661,7 +1698,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 89,
+        "id": 91,
         "name": "tween",
         "formattedName": "Tween",
         "sortName": "1-concepts-tween-0-tween",
@@ -1679,7 +1716,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 90,
+        "id": 92,
         "name": "tweenEasings",
         "formattedName": "Tween Easings",
         "sortName": "1-concepts-tween-1-tweenEasings",
@@ -1697,7 +1734,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 91,
+        "id": 93,
         "name": "tweenEasingsCustom",
         "formattedName": "Custom Easings",
         "sortName": "1-concepts-tween-2-tweenEasingsCustom",
@@ -1716,7 +1753,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 92,
+        "id": 94,
         "name": "video",
         "formattedName": "Video",
         "sortName": "1-concepts-zzzz-9999-video",
@@ -1734,7 +1771,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 93,
+        "id": 95,
         "name": "vn",
         "formattedName": "Visual Novel",
         "sortName": "2-games-zzzz-9999-vn",

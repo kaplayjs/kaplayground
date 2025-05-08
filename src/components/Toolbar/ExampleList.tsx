@@ -5,13 +5,13 @@ import { useProject } from "../../features/Projects/stores/useProject";
 import { sortEntries } from "../ProjectBrowser/SortBy";
 
 const ExampleList: FC = () => {
-    const {
-        getSavedProjects,
-        getProjectMetadata,
-        loadProject,
-        createNewProjectFromDemo,
-        currentSelection,
-    } = useProject();
+    const getSavedProjects = useProject((s) => s.getSavedProjects);
+    const getProjectMetadata = useProject((s) => s.getProjectMetadata);
+    const loadProject = useProject((s) => s.loadProject);
+    const createNewProjectFromDemo = useProject((s) =>
+        s.createNewProjectFromDemo
+    );
+    const currentSelection = useProject((s) => s.currentSelection);
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const demoStringId = ev.target.selectedOptions[0].getAttribute(

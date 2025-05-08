@@ -40,11 +40,11 @@ const colorsPerDifficulty = [
 export const ProjectEntry: FC<Props> = (
     { project: example, isProject, toggleTag },
 ) => {
-    const {
-        createNewProjectFromDemo,
-        loadProject,
-        currentSelection,
-    } = useProject();
+    const loadProject = useProject((s) => s.loadProject);
+    const createNewProjectFromDemo = useProject(
+        (s) => s.createNewProjectFromDemo,
+    );
+    const currentSelection = useProject((s) => s.currentSelection);
 
     const isRecent = (timestamp: string, withinDays = 5) =>
         Math.floor(

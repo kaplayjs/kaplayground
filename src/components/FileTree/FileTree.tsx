@@ -4,7 +4,7 @@ import { View } from "../UI/View";
 import { FileFold } from "./FileFold";
 
 export const FileTree = () => {
-    const { run } = useEditor();
+    const run = useEditor((s) => s.run);
 
     return (
         <View

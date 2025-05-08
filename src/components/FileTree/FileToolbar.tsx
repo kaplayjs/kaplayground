@@ -18,7 +18,8 @@ const templateByKind = (fileName: string): Record<FileKind, string> => ({
 });
 
 export const FileToolbar: FC<Props> = (props) => {
-    const { addFile, getFile } = useProject();
+    const addFile = useProject((s) => s.addFile);
+    const getFile = useProject((s) => s.getFile);
 
     const handleAddFile = () => {
         const fileName = prompt("File name");

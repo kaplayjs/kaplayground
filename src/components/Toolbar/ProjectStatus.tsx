@@ -5,12 +5,10 @@ import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
 
 const ProjectStatus = () => {
-    const {
-        saveProject,
-        getProject,
-        projectIsSaved,
-        setProject,
-    } = useProject();
+    const saveProject = useProject((s) => s.saveProject);
+    const getProject = useProject((s) => s.getProject);
+    const projectIsSaved = useProject((s) => s.projectIsSaved);
+    const setProject = useProject((s) => s.setProject);
     const { run, runtime } = useEditor();
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(getProject().name);
