@@ -28,17 +28,20 @@ export type ExamplesData = {
     difficulties?: { displayName?: string }[];
 };
 
+const examplesData = examplesJson as ExamplesData;
+
 export const ProjectBrowser = () => {
+    useProject((s) => s.projectKey);
+
     const [tab, setTab] = useState("Projects");
-    const { getSavedProjects, getProjectMetadata } = useProject();
+    const getSavedProjects = useProject((s) => s.getSavedProjects);
+    const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
     const [projectsSort, setProjectsSort] = useState("latest");
     const [examplesSort, setExamplesSort] = useState("topic");
     const [projectsGroup, setProjectsGroup] = useState("type");
     const [examplesGroup, setExamplesGroup] = useState("category");
-
-    const examplesData = examplesJson as ExamplesData;
 
     const currentSort = useCallback(
         () => tab == "Projects" ? projectsSort : examplesSort,
@@ -74,7 +77,7 @@ export const ProjectBrowser = () => {
     const filteredProjects = useCallback(
         () =>
             groupBy(
-                (projects() as Example[]).filter((project) =>
+                (projects()).filter((project) =>
                     project.name.toLowerCase().includes(filter.toLowerCase())
                     && (!filterTags.length
                         || project.tags.some(({ name }) =>

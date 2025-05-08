@@ -1,91 +1,93 @@
 import { assets } from "@kaplayjs/crew";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
 
 const ProjectStatus = () => {
-    const saveProject = useProject((s) => s.saveProject);
-    const getProject = useProject((s) => s.getProject);
-    const projectIsSaved = useProject((s) => s.projectIsSaved);
+    const saveProject = useProject((s) => s.saveNewProject);
+    const projectMode = useProject((s) => s.project.mode);
+    const kaplayVersion = useProject((s) => s.project.kaplayVersion);
     const setProject = useProject((s) => s.setProject);
-    const { run, runtime } = useEditor();
+    const run = useEditor((s) => s.run);
+    const runtime = useEditor((s) => s.runtime);
+    const projectName = useProject((s) => s.project.name);
+    const projectKey = useProject((s) => s.projectKey);
+    const demoKey = useProject((s) => s.demoKey);
     const [isEditing, setIsEditing] = useState(false);
-    const [name, setName] = useState(getProject().name);
-    const [initialName, setInitialName] = useState(() => name);
-    const [value, setValue] = useState(() => initialName);
+    // the name is the name of the project
+    // the current value of the input that will be displayed
+    const [inputValue, setInputValue] = useState(() => projectName);
+    const nameInput = useRef<HTMLInputElement>(null);
 
-    const isSaved = (n = name) => {
-        return projectIsSaved(n, getProject().mode);
+    const setNameInputValue = (value: string) => {
+        if (nameInput.current) {
+            nameInput.current.value = value;
+        }
     };
 
-    const projectHasSwitched = () =>
-        !isEditing && getProject().name != initialName;
-
-    const handleSaveProject = (newName = name) => {
-        if (isSaved(newName)) return;
-
-        saveProject(newName, getProject().id);
-        setProject({
-            isDefault: false,
+    const blur = () => {
+        setTimeout(() => {
+            nameInput.current?.blur();
         });
     };
 
-    const handleInputChange = (t: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = t.target.value;
-        const newName = newValue || initialName;
+    const isSaved = () => {
+        return Boolean(projectKey);
+    };
 
-        setValue(newValue);
-        setName(newName);
-        handleSaveProject(newName);
+    const handleSaveProject = () => {
+        setProject({
+            name: inputValue,
+        });
+
+        saveProject();
+    };
+
+    const handleInputChange = (t: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(t.target.value);
     };
 
     const handleInputBlur = () => {
         if (!isEditing) return;
 
-        const newName = error ? initialName : name;
-        setValue(value || newName);
-        setInitialName(newName);
+        resetValue();
         setIsEditing(false);
-        handleSaveProject(newName);
     };
 
     const resetValue = () => {
-        setName(initialName);
-        setValue(initialName);
-        handleSaveProject(initialName);
+        setInputValue(projectName);
         setIsEditing(false);
-        setTimeout(blur);
+        setNameInputValue(projectName);
+        blur();
     };
 
-    const blur = () => (document.activeElement as HTMLElement | null)?.blur();
-
     const error = useMemo(() => {
-        if (projectHasSwitched()) return "";
-        return (value && value != getProject().name
+        if (!isEditing) return "";
+        if (inputValue === projectName) return "";
+
+        return (inputValue && isSaved()
             ? "Project with that name already exists!"
             : "");
-    }, [value, getProject().name]);
+    }, [inputValue, projectKey, projectName]);
 
+    // This is when a new project is loaded, or name changes
     useEffect(() => {
-        if (!projectHasSwitched()) return;
-
-        const newName = getProject().name;
-        setName(newName);
-        setInitialName(newName);
-        setValue(newName);
-    }, [getProject().name]);
+        setInputValue(projectName);
+        setNameInputValue(projectName);
+    }, [projectName]);
 
     return (
         <div className="flex flex-row gap-2 items-center h-full">
-            {!getProject().isDefault && (
+            {!demoKey && (
                 <>
                     <div className="uppercase badge badge-sm px-2 py-[3px] h-auto font-semibold tracking-wider bg-base-50 rounded-xl">
-                        {getProject().mode === "pj" ? "Project" : "Example"}
+                        {projectMode === "pj" ? "Project" : "Example"}
                     </div>
 
                     <input
                         id="projectNameInput"
+                        ref={nameInput}
                         className={cn(
                             "input input-xs placeholder:text-base-content/45",
                             {
@@ -93,11 +95,11 @@ const ProjectStatus = () => {
                                     error,
                             },
                         )}
-                        value={value}
-                        placeholder={initialName}
+                        defaultValue={inputValue}
+                        placeholder={projectName}
                         onChange={handleInputChange}
-                        onFocus={() => setIsEditing(true)}
                         onBlur={handleInputBlur}
+                        onFocus={() => setIsEditing(true)}
                         data-tooltip-id="global-open"
                         data-tooltip-content={error}
                         data-tooltip-hidden={!error}
@@ -105,7 +107,10 @@ const ProjectStatus = () => {
                         data-tooltip-place="bottom-start"
                         onKeyUpCapture={e => {
                             if (e.key === "Escape") resetValue();
-                            else if (e.key === "Enter" && !error) blur();
+                            else if (e.key === "Enter" && !error) {
+                                handleSaveProject();
+                                blur();
+                            }
                         }}
                     >
                     </input>
@@ -121,9 +126,7 @@ const ProjectStatus = () => {
                 )}
                 onClick={() => handleSaveProject()}
                 data-tooltip-id="global"
-                data-tooltip-html={isSaved()
-                    ? `Autosave Enabled`
-                    : `Save as My Project`}
+                data-tooltip-html={"FIX ME PLEASE"}
                 data-tooltip-place="bottom-end"
             >
                 <img
@@ -148,9 +151,9 @@ const ProjectStatus = () => {
 
                     run();
                 }}
-                value={getProject().kaplayVersion}
+                value={kaplayVersion}
             >
-                <option value={"master"} key={"XDD"}>master</option>
+                <option value={"master"} key={"no"}>master</option>
                 {runtime.kaplayVersions.map((v, i) => (
                     <option value={v} key={i}>{v}</option>
                 ))}

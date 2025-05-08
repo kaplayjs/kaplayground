@@ -29,21 +29,21 @@ export const FileTree = () => {
                 >
                     <FileFold
                         level={1}
-                        title="Scenes"
+                        title="scenes"
                         folder="scenes"
                         kind="scene"
                         toolbar
                     />
                     <FileFold
                         level={1}
-                        title="Game Objs"
+                        title="objects"
                         folder="objects"
                         kind="obj"
                         toolbar
                     />
                     <FileFold
                         level={1}
-                        title="Utils"
+                        title="utils"
                         folder="utils"
                         kind="util"
                         toolbar

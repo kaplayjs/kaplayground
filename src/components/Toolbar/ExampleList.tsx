@@ -1,6 +1,5 @@
 import type { ChangeEvent, FC } from "react";
 import { demos } from "../../data/demos";
-import type { Example } from "../../data/demos";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { sortEntries } from "../ProjectBrowser/SortBy";
 
@@ -8,19 +7,16 @@ const ExampleList: FC = () => {
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const loadProject = useProject((s) => s.loadProject);
-    const createNewProjectFromDemo = useProject((s) =>
-        s.createNewProjectFromDemo
-    );
-    const currentSelection = useProject((s) => s.currentSelection);
+    const createNewProject = useProject((s) => s.createNewProject);
+    const projectKey = useProject((s) => s.projectKey);
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
-        const demoStringId = ev.target.selectedOptions[0].getAttribute(
-            "data-example-id",
+        const demoId = ev.target.selectedOptions[0].getAttribute(
+            "data-demo-id",
         );
 
-        if (demoStringId) {
-            const demoId = parseInt(demoStringId);
-            createNewProjectFromDemo(demoId);
+        if (demoId) {
+            createNewProject("ex", {}, demoId);
         } else {
             loadProject(ev.target.value);
         }
@@ -28,7 +24,7 @@ const ExampleList: FC = () => {
 
     const getSortedProjects = (mode: "pj" | "ex") => (
         getSavedProjects(mode)
-            .map(p => getProjectMetadata(p) as Example)
+            .map(pId => getProjectMetadata(pId))
             .sort((a, b) =>
                 sortEntries(
                     "latest",
@@ -44,9 +40,9 @@ const ExampleList: FC = () => {
             <select
                 className="join-item | select select-xs w-full max-w-xs"
                 onChange={handleExampleChange}
-                value={currentSelection ?? "upj-Untitled"}
+                value={projectKey ?? "untitled"}
             >
-                <option className="text-md" disabled value="upj-Untitled">
+                <option className="text-md" disabled value="untitled">
                     My Projects
                 </option>
 
@@ -56,7 +52,7 @@ const ExampleList: FC = () => {
                     </option>
                 ))}
 
-                <option className="text-md" disabled value="uex-Untitled">
+                <option className="text-md" disabled value="nothing">
                     My Examples
                 </option>
 
@@ -69,13 +65,13 @@ const ExampleList: FC = () => {
                 <option className="text-md" disabled>KAPLAY Demos</option>
 
                 {demos.sort((a, b) => sortEntries("topic", "Examples", a, b))
-                    .map((example) => (
+                    .map((demo) => (
                         <option
-                            key={example.name}
-                            value={example.name}
-                            data-example-id={example.id}
+                            key={demo.name}
+                            value={demo.key}
+                            data-demo-id={demo.key}
                         >
-                            {example.formattedName}
+                            {demo.formattedName}
                         </option>
                     ))}
             </select>

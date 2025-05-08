@@ -10,15 +10,15 @@ import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const project = useProject((state) => state.project);
+    const projectKey = useProject((state) => state.projectKey);
+    const projectName = useProject((state) => state.project.name);
     const createNewProject = useProject((state) => state.createNewProject);
-    const loadProject = useProject((state) => state.loadProject);
     const update = useEditor((state) => state.update);
     const run = useEditor((state) => state.run);
     const showNotification = useEditor((state) => state.showNotification);
 
     const handleDownload = () => {
-        const projectLocal = localStorage.getItem(project.id);
+        const projectLocal = localStorage.getItem(projectKey ?? "");
 
         if (!projectLocal) {
             showNotification("No project to export... Remember to save!");
@@ -29,7 +29,7 @@ const Projects: FC = () => {
             type: "application/json",
         });
 
-        downloadBlob(blob, `${project.name}.kaplay`);
+        downloadBlob(blob, `${projectName}.kaplay`);
         showNotification("Exporting the project, check downloads...");
     };
 
@@ -46,7 +46,7 @@ const Projects: FC = () => {
             type: "text/html",
         });
 
-        downloadBlob(blob, `${project.name}.html`);
+        downloadBlob(blob, `${projectName}.html`);
     };
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +76,7 @@ const Projects: FC = () => {
                 assetMap.set(asset[0], asset[1]);
             });
 
-            loadProject(project.state.project.id, {
+            createNewProject(project.state.project.mode, {
                 ...project.state.project,
                 files: fileMap,
                 assets: assetMap,

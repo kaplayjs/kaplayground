@@ -4,7 +4,7 @@ export function wrapCode() {
     let mainFile = useProject.getState().getMainFile()?.value ?? "";
     let parsedFiles = "";
 
-    if (useProject.getState().getProject().mode === "ex") {
+    if (useProject.getState().project.mode === "ex") {
         parsedFiles = mainFile;
     } else {
         let sceneFiles = "";
@@ -13,7 +13,7 @@ export function wrapCode() {
         let KAPLAYFile = useProject.getState().getKAPLAYFile()?.value ?? "";
         let assetsFile = useProject.getState().getAssetsFile()?.value ?? "";
 
-        useProject.getState().getProject().files.forEach((file) => {
+        useProject.getState().project.files.forEach((file) => {
             if (file.kind == "scene") {
                 sceneFiles += `\n${file.value}\n`;
             } else if (file.kind == "obj") {

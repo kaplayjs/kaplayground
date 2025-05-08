@@ -5,13 +5,15 @@ import { compressCode } from "../../../util/compressCode";
 import ToolbarButton from "../ToolbarButton";
 
 export const ShareButton = () => {
-    const getProject = useProject((s) => s.getProject);
+    const kaplayVersion = useProject((s) => s.project.kaplayVersion);
     const getMainFile = useProject((s) => s.getMainFile);
+    const projectKey = useProject((s) => s.projectKey);
+
     const handleShare = () => {
-        const isDefault = getProject().isDefault;
+        const isDefault = projectKey?.startsWith("dm-");
 
         if (isDefault) {
-            const exampleParam = encodeURIComponent(getProject().id);
+            const exampleParam = encodeURIComponent(projectKey!);
 
             const url = `${window.location.origin}/?example=${exampleParam}`;
 
@@ -25,9 +27,7 @@ export const ShareButton = () => {
         const mainFile = getMainFile();
         const compressedCode = compressCode(mainFile?.value!);
         const codeParam = encodeURIComponent(compressedCode);
-        const exampleVersion = encodeURIComponent(
-            getProject().kaplayVersion,
-        );
+        const exampleVersion = encodeURIComponent(kaplayVersion);
         const url =
             `${window.location.origin}/?code=${codeParam}&version=${exampleVersion}`;
 

@@ -15,7 +15,7 @@ export type Tag = {
 } & ExamplesDataRecord[string];
 
 export type Example = {
-    id: number;
+    key: string;
     name: string;
     formattedName: string;
     sortName: string;
@@ -26,7 +26,7 @@ export type Example = {
     version: string;
     minVersion: string;
     tags: Tag[];
-    difficulty: {
+    difficulty?: {
         level: number;
         name: string;
     };
@@ -58,6 +58,7 @@ export const demos = examplesList.map((example) => {
         })),
         difficulty: difficulties[example.difficulty]
             ?? difficulties[difficulties.length - 1],
+        key: example.name,
     };
 
     return obj;

@@ -9,8 +9,6 @@ export type Project = {
     files: Map<string, File>;
     kaplayVersion: string;
     mode: ProjectMode;
-    id: string;
-    isDefault?: boolean;
     createdAt: string;
     updatedAt: string;
 };

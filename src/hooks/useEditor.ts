@@ -45,6 +45,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         iframe: null,
         console: null,
         isDefaultExample: false,
+        currentSelection: null,
         kaplayVersions: [],
     },
     setRuntime: (runtime) => {
