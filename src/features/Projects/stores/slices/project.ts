@@ -311,12 +311,7 @@ export const createProjectSlice: StateCreator<
                     },
                 ],
             ]),
-            mode: "ex",
             kaplayVersion: sharedVersion ?? examplesList[0].version,
-            name: "Shared Example",
-            version: "2.0.0",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
         });
     },
 
