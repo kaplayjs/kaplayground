@@ -72,22 +72,10 @@ export const MonacoEditor: FC<Props> = (props) => {
 
                 updateFile(currentProjectFile.path, editor.getValue());
             }
-
-            updateImageDecorations();
         });
 
-        editor.onDidChangeModel((ev) => {
-            debug(0, "Model changed", ev.newModelUrl);
-
-            editor.getModel()?.setValue(
-                getFile(getRuntime().currentFile)?.value ?? "",
-            );
-
-            updateImageDecorations();
-        });
-
-        editor.onDidScrollChange(() => {
-            updateImageDecorations();
+        editor.onDidChangeModel((e) => {
+            console.log("Model changed", e.newModelUrl);
         });
 
         editor.onDidChangeModelDecorations(() => {
@@ -165,13 +153,13 @@ export const MonacoEditor: FC<Props> = (props) => {
         <div id="monaco-editor-wrapper" className="h-full rounded-xl relative">
             <Editor
                 defaultLanguage="javascript"
-                defaultValue={getFile(getRuntime().currentFile)?.value}
                 beforeMount={handleEditorBeforeMount}
                 onMount={handleEditorMount}
-                theme={localStorage.getItem("theme") || "Spiker"}
+                theme={"Spiker"}
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
+
                     fontSize: 16,
                     lineHeight: 25,
                     tabSize: 4,
@@ -195,7 +183,7 @@ export const MonacoEditor: FC<Props> = (props) => {
                     hideCursorInOverviewRuler: true,
                     wordWrap: getConfig().wordWrap ? "on" : "off",
                 }}
-                path={currentFile}
+                defaultPath={`file:///${currentFile}`}
             />
         </div>
     );

@@ -16,7 +16,7 @@ const AssetsItem: FC<ResourceProps> = ({ asset, visibleIcon }) => {
     });
     const updateFile = useProject((s) => s.updateFile);
     const getFile = useProject((s) => s.getFile);
-    const { update } = useEditor();
+    const update = useEditor((s) => s.update);
 
     const handleResourceDrag = (e: React.DragEvent<HTMLLIElement>) => {
         e.dataTransfer.setData("text", asset.importFunction);

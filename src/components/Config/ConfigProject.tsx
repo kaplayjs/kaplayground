@@ -14,8 +14,8 @@ export const ConfigProject = () => {
     const [packageInfo, setPackageInfo] = useState<Packument | null>(
         null,
     );
-    const { project: project } = useProject();
-    const { setRuntime } = useEditor();
+    const project = useProject((s) => s.project);
+    const setRuntime = useEditor((s) => s.setRuntime);
 
     useEffect(() => {
         async function fetchPackageInfo() {

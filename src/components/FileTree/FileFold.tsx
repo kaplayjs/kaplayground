@@ -7,18 +7,18 @@ import {
 } from "react";
 import { cn } from "../../util/cn";
 import "./FileFolder.css";
-import { useDragAndDrop } from "@formkit/drag-and-drop/react";
-import { assets } from "@kaplayjs/crew";
 import * as ContextMenu from "@radix-ui/react-context-menu";
+import { useShallow } from "zustand/react/shallow";
 import type { Folder, RealFile } from "../../features/Projects/models/File";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { KContextMenuContent } from "../UI/ContextMenu/KContextMenuContent";
 import { KContextMenuItem } from "../UI/ContextMenu/KContextMenuItem";
 import { KContextMenuSeparator } from "../UI/ContextMenu/KContextMenuSeparator";
-import { FileEntry } from "./FileEntry";
+import { FileList } from "./FileList";
 import { FileTreeItemDirty } from "./FileTreeItemDirty";
+import { FolderList } from "./FolderList";
 
-type Props = PropsWithChildren<{
+type FileFoldProps = PropsWithChildren<{
     level: number;
     path: string;
     title?: string;
@@ -26,15 +26,13 @@ type Props = PropsWithChildren<{
     folded?: boolean;
 }>;
 
-const iconByPath: Record<string, any> = {
-    "main.js": assets.play.outlined,
-    "assets.js": assets.assetbrew.outlined,
-    "kaplay.js": assets.ka.outlined,
-};
-
-export const FileFold: FC<Props> = ({ icon, ...props }) => {
+export const FileFold: FC<FileFoldProps> = ({ icon, ...props }) => {
     const [folded, setFolded] = useState(props.folded ?? false);
-    const project = useProject((s) => s.project);
+    const [files, setFiles] = useState<RealFile[]>([]);
+    const [folders, setFolders] = useState<Folder[]>([]);
+    const treeNames = useProject(useShallow(s => {
+        return s.getTreeByPath(props.path).map((f) => f.path).join(",");
+    }));
     const getTreeByPath = useProject((s) => s.getTreeByPath);
     const addFile = useProject((s) => s.addFile);
     const removeFile = useProject((s) => s.removeFile);
@@ -52,19 +50,7 @@ export const FileFold: FC<Props> = ({ icon, ...props }) => {
 
         setFiles(files);
         setFolders(folders);
-    }, [project]);
-
-    const [
-        filesParent,
-        files,
-        setFiles,
-    ] = useDragAndDrop<HTMLUListElement, RealFile>([]);
-
-    const [
-        foldersParent,
-        folders,
-        setFolders,
-    ] = useDragAndDrop<HTMLUListElement, Folder>([]);
+    }, [treeNames]);
 
     const handleCreate = (e: React.FocusEvent<HTMLInputElement>) => {
         const name = e.currentTarget.value.trim();
@@ -175,38 +161,14 @@ export const FileFold: FC<Props> = ({ icon, ...props }) => {
                 )}
 
                 {folders.length > 0 && (
-                    <ul
-                        ref={foldersParent}
-                        className="flex flex-col gap-px"
-                    >
-                        {folders.map((folder) => (
-                            <li key={folder.name}>
-                                <FileFold
-                                    path={`${props.path}/${folder.name}`}
-                                    title={folder.name}
-                                    level={props.level + 1}
-                                    icon={iconByPath[folder.name]}
-                                />
-                            </li>
-                        ))}
-                    </ul>
+                    <FolderList
+                        folders={folders}
+                        level={props.level + 1}
+                        path={props.path}
+                    />
                 )}
 
-                {files.length > 0 && (
-                    <ul
-                        ref={filesParent}
-                        className="flex flex-col gap-px"
-                    >
-                        {files.map((file) => (
-                            <li key={file.name}>
-                                <FileEntry
-                                    file={file}
-                                    icon={iconByPath[file.name]}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                {files.length > 0 && <FileList files={files} />}
             </div>
 
             <ContextMenu.Portal>

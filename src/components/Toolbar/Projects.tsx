@@ -10,7 +10,8 @@ import { downloadBlob } from "../../util/download";
 import ToolbarButton from "./ToolbarButton";
 
 const Projects: FC = () => {
-    const project = useProject((state) => state.project);
+    const projectId = useProject((state) => state.project.id);
+    const projectName = useProject((state) => state.project.name);
     const createNewProject = useProject((state) => state.createNewProject);
     const loadProject = useProject((state) => state.loadProject);
     const update = useEditor((state) => state.update);
@@ -18,7 +19,7 @@ const Projects: FC = () => {
     const showNotification = useEditor((state) => state.showNotification);
 
     const handleDownload = () => {
-        const projectLocal = localStorage.getItem(project.id);
+        const projectLocal = localStorage.getItem(projectId);
 
         if (!projectLocal) {
             showNotification("No project to export... Remember to save!");
@@ -29,7 +30,7 @@ const Projects: FC = () => {
             type: "application/json",
         });
 
-        downloadBlob(blob, `${project.name}.kaplay`);
+        downloadBlob(blob, `${projectName}.kaplay`);
         showNotification("Exporting the project, check downloads...");
     };
 
@@ -46,7 +47,7 @@ const Projects: FC = () => {
             type: "text/html",
         });
 
-        downloadBlob(blob, `${project.name}.html`);
+        downloadBlob(blob, `${projectName}.html`);
     };
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

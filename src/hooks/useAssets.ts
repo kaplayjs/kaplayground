@@ -15,12 +15,10 @@ type UseAssetsReturn = AssetsSlice & {
 type UseAssetsHook = (opt: UseAssetsOpt) => UseAssetsReturn;
 
 export const useAssets: UseAssetsHook = ({ kind }) => {
-    const {
-        assetsLastId,
-        removeAsset,
-        addAsset,
-        project: { assets },
-    } = useProject();
+    const assetsLastId = useProject((state) => state.assetsLastId);
+    const addAsset = useProject((state) => state.addAsset);
+    const removeAsset = useProject((state) => state.removeAsset);
+    const assets = useProject((state) => state.project.assets);
 
     const filteredAssets = useMemo(() => {
         if (!kind) return Object.values(assets);

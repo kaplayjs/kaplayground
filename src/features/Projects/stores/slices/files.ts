@@ -52,8 +52,6 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
         },
 
         updateFile(path, value) {
-            debug(0, "[files] Updating file", path);
-
             const foundFile = get().getFile(path);
             if (!foundFile) return debug(2, "File not found", path);
 

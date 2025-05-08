@@ -28,19 +28,19 @@ export const FileTree = () => {
                 >
                     <FileFold
                         level={1}
-                        title="Scenes"
+                        title="scenes"
                         path="scenes"
                         icon={assets.art.outlined}
                     />
                     <FileFold
                         level={1}
-                        title="Game Objs"
+                        title="objects"
                         path="objects"
                         icon={assets.grass.outlined}
                     />
                     <FileFold
                         level={1}
-                        title="Utils"
+                        title="utils"
                         path="utils"
                         icon={assets.toolbox.outlined}
                     />

@@ -16,6 +16,7 @@ type EditorRuntime = {
     iframe: HTMLIFrameElement | null;
     console: Console | null;
     kaplayVersions: string[];
+    savedProjects: string[];
 };
 
 export interface EditorStore {
@@ -46,6 +47,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         console: null,
         isDefaultExample: false,
         kaplayVersions: [],
+        savedProjects: [],
     },
     setRuntime: (runtime) => {
         set((state) => ({
@@ -57,6 +59,24 @@ export const useEditor = create<EditorStore>((set, get) => ({
     },
     getRuntime: () => get().runtime,
     setCurrentFile: (currentFile) => {
+        const editor = get().runtime.editor;
+        const monaco = get().runtime.monaco;
+        if (!editor || !monaco) return;
+
+        const uri = monaco.Uri.parse(`file:///${currentFile}`);
+        let model = monaco.editor.getModel(uri);
+
+        if (!model) {
+            model = monaco.editor.createModel(
+                useProject.getState().getFile(currentFile)?.value ?? "",
+                "javascript",
+                monaco.Uri.parse(`file:///${currentFile}`),
+            );
+        }
+
+        editor.setModel(model);
+        editor.focus();
+
         set((state) => ({
             runtime: {
                 ...state.runtime,

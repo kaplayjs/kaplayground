@@ -30,7 +30,8 @@ export type ExamplesData = {
 
 export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
-    const { getSavedProjects, getProjectMetadata } = useProject();
+    const getProjects = useProject((s) => s.getSavedProjects);
+    const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
     const [projectsSort, setProjectsSort] = useState("latest");
@@ -55,8 +56,11 @@ export const ProjectBrowser = () => {
         sortEntries(currentSort(), tab, a, b);
 
     const projects = useCallback(
-        () => getSavedProjects().map(project => getProjectMetadata(project)),
-        [getSavedProjects],
+        () => {
+            const savedProjects = getProjects();
+            return savedProjects.map(project => getProjectMetadata(project));
+        },
+        [getProjects],
     );
 
     const currentGroup = useCallback(
@@ -116,6 +120,7 @@ export const ProjectBrowser = () => {
 
         return [...set];
     }, [tab]);
+
     const toggleTag = (tag: string) =>
         setFilterTags(prev =>
             prev.includes(tag)
@@ -218,7 +223,7 @@ export const ProjectBrowser = () => {
                         forceMount
                         hidden={tab !== "Projects"}
                     >
-                        {getSavedProjects().length > 0
+                        {getProjects().length > 0
                             ? (
                                 <>
                                     {Object.entries(filteredProjects()).map((

@@ -1,5 +1,10 @@
 import { useProject } from "../stores/useProject";
 
+/**
+ * Wrap code using legacy auto-import by file order system.
+ *
+ * @returns - The wrapped code as a string.
+ */
 export function wrapCode() {
     const projectState = useProject.getState();
 
