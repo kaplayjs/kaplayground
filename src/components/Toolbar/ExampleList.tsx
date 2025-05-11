@@ -9,6 +9,7 @@ const ExampleList: FC = () => {
     const loadProject = useProject((s) => s.loadProject);
     const createNewProject = useProject((s) => s.createNewProject);
     const projectKey = useProject((s) => s.projectKey);
+    useProject((s) => s.project.name);
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const demoId = ev.target.selectedOptions[0].getAttribute(
@@ -47,7 +48,7 @@ const ExampleList: FC = () => {
                 </option>
 
                 {getSortedProjects("pj").map((project) => (
-                    <option key={project.name} value={project.name}>
+                    <option key={project.key} value={project.key}>
                         {project.formattedName}
                     </option>
                 ))}
@@ -57,7 +58,7 @@ const ExampleList: FC = () => {
                 </option>
 
                 {getSortedProjects("ex").map((project) => (
-                    <option key={project.name} value={project.name}>
+                    <option key={project.key} value={project.key}>
                         {project.formattedName}
                     </option>
                 ))}

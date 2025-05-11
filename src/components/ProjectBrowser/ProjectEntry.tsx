@@ -63,7 +63,7 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
         if (!dialog?.open) return;
 
         if (isProject) {
-            loadProject(project.name);
+            loadProject(project.key);
         } else {
             createNewProject("ex", {}, project.key);
         }
