@@ -188,11 +188,11 @@ export const createProjectSlice: StateCreator<
     },
     getProjectMetadata(key) {
         const project = get().unserializeProject(key);
-
-        return {
+        const metadata = {
             key: key,
             name: project.name,
             formattedName: project.name,
+            type: project.mode == "pj" ? "Projects" : "Examples",
             category: "KAPLAY",
             code: "",
             group: "",
@@ -208,7 +208,9 @@ export const createProjectSlice: StateCreator<
             version: project.version,
             createdAt: project?.createdAt ?? "",
             updatedAt: project?.updatedAt ?? "",
-        } satisfies Example;
+        };
+
+        return metadata satisfies Example;
     },
     setDefaultProjectFiles: (mode, files, assets) => {
         if (mode === "pj") {

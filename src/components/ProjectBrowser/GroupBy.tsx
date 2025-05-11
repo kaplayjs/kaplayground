@@ -16,8 +16,10 @@ const optionsMap: Record<string, string> = {
 const groupMap: Record<string, (item: Example) => string> = {
     difficulty: (
         item,
-    ) => ((examplesData as ExamplesData)?.difficulties?.[item.difficulty?.level]
-        ?.displayName ?? ""),
+    ) => (item.difficulty
+        ? (examplesData as ExamplesData)?.difficulties?.[item.difficulty?.level]
+            ?.displayName ?? ""
+        : ""),
 };
 
 const sortables = ["category", "group", "difficulty"];
