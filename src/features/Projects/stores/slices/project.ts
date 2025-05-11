@@ -77,6 +77,14 @@ export interface ProjectSlice {
      */
     loadProject: (id: string) => void;
     /**
+     * Current project edited state
+     */
+    projectWasEdited: boolean;
+    /**
+     * Set current project edited state
+     */
+    setProjectWasEdited: (bool: boolean) => void;
+    /**
      * Check if a project is saved in localStorage
      *
      * @param id - Project id
@@ -149,6 +157,12 @@ export const createProjectSlice: StateCreator<
         get().saveProject();
     },
 
+    projectWasEdited: false,
+    setProjectWasEdited(bool) {
+        set(() => ({
+            projectWasEdited: bool,
+        }));
+    },
     projectIsSaved: (id: string) => {
         return get().getSavedProjects().includes(id);
     },
@@ -325,6 +339,7 @@ export const createProjectSlice: StateCreator<
         if (id) {
             debug(0, "[project] Saving changes...");
             localStorage.setItem(id, get().serializeProject());
+            get().setProjectWasEdited(true);
         }
     },
 
@@ -357,6 +372,8 @@ export const createProjectSlice: StateCreator<
         });
 
         get().setProjectKey(id);
+        get().setDemoKey(null);
+        get().setProjectWasEdited(false);
 
         // Editor stuff
         useConfig.getState().setConfig({

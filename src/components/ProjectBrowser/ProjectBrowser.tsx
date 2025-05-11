@@ -32,6 +32,8 @@ const examplesData = examplesJson as ExamplesData;
 
 export const ProjectBrowser = () => {
     useProject((s) => s.projectKey);
+    useProject((s) => s.project.name);
+    useProject((s) => s.projectWasEdited);
 
     const [tab, setTab] = useState("Projects");
     const getSavedProjects = useProject((s) => s.getSavedProjects);
