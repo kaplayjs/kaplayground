@@ -2,6 +2,18 @@
 
 Format: Major.Minor.Patch (Y/M/D)
 
+## [2.3.0] - 2025-05-12
+
+### Changed
+
+- `Project.id` is depracted inside `.kaplay` files, you can safely remove it
+
+### Fixed
+
+- Fixed bugs in the editor
+- Rendering Optimization
+- Bean added to Project Core
+
 ## [2.2.2] - 2025-05-5
 
 ### Fixed
