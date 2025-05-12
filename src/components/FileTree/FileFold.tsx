@@ -27,10 +27,14 @@ const paddingLevels = {
 };
 
 export const FileFold: FC<Props> = (props) => {
+    const getFilesByFolder = useProject((s) => s.getFilesByFolder);
     const [folded, setFolded] = useState(props.folded ?? false);
-    const files = useProject(useShallow(s => {
-        return s.getFilesByFolder(props.folder);
+
+    useProject(useShallow(s => {
+        return s.getTree(props.folder);
     }));
+
+    const files = getFilesByFolder(props.folder);
 
     return (
         <div className={cn("mb-2", { "ml-2": props.level })}>

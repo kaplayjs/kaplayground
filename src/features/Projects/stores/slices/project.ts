@@ -53,6 +53,7 @@ export interface ProjectSlice {
         mode: ProjectMode,
         replace?: Partial<Project>,
         demoName?: string,
+        isShared?: boolean,
     ): void;
     getProjectMetadata: (id: string) => Example;
     createFromShared: (sharedCode: string, sharedVersion?: string) => void;
@@ -103,6 +104,12 @@ export interface ProjectSlice {
      * @param prefix - Prefix for the id
      */
     generateId(prefix: ProjectMode): string;
+    /**
+     * Generate a name from an id
+     *
+     * @param prefix - Prefix for the id
+     */
+    generateName(id: string, prefix: ProjectMode, isShared?: boolean): string;
     /**
      * Serialize the current project to a string
      *
@@ -156,7 +163,6 @@ export const createProjectSlice: StateCreator<
 
         get().saveProject();
     },
-
     projectWasEdited: false,
     setProjectWasEdited(bool) {
         set(() => ({
@@ -237,10 +243,12 @@ export const createProjectSlice: StateCreator<
         filter,
         replace,
         demoName,
+        isShared,
     ) {
         const files = new Map<string, File>();
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
+        const possibleId = get().generateId(filter);
 
         let version = examplesList[0].version;
 
@@ -285,7 +293,7 @@ export const createProjectSlice: StateCreator<
 
         set(() => ({
             project: {
-                name: get().generateId(filter),
+                name: get().generateName(possibleId, filter, isShared),
                 version: "2.0.0", // fixed project version
                 files: files,
                 assets: assets,
@@ -313,22 +321,27 @@ export const createProjectSlice: StateCreator<
     },
 
     createFromShared(sharedCode, sharedVersion) {
-        get().createNewProject("ex", {
-            assets: new Map(),
-            files: new Map([
-                [
-                    "main.js",
-                    {
-                        kind: "main",
-                        language: "javascript",
-                        name: "main.js",
-                        path: "main.js",
-                        value: sharedCode,
-                    },
-                ],
-            ]),
-            kaplayVersion: sharedVersion ?? examplesList[0].version,
-        });
+        get().createNewProject(
+            "ex",
+            {
+                assets: new Map(),
+                files: new Map([
+                    [
+                        "main.js",
+                        {
+                            kind: "main",
+                            language: "javascript",
+                            name: "main.js",
+                            path: "main.js",
+                            value: sharedCode,
+                        },
+                    ],
+                ]),
+                kaplayVersion: sharedVersion ?? examplesList[0].version,
+            },
+            undefined,
+            true,
+        );
     },
 
     // #endregion
@@ -389,6 +402,14 @@ export const createProjectSlice: StateCreator<
         const id = `${prefix}-${countWithPrefix + 1}`;
 
         return id;
+    },
+
+    generateName(id, prefix, isShared = false) {
+        const formattedName = prefix == "ex" ? "Example" : "Project";
+        const isSharedName = isShared ? "(Shared)" : "";
+        return `${formattedName} #${
+            id.replace(`${prefix}-`, "")
+        } ${isSharedName}`;
     },
 
     serializeProject() {

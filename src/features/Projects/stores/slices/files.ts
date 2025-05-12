@@ -29,6 +29,13 @@ export interface FilesSlice {
     getMainFile: () => File | null;
     /** Get a file */
     getFile: (path: string) => File | null;
+    /**
+     * Search
+     *
+     * @param path To saerch for tree
+     * @returns Tree of file paths
+     */
+    getTree: (path: string) => string[];
     /** Get files by folder */
     getFilesByFolder: (folder: FileFolder) => File[];
 }
@@ -85,6 +92,19 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
 
         getAssetsFile() {
             return get().getFile("assets.js");
+        },
+
+        getTree(path) {
+            const files = get().project.files;
+            const tree: string[] = [];
+
+            for (const file of files.values()) {
+                if (file.path.startsWith(path)) {
+                    tree.push(file.path);
+                }
+            }
+
+            return tree;
         },
 
         getFilesByFolder(folder) {
