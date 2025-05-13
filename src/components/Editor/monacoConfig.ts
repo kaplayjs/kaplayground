@@ -1,10 +1,15 @@
 import type { Monaco } from "@monaco-editor/react";
 import docTs from "../../../lib.d.ts?raw";
+import { useProject } from "../../features/Projects/stores/useProject";
+import { useEditor } from "../../hooks/useEditor";
 import { DATA_URL_REGEX } from "../../util/regex";
+import { KAPLAYSnippets } from "./completion/KAPLAYSnippets";
 import { addCompletion } from "./completionProviders.ts";
 import { themes } from "./themes/themes.ts";
 
 let providersRegistered = false;
+
+// create monaco instance
 
 export const configMonaco = (monaco: Monaco) => {
     if (providersRegistered) return;
@@ -17,15 +22,59 @@ export const configMonaco = (monaco: Monaco) => {
     );
 
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-        noSemanticValidation: true,
+        noSemanticValidation: false,
         noSyntaxValidation: false,
     });
 
     monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+    monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
 
     monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
         allowNonTsExtensions: true,
         allowJs: true,
+        moduleResolution: 2,
+        baseUrl: ".",
+        paths: {
+            "*": ["*"],
+        },
+    });
+
+    monaco.editor.registerEditorOpener({
+        openCodeEditor(_source, resource, selectionOrPosition) {
+            if (useProject.getState().hasFile(resource.path)) {
+                useEditor.getState().setCurrentFile(resource.path);
+                // use selectionOrPosition to set the cursor position
+
+                if (
+                    selectionOrPosition
+                    && monaco.Range.isIRange(selectionOrPosition)
+                ) {
+                    const range = new monaco.Range(
+                        selectionOrPosition.startLineNumber,
+                        selectionOrPosition.startColumn,
+                        selectionOrPosition.endLineNumber,
+                        selectionOrPosition.endColumn,
+                    );
+
+                    useEditor.getState().getRuntime().editor?.setSelection(
+                        range,
+                    );
+                } else if (selectionOrPosition) {
+                    const position = new monaco.Position(
+                        selectionOrPosition.lineNumber,
+                        selectionOrPosition.column,
+                    );
+
+                    useEditor.getState().getRuntime().editor?.setPosition(
+                        position,
+                    );
+                }
+
+                return true;
+            }
+
+            return false;
+        },
     });
 
     // Hover dataUrl images
@@ -56,238 +105,10 @@ export const configMonaco = (monaco: Monaco) => {
         },
     });
 
-    monaco.languages.registerCompletionItemProvider("javascript", {
-        provideCompletionItems(_model, position) {
-            return {
-                suggestions: [
-                    {
-                        label: "k-init",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: "kaplay();\nloadBean();",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                    },
-                    {
-                        label: "k-obj",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: "const ${1:obj} = add([\n    ${2}\n]);",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-add",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: "add([\n    ${1}\n]);",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-onKeyPress",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "onKeyPress(\"${1:f}\", () => {\n    ${2}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-onKeyRelease",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "onKeyRelease(\"${1:f}\", () => {\n    ${2}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-onKeyDown",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "onKeyDown(\"${1:f}\", () => {\n    ${2}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-onUpdate",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: "onUpdate(() => {\n    ${1}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-arrows",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "onKeyPress(\"up\", () => {\n    ${1}\n});\nonKeyPress(\"down\", () => {\n    ${2}\n});\nonKeyPress(\"left\", () => {\n    ${3}\n});\nonKeyPress(\"right\", () => {\n    ${4}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-arrows-down",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "onKeyDown(\"up\", () => {\n    ${1}\n});\nonKeyDown(\"down\", () => {\n    ${2}\n});\nonKeyDown(\"left\", () => {\n    ${3}\n});\nonKeyDown(\"right\", () => {\n    ${4}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-debug",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: "debug.inspect = true;",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-onLoad",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: "onLoad(() => {\n    ${1}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-scene",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "scene(\"${1:sceneName}\", () => {\n    ${2}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-onCollide",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText:
-                            "onCollide(\"${1:tag1}\", \"${2:tag2}\", () => {\n    ${3}\n});",
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                    {
-                        label: "k-level",
-                        kind: monaco.languages.CompletionItemKind.Module,
-                        insertText: `addLevel([
-    "     $$",
-    "=======",
-], {
-    tileWidth: 64,
-    tileHeight: 64,
-    pos: vec2(100, 200),
-    tiles: {
-        "=": () => [
-            rect(64, 64),
-            area(),
-            body({ isStatic: true }),
-            color("#6bc96c"),
-            outline(4),
-            anchor("bot"),
-        ],
-        "$": () => [
-            circle(16),
-            area(),
-            color("#fcef8d"),
-            outline(4),
-            anchor("bot")
-        ],
-    }
-})`,
-                        range: new monaco.Range(
-                            position.lineNumber,
-                            position.column - 1,
-                            position.lineNumber,
-                            position.column,
-                        ),
-                        insertTextRules:
-                            monaco.languages.CompletionItemInsertTextRule
-                                .InsertAsSnippet,
-                    },
-                ],
-            };
-        },
-    });
+    monaco.languages.registerCompletionItemProvider(
+        "javascript",
+        new KAPLAYSnippets(),
+    );
 
     monaco.languages.registerCompletionItemProvider("javascript", {
         provideCompletionItems(...args) {

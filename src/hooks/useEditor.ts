@@ -64,6 +64,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const monaco = get().runtime.monaco;
         const currentFile = get().runtime.currentFile;
         const viewStates = get().runtime.viewStates;
+        // remove initial /
+        newCurrentFile = newCurrentFile.replace(/^\/|\/$/g, "");
 
         if (!editor || !monaco) {
             return set({
@@ -155,13 +157,15 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
             if (!iframeContentWindow) return;
 
-            iframeContentWindow.postMessage(
-                {
-                    type: "UPDATE_CODE",
-                    code: code,
-                },
-                "*",
-            );
+            code.then((d) => {
+                iframeContentWindow.postMessage(
+                    {
+                        type: "UPDATE_CODE",
+                        code: d,
+                    },
+                    "*",
+                );
+            });
         };
     },
     updateImageDecorations() {
