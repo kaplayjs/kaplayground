@@ -24,3 +24,10 @@
 
 - 🛠️ **Code Editor**\
   Use a modern, powerful code editor based in VS Code, with features like auto-completion, syntax highlighting and special KAPLAY snippets and autocompletion.
+
+## 📚 Resources
+
+- [Roadmap](https://github.com/orgs/kaplayjs/projects/14/views/1) -
+  See what features are planned for the future.
+- [KAPLAYGROUND Wiki](https://github.com/kaplayjs/kaplayground/wiki) -
+  Explore the wiki for in-depth guides, tutorials, and documentation.
