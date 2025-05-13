@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import type { FC } from "react";
+import { type FC, useRef } from "react";
 import { buildProject } from "../../features/Projects/application/buildProject";
 import type { Asset } from "../../features/Projects/models/Asset";
 import type { File } from "../../features/Projects/models/File";
@@ -7,17 +7,24 @@ import type { Project } from "../../features/Projects/models/Project";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 import { downloadBlob } from "../../util/download";
-import ToolbarButton from "./ToolbarButton";
+import { KDropdownMenuSeparator } from "../UI/KDropdown/KDropdownSeparator";
+import { ToolbarDropdown } from "./ToolbarDropdown";
+import { ToolbarDropdownButton } from "./ToolbarDropdownButton";
 
-const Projects: FC = () => {
-    const projectKey = useProject((state) => state.projectKey);
-    const projectName = useProject((state) => state.project.name);
-    const createNewProject = useProject((state) => state.createNewProject);
-    const update = useEditor((state) => state.update);
+export const ToolbarProjectDropdown: FC = () => {
     const run = useEditor((state) => state.run);
     const showNotification = useEditor((state) => state.showNotification);
+    const createNewProject = useProject((state) => state.createNewProject);
+    const newFileInput = useRef<HTMLInputElement>(null);
 
-    const handleDownload = () => {
+    const handleImport = () => {
+        if (newFileInput.current) {
+            newFileInput.current.click();
+        }
+    };
+
+    const handleExport = () => {
+        const { projectKey, project } = useProject.getState();
         const projectLocal = localStorage.getItem(projectKey ?? "");
 
         if (!projectLocal) {
@@ -29,12 +36,12 @@ const Projects: FC = () => {
             type: "application/json",
         });
 
-        downloadBlob(blob, `${projectName}.kaplay`);
-        showNotification("Exporting the project, check downloads...");
+        downloadBlob(blob, `${project.name.trim()}.kaplay`);
+        showNotification("Downloading exported project...");
     };
 
-    const handleExportHTML = async () => {
-        // get content from sandbox iframe
+    const handleHTMLBuild = async () => {
+        const { project } = useProject.getState();
         const projectCode = await buildProject();
 
         if (!projectCode) {
@@ -46,7 +53,8 @@ const Projects: FC = () => {
             type: "text/html",
         });
 
-        downloadBlob(blob, `${projectName}.html`);
+        downloadBlob(blob, `${project.name.trim()}.html`);
+        showNotification("Downloading HTML5 game...");
     };
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,70 +96,61 @@ const Projects: FC = () => {
 
     const handleNewProject = () => {
         createNewProject("pj");
-        update();
         run();
     };
 
     const handleNewExample = () => {
         createNewProject("ex");
-        update();
         run();
     };
 
     return (
-        <div className="dropdown dropdown-end flex-grow-0 flex-shrink-0 basis-24 h-full">
-            <ToolbarButton
-                icon={assets.toolbox.outlined}
-                text="Project"
-                tabIndex={0}
-                tip="Project Export/Import"
-            />
-            <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52"
+        <ToolbarDropdown
+            icon={assets.toolbox.outlined}
+            text="Project"
+            tip="Project Options"
+        >
+            <ToolbarDropdownButton
+                onClick={handleHTMLBuild}
             >
-                <li>
-                    <button
-                        onClick={handleDownload}
-                    >
-                        Export project
-                    </button>
-                </li>
-                <li>
-                    <button
-                        onClick={handleExportHTML}
-                    >
-                        Export project as .html
-                    </button>
-                </li>
-                <li>
-                    <label>
-                        <input
-                            type="file"
-                            className="hidden"
-                            onChange={handleProjectUpload}
-                            accept=".kaplay"
-                        />
-                        <span>Import project</span>
-                    </label>
-                </li>
-                <li>
-                    <button
-                        onClick={handleNewProject}
-                    >
-                        Create new project
-                    </button>
-                </li>
-                <li>
-                    <button
-                        onClick={handleNewExample}
-                    >
-                        Create new example
-                    </button>
-                </li>
-            </ul>
-        </div>
+                Build (HTML5)
+            </ToolbarDropdownButton>
+
+            <KDropdownMenuSeparator />
+
+            <ToolbarDropdownButton
+                onClick={handleImport}
+            >
+                Import
+            </ToolbarDropdownButton>
+
+            <ToolbarDropdownButton
+                onClick={handleExport}
+            >
+                Export
+            </ToolbarDropdownButton>
+
+            <KDropdownMenuSeparator />
+
+            <ToolbarDropdownButton
+                onClick={handleNewProject}
+            >
+                Create new project
+            </ToolbarDropdownButton>
+
+            <ToolbarDropdownButton
+                onClick={handleNewExample}
+            >
+                Create new example
+            </ToolbarDropdownButton>
+
+            <input
+                type="file"
+                className="hidden"
+                onChange={handleProjectUpload}
+                accept=".kaplay"
+                ref={newFileInput}
+            />
+        </ToolbarDropdown>
     );
 };
-
-export default Projects;

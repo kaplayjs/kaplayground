@@ -2,7 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import { toast } from "react-toastify";
 import { useProject } from "../../../features/Projects/stores/useProject";
 import { compressCode } from "../../../util/compressCode";
-import ToolbarButton from "../ToolbarButton";
+import { ToolbarButton } from "../ToolbarButton";
 
 export const ShareButton = () => {
     const kaplayVersion = useProject((s) => s.project.kaplayVersion);

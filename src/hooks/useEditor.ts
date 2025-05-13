@@ -11,6 +11,7 @@ import { MATCH_ASSET_URL_REGEX } from "../util/regex";
 type EditorRuntime = {
     editor: editor.IStandaloneCodeEditor | null;
     monaco: Monaco | null;
+    viewStates: Record<string, editor.ICodeEditorViewState | null>;
     currentFile: string;
     gylphDecorations: editor.IEditorDecorationsCollection | null;
     iframe: HTMLIFrameElement | null;
@@ -45,6 +46,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         iframe: null,
         console: null,
         isDefaultExample: false,
+        viewStates: {},
         currentSelection: null,
         kaplayVersions: [],
     },
@@ -57,11 +59,53 @@ export const useEditor = create<EditorStore>((set, get) => ({
         }));
     },
     getRuntime: () => get().runtime,
-    setCurrentFile: (currentFile) => {
+    setCurrentFile: (newCurrentFile) => {
+        const editor = get().runtime.editor;
+        const monaco = get().runtime.monaco;
+        const currentFile = get().runtime.currentFile;
+        const viewStates = get().runtime.viewStates;
+
+        if (!editor || !monaco) {
+            return set({
+                runtime: {
+                    ...get().runtime,
+                    currentFile: newCurrentFile,
+                },
+            });
+        }
+
+        // Previous view state saving
+        viewStates[currentFile] = editor.saveViewState();
+
+        // Model changing logic
+        let currentFileModel = monaco.editor.getModel(
+            monaco.Uri.file(newCurrentFile),
+        );
+
+        if (!currentFileModel) {
+            currentFileModel = monaco.editor.createModel(
+                useProject.getState().getFile(newCurrentFile)?.value ?? "",
+                "javascript",
+                monaco.Uri.file(newCurrentFile),
+            );
+        }
+
+        editor.setModel(currentFileModel);
+
+        // Load new view state
+        const viewState = viewStates[newCurrentFile];
+
+        if (viewState) {
+            editor.restoreViewState(viewState);
+        }
+
+        editor.focus();
+
         set((state) => ({
             runtime: {
                 ...state.runtime,
-                currentFile,
+                currentFile: newCurrentFile,
+                viewStates: viewStates,
             },
         }));
     },
@@ -80,7 +124,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         debug(
             0,
-            "[monaco] Editor value updated with",
+            "[monaco] Editor value forced updated with",
             currentFile.path.slice(0, 25) + "...",
         );
 
@@ -96,7 +140,9 @@ export const useEditor = create<EditorStore>((set, get) => ({
         });
     },
     run() {
-        const iframe = document.querySelector<HTMLIFrameElement>("#game-view");
+        const iframe = document.querySelector<HTMLIFrameElement>(
+            "#game-view",
+        );
         if (!iframe) return;
 
         // Refresh the iframe

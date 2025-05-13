@@ -2,8 +2,8 @@ import { assets } from "@kaplayjs/crew";
 import type { FC, PropsWithChildren } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
-import Projects from "./Projects";
-import ToolbarButton from "./ToolbarButton";
+import { ToolbarButton } from "./ToolbarButton";
+import { ToolbarProjectDropdown } from "./ToolbarProjectDropdown";
 import { AboutButton } from "./ToolButtons/AboutButton";
 import { ConfigButton } from "./ToolButtons/ConfigButton";
 import { ShareButton } from "./ToolButtons/ShareButton";
@@ -31,6 +31,7 @@ const ToolbarToolsMenu: FC = () => {
                     keys={["ctrl", "s"]}
                 />
             </ToolbarToolItem>
+
             {projectMode == "ex" && (
                 <ToolbarToolItem>
                     <ShareButton />
@@ -38,7 +39,7 @@ const ToolbarToolsMenu: FC = () => {
             )}
 
             <ToolbarToolItem>
-                <Projects />
+                <ToolbarProjectDropdown />
             </ToolbarToolItem>
 
             <ToolbarToolItem>

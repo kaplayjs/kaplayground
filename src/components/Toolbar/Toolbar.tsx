@@ -1,6 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import ExampleList from "./ExampleList";
-import ProjectStatus from "./ProjectStatus";
+import { ProjectStatus } from "./ProjectStatus";
 import ToolbarToolsMenu from "./ToolbarToolsMenu";
 
 export const Toolbar = () => {

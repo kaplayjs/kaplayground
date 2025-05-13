@@ -14,7 +14,7 @@ const generateKbdFromKeys = (keys: string[]) => {
         .join(" + ");
 };
 
-const ToolbarButton = forwardRef<Ref, Props>((props, ref) => {
+export const ToolbarButton = forwardRef<Ref, Props>((props, ref) => {
     return (
         <button
             className="btn btn-xs btn-ghost px-2 rounded-sm items-center justify-center h-full group-last:rounded-br-lg"
@@ -35,5 +35,3 @@ const ToolbarButton = forwardRef<Ref, Props>((props, ref) => {
         </button>
     );
 });
-
-export default ToolbarButton;

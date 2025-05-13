@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import ToolbarButton from "../ToolbarButton";
+import { ToolbarButton } from "../ToolbarButton";
 
 export const AboutButton = () => {
     const handleModalOpenClick = () => {

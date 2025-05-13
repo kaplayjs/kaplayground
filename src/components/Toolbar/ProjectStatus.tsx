@@ -4,7 +4,7 @@ import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
 
-const ProjectStatus = () => {
+export const ProjectStatus = () => {
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const saveNewProject = useProject((s) => s.saveNewProject);
@@ -12,7 +12,7 @@ const ProjectStatus = () => {
     const kaplayVersion = useProject((s) => s.project.kaplayVersion);
     const setProject = useProject((s) => s.setProject);
     const run = useEditor((s) => s.run);
-    const runtime = useEditor((s) => s.runtime);
+    const kaplayVersions = useEditor((s) => s.runtime.kaplayVersions);
     const projectName = useProject((s) => s.project.name);
     const projectKey = useProject((s) => s.projectKey);
     const demoKey = useProject((s) => s.demoKey);
@@ -184,12 +184,10 @@ const ProjectStatus = () => {
                 value={kaplayVersion}
             >
                 <option value={"master"} key={"no"}>master</option>
-                {runtime.kaplayVersions.map((v, i) => (
+                {kaplayVersions.map((v, i) => (
                     <option value={v} key={i}>{v}</option>
                 ))}
             </select>
         </div>
     );
 };
-
-export default ProjectStatus;
