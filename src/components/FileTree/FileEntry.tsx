@@ -44,8 +44,11 @@ const FileButton: FC<{
 };
 
 export const FileEntry: FC<Props> = ({ file }) => {
-    const { removeFile, project: project, setProject } = useProject();
-    const { getRuntime, setCurrentFile } = useEditor();
+    const removeFile = useProject((s) => s.removeFile);
+    const projectFiles = useProject((s) => s.project.files);
+    const setProject = useProject((s) => s.setProject);
+    const setCurrentFile = useEditor((s) => s.setCurrentFile);
+    const currentFile = useEditor((s) => s.runtime.currentFile);
 
     const isRoot = () => !file.path.includes("/");
 
@@ -70,7 +73,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         e.stopPropagation();
 
         // order the map with the file one step up
-        const files = project.files;
+        const files = projectFiles;
         const order = Array.from(files.keys());
         const index = order.indexOf(file.path);
 
@@ -86,7 +89,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         );
 
         setProject({
-            ...project,
+            ...projectFiles,
             files: newFiles,
         });
     };
@@ -95,7 +98,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         e.stopPropagation();
 
         // order the map with the file one step down
-        const files = project.files;
+        const files = projectFiles;
         const order = Array.from(files.keys());
         const index = order.indexOf(file.path);
 
@@ -111,7 +114,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
         );
 
         setProject({
-            ...project,
+            ...projectFiles,
             files: newFiles,
         });
     };
@@ -122,8 +125,8 @@ export const FileEntry: FC<Props> = ({ file }) => {
                 "file btn btn-sm w-full justify-start pl-2 pr-0.5 h-[1.875rem] min-h-0",
                 {
                     "font-normal pl-3": !isRoot(),
-                    "btn-primary": getRuntime().currentFile === file.path,
-                    "btn-ghost": getRuntime().currentFile !== file.path,
+                    "bg-base-100 hover:bg-base-100": currentFile === file.path,
+                    "btn-ghost": currentFile !== file.path,
                 },
             )}
             onClick={handleClick}

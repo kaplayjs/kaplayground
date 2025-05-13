@@ -19,7 +19,7 @@ type Props = {
 
 const AssetsPanel: React.FC<Props> = (props) => {
     const { addAsset } = useAssets({ kind: props.kind });
-    const { showNotification } = useEditor();
+    const showNotification = useEditor((s) => s.showNotification);
     const [isDragging, setIsDragging] = React.useState(false);
 
     const handleAssetUpload = async (acceptedFiles: File[]) => {

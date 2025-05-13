@@ -1,8 +1,9 @@
 import { assets } from "@kaplayjs/crew";
-import { type FC, type PropsWithChildren, useMemo, useState } from "react";
+import { type FC, type PropsWithChildren, useState } from "react";
 import { cn } from "../../util/cn";
 import { FileToolbar } from "./FileToolbar";
 import "./FileFolder.css";
+import { useShallow } from "zustand/react/shallow";
 import type { FileFolder } from "../../features/Projects/models/FileFolder";
 import type { FileKind } from "../../features/Projects/models/FileKind";
 import { useProject } from "../../features/Projects/stores/useProject";
@@ -26,11 +27,14 @@ const paddingLevels = {
 };
 
 export const FileFold: FC<Props> = (props) => {
+    const getFilesByFolder = useProject((s) => s.getFilesByFolder);
     const [folded, setFolded] = useState(props.folded ?? false);
-    const { getFilesByFolder, project: project } = useProject();
-    const files = useMemo(() => getFilesByFolder(props.folder), [
-        project.files.values(),
-    ]);
+
+    useProject(useShallow(s => {
+        return s.getTree(props.folder);
+    }));
+
+    const files = getFilesByFolder(props.folder);
 
     return (
         <div className={cn("mb-2", { "ml-2": props.level })}>

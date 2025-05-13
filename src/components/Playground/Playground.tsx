@@ -35,11 +35,8 @@ localStorage.setItem(
 const Playground = () => {
     const projectMode = useProject((state) => state.project.mode);
     const createNewProject = useProject((state) => state.createNewProject);
-    const createNewProjectFromDemo = useProject((state) =>
-        state.createNewProjectFromDemo
-    );
     const loadProject = useProject((state) => state.loadProject);
-    const loadSharedDemo = useProject((state) => state.loadSharedDemo);
+    const loadSharedDemo = useProject((state) => state.createFromShared);
     const setRuntime = useEditor((state) => state.setRuntime);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
@@ -50,25 +47,25 @@ const Playground = () => {
     };
 
     const loadShare = (sharedCode: string, sharedVersion?: string) => {
-        debug(0, "Importing shared code...", decompressCode(sharedCode));
+        debug(0, "[init] Importing shared code...", decompressCode(sharedCode));
         loadSharedDemo(decompressCode(sharedCode), sharedVersion);
         setLoadingProject(false);
     };
 
     const loadDemo = (demo: string) => {
-        debug(0, "Loading demo...", demo);
-        createNewProjectFromDemo(demo);
+        debug(0, "[init] Loading demo...", demo);
+        createNewProject("ex", undefined, demo);
         setLoadingProject(false);
     };
 
     const loadNewProject = () => {
-        debug(0, "No project found, creating a new one...");
+        debug(0, "[init] No project found, creating a new one...");
         createNewProject("pj");
         setLoadingProject(false);
     };
 
     const loadLastOpenedProject = (lastOpenedProjectId: string) => {
-        debug(0, "[project] Loading last opened project...");
+        debug(0, "[init] Loading last opened project...");
         loadProject(lastOpenedProjectId);
         setLoadingProject(false);
     };

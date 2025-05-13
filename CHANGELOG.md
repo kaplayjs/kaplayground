@@ -2,6 +2,24 @@
 
 Format: Major.Minor.Patch (Y/M/D)
 
+## [2.3.0] - 2025-05-12
+
+### Added
+
+- Now file state (cursor position, selected, scroll, undo/redo) is saved and preserved
+  when switching between files
+- Better UI in Project Dropdown in Toolbar
+
+### Changed
+
+- `Project.id` is depracted inside `.kaplay` files, you can safely remove it
+
+### Fixed
+
+- Fixed bugs in the editor
+- Rendering Optimization
+- Bean added to Project Core
+
 ## [2.2.2] - 2025-05-5
 
 ### Fixed

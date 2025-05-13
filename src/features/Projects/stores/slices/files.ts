@@ -29,6 +29,13 @@ export interface FilesSlice {
     getMainFile: () => File | null;
     /** Get a file */
     getFile: (path: string) => File | null;
+    /**
+     * Search
+     *
+     * @param path To saerch for tree
+     * @returns Tree of file paths
+     */
+    getTree: (path: string) => string[];
     /** Get files by folder */
     getFilesByFolder: (folder: FileFolder) => File[];
 }
@@ -38,22 +45,22 @@ kaplay(${config});
 `;
 
 export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
-    (set, get) => ({
+    (_set, get) => ({
         addFile(file) {
-            debug(0, "Adding file", file.path);
+            debug(0, "[files] Adding file", file.path);
             get().project.files.set(file.path, file);
-            set({});
+            get().setProject({});
         },
 
         removeFile(path) {
-            debug(0, "Removing file", path);
+            debug(0, "[files] Removing file", path);
             const files = get().project.files;
 
             const foundFile = files.has(path) ? files.get(path) : null;
             if (!foundFile) return console.debug("File not found", path);
 
             get().project.files.delete(path);
-            set({});
+            get().setProject({});
         },
 
         getFile(path) {
@@ -61,29 +68,18 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
         },
 
         updateFile(path, value) {
-            debug(0, "[files] Updating file", path);
             const files = get().project.files;
 
             const foundFile = files.has(path) ? files.get(path) : null;
-            if (!foundFile) return debug(2, "File not found", path);
+            if (!foundFile) throw new Error("[files] File not found");
 
-            if (get().getProject().isDefault) {
-                debug(0, "Default project, dettaching", path);
-                get().setProject({
-                    isDefault: false,
-                });
-            }
+            debug(0, "[files] Updating file", foundFile.path);
 
-            get().addFile({
+            get().project.files.set(foundFile.path, {
                 ...foundFile,
                 value,
             });
-
-            get().setProject({
-                updatedAt: new Date().toISOString(),
-            });
-
-            set({});
+            get().setProject({});
         },
 
         getKAPLAYFile() {
@@ -96,6 +92,19 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
 
         getAssetsFile() {
             return get().getFile("assets.js");
+        },
+
+        getTree(path) {
+            const files = get().project.files;
+            const tree: string[] = [];
+
+            for (const file of files.values()) {
+                if (file.path.startsWith(path)) {
+                    tree.push(file.path);
+                }
+            }
+
+            return tree;
         },
 
         getFilesByFolder(folder) {

@@ -4,7 +4,7 @@ import {
     defaultExampleFile,
     defaultProject,
 } from "../../../../config/defaultProject";
-import { demos } from "../../../../data/demos";
+import { demos, type Example } from "../../../../data/demos";
 import examplesList from "../../../../data/exampleList.json";
 import { useConfig } from "../../../../hooks/useConfig";
 import { useEditor } from "../../../../hooks/useEditor";
@@ -13,33 +13,115 @@ import type { Asset } from "../../models/Asset";
 import type { File } from "../../models/File";
 import type { Project } from "../../models/Project";
 import type { ProjectMode } from "../../models/ProjectMode";
-import { type ProjectStore, useProject } from "../useProject.ts";
+import { type ProjectStore } from "../useProject.ts";
 
 export interface ProjectSlice {
+    /**
+     * Current project associated localStorage key
+     */
+    projectKey: string | null;
+    /**
+     * Set current project associated localStorage key
+     */
+    setProjectKey: (key: string | null) => void;
+    /**
+     * Get current demo key
+     */
+    demoKey: string | null;
+    /**
+     * Set current demo key
+     */
+    setDemoKey: (key: string | null) => void;
+    /**
+     * Current project
+     */
     project: Project;
-    getProject(): Project;
+    /**
+     * Set current project
+     *
+     * @param project - Project to set
+     */
     setProject(project: Partial<Project>): void;
     /**
      * Creates a new project inside KAPLAYGROUND
      *
      * @param mode - Project mode, example or project
-     * @param demoId - Optional demo id to load a demo (as a fallback of createNewProjectFromDemo)
+     * @param replace - Optional project to replace in creation
+     * @param demoName - Optional demo name to load as a demo
      */
-    createNewProject: (mode: ProjectMode, demoId?: number) => void;
-    createNewProjectFromDemo: (demoId: number | string) => void;
-    projectIsSaved: (id: string, mode: ProjectMode) => boolean;
-    getSavedProjects: (filter?: ProjectMode) => string[];
-    getProjectMetadata: (id: string) => object;
-    saveProject: (newProjectId: string, oldProjectId: string) => void;
-    loadProject: (projectId: string, replaceProject?: Project) => void;
-    loadSharedDemo: (sharedCode: string, sharedVersion?: string) => void;
+    createNewProject(
+        mode: ProjectMode,
+        replace?: Partial<Project>,
+        demoName?: string,
+        isShared?: boolean,
+    ): void;
+    getProjectMetadata: (id: string) => Example;
+    createFromShared: (sharedCode: string, sharedVersion?: string) => void;
     setDefaultProjectFiles: (
         mode: ProjectMode,
         files: Map<string, File>,
         assets: Map<string, Asset>,
     ) => void;
-    currentSelection: string | null;
-    setCurrentSelection: (id: string | null) => void;
+    /**
+     * Save current project in localStorage
+     */
+    saveProject: () => void;
+    /**
+     * Save current project as a new project in localStorage
+     */
+    saveNewProject(): void;
+    /**
+     * Load a project from localStorage
+     *
+     * @param id - Project id
+     * @returns
+     */
+    loadProject: (id: string) => void;
+    /**
+     * Current project edited state
+     */
+    projectWasEdited: boolean;
+    /**
+     * Set current project edited state
+     */
+    setProjectWasEdited: (bool: boolean) => void;
+    /**
+     * Check if a project is saved in localStorage
+     *
+     * @param id - Project id
+     * @returns If the project is saved
+     */
+    projectIsSaved(id: string): boolean;
+    /**
+     * Get all saved projects in localStorage
+     *
+     * @param filter - Filter for the projects
+     */
+    getSavedProjects: (filter?: ProjectMode) => string[];
+    /**
+     * Generate a new id for a project
+     *
+     * @param prefix - Prefix for the id
+     */
+    generateId(prefix: ProjectMode): string;
+    /**
+     * Generate a name from an id
+     *
+     * @param prefix - Prefix for the id
+     */
+    generateName(id: string, prefix: ProjectMode, isShared?: boolean): string;
+    /**
+     * Serialize the current project to a string
+     *
+     * @returns Serialized project
+     */
+    serializeProject(): string;
+    /**
+     * Unserialize a project from localStorage
+     *
+     * @param id - Project id
+     */
+    unserializeProject(id: string): Project;
 }
 
 export const createProjectSlice: StateCreator<
@@ -53,142 +135,42 @@ export const createProjectSlice: StateCreator<
         version: "2.0.0",
         files: new Map(),
         assets: new Map(),
-        kaplayConfig: {},
         mode: "pj",
         kaplayVersion: examplesList[0].version,
-        id: `upj-Untitled`,
         createdAt: "",
         updatedAt: "",
     },
-    getProject: () => {
-        return get().project;
+    projectKey: null,
+    setProjectKey(key) {
+        set(() => ({
+            projectKey: key,
+        }));
+    },
+    demoKey: null,
+    setDemoKey(key) {
+        set(() => ({
+            demoKey: key,
+        }));
     },
     setProject: (project) => {
         set(() => ({
             project: {
                 ...get().project,
                 ...project,
+                updatedAt: new Date().toISOString(),
             },
         }));
+
+        get().saveProject();
     },
-    currentSelection: null,
-    setCurrentSelection: (sel) => set({ currentSelection: sel }),
-    createNewProject: (filter: ProjectMode, demoId?: number) => {
-        const files = new Map<string, File>();
-        const assets = new Map<string, Asset>();
-        const lastVersion = get().project.kaplayVersion;
-
-        let version = examplesList[0].version;
-        let id = `u${filter}-Untitled`;
-
-        if (filter === "pj") {
-            // Create a new project with default files and assets
-            get().setDefaultProjectFiles("pj", files, assets);
-            debug(2, "Default files loaded");
-        } else if (demoId !== undefined) {
-            // Load a demo
-            const foundDemo = demos.find((demo) => {
-                return demo.id === demoId;
-            });
-
-            if (foundDemo === undefined) {
-                debug(2, `[project] Demo with id ${demoId} not found`);
-                return;
-            }
-
-            files.set("main.js", {
-                kind: "main",
-                language: "javascript",
-                name: "main.js",
-                path: "main.js",
-                value: foundDemo.code,
-            });
-
-            id = foundDemo.name;
-            version = foundDemo.version;
-
-            debug(0, "[project] Demo loaded", foundDemo.name);
-        } else {
-            // Create a new project with default files and assets for examples
-            get().setDefaultProjectFiles("ex", files, assets);
-            debug(1, "New files for the new example project", files, assets);
-        }
-
-        useEditor.getState().update(files.get("main.js")?.value);
-        useEditor.getState().setCurrentFile("main.js");
-
-        useProject.persist.setOptions({
-            name: `u${filter}-Untitled`,
-        });
-        useProject.persist.rehydrate();
-
-        useConfig.getState().setConfig({
-            lastOpenedProject: `u${filter}-Untitled`,
-        });
-
-        if (lastVersion !== version) {
-            toast(
-                `KAPLAY version updated to ${version} for this example. May take a few seconds to load.`,
-            );
-        }
-
+    projectWasEdited: false,
+    setProjectWasEdited(bool) {
         set(() => ({
-            project: {
-                name: `${filter}#${get().getSavedProjects("pj").length}`,
-                version: "2.0.0",
-                files: files,
-                assets: assets,
-                kaplayConfig: {},
-                mode: filter,
-                kaplayVersion: version,
-                isDefault: demoId ? true : false,
-                id: id,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            },
+            projectWasEdited: bool,
         }));
-
-        get().setCurrentSelection(get().project.id);
-
-        // Editor stuff
-        useEditor.getState().updateAndRun();
     },
-    createNewProjectFromDemo(demoId: number | string) {
-        if (typeof demoId === "string") {
-            const demoIndex = demos.findIndex((d) => {
-                return d.name == demoId;
-            });
-
-            demoId = demoIndex;
-        }
-        get().createNewProject("ex", demoId);
-    },
-    saveProject: (id: string, oldId: string) => {
-        useProject.persist.setOptions({
-            name: `${get().project.mode}-${id}`,
-        });
-
-        useProject.persist.rehydrate();
-
-        localStorage.removeItem(oldId);
-
-        useConfig.getState().setConfig({
-            lastOpenedProject: `${get().project.mode}-${id}`,
-        });
-
-        set({
-            project: {
-                ...get().project,
-                name: id,
-                id: `${get().project.mode}-${id}`,
-                updatedAt: new Date().toISOString(),
-            },
-        });
-
-        get().setCurrentSelection(get().project.id);
-    },
-    projectIsSaved: (name: string, filter: "pj" | "ex") => {
-        return get().getSavedProjects().includes(`${filter}-${name}`);
+    projectIsSaved: (id: string) => {
+        return get().getSavedProjects().includes(id);
     },
     getSavedProjects: (filter) => {
         const keys: string[] = [];
@@ -210,29 +192,31 @@ export const createProjectSlice: StateCreator<
 
         return keys;
     },
-    getProjectMetadata(id: string): object {
-        const data = JSON.parse(localStorage.getItem(id) ?? "")?.state
-            ?.project;
-
-        if (!data) return {};
-
-        const mode = data.id.split("-")[0];
-
-        return {
-            formattedName: data.id.slice(3),
-            name: data.id,
-            type: mode == "pj" ? "Projects" : "Examples",
+    getProjectMetadata(key) {
+        const project = get().unserializeProject(key);
+        const metadata = {
+            key: key,
+            name: project.name,
+            formattedName: project.name,
+            type: project.mode == "pj" ? "Projects" : "Examples",
+            category: "KAPLAY",
+            code: "",
+            group: "",
+            minVersion: "",
+            sortName: project.name,
+            locked: false,
             tags: [
-                ...mode == "pj"
+                ...project.mode == "pj"
                     ? [{ name: "project", displayName: "Project" }]
                     : [{ name: "example", displayName: "Example" }],
             ],
             description: "",
-            id: 0,
-            version: "2.0.0",
-            createdAt: data?.createdAt ?? "",
-            updatedAt: data?.updatedAt ?? "",
+            version: project.version,
+            createdAt: project?.createdAt ?? "",
+            updatedAt: project?.updatedAt ?? "",
         };
+
+        return metadata satisfies Example;
     },
     setDefaultProjectFiles: (mode, files, assets) => {
         if (mode === "pj") {
@@ -252,57 +236,215 @@ export const createProjectSlice: StateCreator<
             });
         }
     },
-    // Should be used to load already created projects
-    // If not, createProject or createProjectFromExample should be used
-    loadProject(projectId: string, replaceProject?: Project) {
-        useProject.persist.setOptions({
-            name: projectId,
-        });
 
-        if (replaceProject) {
+    // #region Project Creation
+
+    createNewProject(
+        filter,
+        replace,
+        demoName,
+        isShared,
+    ) {
+        const files = new Map<string, File>();
+        const assets = new Map<string, Asset>();
+        const lastVersion = get().project.kaplayVersion;
+        const possibleId = get().generateId(filter);
+
+        let version = examplesList[0].version;
+
+        if (filter === "ex") {
+            if (demoName) {
+                const foundDemo = demos.find((demo) => {
+                    return demo.name == demoName;
+                });
+
+                if (foundDemo === undefined) {
+                    debug(2, `[project] Demo with id ${demoName} not found`);
+                    return;
+                }
+
+                files.set("main.js", {
+                    kind: "main",
+                    language: "javascript",
+                    name: "main.js",
+                    path: "main.js",
+                    value: foundDemo.code,
+                });
+
+                version = foundDemo.version;
+
+                debug(1, "[project] Demo loaded", foundDemo.name);
+            } else {
+                // Create a new project with default files and assets for examples
+                get().setDefaultProjectFiles("ex", files, assets);
+                debug(1, "[project] New files for the new example project");
+            }
+        } else {
+            // Create a new project with default files and assets
+            get().setDefaultProjectFiles("pj", files, assets);
+            debug(2, "Default files loaded");
+        }
+
+        if (lastVersion !== version) {
+            toast(
+                `KAPLAY version updated to ${version} for this example. May take a few seconds to load.`,
+            );
+        }
+
+        set(() => ({
+            project: {
+                name: get().generateName(possibleId, filter, isShared),
+                version: "2.0.0", // fixed project version
+                files: files,
+                assets: assets,
+                mode: filter,
+                kaplayVersion: version,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            },
+        }));
+
+        if (replace) {
             set({
                 project: {
-                    ...replaceProject,
+                    ...get().project,
+                    ...replace,
                 },
             });
         }
 
-        useProject.persist.rehydrate();
-
-        useConfig.getState().setConfig({
-            lastOpenedProject: projectId,
-        });
-
-        set({});
-
-        get().setCurrentSelection(get().project.id);
-
-        // Editor stuff
+        // Editor update
+        get().setProjectKey(null);
+        get().setDemoKey(demoName ?? null);
+        useEditor.getState().setCurrentFile("main.js");
         useEditor.getState().updateAndRun();
     },
-    loadSharedDemo(sharedCode: string, sharedVersion?: string) {
-        get().loadProject("ex-shared", {
-            assets: new Map(),
-            files: new Map([
-                [
-                    "main.js",
-                    {
-                        kind: "main",
-                        language: "javascript",
-                        name: "main.js",
-                        path: "main.js",
-                        value: sharedCode,
-                    },
-                ],
-            ]),
-            mode: "ex",
-            id: "ex-shared",
-            kaplayVersion: sharedVersion ?? examplesList[0].version,
-            name: "Shared Example",
-            version: "2.0.0",
-            isDefault: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+
+    createFromShared(sharedCode, sharedVersion) {
+        get().createNewProject(
+            "ex",
+            {
+                assets: new Map(),
+                files: new Map([
+                    [
+                        "main.js",
+                        {
+                            kind: "main",
+                            language: "javascript",
+                            name: "main.js",
+                            path: "main.js",
+                            value: sharedCode,
+                        },
+                    ],
+                ]),
+                kaplayVersion: sharedVersion ?? examplesList[0].version,
+            },
+            undefined,
+            true,
+        );
+    },
+
+    // #endregion
+
+    // #region Project saving
+
+    saveProject() {
+        const id = get().projectKey;
+
+        if (id) {
+            debug(0, "[project] Saving changes...");
+            localStorage.setItem(id, get().serializeProject());
+            get().setProjectWasEdited(true);
+        }
+    },
+
+    saveNewProject() {
+        debug(0, "[project] Saving new project...");
+
+        const id = get().generateId(get().project.mode);
+        localStorage.setItem(id, get().serializeProject());
+
+        get().setProjectKey(id);
+        get().setDemoKey(null);
+
+        // Update other stores
+        useConfig.getState().setConfig({
+            lastOpenedProject: id,
         });
     },
+
+    loadProject(id) {
+        debug(0, "[project] Loading project", id);
+
+        const project = get().unserializeProject(id);
+
+        set({
+            project: {
+                ...project,
+                files: new Map(project.files),
+                assets: new Map(project.assets),
+            },
+        });
+
+        get().setProjectKey(id);
+        get().setDemoKey(null);
+        get().setProjectWasEdited(false);
+
+        // Editor stuff
+        useConfig.getState().setConfig({
+            lastOpenedProject: id,
+        });
+        useEditor.getState().updateAndRun();
+    },
+
+    generateId(prefix) {
+        const countWithPrefix = get().getSavedProjects(prefix).length;
+        const id = `${prefix}-${countWithPrefix + 1}`;
+
+        return id;
+    },
+
+    generateName(id, prefix, isShared = false) {
+        const formattedName = prefix == "ex" ? "Example" : "Project";
+        const isSharedName = isShared ? "(Shared)" : "";
+        return `${formattedName} #${
+            id.replace(`${prefix}-`, "")
+        } ${isSharedName}`;
+    },
+
+    serializeProject() {
+        const project = get().project;
+
+        return JSON.stringify({
+            ...project,
+            files: Array.from(project.files.entries()),
+            assets: Array.from(project.assets.entries()),
+        });
+    },
+
+    unserializeProject(id: string) {
+        const projectSerialized = localStorage.getItem(id);
+
+        if (!projectSerialized) {
+            throw new Error(
+                `Tried to load a project that doesn't exist: ${id}`,
+            );
+        }
+
+        const savedProject = JSON.parse(projectSerialized);
+        let project = null;
+
+        if (savedProject.state?.project) {
+            project = savedProject.state.project;
+        } else {
+            project = savedProject;
+        }
+
+        return {
+            ...project,
+            files: new Map(project.files),
+            assets: new Map(project.assets),
+        };
+    },
+    // #endregion
 });
