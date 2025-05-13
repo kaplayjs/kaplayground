@@ -7,8 +7,9 @@ const toDataUrl = (data: string) => {
 };
 
 export async function buildProject() {
-    const code = wrapCode();
+    const code = await wrapCode();
     const kaplayLib = await getVersion(true);
+
     if (!kaplayLib) {
         throw new Error("Failed to fetch the library");
     }

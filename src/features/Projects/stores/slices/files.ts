@@ -29,6 +29,8 @@ export interface FilesSlice {
     getMainFile: () => File | null;
     /** Get a file */
     getFile: (path: string) => File | null;
+    /** Check if path exists */
+    hasFile: (path: string) => boolean;
     /**
      * Search
      *
@@ -36,6 +38,18 @@ export interface FilesSlice {
      * @returns Tree of file paths
      */
     getTree: (path: string) => string[];
+    /**
+     * Get the relative path to import a file
+     *
+     * @param path - The path to the file
+     * @param toImportPath - The path to import
+     * @returns
+     */
+    getImport(path: string, toImportPath: string): string;
+    /**
+     * Search for relative imports
+     */
+    getRelativeImports: (path: string, toImportPath: string) => string[];
     /** Get files by folder */
     getFilesByFolder: (folder: FileFolder) => File[];
 }
@@ -64,7 +78,38 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
         },
 
         getFile(path) {
-            return get().project.files.get(path) ?? null;
+            path = path.replace(/^\/|\/$/g, "");
+            const hasExtension = path.includes(".");
+            let file;
+
+            if (hasExtension) {
+                file = get().project.files.get(path);
+            } else {
+                const tsFile = get().project.files.get(path + ".ts");
+                const jsFile = get().project.files.get(path + ".js");
+
+                file = tsFile ?? jsFile;
+            }
+
+            return file ?? null;
+        },
+
+        hasFile(path) {
+            // normalize path
+            path = path.replace(/^\/|\/$/g, "");
+            const hasExtension = path.includes(".");
+            let file;
+
+            if (hasExtension) {
+                file = get().project.files.get(path);
+            } else {
+                const tsFile = get().project.files.get(path + ".ts");
+                const jsFile = get().project.files.get(path + ".js");
+
+                file = tsFile ?? jsFile;
+            }
+
+            return !!file;
         },
 
         updateFile(path, value) {
@@ -95,6 +140,8 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
         },
 
         getTree(path) {
+            // normalize path
+            path = path.replace(/^\/|\/$/g, "");
             const files = get().project.files;
             const tree: string[] = [];
 
@@ -105,6 +152,35 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
             }
 
             return tree;
+        },
+
+        // should combine getImport and getTree for return relative imports from path
+        getRelativeImports(path, toImportPath) {
+            const files = get().getTree(path);
+            return files.map(filePath => get().getImport(path, filePath));
+        },
+
+        // this should return ../../assets or ../objects/file.js or ./kaplay.js
+        getImport(path, toImportPath) {
+            // normalize path
+            path = path.replace(/^\/|\/$/g, "");
+            toImportPath = toImportPath.replace(/^\/|\/$/g, "");
+
+            const pathParts = path.split("/");
+            const toImportPathParts = toImportPath.split("/");
+            const commonParts = pathParts.filter((part, index) => {
+                return part === toImportPathParts[index];
+            });
+            const relativePath = toImportPathParts.slice(commonParts.length);
+            const relativePathLength = relativePath.length;
+            const pathLength = pathParts.length - relativePathLength;
+            const relativePathParts = pathParts.slice(0, pathLength);
+            const relativePathString = relativePathParts
+                .map(() => "..")
+                .concat(relativePath)
+                .join("/");
+
+            return relativePathString;
         },
 
         getFilesByFolder(folder) {

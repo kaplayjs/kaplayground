@@ -75,7 +75,12 @@ export const MonacoEditor: FC<Props> = (props) => {
             updateImageDecorations();
         });
 
-        editor.onDidChangeModel(() => {
+        editor.onDidChangeModel((e) => {
+            console.log(
+                "tried to change model to",
+                e.oldModelUrl,
+                e.newModelUrl,
+            );
             updateImageDecorations();
         });
 
