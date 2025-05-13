@@ -1,6 +1,6 @@
 import { languages } from "monaco-editor";
 import { useEditor } from "../../hooks/useEditor.ts";
-import { compMap } from "./snippets/compSnippets.ts";
+import { compMap } from "./monaco/snippets/compSnippets.ts";
 
 type CompletionProviderFunc =
     languages.CompletionItemProvider["provideCompletionItems"];

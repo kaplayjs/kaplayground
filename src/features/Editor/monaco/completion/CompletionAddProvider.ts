@@ -5,7 +5,7 @@ import {
     type Position,
 } from "monaco-editor";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import { useEditor } from "../../../hooks/useEditor";
+import { useEditor } from "../../../../hooks/useEditor";
 import { compMap } from "../snippets/compSnippets";
 
 export class CompletionAddProvider implements languages.CompletionItemProvider {

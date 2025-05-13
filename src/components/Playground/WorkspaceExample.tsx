@@ -1,6 +1,6 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
-import { MonacoEditor } from "../../features/Editor/MonacoEditor.tsx";
+import { MonacoEditor } from "../../features/Editor/components/MonacoEditor.tsx";
 import { allotmentStorage } from "../../util/allotmentStorage.ts";
 import { cn } from "../../util/cn";
 import { scrollbarSize } from "../../util/scrollbarSize.ts";
