@@ -1,8 +1,8 @@
 import type { Monaco } from "@monaco-editor/react";
 import docTs from "../../../lib.d.ts?raw";
-import { useProject } from "../../features/Projects/stores/useProject";
-import { useEditor } from "../../hooks/useEditor";
-import { DATA_URL_REGEX } from "../../util/regex";
+import { useEditor } from "../../hooks/useEditor.ts";
+import { DATA_URL_REGEX } from "../../util/regex.ts";
+import { useProject } from "../Projects/stores/useProject.ts";
 import { CompletionAddProvider } from "./completion/CompletionAddProvider";
 import { KSnippetsProvider } from "./completion/KSnippets.ts";
 import { themes } from "./themes/themes.ts";

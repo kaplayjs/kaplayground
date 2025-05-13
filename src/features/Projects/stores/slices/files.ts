@@ -155,7 +155,7 @@ export const createFilesSlice: StateCreator<ProjectStore, [], [], FilesSlice> =
         },
 
         // should combine getImport and getTree for return relative imports from path
-        getRelativeImports(path, toImportPath) {
+        getRelativeImports(path) {
             const files = get().getTree(path);
             return files.map(filePath => get().getImport(path, filePath));
         },
