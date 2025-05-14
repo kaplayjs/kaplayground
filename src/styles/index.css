@@ -110,7 +110,3 @@ html, body, #root {
     }
 }
 
-.monaco-editor .suggest-widget .monaco-list-row .codicon-customImport {
-    background: url('https://replit.com/public/images/mark.png') no-repeat center center;
-    background-size: contain;
-}
