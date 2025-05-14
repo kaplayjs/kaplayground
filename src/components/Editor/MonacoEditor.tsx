@@ -200,6 +200,7 @@ export const MonacoEditor: FC<Props> = (props) => {
                     },
                     overviewRulerBorder: false,
                     hideCursorInOverviewRuler: true,
+                    wordWrap: getConfig().wordWrap ? "on" : "off",
                 }}
             />
         </div>
