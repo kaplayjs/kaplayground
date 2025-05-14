@@ -9,12 +9,16 @@ export const formatAction = (
     label: "Format file using KAPLAYGROUND",
     contextMenuGroupId: "navigation",
     contextMenuOrder: 1.5,
-    run: () => {
-        editor.getAction("editor.action.formatDocument")?.run();
-        const canvas = useEditor.getState().runtime.confettiCanvas;
+    run: async () => {
+        const canvas = useEditor.getState().runtime.confettiCanvas!;
+        const oldContent = editor.getValue();
 
-        if (!canvas) {
-            throw new Error("Canvas not found");
+        await editor.getAction("editor.action.formatDocument")?.run();
+
+        const newContent = editor.getValue();
+
+        if (oldContent === newContent) {
+            return;
         }
 
         if (!useConfig.getState().config.funFormat) return;

@@ -1,6 +1,6 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useConfig } from "../../../hooks/useConfig.ts";
 import { useEditor } from "../../../hooks/useEditor.ts";
 import { useProject } from "../../Projects/stores/useProject.ts";
@@ -136,6 +136,14 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         run();
     };
 
+    useEffect(() => {
+        useConfig.subscribe((state) => {
+            useEditor.getState().runtime.editor?.updateOptions({
+                wordWrap: state.config.wordWrap ? "on" : "off",
+            });
+        });
+    }, []);
+
     return (
         <div id="monaco-editor-wrapper" className="h-full rounded-xl relative">
             <Editor
@@ -144,7 +152,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 defaultValue={getFile(getRuntime().currentFile)?.value}
                 beforeMount={handleEditorBeforeMount}
                 onMount={handleEditorMount}
-                theme={localStorage.getItem("theme") || "Spiker"}
+                theme={"Spiker"}
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
