@@ -1,8 +1,10 @@
 import { assets } from "@kaplayjs/crew";
+import * as esbuild from "esbuild-wasm";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig";
 import { useEditor } from "../../hooks/useEditor.ts";
@@ -35,7 +37,6 @@ localStorage.setItem(
 const Playground = () => {
     const projectMode = useProject((state) => state.project.mode);
     const createNewProject = useProject((state) => state.createNewProject);
-    const loadProject = useProject((state) => state.loadProject);
     const loadSharedDemo = useProject((state) => state.createFromShared);
     const setRuntime = useEditor((state) => state.setRuntime);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
@@ -79,22 +80,29 @@ const Playground = () => {
             });
         });
 
-        // Loading the project, default project, shared project, etc.
-        const urlParams = new URLSearchParams(window.location.search);
-        const lastOpenedPj = useConfig.getState().getConfig().lastOpenedProject;
-        const sharedCode = urlParams.get("code");
-        const sharedVersion = urlParams.get("version");
-        const exampleName = urlParams.get("example");
+        // Initialize ESBuild
+        esbuild.initialize({
+            wasmURL: "https://unpkg.com/esbuild-wasm/esbuild.wasm",
+            worker: true,
+        }).then(() => {
+            // Loading the project, default project, shared project, etc.
+            const urlParams = new URLSearchParams(window.location.search);
+            const lastOpenedPj =
+                useConfig.getState().getConfig().lastOpenedProject;
+            const sharedCode = urlParams.get("code");
+            const sharedVersion = urlParams.get("version");
+            const exampleName = urlParams.get("example");
 
-        if (sharedCode) {
-            loadShare(sharedCode, sharedVersion ?? undefined);
-        } else if (exampleName) {
-            loadDemo(exampleName);
-        } else if (lastOpenedPj) {
-            loadLastOpenedProject(lastOpenedPj);
-        } else {
-            loadNewProject();
-        }
+            if (sharedCode) {
+                loadShare(sharedCode, sharedVersion ?? undefined);
+            } else if (exampleName) {
+                loadDemo(exampleName);
+            } else if (lastOpenedPj) {
+                loadLastOpenedProject(lastOpenedPj);
+            } else {
+                loadNewProject();
+            }
+        });
     }, []);
 
     if (loadingProject) {

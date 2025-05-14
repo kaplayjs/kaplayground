@@ -4,6 +4,7 @@ import { useEditor } from "../../../hooks/useEditor.ts";
 import { DATA_URL_REGEX } from "../../../util/regex.ts";
 import { useProject } from "../../Projects/stores/useProject.ts";
 import { CompletionAddProvider } from "./completion/CompletionAddProvider.ts";
+import { ImportPathCompletionProvider } from "./completion/ImportPathCompletionProvider";
 import { KSnippetsProvider } from "./completion/KSnippets.ts";
 import { themes } from "./themes/themes.ts";
 
@@ -113,6 +114,11 @@ export const configMonaco = (monaco: Monaco) => {
     monaco.languages.registerCompletionItemProvider(
         "javascript",
         new CompletionAddProvider(),
+    );
+
+    monaco.languages.registerCompletionItemProvider(
+        "javascript",
+        new ImportPathCompletionProvider(),
     );
 
     // Themes

@@ -2,6 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import type { FC } from "react";
 import type { Tag } from "../../data/demos";
+import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { cn } from "../../util/cn";
 
@@ -41,7 +42,6 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
     { project, isProject, toggleTag },
 ) => {
     const createNewProject = useProject((s) => s.createNewProject);
-    const loadProject = useProject((s) => s.loadProject);
     const projectKey = useProject((s) => s.projectKey);
     const demoKey = useProject((s) => s.demoKey);
     const isCurrent = projectKey == project.key || demoKey == project.key;

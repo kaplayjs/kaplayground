@@ -1,9 +1,8 @@
 import type { FileKind } from "./FileKind";
 
-export type File = {
-    name: string;
+export interface File {
     path: string;
     language: string;
     value: string;
     kind: FileKind;
-};
+}

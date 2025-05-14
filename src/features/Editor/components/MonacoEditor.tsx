@@ -4,6 +4,7 @@ import { type FC, useEffect } from "react";
 import { useConfig } from "../../../hooks/useConfig.ts";
 import { useEditor } from "../../../hooks/useEditor.ts";
 import { useProject } from "../../Projects/stores/useProject.ts";
+import { loadFileInModel } from "../application/loadFileInModel";
 import { formatAction } from "../monaco/actions/format.ts";
 import { createConfetti } from "../monaco/fun/createConfetti";
 import { configMonaco } from "../monaco/monacoConfig.ts";
@@ -134,6 +135,10 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
 
         updateImageDecorations();
         run();
+
+        for (const file of useProject.getState().project.files.values()) {
+            loadFileInModel(file);
+        }
     };
 
     useEffect(() => {
