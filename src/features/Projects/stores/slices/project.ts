@@ -278,6 +278,14 @@ export const createProjectSlice: StateCreator<
             });
         }
 
+        if (demoName) {
+            window.history.replaceState(
+                {},
+                "",
+                `${window.location.origin}/?example=${demoName}`,
+            );
+        }
+
         get().setProjectKey(null);
         get().setDemoKey(demoName ?? null);
 
