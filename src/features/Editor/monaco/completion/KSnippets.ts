@@ -6,7 +6,8 @@ import {
 } from "monaco-editor";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
-export class KAPLAYSnippets implements languages.CompletionItemProvider {
+export class KSnippetsProvider implements languages.CompletionItemProvider {
+    triggerCharacters = ["k-"];
     provideCompletionItems(
         _model: editor.ITextModel,
         position: Position,

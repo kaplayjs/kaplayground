@@ -1,4 +1,5 @@
 import type { Monaco } from "@monaco-editor/react";
+import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
@@ -8,16 +9,48 @@ import { parseAssetPath } from "../util/assetsParsing";
 import { debug } from "../util/logs";
 import { MATCH_ASSET_URL_REGEX } from "../util/regex";
 
-type EditorRuntime = {
+interface EditorRuntime {
+    /**
+     * The monaco code editor instance
+     */
     editor: editor.IStandaloneCodeEditor | null;
+    /**
+     * The monaco instance
+     */
     monaco: Monaco | null;
+    /**
+     * The stored view states for each file
+     */
     viewStates: Record<string, editor.ICodeEditorViewState | null>;
+    /**
+     * The current selection in the editor
+     */
     currentFile: string;
+    /**
+     * Decorations for the gylph images
+     */
     gylphDecorations: editor.IEditorDecorationsCollection | null;
+    /**
+     * Iframe element for the game view
+     */
     iframe: HTMLIFrameElement | null;
+    /**
+     * Console element for the game view
+     */
     console: Console | null;
+    /**
+     * Versions cached
+     */
     kaplayVersions: string[];
-};
+    /**
+     * The confetti canvas
+     */
+    confettiCanvas:
+        | HTMLCanvasElement & {
+            confetti: confetti.CreateTypes;
+        }
+        | null;
+}
 
 export interface EditorStore {
     runtime: EditorRuntime;
@@ -45,10 +78,9 @@ export const useEditor = create<EditorStore>((set, get) => ({
         gylphDecorations: null,
         iframe: null,
         console: null,
-        isDefaultExample: false,
         viewStates: {},
-        currentSelection: null,
         kaplayVersions: [],
+        confettiCanvas: null,
     },
     setRuntime: (runtime) => {
         set((state) => ({

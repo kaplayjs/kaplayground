@@ -90,7 +90,7 @@ export const FileFold: FC<Props> = (props) => {
                     : (
                         files.map((file) => {
                             return (
-                                <li key={file.name} className="">
+                                <li key={file.path} className="">
                                     <FileEntry
                                         file={{ ...file }}
                                     />

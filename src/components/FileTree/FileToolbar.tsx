@@ -27,7 +27,6 @@ export const FileToolbar: FC<Props> = (props) => {
         if (getFile(`${folderByKind[props.kind]}/${fileName}.js`)) return;
 
         addFile({
-            name: fileName + ".js",
             kind: props.kind,
             value: templateByKind(fileName)[props.kind],
             language: "javascript",

@@ -1,11 +1,11 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
+import { MonacoEditor } from "../../features/Editor/components/MonacoEditor.tsx";
 import { allotmentStorage } from "../../util/allotmentStorage.ts";
 import { cn } from "../../util/cn";
 import { scrollbarSize } from "../../util/scrollbarSize.ts";
 import { AssetBrew } from "../AssetBrew/AssetBrew.tsx";
 import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
-import { MonacoEditor } from "../Editor/MonacoEditor";
 import { Toolbar } from "../Toolbar";
 import ExampleList from "../Toolbar/ExampleList";
 import ToolbarToolsMenu from "../Toolbar/ToolbarToolsMenu";

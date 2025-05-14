@@ -1,11 +1,6 @@
 import * as esbuild from "esbuild-wasm";
 import { useProject } from "../stores/useProject";
 
-await esbuild.initialize({
-    wasmURL: "https://unpkg.com/esbuild-wasm/esbuild.wasm",
-    worker: true,
-});
-
 const virtualPlugin: esbuild.Plugin = {
     name: "virtual-fs",
     setup(build) {

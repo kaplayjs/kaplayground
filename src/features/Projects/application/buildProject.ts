@@ -1,5 +1,5 @@
 import { getVersion, parseAssets } from "../../../util/compiler";
-import { wrapCode } from "./wrapCode";
+import { buildCode } from "./buildCode";
 
 const toDataUrl = (data: string) => {
     const base64 = btoa(data);
@@ -7,7 +7,7 @@ const toDataUrl = (data: string) => {
 };
 
 export async function buildProject() {
-    const code = await wrapCode();
+    const code = await buildCode();
     const kaplayLib = await getVersion(true);
 
     if (!kaplayLib) {

@@ -1,10 +1,11 @@
 import type { Monaco } from "@monaco-editor/react";
-import docTs from "../../../lib.d.ts?raw";
-import { useProject } from "../../features/Projects/stores/useProject";
-import { useEditor } from "../../hooks/useEditor";
-import { DATA_URL_REGEX } from "../../util/regex";
-import { KAPLAYSnippets } from "./completion/KAPLAYSnippets";
-import { addCompletion } from "./completionProviders.ts";
+import docTs from "../../../../lib.d.ts?raw";
+import { useEditor } from "../../../hooks/useEditor.ts";
+import { DATA_URL_REGEX } from "../../../util/regex.ts";
+import { useProject } from "../../Projects/stores/useProject.ts";
+import { CompletionAddProvider } from "./completion/CompletionAddProvider.ts";
+import { ImportPathCompletionProvider } from "./completion/ImportPathCompletionProvider";
+import { KSnippetsProvider } from "./completion/KSnippets.ts";
 import { themes } from "./themes/themes.ts";
 
 let providersRegistered = false;
@@ -107,14 +108,18 @@ export const configMonaco = (monaco: Monaco) => {
 
     monaco.languages.registerCompletionItemProvider(
         "javascript",
-        new KAPLAYSnippets(),
+        new KSnippetsProvider(),
     );
 
-    monaco.languages.registerCompletionItemProvider("javascript", {
-        provideCompletionItems(...args) {
-            return addCompletion(...args);
-        },
-    });
+    monaco.languages.registerCompletionItemProvider(
+        "javascript",
+        new CompletionAddProvider(),
+    );
+
+    monaco.languages.registerCompletionItemProvider(
+        "javascript",
+        new ImportPathCompletionProvider(),
+    );
 
     // Themes
     monaco.editor.defineTheme("Spiker", themes.Spiker);

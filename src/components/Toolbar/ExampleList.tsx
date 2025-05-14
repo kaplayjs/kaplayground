@@ -1,12 +1,12 @@
 import type { ChangeEvent, FC } from "react";
 import { demos } from "../../data/demos";
+import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { sortEntries } from "../ProjectBrowser/SortBy";
 
 const ExampleList: FC = () => {
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
-    const loadProject = useProject((s) => s.loadProject);
     const createNewProject = useProject((s) => s.createNewProject);
     const projectKey = useProject((s) => s.projectKey || s.demoKey);
     useProject((s) => s.project.name);

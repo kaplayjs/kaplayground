@@ -37,7 +37,8 @@ export const createAssetsSlice: StateCreator<
 ) => ({
     assetsLastId: 0,
     addAsset(asset) {
-        console.debug("Adding asset", asset);
+        debug(0, "[assets] Adding asset", asset.path);
+
         const assets = get().project.assets;
 
         const foundAsset = assets.has(asset.path)
@@ -52,15 +53,6 @@ export const createAssetsSlice: StateCreator<
 
             set({});
         } else {
-            console.debug(
-                "Asset added",
-                asset,
-                loadByAsset(
-                    asset.name,
-                    asset.kind,
-                ),
-            );
-
             assets.set(asset.path, {
                 ...asset,
                 importFunction: loadByAsset(
@@ -73,7 +65,7 @@ export const createAssetsSlice: StateCreator<
         }
     },
     removeAsset(resourceId) {
-        debug(0, "Removing asset", resourceId);
+        debug(0, "[assets] Removing asset", resourceId);
 
         const assets = get().project.assets;
 
