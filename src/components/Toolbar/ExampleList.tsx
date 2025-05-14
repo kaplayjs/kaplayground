@@ -8,7 +8,7 @@ const ExampleList: FC = () => {
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const loadProject = useProject((s) => s.loadProject);
     const createNewProject = useProject((s) => s.createNewProject);
-    const projectKey = useProject((s) => s.projectKey);
+    const projectKey = useProject((s) => s.projectKey || s.demoKey);
     useProject((s) => s.project.name);
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
