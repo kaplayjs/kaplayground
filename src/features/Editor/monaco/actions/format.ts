@@ -1,13 +1,9 @@
-import { CreateTypes } from "canvas-confetti";
 import * as monaco from "monaco-editor";
-import { type Config } from "../../../hooks/useConfig";
+import { useConfig } from "../../../../hooks/useConfig";
+import { useEditor } from "../../../../hooks/useEditor";
 
 export const formatAction = (
     editor: monaco.editor.IStandaloneCodeEditor,
-    config: Config,
-    canvas: HTMLCanvasElement & {
-        confetti: CreateTypes;
-    },
 ): monaco.editor.IActionDescriptor => ({
     id: "format-kaplay",
     label: "Format file using KAPLAYGROUND",
@@ -15,8 +11,13 @@ export const formatAction = (
     contextMenuOrder: 1.5,
     run: () => {
         editor.getAction("editor.action.formatDocument")?.run();
+        const canvas = useEditor.getState().runtime.confettiCanvas;
 
-        if (!config.funFormat) return;
+        if (!canvas) {
+            throw new Error("Canvas not found");
+        }
+
+        if (!useConfig.getState().config.funFormat) return;
 
         var duration = 0.5 * 1000;
         var animationEnd = Date.now() + duration;
