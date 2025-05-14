@@ -1,10 +1,9 @@
 import { CreateTypes } from "canvas-confetti";
 import * as monaco from "monaco-editor";
-import { type Config } from "../../../hooks/useConfig";
+import { useConfig } from "../../../hooks/useConfig";
 
 export const formatAction = (
     editor: monaco.editor.IStandaloneCodeEditor,
-    config: Config,
     canvas: HTMLCanvasElement & {
         confetti: CreateTypes;
     },
@@ -13,10 +12,18 @@ export const formatAction = (
     label: "Format file using KAPLAYGROUND",
     contextMenuGroupId: "navigation",
     contextMenuOrder: 1.5,
-    run: () => {
-        editor.getAction("editor.action.formatDocument")?.run();
+    run: async () => {
+        const oldContent = editor.getValue();
 
-        if (!config.funFormat) return;
+        await editor.getAction("editor.action.formatDocument")?.run();
+
+        const newContent = editor.getValue();
+
+        if (oldContent === newContent) {
+            return;
+        }
+
+        if (!useConfig.getState().config.funFormat) return;
 
         var duration = 0.5 * 1000;
         var animationEnd = Date.now() + duration;

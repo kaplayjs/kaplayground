@@ -1,7 +1,7 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
 import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig.ts";
 import { useEditor } from "../../hooks/useEditor";
@@ -134,7 +134,7 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
-        editor.addAction(formatAction(editor, getConfig(), canvas));
+        editor.addAction(formatAction(editor, canvas));
 
         editor.addAction({
             id: "toggle-word-wrap",
@@ -159,6 +159,14 @@ export const MonacoEditor: FC<Props> = (props) => {
         run();
     };
 
+    useEffect(() => {
+        useConfig.subscribe((state) => {
+            useEditor.getState().runtime.editor?.updateOptions({
+                wordWrap: state.config.wordWrap ? "on" : "off",
+            });
+        });
+    }, []);
+
     return (
         <div id="monaco-editor-wrapper" className="h-full rounded-xl relative">
             <Editor
@@ -167,7 +175,7 @@ export const MonacoEditor: FC<Props> = (props) => {
                 defaultValue={getFile(getRuntime().currentFile)?.value}
                 beforeMount={handleEditorBeforeMount}
                 onMount={handleEditorMount}
-                theme={localStorage.getItem("theme") || "Spiker"}
+                theme={"Spiker"}
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
