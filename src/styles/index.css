@@ -52,7 +52,7 @@ html, body, #root {
 
 
 #monaco-editor-wrapper .monaco-editor {
-    @apply rounded-xl;
+    @apply rounded-xl outline-none;
 
     .quick-input-widget .monaco-highlighted-label .highlight {
         color: oklch(var(--p));
@@ -61,6 +61,19 @@ html, body, #root {
     .find-widget .button:not(.disabled):hover,
     .find-widget .codicon-find-selection:hover {
         background-color: oklch(var(--bc) / 0.15) !important;
+    }
+    .find-widget .button.toggle {
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+    .find-widget .button.toggle:focus-visible {
+        outline: none;
+        box-shadow: inset 0 0 0 1px oklch(var(--bc) / 0.10);
+    }
+    .find-widget .codicon:focus-visible {
+        outline: 1px solid oklch(var(--bc) / 0.2);
+        outline-offset: 1px;
     }
 }
 
