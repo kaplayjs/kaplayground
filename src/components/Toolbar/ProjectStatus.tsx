@@ -183,7 +183,6 @@ export const ProjectStatus = () => {
                 }}
                 value={kaplayVersion}
             >
-                <option value={"master"} key={"no"}>master</option>
                 {kaplayVersions.map((v, i) => (
                     <option value={v} key={i}>{v}</option>
                 ))}
