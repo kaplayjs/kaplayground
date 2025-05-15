@@ -2,6 +2,7 @@ import type { Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import { kaplayVersions } from "../data/kaplayVersions.json";
 import { wrapGame } from "../features/Projects/application/wrapGame";
 import { useProject } from "../features/Projects/stores/useProject";
 import { parseAssetPath } from "../util/assetsParsing";
@@ -48,7 +49,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         isDefaultExample: false,
         viewStates: {},
         currentSelection: null,
-        kaplayVersions: [],
+        kaplayVersions: kaplayVersions,
     },
     setRuntime: (runtime) => {
         set((state) => ({

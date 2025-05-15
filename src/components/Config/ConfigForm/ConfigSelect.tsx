@@ -14,8 +14,10 @@ export const ConfigSelect = (props: ConfigSelectProps) => {
             <span className="label-text font-medium">{props.label}</span>
 
             <select
-                id="debug-selector"
                 className="select select-bordered select-sm"
+                defaultValue={config[props.configKey]
+                    ? String(config[props.configKey])
+                    : undefined}
                 data-config={props.configKey}
                 data-value={config[props.configKey]}
                 data-select

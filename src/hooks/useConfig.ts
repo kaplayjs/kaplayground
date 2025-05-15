@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { debug } from "../util/logs.ts";
 
 // This interacts with the local storage to save/load data about the layout,
@@ -11,6 +10,8 @@ import { debug } from "../util/logs.ts";
 export interface Config {
     /** The last opened project, used for reload the playground */
     lastOpenedProject: string | null;
+    /** Preferred KAPLAY version used as default */
+    preferredVersion: string;
     /** It defines how deep it's the debugging logging in the browser console */
     debugLevel: number | null;
     /** If Editor should auto-run the format command */
@@ -21,21 +22,26 @@ export interface Config {
     wordWrap: boolean;
 }
 
+const defaultConfig: Config = {
+    lastOpenedProject: null,
+    preferredVersion: "3001.0",
+    debugLevel: null,
+    autoFormat: true,
+    funFormat: false,
+    wordWrap: false,
+};
+
 type Store = {
     config: Config;
     setConfigKey: <T extends keyof Config>(key: T, value: Config[T]) => void;
     setConfig: (config: Partial<Config>) => void;
     getConfig: () => Config;
+    loadConfig: () => void;
+    saveConfig: () => void;
 };
 
-export const useConfig = create<Store>()(persist((set, get) => ({
-    config: {
-        lastOpenedProject: null,
-        debugLevel: null,
-        autoFormat: true,
-        funFormat: false,
-        wordWrap: false,
-    },
+export const useConfig = create<Store>()((set, get) => ({
+    config: defaultConfig,
     setConfigKey(key, value) {
         debug(0, "[config] Setting config key", key, "to", value);
 
@@ -45,6 +51,8 @@ export const useConfig = create<Store>()(persist((set, get) => ({
                 [key]: value,
             },
         }));
+
+        get().saveConfig();
     },
     setConfig: (config) => {
         set(() => ({
@@ -53,10 +61,26 @@ export const useConfig = create<Store>()(persist((set, get) => ({
                 ...config,
             },
         }));
+
+        get().saveConfig();
     },
     getConfig: () => {
         return get().config;
     },
-}), {
-    name: "config",
+    saveConfig: () => {
+        const config = get().config;
+        localStorage.setItem("config", JSON.stringify(config));
+    },
+    loadConfig: () => {
+        const config = localStorage.getItem("config");
+
+        if (config) {
+            set(() => ({
+                config: {
+                    ...defaultConfig,
+                    ...JSON.parse(config),
+                },
+            }));
+        }
+    },
 }));

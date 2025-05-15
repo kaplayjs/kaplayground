@@ -5,10 +5,10 @@ import {
     defaultProject,
 } from "../../../../config/defaultProject";
 import { demos, type Example } from "../../../../data/demos";
-import examplesList from "../../../../data/exampleList.json";
 import { useConfig } from "../../../../hooks/useConfig";
 import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
+import { preferredVersion } from "../../application/preferredVersion";
 import type { Asset } from "../../models/Asset";
 import type { File } from "../../models/File";
 import type { Project } from "../../models/Project";
@@ -136,7 +136,7 @@ export const createProjectSlice: StateCreator<
         files: new Map(),
         assets: new Map(),
         mode: "pj",
-        kaplayVersion: examplesList[0].version,
+        kaplayVersion: preferredVersion(),
         createdAt: "",
         updatedAt: "",
     },
@@ -250,7 +250,7 @@ export const createProjectSlice: StateCreator<
         const lastVersion = get().project.kaplayVersion;
         const possibleId = get().generateId(filter);
 
-        let version = examplesList[0].version;
+        let version = preferredVersion();
 
         if (filter === "ex") {
             if (demoName) {
@@ -287,7 +287,9 @@ export const createProjectSlice: StateCreator<
 
         if (lastVersion !== version) {
             toast(
-                `KAPLAY version updated to ${version} for this example. May take a few seconds to load.`,
+                `KAPLAY version updated to ${version} for this ${
+                    filter === "ex" ? "example" : "project"
+                }. May take a few seconds to load.`,
             );
         }
 
@@ -345,7 +347,7 @@ export const createProjectSlice: StateCreator<
                         },
                     ],
                 ]),
-                kaplayVersion: sharedVersion ?? examplesList[0].version,
+                kaplayVersion: sharedVersion ?? preferredVersion(),
             },
             undefined,
             true,
