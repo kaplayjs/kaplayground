@@ -63,3 +63,16 @@ export const demos = examplesList.map((example) => {
 
     return obj;
 });
+
+export const demoVersions = Object.fromEntries(
+    [...new Set(demos.map(d => d.minVersion))].filter(Boolean)
+        .sort((a, b) => parseFloat(b) - parseFloat(a))
+        .map(version => {
+            const v = parseFloat(version);
+            const count = demos.filter(d => {
+                const min = parseFloat(d.minVersion ?? "");
+                return d.locked ? min === v : min <= v;
+            }).length;
+            return [version, count];
+        }),
+);

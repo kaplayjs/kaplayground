@@ -1,14 +1,15 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { demos } from "../../data/demos";
+import { demos, demoVersions } from "../../data/demos";
 import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { useConfig } from "../../hooks/useConfig";
 import { cn } from "../../util/cn";
 import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
@@ -21,6 +22,7 @@ import {
     sortMapProjects,
 } from "./SortBy";
 import { TagsFilter } from "./TagsFilter";
+import { VersionFilter } from "./VersionFilter";
 
 export type ExamplesData = {
     categories?: ExamplesDataRecord;
@@ -38,8 +40,12 @@ export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
+    const preferredVersion = useConfig((s) => s.config.preferredVersion);
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
+    const [filterVersion, setFilterVersion] = useState<string | undefined>(
+        undefined,
+    );
     const [projectsSort, setProjectsSort] = useState("latest");
     const [examplesSort, setExamplesSort] = useState("topic");
     const [projectsGroup, setProjectsGroup] = useState("type");
@@ -106,6 +112,21 @@ export const ProjectBrowser = () => {
             ),
         [filter, filterTags, currentSort, examplesGroup],
     );
+
+    const getVersion = () => {
+        const versionKeys = Object.keys(demoVersions);
+        return versionKeys.includes(preferredVersion)
+            ? preferredVersion
+            : (filterVersion ?? versionKeys[0]);
+    };
+
+    useEffect(() => {
+        if (!filterVersion) setFilterVersion(getVersion());
+    }, [demoVersions, filterVersion]);
+
+    useEffect(() => {
+        if (filterVersion) setFilterVersion(getVersion());
+    }, [preferredVersion]);
 
     const tags = useCallback((): string[] => {
         const set = new Set<string>();
@@ -179,12 +200,23 @@ export const ProjectBrowser = () => {
                         </div>
                     </div>
 
-                    <input
-                        type="search"
-                        placeholder="Search for examples/projects"
-                        className="input input-bordered w-full"
-                        onChange={(ev) => setFilter(ev.target.value)}
-                    />
+                    <div className="flex join">
+                        <input
+                            type="search"
+                            placeholder="Search for examples/projects"
+                            className="input input-bordered w-full join-item"
+                            onChange={(ev) => setFilter(ev.target.value)}
+                        />
+
+                        {tab == "Examples" && (
+                            <VersionFilter
+                                value={filterVersion}
+                                options={demoVersions}
+                                onChange={(value: string) =>
+                                    setFilterVersion(value)}
+                            />
+                        )}
+                    </div>
 
                     <TagsFilter
                         value={tags}
@@ -434,6 +466,7 @@ export const ProjectBrowser = () => {
                                                 project={example}
                                                 key={example.name}
                                                 toggleTag={toggleTag}
+                                                filterVersion={filterVersion}
                                             />
                                         ))}
                                     </div>
