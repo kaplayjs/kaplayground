@@ -61,9 +61,13 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
 
     const isIncompatible = (() => {
         const min = parseFloat(project.minVersion);
+        const ver = project.version == "master" ? "" : project.version;
         const filter = parseFloat(filterVersion ?? "");
 
-        return !isProject && (project.locked ? min != filter : min > filter);
+        return !isProject
+            && (ver
+                ? !ver.startsWith(`${filter}.`) && min < filter
+                : (project.locked ? min != filter : min > filter));
     })();
 
     const labelBaseClass = cn([
@@ -127,11 +131,13 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                             <span
                                 className={cn(
                                     labelBaseClass,
-                                    "bg-error/60 animate-fade-in",
+                                    "normal-case bg-error/60 animate-fade-in",
                                 )}
                             >
-                                v{project.minVersion}
-                                {!project.locked && "+"}
+                                v{project.version != "master"
+                                    ? project.version
+                                    : project.minVersion
+                                        + (!project.locked ? "+" : "")}
                             </span>
                         )}
                     </div>

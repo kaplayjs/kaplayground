@@ -72,14 +72,14 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
             description: tags?.description || "",
             code: codeWithoutMeta,
             difficulty: parseInt(tags?.difficulty) ?? 4,
-            version: "master",
-            minVersion: (tags?.minver)?.trim() || "noset",
+            version: (tags?.ver)?.trim() || "master",
+            minVersion: (tags?.minver)?.trim() || "",
             tags: tags?.tags?.trim().split(", ") || [],
             createdAt: getFileTimestamp(filePath),
             updatedAt: getFileTimestamp(filePath, "updated"),
         };
 
-        if (tags?.locked) example.locked = true;
+        if (tags?.locked != undefined) example.locked = true;
 
         return example;
     });
