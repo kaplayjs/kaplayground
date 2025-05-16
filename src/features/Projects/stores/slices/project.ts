@@ -374,6 +374,11 @@ export const createProjectSlice: StateCreator<
 
         get().setProjectKey(id);
         get().setDemoKey(null);
+        window.history.replaceState(
+            {},
+            "",
+            `${window.location.origin}/`,
+        );
 
         // Update other stores
         useConfig.getState().setConfig({
