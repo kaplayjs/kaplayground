@@ -11,36 +11,45 @@ import { assets } from "@kaplayjs/crew";
 import { useProject } from "../features/Projects/stores/useProject";
 
 export const parseAssetPath = (path: string) => {
-    let parsedPath = path;
-
-    parsedPath = parsedPath.replace(/^\/|\/$/g, "").replace(
-        "assets/",
-        "",
-    ).replace(/"/g, "");
+    let normalPath = normalize(path);
 
     const projectAssets = useProject.getState().project.assets;
-    const pathInAssets = projectAssets.get(parsedPath);
+    const pathInAssets = projectAssets.get(normalPath);
 
     if (pathInAssets) {
         path = pathInAssets.url;
         return path;
     }
 
-    const crewPath = parsedPath.split("/").pop()?.split(".").slice(0, -1).join(
-        ".",
-    );
-    const isOutlined = crewPath?.endsWith("-o");
-    const pathInCrew = assets[crewPath as keyof typeof assets];
+    const isCrew = normalPath.startsWith("crew/");
 
-    if (pathInCrew) {
-        if (isOutlined && pathInCrew.outlined) {
-            parsedPath = pathInCrew.outlined;
-        } else if (pathInCrew.sprite) {
-            parsedPath = pathInCrew.sprite;
+    if (isCrew) {
+        const crewName = normalPath.split("/").pop()?.split(".").slice(0, -1)
+            .join(
+                ".",
+            );
+        const isOutlined = crewName?.endsWith("-o");
+        const crewEntry = assets[crewName as keyof typeof assets];
+
+        if (isOutlined && crewEntry.outlined) {
+            normalPath = crewEntry.outlined;
+        } else if (crewEntry.sprite) {
+            normalPath = crewEntry.sprite;
         }
 
-        return parsedPath;
+        return normalPath;
     }
 
     return path;
+};
+
+// TODO: Remplaze with normalize() from path.ts
+const normalize = (path: string) => {
+    const normalizedPath = path.replace(/^\/|\/$/g, "").replace(/"/g, "");
+
+    if (normalizedPath.startsWith("assets/")) {
+        return normalizedPath.replace("assets/", "");
+    }
+
+    return normalizedPath;
 };
