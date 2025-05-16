@@ -313,6 +313,14 @@ export const createProjectSlice: StateCreator<
             });
         }
 
+        if (demoName) {
+            window.history.replaceState(
+                {},
+                "",
+                `${window.location.origin}/?example=${demoName}`,
+            );
+        }
+
         // Editor update
         get().setProjectKey(null);
         get().setDemoKey(demoName ?? null);
@@ -389,6 +397,12 @@ export const createProjectSlice: StateCreator<
         get().setProjectKey(id);
         get().setDemoKey(null);
         get().setProjectWasEdited(false);
+
+        window.history.replaceState(
+            {},
+            "",
+            `${window.location.origin}/`,
+        );
 
         // Editor stuff
         useConfig.getState().setConfig({
