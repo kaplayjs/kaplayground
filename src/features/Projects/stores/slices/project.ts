@@ -237,7 +237,7 @@ export const createProjectSlice: StateCreator<
 
         return Object.fromEntries(
             [...new Set(projectVersions)]
-                .sort((a, b) => parseFloat(b) - parseFloat(a))
+                .sort((a, b) => b.localeCompare(a))
                 .map(
                     version => [
                         version,
@@ -253,7 +253,7 @@ export const createProjectSlice: StateCreator<
 
         return Object.fromEntries(
             [...new Set(projectMinVersions)]
-                .sort((a, b) => parseFloat(b) - parseFloat(a))
+                .sort((a, b) => b.localeCompare(a))
                 .map(
                     version => [
                         version,
