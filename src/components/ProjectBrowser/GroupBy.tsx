@@ -6,11 +6,12 @@ import type { ExamplesData } from "./ProjectBrowser";
 type Props = {
     value: string;
     onChange: (value: string) => void;
-    options: string[];
+    options: (string | [string, string])[];
 };
 
 const optionsMap: Record<string, string> = {
     group: "Topic",
+    minVersion: "Min. Version",
 };
 
 const groupMap: Record<string, (item: Example) => string> = {
@@ -68,12 +69,21 @@ export const GroupBy: FC<Props> = ({ value, onChange, options }) => {
                     value={value}
                     onChange={e => onChange(e.target.value)}
                 >
-                    {options.map(o => (
-                        <option key={o} value={o}>
-                            {optionsMap?.[o]
-                                ?? o.charAt(0).toUpperCase() + o.slice(1)}
-                        </option>
-                    ))}
+                    {options.map(o =>
+                        typeof o == "object"
+                            ? (
+                                <option key={o[0]} value={o[0]}>
+                                    {o[1]}
+                                </option>
+                            )
+                            : (
+                                <option key={o} value={o}>
+                                    {optionsMap?.[o]
+                                        ?? o.charAt(0).toUpperCase()
+                                            + o.slice(1)}
+                                </option>
+                            )
+                    )}
                 </select>
             </div>
         </div>

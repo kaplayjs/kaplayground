@@ -4,7 +4,7 @@ import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
@@ -128,9 +128,9 @@ export const ProjectBrowser = () => {
             setExamplesFilterVersion(value);
         }
     };
-    const versions = useMemo(
+    const versions = useCallback(
         () => tab == "Projects" ? getProjectMinVersions() : demoVersions,
-        [tab, getSavedProjects],
+        [tab, projects],
     );
 
     const getDefaultDemoFilterVersion = () => {
@@ -203,11 +203,17 @@ export const ProjectBrowser = () => {
                                 value={currentGroup()}
                                 onChange={setCurrentGroup}
                                 options={tab == "Projects"
-                                    ? ["type", "none"]
+                                    ? [
+                                        "type",
+                                        ["minVersion", "Version"],
+                                        "none",
+                                    ]
                                     : [
                                         "category",
                                         "group",
                                         "difficulty",
+                                        "minVersion",
+                                        "version",
                                         "none",
                                     ]}
                             />
@@ -233,7 +239,7 @@ export const ProjectBrowser = () => {
 
                         <VersionFilter
                             value={currentFilterVersion()}
-                            options={versions}
+                            options={versions()}
                             onChange={setCurrentFilterVersion}
                             allOption={tab == "Projects"
                                 ? ({
