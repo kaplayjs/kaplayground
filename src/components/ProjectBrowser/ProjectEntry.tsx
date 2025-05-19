@@ -83,6 +83,9 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
             ? !ver.startsWith(`${filter}.`) && min < filter
             : (project.locked ? min != filter : min > filter);
     })();
+    const exampleHasMaxVersion = !isProject
+        && (project.version != "master"
+            && project.version.startsWith(`${filterVersion}.`));
 
     const labelBaseClass = cn([
         "inline-flex items-center",
@@ -141,7 +144,7 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                             </span>
                         )}
 
-                        {isIncompatible && (
+                        {(isIncompatible || exampleHasMaxVersion) && (
                             <span
                                 className={cn(
                                     labelBaseClass,
