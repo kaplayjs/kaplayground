@@ -1,18 +1,16 @@
-import { CreateTypes } from "canvas-confetti";
 import * as monaco from "monaco-editor";
-import { useConfig } from "../../../hooks/useConfig";
+import { useConfig } from "../../../../hooks/useConfig";
+import { useEditor } from "../../../../hooks/useEditor";
 
 export const formatAction = (
     editor: monaco.editor.IStandaloneCodeEditor,
-    canvas: HTMLCanvasElement & {
-        confetti: CreateTypes;
-    },
 ): monaco.editor.IActionDescriptor => ({
     id: "format-kaplay",
     label: "Format file using KAPLAYGROUND",
     contextMenuGroupId: "navigation",
     contextMenuOrder: 1.5,
     run: async () => {
+        const canvas = useEditor.getState().runtime.confettiCanvas!;
         const oldContent = editor.getValue();
 
         await editor.getAction("editor.action.formatDocument")?.run();

@@ -1,10 +1,10 @@
 import { Allotment, LayoutPriority } from "allotment";
 import type { FC } from "react";
+import { MonacoEditor } from "../../features/Editor/components/MonacoEditor.tsx";
 import { allotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
 import { Assets } from "../Assets";
 import { ConsoleView } from "../ConsoleView/ConsoleView.tsx";
-import { MonacoEditor } from "../Editor/MonacoEditor";
 import { FileTree } from "../FileTree";
 import { Toolbar } from "../Toolbar";
 import { GameView } from "./GameView";

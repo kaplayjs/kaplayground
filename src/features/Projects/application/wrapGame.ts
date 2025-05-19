@@ -1,8 +1,8 @@
 import { getVersion, parseAssets } from "../../../util/compiler";
-import { wrapCode } from "./wrapCode";
+import { buildCode } from "./buildCode";
 
 export async function wrapGame() {
-    const code = await wrapCode();
+    const code = await buildCode();
 
     return `
         import kaplay from "${getVersion()}";

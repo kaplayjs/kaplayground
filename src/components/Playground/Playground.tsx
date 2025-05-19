@@ -1,8 +1,11 @@
 import { assets } from "@kaplayjs/crew";
+import * as esbuild from "esbuild-wasm";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import { loadProject } from "../../features/Projects/application/loadProject";
+import { preferredVersion } from "../../features/Projects/application/preferredVersion";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig";
 import { decompressCode } from "../../util/compressCode";
@@ -34,8 +37,8 @@ const Playground = () => {
     const loadConfig = useConfig((state) => state.loadConfig);
     const projectMode = useProject((state) => state.project.mode);
     const createNewProject = useProject((state) => state.createNewProject);
-    const loadProject = useProject((state) => state.loadProject);
     const loadSharedDemo = useProject((state) => state.createFromShared);
+    const setProject = useProject((state) => state.setProject);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
@@ -73,22 +76,34 @@ const Playground = () => {
         // Load global config
         loadConfig();
 
-        // Loading the project, default project, shared project, etc.
-        const urlParams = new URLSearchParams(window.location.search);
-        const lastOpenedPj = useConfig.getState().getConfig().lastOpenedProject;
-        const sharedCode = urlParams.get("code");
-        const sharedVersion = urlParams.get("version");
-        const exampleName = urlParams.get("example");
+        // Set initial project KAPLAY version
+        setProject({
+            kaplayVersion: preferredVersion(),
+        });
 
-        if (sharedCode) {
-            loadShare(sharedCode, sharedVersion ?? undefined);
-        } else if (exampleName) {
-            loadDemo(exampleName);
-        } else if (lastOpenedPj) {
-            loadLastOpenedProject(lastOpenedPj);
-        } else {
-            loadNewProject();
-        }
+        // Initialize ESBuild
+        esbuild.initialize({
+            wasmURL: "https://unpkg.com/esbuild-wasm/esbuild.wasm",
+            worker: true,
+        }).then(() => {
+            // Loading the project, default project, shared project, etc.
+            const urlParams = new URLSearchParams(window.location.search);
+            const lastOpenedPj =
+                useConfig.getState().getConfig().lastOpenedProject;
+            const sharedCode = urlParams.get("code");
+            const sharedVersion = urlParams.get("version");
+            const exampleName = urlParams.get("example");
+
+            if (sharedCode) {
+                loadShare(sharedCode, sharedVersion ?? undefined);
+            } else if (exampleName) {
+                loadDemo(exampleName);
+            } else if (lastOpenedPj) {
+                loadLastOpenedProject(lastOpenedPj);
+            } else {
+                loadNewProject();
+            }
+        });
     }, []);
 
     if (loadingProject) {

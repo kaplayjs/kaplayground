@@ -1,20 +1,19 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
-import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
 import { type FC, useEffect } from "react";
-import { useProject } from "../../features/Projects/stores/useProject";
-import { useConfig } from "../../hooks/useConfig.ts";
-import { useEditor } from "../../hooks/useEditor";
-import { debug } from "../../util/logs";
-import { formatAction } from "./actions/format";
-import { configMonaco } from "./monacoConfig";
+import { useConfig } from "../../../hooks/useConfig.ts";
+import { useEditor } from "../../../hooks/useEditor.ts";
+import { useProject } from "../../Projects/stores/useProject.ts";
+import { loadFileInModel } from "../application/loadFileInModel";
+import { formatAction } from "../monaco/actions/format.ts";
+import { createConfetti } from "../monaco/fun/createConfetti";
+import { configMonaco } from "../monaco/monacoConfig.ts";
 
-type Props = {
+interface MonacoEditorProps {
     onMount?: () => void;
-    defaultTheme?: string;
-};
+}
 
-export const MonacoEditor: FC<Props> = (props) => {
+export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     const updateFile = useProject((s) => s.updateFile);
     const getFile = useProject((s) => s.getFile);
     const run = useEditor((s) => s.run);
@@ -33,54 +32,33 @@ export const MonacoEditor: FC<Props> = (props) => {
         editor: editor.IStandaloneCodeEditor,
         monaco: Monaco,
     ) => {
-        setRuntime({ editor, monaco });
+        setRuntime({
+            editor,
+            monaco,
+            confettiCanvas: createConfetti(),
+        });
+
         const currentFile = getRuntime().currentFile;
-
-        // Create canvas
-        const canvas = document.createElement("canvas") as HTMLCanvasElement & {
-            confetti: confetti.CreateTypes;
-        };
-        canvas.style.position = "absolute";
-        canvas.style.pointerEvents = "none"; // Prevent interactions
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-
-        document.getElementById("monaco-editor-wrapper")!.appendChild(canvas);
-
-        // Confetti thing setup
-        canvas.confetti = confetti.create(canvas, { resize: true });
 
         props.onMount?.();
         editor.setValue(getFile(currentFile)?.value ?? "");
 
         editor.onDidChangeModelContent((ev) => {
-            if (ev.isFlush) {
-            } else {
-                const currentProjectFile = getFile(getRuntime().currentFile);
-                if (!currentProjectFile) {
-                    return debug(0, "Current file not found");
-                }
+            if (ev.isFlush) return;
 
-                debug(
-                    0,
-                    "Due to text editor change, updating file",
-                    currentProjectFile.path,
+            const currentProjectFile = getFile(getRuntime().currentFile);
+
+            if (!currentProjectFile) {
+                throw new Error(
+                    "[monaco] Tried to update a file that doesn't exist",
                 );
-
-                updateFile(currentProjectFile.path, editor.getValue());
             }
 
+            updateFile(currentProjectFile.path, editor.getValue());
             updateImageDecorations();
         });
 
-        editor.onDidChangeModel((e) => {
-            console.log(
-                "tried to change model to",
-                e.oldModelUrl,
-                e.newModelUrl,
-            );
+        editor.onDidChangeModel(() => {
             updateImageDecorations();
         });
 
@@ -134,7 +112,7 @@ export const MonacoEditor: FC<Props> = (props) => {
             },
         });
 
-        editor.addAction(formatAction(editor, canvas));
+        editor.addAction(formatAction(editor));
 
         editor.addAction({
             id: "toggle-word-wrap",
@@ -157,6 +135,10 @@ export const MonacoEditor: FC<Props> = (props) => {
 
         updateImageDecorations();
         run();
+
+        for (const file of useProject.getState().project.files.values()) {
+            loadFileInModel(file);
+        }
     };
 
     useEffect(() => {

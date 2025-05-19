@@ -1,13 +1,10 @@
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
-import {
-    defaultExampleFile,
-    defaultProject,
-} from "../../../../config/defaultProject";
 import { demos, type Example } from "../../../../data/demos";
 import { useConfig } from "../../../../hooks/useConfig";
 import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
+import { createDefaultFiles } from "../../application/createDefaultFiles";
 import { preferredVersion } from "../../application/preferredVersion";
 import type { Asset } from "../../models/Asset";
 import type { File } from "../../models/File";
@@ -57,11 +54,6 @@ export interface ProjectSlice {
     ): void;
     getProjectMetadata: (id: string) => Example;
     createFromShared: (sharedCode: string, sharedVersion?: string) => void;
-    setDefaultProjectFiles: (
-        mode: ProjectMode,
-        files: Map<string, File>,
-        assets: Map<string, Asset>,
-    ) => void;
     /**
      * Save current project in localStorage
      */
@@ -70,13 +62,6 @@ export interface ProjectSlice {
      * Save current project as a new project in localStorage
      */
     saveNewProject(): void;
-    /**
-     * Load a project from localStorage
-     *
-     * @param id - Project id
-     * @returns
-     */
-    loadProject: (id: string) => void;
     /**
      * Current project edited state
      */
@@ -148,7 +133,7 @@ export const createProjectSlice: StateCreator<
         files: new Map(),
         assets: new Map(),
         mode: "pj",
-        kaplayVersion: preferredVersion(),
+        kaplayVersion: "",
         createdAt: "",
         updatedAt: "",
     },
@@ -262,29 +247,11 @@ export const createProjectSlice: StateCreator<
                 ),
         );
     },
-    setDefaultProjectFiles: (mode, files, assets) => {
-        if (mode === "pj") {
-            defaultProject.files.forEach((file) => {
-                files.set(file.path, file);
-            });
-            defaultProject.resources.forEach((asset) => {
-                assets.set(asset.path, asset);
-            });
-        } else {
-            files.set("main.js", {
-                kind: "main",
-                language: "javascript",
-                name: "main.js",
-                path: "main.js",
-                value: defaultExampleFile,
-            });
-        }
-    },
 
     // #region Project Creation
 
     createNewProject(
-        filter,
+        mode,
         replace,
         demoName,
         isShared,
@@ -292,11 +259,12 @@ export const createProjectSlice: StateCreator<
         const files = new Map<string, File>();
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
-        const possibleId = get().generateId(filter);
+        const possibleId = get().generateId(mode);
+        let loadDefault = false;
 
         let version = preferredVersion();
 
-        if (filter === "ex") {
+        if (mode === "ex") {
             if (demoName) {
                 const foundDemo = demos.find((demo) => {
                     return demo.name == demoName;
@@ -310,40 +278,37 @@ export const createProjectSlice: StateCreator<
                 files.set("main.js", {
                     kind: "main",
                     language: "javascript",
-                    name: "main.js",
                     path: "main.js",
                     value: foundDemo.code,
                 });
 
                 version = foundDemo.version;
 
-                debug(1, "[project] Demo loaded", foundDemo.name);
+                debug(0, "[project] Demo loaded", foundDemo.name);
             } else {
-                // Create a new project with default files and assets for examples
-                get().setDefaultProjectFiles("ex", files, assets);
-                debug(1, "[project] New files for the new example project");
+                debug(0, "[project] Created a new example project");
+                loadDefault = true;
             }
         } else {
-            // Create a new project with default files and assets
-            get().setDefaultProjectFiles("pj", files, assets);
-            debug(2, "Default files loaded");
+            debug(0, "[project] Created a new project");
+            loadDefault = true;
         }
 
         if (lastVersion !== version) {
             toast(
                 `KAPLAY version updated to ${version} for this ${
-                    filter === "ex" ? "example" : "project"
+                    mode === "ex" ? "example" : "project"
                 }. May take a few seconds to load.`,
             );
         }
 
         set(() => ({
             project: {
-                name: get().generateName(possibleId, filter, isShared),
+                name: get().generateName(possibleId, mode, isShared),
                 version: "2.0.0", // fixed project version
                 files: files,
                 assets: assets,
-                mode: filter,
+                mode: mode,
                 kaplayVersion: version,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
@@ -367,9 +332,13 @@ export const createProjectSlice: StateCreator<
             );
         }
 
-        // Editor update
         get().setProjectKey(null);
         get().setDemoKey(demoName ?? null);
+
+        if (loadDefault) {
+            createDefaultFiles();
+        }
+
         useEditor.getState().setCurrentFile("main.js");
         useEditor.getState().updateAndRun();
     },
@@ -430,36 +399,6 @@ export const createProjectSlice: StateCreator<
         useConfig.getState().setConfig({
             lastOpenedProject: id,
         });
-    },
-
-    loadProject(id) {
-        debug(0, "[project] Loading project", id);
-
-        const project = get().unserializeProject(id);
-
-        set({
-            project: {
-                ...project,
-                files: new Map(project.files),
-                assets: new Map(project.assets),
-            },
-        });
-
-        get().setProjectKey(id);
-        get().setDemoKey(null);
-        get().setProjectWasEdited(false);
-
-        window.history.replaceState(
-            {},
-            "",
-            `${window.location.origin}/`,
-        );
-
-        // Editor stuff
-        useConfig.getState().setConfig({
-            lastOpenedProject: id,
-        });
-        useEditor.getState().updateAndRun();
     },
 
     generateId(prefix) {

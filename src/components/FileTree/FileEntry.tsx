@@ -3,6 +3,7 @@ import type { FC, MouseEventHandler } from "react";
 import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
 import "./FileEntry.css";
+import { basename } from "../../features/Projects/application/path";
 import type { File } from "../../features/Projects/models/File";
 import type { FileKind } from "../../features/Projects/models/FileKind";
 import { useProject } from "../../features/Projects/stores/useProject";
@@ -140,7 +141,7 @@ export const FileEntry: FC<Props> = ({ file }) => {
                 />
             )}
             <span className="text-left truncate w-[50%] flex-1 py-0.5">
-                {removeExtension(file.name)}
+                {removeExtension(basename(file.path))}
             </span>
             <div role="toolbar" className="file-actions hidden">
                 <FileButton
