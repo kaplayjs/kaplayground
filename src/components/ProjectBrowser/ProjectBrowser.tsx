@@ -4,7 +4,7 @@ import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
@@ -40,12 +40,16 @@ export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
+    const getProjectMinVersions = useProject((s) => s.getProjectMinVersions);
     const preferredVersion = useConfig((s) => s.config.preferredVersion);
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
-    const [filterVersion, setFilterVersion] = useState<string | undefined>(
+    const [examplesFilterVersion, setExamplesFilterVersion] = useState<
+        string | undefined
+    >(
         undefined,
     );
+    const [projectsFilterVersion, setProjectsFilterVersion] = useState("All");
     const [projectsSort, setProjectsSort] = useState("latest");
     const [examplesSort, setExamplesSort] = useState("topic");
     const [projectsGroup, setProjectsGroup] = useState("type");
@@ -113,19 +117,38 @@ export const ProjectBrowser = () => {
         [filter, filterTags, currentSort, examplesGroup],
     );
 
-    const getVersion = () => {
+    const currentFilterVersion = useCallback(
+        () => tab == "Projects" ? projectsFilterVersion : examplesFilterVersion,
+        [tab, projectsFilterVersion, examplesFilterVersion],
+    );
+    const setCurrentFilterVersion = (value: string) => {
+        if (tab == "Projects") {
+            setProjectsFilterVersion(value);
+        } else {
+            setExamplesFilterVersion(value);
+        }
+    };
+    const versions = useMemo(
+        () => tab == "Projects" ? getProjectMinVersions() : demoVersions,
+        [tab, getSavedProjects],
+    );
+
+    const getDefaultDemoFilterVersion = () => {
         const versionKeys = Object.keys(demoVersions);
         return versionKeys.includes(preferredVersion)
             ? preferredVersion
-            : (filterVersion ?? versionKeys[0]);
+            : (examplesFilterVersion ?? versionKeys[0]);
     };
+    useEffect(() => {
+        if (!examplesFilterVersion) {
+            setExamplesFilterVersion(getDefaultDemoFilterVersion());
+        }
+    }, [demoVersions, examplesFilterVersion]);
 
     useEffect(() => {
-        if (!filterVersion) setFilterVersion(getVersion());
-    }, [demoVersions, filterVersion]);
-
-    useEffect(() => {
-        if (filterVersion) setFilterVersion(getVersion());
+        if (examplesFilterVersion) {
+            setExamplesFilterVersion(getDefaultDemoFilterVersion());
+        }
     }, [preferredVersion]);
 
     const tags = useCallback((): string[] => {
@@ -208,14 +231,17 @@ export const ProjectBrowser = () => {
                             onChange={(ev) => setFilter(ev.target.value)}
                         />
 
-                        {tab == "Examples" && (
-                            <VersionFilter
-                                value={filterVersion}
-                                options={demoVersions}
-                                onChange={(value: string) =>
-                                    setFilterVersion(value)}
-                            />
-                        )}
+                        <VersionFilter
+                            value={currentFilterVersion()}
+                            options={versions}
+                            onChange={setCurrentFilterVersion}
+                            allOption={tab == "Projects"
+                                ? ({
+                                    "All": getSavedProjects().length,
+                                })
+                                : false}
+                            strictComparison={tab == "Projects"}
+                        />
                     </div>
 
                     <TagsFilter
@@ -319,6 +345,8 @@ export const ProjectBrowser = () => {
                                                             isProject
                                                             key={project.name}
                                                             toggleTag={toggleTag}
+                                                            filterVersion={currentFilterVersion()}
+                                                            filterSctrictComparison={true}
                                                         />
                                                     ))}
                                                 </div>
@@ -466,7 +494,7 @@ export const ProjectBrowser = () => {
                                                 project={example}
                                                 key={example.name}
                                                 toggleTag={toggleTag}
-                                                filterVersion={filterVersion}
+                                                filterVersion={currentFilterVersion()}
                                             />
                                         ))}
                                     </div>

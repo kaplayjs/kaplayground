@@ -24,6 +24,7 @@ interface ProjectEntryProps {
     isProject?: boolean;
     toggleTag?: Function;
     filterVersion?: string;
+    filterSctrictComparison?: boolean;
 }
 
 const imagesPerDifficulty = [
@@ -41,7 +42,13 @@ const colorsPerDifficulty = [
 ];
 
 export const ProjectEntry: FC<ProjectEntryProps> = (
-    { project, isProject, toggleTag, filterVersion },
+    {
+        project,
+        isProject,
+        toggleTag,
+        filterVersion,
+        filterSctrictComparison = false,
+    },
 ) => {
     const createNewProject = useProject((s) => s.createNewProject);
     const loadProject = useProject((s) => s.loadProject);
@@ -60,14 +67,21 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
     const isNewOrUpdated = !isProject && (isNew || isUpdated);
 
     const isIncompatible = (() => {
-        const min = parseFloat(project.minVersion);
-        const ver = project.version == "master" ? "" : project.version;
-        const filter = parseFloat(filterVersion ?? "");
+        if (!filterVersion || filterVersion == "All") return false;
 
-        return !isProject
-            && (ver
-                ? !ver.startsWith(`${filter}.`) && min < filter
-                : (project.locked ? min != filter : min > filter));
+        if (filterSctrictComparison) {
+            return project.minVersion != filterVersion;
+        }
+
+        const filter = parseFloat(filterVersion ?? "");
+        const min = parseFloat(project.minVersion);
+        const ver = !isProject && project.version == "master"
+            ? ""
+            : project.version;
+
+        return ver
+            ? !ver.startsWith(`${filter}.`) && min < filter
+            : (project.locked ? min != filter : min > filter);
     })();
 
     const labelBaseClass = cn([
@@ -134,7 +148,9 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                                     "normal-case bg-error/60 animate-fade-in",
                                 )}
                             >
-                                v{project.version != "master"
+                                {![project.version, project.minVersion]
+                                    .includes("master") && "v"}
+                                {project.version != "master"
                                     ? project.version
                                     : project.minVersion
                                         + (!project.locked ? "+" : "")}

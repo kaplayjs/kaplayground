@@ -4,13 +4,27 @@ type Props = {
     value: string | undefined;
     options: Record<string, number>;
     onChange: (value: string) => void;
+    allOption: Record<string, number> | false;
+    strictComparison?: boolean;
 };
 
 const optionFormatted = (option = "") => (
-    option != "" ? `v${option}` : option
+    option != "" && /^\d/.test(option) ? `v${option}` : option
 );
 
-export const VersionFilter: FC<Props> = ({ value = "", options, onChange }) => {
+export const VersionFilter: FC<Props> = (
+    {
+        value = "",
+        options,
+        onChange,
+        allOption = false,
+        strictComparison = false,
+    },
+) => {
+    const selectOptions: Record<string, number> = allOption
+        ? { ...allOption, ...options }
+        : options;
+
     return (
         <div className="grid">
             <select
@@ -18,7 +32,9 @@ export const VersionFilter: FC<Props> = ({ value = "", options, onChange }) => {
                 className="col-start-1 row-start-1 select select-bordered font-sans text-xs sm:text-sm pr-8 opacity-0"
                 onChange={e => onChange(e.target.value ?? "")}
                 data-tooltip-id="projects-browser"
-                data-tooltip-content="Compatible with"
+                data-tooltip-content={strictComparison
+                    ? "Version filter"
+                    : "Compatible with"}
                 data-tooltip-place="left"
             >
                 <option
@@ -29,7 +45,7 @@ export const VersionFilter: FC<Props> = ({ value = "", options, onChange }) => {
                     Version
                 </option>
 
-                {Object.entries(options).map((
+                {Object.entries(selectOptions).map((
                     [value, count]: [string, number],
                 ) => (
                     <option key={value} value={value}>
@@ -41,9 +57,9 @@ export const VersionFilter: FC<Props> = ({ value = "", options, onChange }) => {
             <div className="join-item col-start-1 row-start-1 select select-bordered text-xs sm:text-sm pr-8 gap-1 items-center pointer-events-none">
                 {optionFormatted(value)}
 
-                {options?.[value] && (
+                {(selectOptions?.[value]) && (
                     <span className="badge badge-xs font-medium py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
-                        {options[value]}
+                        {selectOptions[value]}
                     </span>
                 )}
             </div>

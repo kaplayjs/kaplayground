@@ -99,6 +99,18 @@ export interface ProjectSlice {
      */
     getSavedProjects: (filter?: ProjectMode) => string[];
     /**
+     * Get KAPLAY versions used in projects
+     *
+     * @param filter - Filter for the projects
+     */
+    getProjectVersions: () => Record<string, number>;
+    /**
+     * Get KAPLAY minimal versions used in projects
+     *
+     * @param filter - Filter for the projects
+     */
+    getProjectMinVersions: () => Record<string, number>;
+    /**
      * Generate a new id for a project
      *
      * @param prefix - Prefix for the id
@@ -202,21 +214,53 @@ export const createProjectSlice: StateCreator<
             category: "KAPLAY",
             code: "",
             group: "",
-            minVersion: "",
+            minVersion: project.kaplayVersion.split(".").slice(0, 2).join("."),
             sortName: project.name,
-            locked: false,
+            locked: true,
             tags: [
                 ...project.mode == "pj"
                     ? [{ name: "project", displayName: "Project" }]
                     : [{ name: "example", displayName: "Example" }],
             ],
             description: "",
-            version: project.version,
+            version: project.kaplayVersion,
             createdAt: project?.createdAt ?? "",
             updatedAt: project?.updatedAt ?? "",
         };
 
         return metadata satisfies Example;
+    },
+    getProjectVersions() {
+        const projectVersions = get().getSavedProjects().map(project =>
+            get().getProjectMetadata(project).version
+        );
+
+        return Object.fromEntries(
+            [...new Set(projectVersions)]
+                .sort((a, b) => parseFloat(b) - parseFloat(a))
+                .map(
+                    version => [
+                        version,
+                        projectVersions.filter(v => v == version).length,
+                    ],
+                ),
+        );
+    },
+    getProjectMinVersions() {
+        const projectMinVersions = get().getSavedProjects().map(project =>
+            get().getProjectMetadata(project).minVersion
+        );
+
+        return Object.fromEntries(
+            [...new Set(projectMinVersions)]
+                .sort((a, b) => parseFloat(b) - parseFloat(a))
+                .map(
+                    version => [
+                        version,
+                        projectMinVersions.filter(v => v == version).length,
+                    ],
+                ),
+        );
     },
     setDefaultProjectFiles: (mode, files, assets) => {
         if (mode === "pj") {
