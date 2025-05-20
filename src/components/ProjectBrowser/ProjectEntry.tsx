@@ -14,14 +14,18 @@ export type ProjectEntryProject = {
     difficulty?: { level: number; name: string };
     tags?: Tag[];
     version: string;
+    minVersion: string;
     createdAt: string;
     updatedAt: string;
+    locked?: boolean;
 };
 
 interface ProjectEntryProps {
     project: ProjectEntryProject;
     isProject?: boolean;
     toggleTag?: Function;
+    filterVersion?: string;
+    filterSctrictComparison?: boolean;
 }
 
 const imagesPerDifficulty = [
@@ -39,7 +43,13 @@ const colorsPerDifficulty = [
 ];
 
 export const ProjectEntry: FC<ProjectEntryProps> = (
-    { project, isProject, toggleTag },
+    {
+        project,
+        isProject,
+        toggleTag,
+        filterVersion,
+        filterSctrictComparison = false,
+    },
 ) => {
     const createNewProject = useProject((s) => s.createNewProject);
     const projectKey = useProject((s) => s.projectKey);
@@ -54,6 +64,34 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
 
     const isNew = isRecent(project.createdAt);
     const isUpdated = isRecent(project.updatedAt);
+    const isNewOrUpdated = !isProject && (isNew || isUpdated);
+
+    const isIncompatible = (() => {
+        if (!filterVersion || filterVersion == "All") return false;
+
+        if (filterSctrictComparison) {
+            return project.minVersion != filterVersion;
+        }
+
+        const filter = parseFloat(filterVersion ?? "");
+        const min = parseFloat(project.minVersion);
+        const ver = !isProject && project.version == "master"
+            ? ""
+            : project.version;
+
+        return ver
+            ? !ver.startsWith(`${filter}.`) && min < filter
+            : (project.locked ? min != filter : min > filter);
+    })();
+    const exampleHasMaxVersion = !isProject
+        && (project.version != "master"
+            && project.version.startsWith(`${filterVersion}.`));
+
+    const labelBaseClass = cn([
+        "inline-flex items-center",
+        "font-medium text-[0.56rem] leading-none tracking-wide text-white uppercase",
+        "min-h-4 px-1.5 rounded-md transition-opacity",
+    ]);
 
     const handleClick = () => {
         const dialog = document.querySelector<HTMLDialogElement>(
@@ -75,6 +113,7 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
         <article
             className={cn(
                 "group bg-base-200 px-4 pt-3.5 pb-3 rounded-lg flex flex-col gap-2 cursor-pointer min-h-[90px] hover:bg-base-content/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content transition-colors",
+                "data-[wrong-version]:bg-base-200/30 data-[wrong-version]:hover:bg-base-content/5",
                 {
                     "bg-base-content/10 ring-1 ring-inset ring-base-content/[4%]":
                         isCurrent,
@@ -84,20 +123,43 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
             onKeyUpCapture={e => e.key == "Enter" && handleClick()}
             tabIndex={0}
             role="button"
+            data-wrong-version={isIncompatible || undefined}
         >
-            <div className="relative flex flex-col gap-1.5 flex-1">
-                {!isProject && (isNew || isUpdated) && (
-                    <span
-                        className={cn(
-                            "absolute -top-2.5 -right-3.5 inline-flex items-center mr-px text-[0.56rem] leading-none tracking-wide text-white min-h-4 px-1.5 font-medium uppercase rounded-md",
-                            {
-                                "bg-pink-800/80": isNew,
-                                "bg-cyan-800/80": !isNew && isUpdated,
-                            },
+            <div className="relative flex flex-col gap-1.5 flex-1 [&>*]:transition-opacity">
+                {(isNewOrUpdated || isIncompatible) && (
+                    <div className="absolute -top-2.5 -right-3.5 flex justify-end gap-1 mr-px max-w-full overflow-hidden [[data-wrong-version]:not(:hover)_&~*]:opacity-40">
+                        {isNewOrUpdated && (
+                            <span
+                                className={cn(
+                                    labelBaseClass,
+                                    {
+                                        "bg-pink-800/80": isNew,
+                                        "bg-cyan-800/80": !isNew && isUpdated,
+                                        "[[data-wrong-version]:not(:hover)_&]:opacity-50":
+                                            isIncompatible,
+                                    },
+                                )}
+                            >
+                                {isNew ? "New" : "Updated"}
+                            </span>
                         )}
-                    >
-                        {isNew ? "New" : "Updated"}
-                    </span>
+
+                        {(isIncompatible || exampleHasMaxVersion) && (
+                            <span
+                                className={cn(
+                                    labelBaseClass,
+                                    "normal-case bg-error/60 animate-fade-in",
+                                )}
+                            >
+                                {![project.version, project.minVersion]
+                                    .includes("master") && "v"}
+                                {project.version != "master"
+                                    ? project.version
+                                    : project.minVersion
+                                        + (!project.locked ? "+" : "")}
+                            </span>
+                        )}
+                    </div>
                 )}
 
                 <h2 className="flex items-start justify-between gap-1 text-lg font-medium text-white">

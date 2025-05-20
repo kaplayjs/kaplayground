@@ -1,11 +1,11 @@
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
 import { demos, type Example } from "../../../../data/demos";
-import examplesList from "../../../../data/exampleList.json";
 import { useConfig } from "../../../../hooks/useConfig";
 import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
 import { createDefaultFiles } from "../../application/createDefaultFiles";
+import { preferredVersion } from "../../application/preferredVersion";
 import type { Asset } from "../../models/Asset";
 import type { File } from "../../models/File";
 import type { Project } from "../../models/Project";
@@ -84,6 +84,18 @@ export interface ProjectSlice {
      */
     getSavedProjects: (filter?: ProjectMode) => string[];
     /**
+     * Get KAPLAY versions used in projects
+     *
+     * @param filter - Filter for the projects
+     */
+    getProjectVersions: () => Record<string, number>;
+    /**
+     * Get KAPLAY minimal versions used in projects
+     *
+     * @param filter - Filter for the projects
+     */
+    getProjectMinVersions: () => Record<string, number>;
+    /**
      * Generate a new id for a project
      *
      * @param prefix - Prefix for the id
@@ -121,7 +133,7 @@ export const createProjectSlice: StateCreator<
         files: new Map(),
         assets: new Map(),
         mode: "pj",
-        kaplayVersion: examplesList[0].version,
+        kaplayVersion: "",
         createdAt: "",
         updatedAt: "",
     },
@@ -187,21 +199,53 @@ export const createProjectSlice: StateCreator<
             category: "KAPLAY",
             code: "",
             group: "",
-            minVersion: "",
+            minVersion: project.kaplayVersion.split(".").slice(0, 2).join("."),
             sortName: project.name,
-            locked: false,
+            locked: true,
             tags: [
                 ...project.mode == "pj"
                     ? [{ name: "project", displayName: "Project" }]
                     : [{ name: "example", displayName: "Example" }],
             ],
             description: "",
-            version: project.version,
+            version: project.kaplayVersion,
             createdAt: project?.createdAt ?? "",
             updatedAt: project?.updatedAt ?? "",
         };
 
         return metadata satisfies Example;
+    },
+    getProjectVersions() {
+        const projectVersions = get().getSavedProjects().map(project =>
+            get().getProjectMetadata(project).version
+        );
+
+        return Object.fromEntries(
+            [...new Set(projectVersions)]
+                .sort((a, b) => b.localeCompare(a))
+                .map(
+                    version => [
+                        version,
+                        projectVersions.filter(v => v == version).length,
+                    ],
+                ),
+        );
+    },
+    getProjectMinVersions() {
+        const projectMinVersions = get().getSavedProjects().map(project =>
+            get().getProjectMetadata(project).minVersion
+        );
+
+        return Object.fromEntries(
+            [...new Set(projectMinVersions)]
+                .sort((a, b) => b.localeCompare(a))
+                .map(
+                    version => [
+                        version,
+                        projectMinVersions.filter(v => v == version).length,
+                    ],
+                ),
+        );
     },
 
     // #region Project Creation
@@ -218,7 +262,7 @@ export const createProjectSlice: StateCreator<
         const possibleId = get().generateId(mode);
         let loadDefault = false;
 
-        let version = examplesList[0].version;
+        let version = preferredVersion();
 
         if (mode === "ex") {
             if (demoName) {
@@ -252,7 +296,9 @@ export const createProjectSlice: StateCreator<
 
         if (lastVersion !== version) {
             toast(
-                `KAPLAY version updated to ${version} for this example. May take a few seconds to load.`,
+                `KAPLAY version updated to ${version} for this ${
+                    mode === "ex" ? "example" : "project"
+                }. May take a few seconds to load.`,
             );
         }
 
@@ -314,7 +360,7 @@ export const createProjectSlice: StateCreator<
                         },
                     ],
                 ]),
-                kaplayVersion: sharedVersion ?? examplesList[0].version,
+                kaplayVersion: sharedVersion ?? preferredVersion(),
             },
             undefined,
             true,

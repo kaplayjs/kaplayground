@@ -5,12 +5,11 @@ import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import { loadProject } from "../../features/Projects/application/loadProject";
+import { preferredVersion } from "../../features/Projects/application/preferredVersion";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig";
-import { useEditor } from "../../hooks/useEditor.ts";
 import { decompressCode } from "../../util/compressCode";
 import { debug } from "../../util/logs";
-import { getPackageInfo } from "../../util/npm.ts";
 import { AboutDialog } from "../About";
 import ConfigDialog from "../Config/ConfigDialog";
 import { ProjectBrowser } from "../ProjectBrowser";
@@ -35,10 +34,11 @@ localStorage.setItem(
 );
 
 const Playground = () => {
+    const loadConfig = useConfig((state) => state.loadConfig);
     const projectMode = useProject((state) => state.project.mode);
     const createNewProject = useProject((state) => state.createNewProject);
     const loadSharedDemo = useProject((state) => state.createFromShared);
-    const setRuntime = useEditor((state) => state.setRuntime);
+    const setProject = useProject((state) => state.setProject);
     const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
     const [loadingProject, setLoadingProject] = useState<boolean>(true);
     const [loadingEditor, setLoadingEditor] = useState<boolean>(true);
@@ -73,11 +73,12 @@ const Playground = () => {
 
     // First paint
     useEffect(() => {
-        // Save in memory current versions
-        getPackageInfo("kaplay").then((info) => {
-            setRuntime({
-                kaplayVersions: Object.keys(info.versions).reverse(),
-            });
+        // Load global config
+        loadConfig();
+
+        // Set initial project KAPLAY version
+        setProject({
+            kaplayVersion: preferredVersion(),
         });
 
         // Initialize ESBuild

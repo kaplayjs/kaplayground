@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import type { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import { kaplayVersions } from "../data/kaplayVersions.json";
 import { wrapGame } from "../features/Projects/application/wrapGame";
 import { useProject } from "../features/Projects/stores/useProject";
 import { parseAssetPath } from "../util/assetsParsing";
@@ -79,7 +80,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         iframe: null,
         console: null,
         viewStates: {},
-        kaplayVersions: [],
+        kaplayVersions: kaplayVersions,
         confettiCanvas: null,
     },
     setRuntime: (runtime) => {

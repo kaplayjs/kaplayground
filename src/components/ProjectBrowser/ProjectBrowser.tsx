@@ -1,14 +1,15 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { demos } from "../../data/demos";
+import { demos, demoVersions } from "../../data/demos";
 import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { useConfig } from "../../hooks/useConfig";
 import { cn } from "../../util/cn";
 import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
@@ -21,6 +22,7 @@ import {
     sortMapProjects,
 } from "./SortBy";
 import { TagsFilter } from "./TagsFilter";
+import { VersionFilter } from "./VersionFilter";
 
 export type ExamplesData = {
     categories?: ExamplesDataRecord;
@@ -38,8 +40,16 @@ export const ProjectBrowser = () => {
     const [tab, setTab] = useState("Projects");
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const getProjectMetadata = useProject((s) => s.getProjectMetadata);
+    const getProjectMinVersions = useProject((s) => s.getProjectMinVersions);
+    const preferredVersion = useConfig((s) => s.config.preferredVersion);
     const [filter, setFilter] = useState("");
     const [filterTags, setFilterTags] = useState<string[]>([]);
+    const [examplesFilterVersion, setExamplesFilterVersion] = useState<
+        string | undefined
+    >(
+        undefined,
+    );
+    const [projectsFilterVersion, setProjectsFilterVersion] = useState("All");
     const [projectsSort, setProjectsSort] = useState("latest");
     const [examplesSort, setExamplesSort] = useState("topic");
     const [projectsGroup, setProjectsGroup] = useState("type");
@@ -107,6 +117,40 @@ export const ProjectBrowser = () => {
         [filter, filterTags, currentSort, examplesGroup],
     );
 
+    const currentFilterVersion = useCallback(
+        () => tab == "Projects" ? projectsFilterVersion : examplesFilterVersion,
+        [tab, projectsFilterVersion, examplesFilterVersion],
+    );
+    const setCurrentFilterVersion = (value: string) => {
+        if (tab == "Projects") {
+            setProjectsFilterVersion(value);
+        } else {
+            setExamplesFilterVersion(value);
+        }
+    };
+    const versions = useCallback(
+        () => tab == "Projects" ? getProjectMinVersions() : demoVersions,
+        [tab, projects],
+    );
+
+    const getDefaultDemoFilterVersion = () => {
+        const versionKeys = Object.keys(demoVersions);
+        return versionKeys.includes(preferredVersion)
+            ? preferredVersion
+            : (examplesFilterVersion ?? versionKeys[0]);
+    };
+    useEffect(() => {
+        if (!examplesFilterVersion) {
+            setExamplesFilterVersion(getDefaultDemoFilterVersion());
+        }
+    }, [demoVersions, examplesFilterVersion]);
+
+    useEffect(() => {
+        if (examplesFilterVersion) {
+            setExamplesFilterVersion(getDefaultDemoFilterVersion());
+        }
+    }, [preferredVersion]);
+
     const tags = useCallback((): string[] => {
         const set = new Set<string>();
         ((tab == "Projects" ? projects() : demos) as Example[]).sort(
@@ -159,11 +203,17 @@ export const ProjectBrowser = () => {
                                 value={currentGroup()}
                                 onChange={setCurrentGroup}
                                 options={tab == "Projects"
-                                    ? ["type", "none"]
+                                    ? [
+                                        "type",
+                                        ["minVersion", "Version"],
+                                        "none",
+                                    ]
                                     : [
                                         "category",
                                         "group",
                                         "difficulty",
+                                        "minVersion",
+                                        "version",
                                         "none",
                                     ]}
                             />
@@ -179,12 +229,26 @@ export const ProjectBrowser = () => {
                         </div>
                     </div>
 
-                    <input
-                        type="search"
-                        placeholder="Search for examples/projects"
-                        className="input input-bordered w-full"
-                        onChange={(ev) => setFilter(ev.target.value)}
-                    />
+                    <div className="flex join">
+                        <input
+                            type="search"
+                            placeholder="Search for examples/projects"
+                            className="input input-bordered w-full join-item"
+                            onChange={(ev) => setFilter(ev.target.value)}
+                        />
+
+                        <VersionFilter
+                            value={currentFilterVersion()}
+                            options={versions()}
+                            onChange={setCurrentFilterVersion}
+                            allOption={tab == "Projects"
+                                ? ({
+                                    "All": getSavedProjects().length,
+                                })
+                                : false}
+                            strictComparison={tab == "Projects"}
+                        />
+                    </div>
 
                     <TagsFilter
                         value={tags}
@@ -287,6 +351,8 @@ export const ProjectBrowser = () => {
                                                             isProject
                                                             key={project.name}
                                                             toggleTag={toggleTag}
+                                                            filterVersion={currentFilterVersion()}
+                                                            filterSctrictComparison={true}
                                                         />
                                                     ))}
                                                 </div>
@@ -434,6 +500,7 @@ export const ProjectBrowser = () => {
                                                 project={example}
                                                 key={example.name}
                                                 toggleTag={toggleTag}
+                                                filterVersion={currentFilterVersion()}
                                             />
                                         ))}
                                     </div>

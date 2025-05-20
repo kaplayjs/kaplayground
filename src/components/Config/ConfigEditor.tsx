@@ -15,6 +15,15 @@ export const ConfigEditor = () => {
                 Editor Configuration
             </h2>
 
+            <ConfigSelect
+                configKey="preferredVersion"
+                label="Preferred KAPLAY Version"
+            >
+                <option value="master">master</option>
+                <option value="4000.0">v4000</option>
+                <option value="3001.0">v3001</option>
+            </ConfigSelect>
+
             <ConfigCheckbox configKey="autoFormat" label="Auto Formatting" />
 
             <ConfigCheckbox
