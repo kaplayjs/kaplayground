@@ -277,7 +277,7 @@
             "effects"
         ],
         "createdAt": "2021-11-03T01:35:14-04:00",
-        "updatedAt": "2025-04-26T14:01:03-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 15,
@@ -301,11 +301,11 @@
     {
         "id": 16,
         "name": "clip",
-        "formattedName": "Clipped lines",
+        "formattedName": "Clipped Lines",
         "sortName": "1-concepts-zzzz-9999-clip",
         "category": "concepts",
         "group": "",
-        "description": "TBD",
+        "description": "Highlight intersecting parts of drawn lines",
         "code": "kaplay();\n\nconst r = new Rect(vec2(100, 100), 300, 200);\nconst c = new Circle(vec2(250, 200), 100, 100);\nconst res = new Line(vec2(), vec2());\nconst testLines = [\n    new Line(vec2(20, 40), vec2(500, 200)),\n    new Line(vec2(20, 80), vec2(60, 20)),\n    new Line(vec2(170, 200), vec2(260, 220)),\n    new Line(vec2(150, 40), vec2(300, 40)),\n    new Line(vec2(40, 100), vec2(40, 170)),\n    new Line(vec2(160, 140), vec2(240, 140)),\n    new Line(vec2(120, 150), vec2(120, 190)),\n];\n\nfunction drawRectClippedLine(r, l) {\n    drawLine({\n        p1: l.p1,\n        p2: l.p2,\n        color: WHITE,\n    });\n\n    if (clipLineToRect(r, l, res)) {\n        drawLine({\n            p1: res.p1,\n            p2: res.p2,\n            color: GREEN,\n        });\n    }\n}\n\nfunction drawCircleClippedLine(r, l) {\n    drawLine({\n        p1: l.p1,\n        p2: l.p2,\n        color: WHITE,\n    });\n\n    if (clipLineToCircle(c, l, res)) {\n        drawLine({\n            p1: res.p1,\n            p2: res.p2,\n            color: GREEN,\n        });\n    }\n}\n\nscene(\"rect\", () => {\n    onDraw(() => {\n        drawRect({\n            pos: r.pos,\n            width: r.width,\n            height: r.height,\n            fill: false,\n            outline: {\n                color: RED,\n                width: 1,\n            },\n        });\n\n        for (const line of testLines) {\n            drawRectClippedLine(r, line);\n        }\n    });\n\n    onKeyPress(\"c\", () => {\n        go(\"circle\");\n    });\n});\n\nscene(\"circle\", () => {\n    onDraw(() => {\n        drawCircle({\n            pos: c.center,\n            radius: c.radius,\n            fill: false,\n            outline: {\n                color: RED,\n                width: 1,\n            },\n        });\n\n        for (const line of testLines) {\n            drawCircleClippedLine(c, line);\n        }\n    });\n\n    onKeyPress(\"r\", () => {\n        go(\"rect\");\n    });\n});\n\ngo(\"circle\");",
         "difficulty": 2,
         "version": "master",
@@ -315,7 +315,7 @@
             "visual"
         ],
         "createdAt": "2024-10-25T20:13:50+09:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 17,
@@ -419,7 +419,7 @@
         "sortName": "1-concepts-zzzz-9999-curves",
         "category": "concepts",
         "group": "",
-        "description": "TBD",
+        "description": "Normalize speed on Bezier curves and track direction using derivatives over time",
         "code": "kaplay();\n\nfunction addPoint(c, ...args) {\n    return add([\n        \"point\",\n        rect(8, 8),\n        anchor(\"center\"),\n        pos(...args),\n        area(),\n        color(c),\n    ]);\n}\n\nfunction addBezier(...objects) {\n    const points = [...objects];\n\n    let t = 0;\n    return add([\n        pos(0, 0),\n        {\n            draw() {\n                const coords = points.map(p => p.pos);\n                const c = normalizedCurve(t => evaluateBezier(...coords, t));\n                drawCurve(t => evaluateBezier(...coords, t), {\n                    segments: 25,\n                    width: 4,\n                });\n                drawLine({\n                    p1: points[0].pos,\n                    p2: points[1].pos,\n                    width: 2,\n                    color: rgb(0, 0, 255),\n                });\n                drawLine({\n                    p1: points[3].pos,\n                    p2: points[2].pos,\n                    width: 2,\n                    color: rgb(0, 0, 255),\n                });\n                for (let i = 0; i <= 10; i++) {\n                    const p = evaluateBezier(...coords, i / 10);\n                    drawCircle({\n                        pos: p,\n                        radius: 4,\n                        color: YELLOW,\n                    });\n                }\n                for (let i = 0; i <= 10; i++) {\n                    const p = c(i / 10);\n                    drawCircle({\n                        pos: p,\n                        radius: 8,\n                        color: RED,\n                        opacity: 0.5,\n                    });\n                }\n            },\n            update() {\n            },\n        },\n    ]);\n}\n\nfunction drawCatmullRom(a, b, c, d) {\n    drawCurve(t => evaluateCatmullRom(a, b, c, d, t), {\n        segments: 25,\n        width: 4,\n    });\n}\n\nfunction normalizedFirstDerivative(curve, curveFirstDerivative) {\n    const curveLength = curveLengthApproximation(curve);\n    const length = curveLength(1);\n    return s => {\n        const l = s * length;\n        const t = curveLength(l, true);\n        return curveFirstDerivative(t);\n    };\n}\n\nfunction addCatmullRom(...objects) {\n    const points = [...objects];\n\n    let t = 0;\n    return add([\n        pos(0, 0),\n        {\n            draw() {\n                const coords = points.map(p => p.pos);\n                const first = coords[0].add(coords[0].sub(coords[1]));\n                const last = coords[coords.length - 1].add(\n                    coords[coords.length - 1].sub(coords[coords.length - 2]),\n                );\n                let curve;\n                let ct;\n                const curveCoords = [\n                    [first, ...coords.slice(0, 3)],\n                    coords,\n                    [...coords.slice(1), last],\n                ];\n                const curveLengths = curveCoords.map(cc =>\n                    curveLengthApproximation(t => evaluateCatmullRom(...cc, t))(\n                        1,\n                    )\n                );\n                const length = curveLengths.reduce((sum, l) => sum + l, 0);\n                const p0 = curveLengths[0] / length;\n                const p1 = curveLengths[1] / length;\n                const p2 = curveLengths[2] / length;\n                if (t <= p0) {\n                    curve = curveCoords[0];\n                    ct = t * (1 / p0);\n                }\n                else if (t <= p0 + p1) {\n                    curve = curveCoords[1];\n                    ct = (t - p0) * (1 / p1);\n                }\n                else {\n                    curve = curveCoords[2];\n                    ct = (t - p0 - p1) * (1 / p2);\n                }\n                const c = normalizedCurve(t => evaluateCatmullRom(...curve, t));\n                const cd = normalizedFirstDerivative(\n                    t => evaluateCatmullRom(...curve, t),\n                    t => evaluateCatmullRomFirstDerivative(...curve, t),\n                );\n\n                drawCatmullRom(first, ...coords.slice(0, 3), {\n                    segments: 10,\n                    width: 4,\n                });\n                drawCatmullRom(...coords, { segments: 10, width: 4 });\n                drawCatmullRom(...coords.slice(1), last, {\n                    segments: 10,\n                    width: 4,\n                });\n\n                const cartPos1 = evaluateCatmullRom(...curve, ct);\n                const tangent1 = evaluateCatmullRomFirstDerivative(\n                    ...curve,\n                    ct,\n                );\n                pushTransform();\n                pushTranslate(cartPos1);\n                pushRotate(tangent1.angle(1, 0));\n                drawRect({\n                    width: 16,\n                    height: 8,\n                    pos: vec2(-8, -4),\n                    color: YELLOW,\n                    outline: { color: BLUE, width: 4 },\n                });\n                popTransform();\n\n                const cartPos2 = c(ct);\n                const tangent2 = cd(ct);\n                pushTransform();\n                pushTranslate(cartPos2);\n                pushRotate(tangent2.angle(1, 0));\n                drawRect({\n                    width: 16,\n                    height: 8,\n                    pos: vec2(-8, -4),\n                    color: RED,\n                    opacity: 0.5,\n                    outline: { color: BLACK, width: 4 },\n                });\n                popTransform();\n            },\n            update() {\n                t += dt() / 10;\n                t = t % 1;\n            },\n        },\n    ]);\n}\n\n// Interraction\nlet obj = null;\n\nonClick(\"point\", (point) => {\n    obj = point;\n});\n\nonMouseMove((pos) => {\n    if (obj) {\n        obj.moveTo(pos);\n    }\n});\n\nonMouseRelease((pos) => {\n    obj = null;\n});\n\n// Scene creation\nconst p0 = addPoint(RED, 100, 40);\nconst p1 = addPoint(BLUE, 80, 120);\nconst p2 = addPoint(BLUE, 300, 60);\nconst p3 = addPoint(RED, 250, 200);\n\naddBezier(p0, p1, p2, p3);\n\nadd([\n    pos(20, 300),\n    text(\"yellow: default spacing\\nred: constant spacing\", { size: 20 }),\n]);\n\nconst c0 = addPoint(RED, 400, 40);\nconst c1 = addPoint(RED, 380, 120);\nconst c2 = addPoint(RED, 500, 60);\nconst c3 = addPoint(RED, 450, 200);\n\naddCatmullRom(c0, c1, c2, c3);\n\nadd([\n    pos(400, 300),\n    text(\"yellow: default speed\\nred: constant speed\", { size: 20 }),\n]);\n\nadd([\n    pos(20, 350),\n    text(\n        \"curves are non-linear in t. This means that for a given t,\\nthe distance traveled from the start doesn't grow at constant speed.\\nTo fix this, turn the curve into a normalized curve first.\\nUse derivatives to find the direction of the curve at a certain t.\",\n        { size: 20 },\n    ),\n]);",
         "difficulty": 2,
         "version": "master",
@@ -428,12 +428,12 @@
             "math"
         ],
         "createdAt": "2024-06-06T15:31:31+09:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 23,
         "name": "customCompDebug",
-        "formattedName": "Curves",
+        "formattedName": "Custom Components Debug",
         "sortName": "1-concepts-zzzz-9999-customCompDebug",
         "category": "concepts",
         "group": "",
@@ -447,7 +447,7 @@
             "debug"
         ],
         "createdAt": "2025-04-12T10:54:56-03:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 24,
@@ -659,7 +659,7 @@
         "sortName": "1-concepts-zzzz-9999-friction",
         "category": "concepts",
         "group": "",
-        "description": "TBD.",
+        "description": "How to apply friction to objects",
         "code": "kaplay({ scale: 0.5 });\nloadSprite(\"bean\", \"/sprites/bean.png\");\nloadSprite(\"grass\", \"/sprites/grass.png\");\nsetGravity(3200);\nconst level = addLevel([\n    \"@       =     \",\n    \"\",\n    \"=======       \",\n    \"      =       \",\n    \"      =========\",\n], {\n    tileWidth: 64,\n    tileHeight: 64,\n    pos: vec2(100, 200),\n    tiles: {\n        \"@\": () => [\n            sprite(\"bean\"),\n            area({ friction: 0.02, restitution: 0 }),\n            body(),\n            anchor(\"bot\"),\n            \"player\",\n        ],\n        \"=\": () => [\n            sprite(\"grass\"),\n            area({ friction: 0.02, restitution: 0 }),\n            body({ isStatic: true }),\n            anchor(\"bot\"),\n        ],\n    },\n});\n\nconst player = level.get(\"player\")[0];\nplayer.vel.x = 480;\ndebug.log(player.friction);",
         "difficulty": 0,
         "version": "master",
@@ -668,7 +668,7 @@
             "physics"
         ],
         "createdAt": "2024-10-06T10:05:00+09:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 36,
@@ -725,7 +725,7 @@
             "ai"
         ],
         "createdAt": "2024-06-26T21:43:07+09:00",
-        "updatedAt": "2025-05-07T10:22:35-04:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 39,
@@ -835,10 +835,10 @@
         "tags": [
             "basics",
             "effects",
-            "components"
+            "comps"
         ],
         "createdAt": "2021-03-12T00:08:17-05:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 45,
@@ -848,7 +848,7 @@
         "category": "basics",
         "group": "",
         "description": "How to use layer system",
-        "code": "kaplay();\n\nlayers([\"bg\", \"game\", \"ui\"], \"game\");\n\n// bg layer\nadd([\n    rect(width(), height()),\n    layer(\"bg\"),\n    color(rgb(64, 128, 255)),\n    // opacity(0.5)\n]).add([text(\"BG\")]);\n\n// game layer explicit\nadd([\n    pos(width() / 5, height() / 5),\n    rect(width() / 3, height() / 3),\n    layer(\"game\"),\n    color(rgb(255, 128, 64)),\n]).add([text(\"GAME\")]);\n\n// game layer implicit\nadd([\n    pos(3 * width() / 5, 3 * height() / 5),\n    rect(width() / 3, height() / 3),\n    color(rgb(255, 128, 64)),\n]).add([pos(width() / 3, height() / 3), text(\"GAME\"), anchor(\"botright\")]);\n\n// ui layer\nadd([\n    pos(center()),\n    rect(width() / 2, height() / 2),\n    anchor(\"center\"),\n    color(rgb(64, 255, 128)),\n]).add([text(\"UI\"), anchor(\"center\")]);",
+        "code": "kaplay();\n\nlayers([\"bg\", \"game\", \"ui\"], \"game\");\n\n// bg layer\nadd([\n    rect(width(), height()),\n    layer(\"bg\"),\n    color(rgb(64, 128, 255)),\n    // opacity(0.5)\n]).add([text(\"BG\")]);\n\n// game layer implicit\nadd([\n    pos(3 * width() / 5, 3 * height() / 5),\n    rect(width() / 3, height() / 3),\n    color(rgb(255, 128, 64)),\n]).add([pos(width() / 3, height() / 3), text(\"GAME\"), anchor(\"botright\")]);\n\n// ui layer\nadd([\n    pos(center()),\n    rect(width() / 2, height() / 2),\n    anchor(\"center\"),\n    layer(\"ui\"),\n    color(rgb(64, 255, 128)),\n]).add([text(\"UI\"), anchor(\"center\")]);\n\n// game layer explicit\nadd([\n    pos(width() / 5, height() / 5),\n    rect(width() / 3, height() / 3),\n    layer(\"game\"),\n    color(rgb(255, 128, 64)),\n]).add([text(\"GAME\")]);",
         "difficulty": 0,
         "version": "master",
         "minVersion": "3001.0",
@@ -858,7 +858,7 @@
             "ui"
         ],
         "createdAt": "2024-06-08T22:29:26+09:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-06-03T21:53:52+09:00"
     },
     {
         "id": 46,
@@ -934,7 +934,7 @@
             "comps"
         ],
         "createdAt": "2025-03-27T06:47:59-07:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 50,
@@ -971,7 +971,7 @@
             "effects"
         ],
         "createdAt": "2024-06-04T21:24:04+09:00",
-        "updatedAt": "2025-04-28T17:07:05+09:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 52,
@@ -989,7 +989,7 @@
             "effects"
         ],
         "createdAt": "2024-05-28T21:14:51+09:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 53,
@@ -1045,7 +1045,7 @@
             "game"
         ],
         "createdAt": "2022-12-26T17:11:19+09:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 56,
@@ -1065,7 +1065,7 @@
             "effects"
         ],
         "createdAt": "2022-12-26T17:11:19+09:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 57,
@@ -1090,8 +1090,8 @@
         "id": 58,
         "name": "onLoadError",
         "formattedName": "Load Error",
-        "sortName": "9999-zzzz-9999-onLoadError",
-        "category": "",
+        "sortName": "1-concepts-zzzz-9999-onLoadError",
+        "category": "concepts",
         "group": "",
         "description": "How to handle errors on load.",
         "code": "kaplay();\n\n// this will not load (uncomment)\n// loadSprite(\"bobo\", \"notavalidURL\");\n\n// process the load error\n// you decide whether to ignore it, or throw an error and halt the game\nonLoadError((name, asset) => {\n    // ignore it:\n    debug.error(`${name} failed to load: ${asset.error}`);\n    // throw an error:\n    throw asset.error;\n});",
@@ -1102,14 +1102,14 @@
             "loading"
         ],
         "createdAt": "2024-11-13T07:29:03-05:00",
-        "updatedAt": "2025-04-23T09:46:17-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 59,
         "name": "out",
-        "formattedName": "Out",
-        "sortName": "9999-zzzz-9999-out",
-        "category": "",
+        "formattedName": "Out of Screen",
+        "sortName": "1-concepts-zzzz-9999-out",
+        "category": "concepts",
         "group": "",
         "description": "How to handle objects that are out of screen.",
         "code": "// detect if obj is out of screen\n\nkaplay();\n\nloadSprite(\"bean\", \"/sprites/bean.png\");\n\n// custom comp\nfunction handleout() {\n    return {\n        id: \"handleout\",\n        require: [\"pos\"],\n        update() {\n            const spos = this.screenPos();\n            if (\n                spos.x < 0\n                || spos.x > width()\n                || spos.y < 0\n                || spos.y > height()\n            ) {\n                // triggers a custom event when out\n                this.trigger(\"out\");\n            }\n        },\n    };\n}\n\nconst SPEED = 640;\n\nfunction shoot() {\n    const center = vec2(width() / 2, height() / 2);\n    const mpos = mousePos();\n    add([\n        pos(center),\n        sprite(\"bean\"),\n        anchor(\"center\"),\n        handleout(),\n        \"bean\",\n        { dir: mpos.sub(center).unit() },\n    ]);\n}\n\nonKeyPress(\"space\", shoot);\nonClick(shoot);\n\nonUpdate(\"bean\", (m) => {\n    m.move(m.dir.scale(SPEED));\n});\n\n// binds a custom event \"out\" to tag group \"bean\"\non(\"out\", \"bean\", (m) => {\n    addKaboom(m.pos);\n    destroy(m);\n});",
@@ -1120,7 +1120,7 @@
             "comps"
         ],
         "createdAt": "2021-05-28T14:34:07-04:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 60,
@@ -1202,7 +1202,7 @@
         "category": "concepts",
         "group": "",
         "description": "How to do a basic pause screen",
-        "code": "kaplay();\n\nloadSprite(\"bean\", \"/sprites/bean.png\");\nloadSound(\"score\", \"/sounds/score.mp3\");\nloadSound(\"wooosh\", \"/sounds/wooosh.mp3\");\nloadSound(\"hit\", \"/sounds/hit.mp3\");\n\n// define gravity\nsetGravity(3200);\n\nsetBackground(141, 183, 255);\n\nscene(\"game\", () => {\n    const game = add([\n        timer(),\n    ]);\n\n    const PIPE_OPEN = 240;\n    const PIPE_MIN = 60;\n    const JUMP_FORCE = 800;\n    const SPEED = 320;\n    const CEILING = -60;\n\n    // a game object consists of a list of components and tags\n    const bean = game.add([\n        // sprite() means it's drawn with a sprite of name \"bean\" (defined above in 'loadSprite')\n        sprite(\"bean\"),\n        // give it a position\n        pos(width() / 4, 0),\n        // give it a collider\n        area(),\n        // body component enables it to fall and jump in a gravity world\n        body(),\n    ]);\n\n    // check for fall death\n    bean.onUpdate(() => {\n        if (bean.pos.y >= height() || bean.pos.y <= CEILING) {\n            // switch to \"lose\" scene\n            go(\"lose\", score);\n        }\n    });\n\n    // jump\n    onKeyPress(\"space\", () => {\n        bean.jump(JUMP_FORCE);\n        play(\"wooosh\");\n    });\n\n    onGamepadButtonPress(\"south\", () => {\n        bean.jump(JUMP_FORCE);\n        play(\"wooosh\");\n    });\n\n    // mobile\n    onClick(() => {\n        bean.jump(JUMP_FORCE);\n        play(\"wooosh\");\n    });\n\n    function spawnPipe() {\n        // calculate pipe positions\n        const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN);\n        const h2 = height() - h1 - PIPE_OPEN;\n\n        game.add([\n            pos(width(), 0),\n            rect(64, h1),\n            color(0, 127, 255),\n            outline(4),\n            area(),\n            move(LEFT, SPEED),\n            offscreen({ destroy: true }),\n            // give it tags to easier define behaviors see below\n            \"pipe\",\n        ]);\n\n        game.add([\n            pos(width(), h1 + PIPE_OPEN),\n            rect(64, h2),\n            color(0, 127, 255),\n            outline(4),\n            area(),\n            move(LEFT, SPEED),\n            offscreen({ destroy: true }),\n            // give it tags to easier define behaviors see below\n            \"pipe\",\n            // raw obj just assigns every field to the game obj\n            { passed: false },\n        ]);\n    }\n\n    // callback when bean onCollide with objects with tag \"pipe\"\n    bean.onCollide(\"pipe\", () => {\n        go(\"lose\", score);\n        play(\"hit\");\n        addKaboom(bean.pos);\n    });\n\n    // per frame event for all objects with tag 'pipe'\n    onUpdate(\"pipe\", (p) => {\n        // check if bean passed the pipe\n        if (p.pos.x + p.width <= bean.pos.x && p.passed === false) {\n            addScore();\n            p.passed = true;\n        }\n    });\n\n    // spawn a pipe every 1 sec\n    game.loop(1, () => {\n        spawnPipe();\n    });\n\n    let score = 0;\n\n    // display score\n    const scoreLabel = game.add([\n        text(score.toString()),\n        anchor(\"center\"),\n        pos(width() / 2, 80),\n        fixed(),\n        z(100),\n    ]);\n\n    function addScore() {\n        score++;\n        scoreLabel.text = score.toString();\n        play(\"score\");\n    }\n\n    let curTween = null;\n\n    onKeyPress(\"p\", () => {\n        game.paused = !game.paused;\n        if (curTween) curTween.cancel();\n        curTween = tween(\n            pauseMenu.pos,\n            game.paused ? center() : center().add(0, 700),\n            1,\n            (p) => pauseMenu.pos = p,\n            easings.easeOutElastic,\n        );\n        if (game.paused) {\n            pauseMenu.hidden = false;\n            pauseMenu.paused = false;\n        }\n        else {\n            curTween.onEnd(() => {\n                pauseMenu.hidden = true;\n                pauseMenu.paused = true;\n            });\n        }\n    });\n\n    const pauseMenu = add([\n        rect(300, 400),\n        color(255, 255, 255),\n        outline(4),\n        anchor(\"center\"),\n        pos(center().add(0, 700)),\n    ]);\n\n    pauseMenu.hidden = true;\n    pauseMenu.paused = true;\n});\n\nscene(\"lose\", (score) => {\n    add([\n        sprite(\"bean\"),\n        pos(width() / 2, height() / 2 - 108),\n        scale(3),\n        anchor(\"center\"),\n    ]);\n\n    // display score\n    add([\n        text(score),\n        pos(width() / 2, height() / 2 + 108),\n        scale(3),\n        anchor(\"center\"),\n    ]);\n\n    // go back to game with space is pressed\n    onKeyPress(\"space\", () => go(\"game\"));\n    onClick(() => go(\"game\"));\n});\n\ngo(\"game\");",
+        "code": "kaplay();\n\nloadSprite(\"bean\", \"/sprites/bean.png\");\nloadSound(\"score\", \"/sounds/score.mp3\");\nloadSound(\"wooosh\", \"/sounds/wooosh.mp3\");\nloadSound(\"hit\", \"/sounds/hit.mp3\");\n\n// define gravity\nsetGravity(3200);\n\nsetBackground(141, 183, 255);\n\nscene(\"game\", () => {\n    const game = add([\n        timer(),\n    ]);\n\n    const PIPE_OPEN = 240;\n    const PIPE_MIN = 60;\n    const JUMP_FORCE = 800;\n    const SPEED = 320;\n    const CEILING = -60;\n\n    // a game object consists of a list of components and tags\n    const bean = game.add([\n        // sprite() means it's drawn with a sprite of name \"bean\" (defined above in 'loadSprite')\n        sprite(\"bean\"),\n        // give it a position\n        pos(width() / 4, 0),\n        // give it a collider\n        area(),\n        // body component enables it to fall and jump in a gravity world\n        body(),\n    ]);\n\n    // check for fall death\n    bean.onUpdate(() => {\n        if (bean.pos.y >= height() || bean.pos.y <= CEILING) {\n            // switch to \"lose\" scene\n            go(\"lose\", score);\n        }\n    });\n\n    // jump\n    game.onKeyPress(\"space\", () => {\n        bean.jump(JUMP_FORCE);\n        play(\"wooosh\");\n    });\n\n    game.onGamepadButtonPress(\"south\", () => {\n        bean.jump(JUMP_FORCE);\n        play(\"wooosh\");\n    });\n\n    // mouse and touch\n    game.onMousePress(\"left\", () => {\n        bean.jump(JUMP_FORCE);\n        play(\"wooosh\");\n    });\n\n    function spawnPipe() {\n        // calculate pipe positions\n        const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN);\n        const h2 = height() - h1 - PIPE_OPEN;\n\n        game.add([\n            pos(width(), 0),\n            rect(64, h1),\n            color(0, 127, 255),\n            outline(4),\n            area(),\n            move(LEFT, SPEED),\n            offscreen({ destroy: true }),\n            // give it tags to easier define behaviors see below\n            \"pipe\",\n        ]);\n\n        game.add([\n            pos(width(), h1 + PIPE_OPEN),\n            rect(64, h2),\n            color(0, 127, 255),\n            outline(4),\n            area(),\n            move(LEFT, SPEED),\n            offscreen({ destroy: true }),\n            // give it tags to easier define behaviors see below\n            \"pipe\",\n            // raw obj just assigns every field to the game obj\n            { passed: false },\n        ]);\n    }\n\n    // callback when bean onCollide with objects with tag \"pipe\"\n    bean.onCollide(\"pipe\", () => {\n        go(\"lose\", score);\n        play(\"hit\");\n        addKaboom(bean.pos);\n    });\n\n    // per frame event for all objects with tag 'pipe'\n    onUpdate(\"pipe\", (p) => {\n        // check if bean passed the pipe\n        if (p.pos.x + p.width <= bean.pos.x && p.passed === false) {\n            addScore();\n            p.passed = true;\n        }\n    });\n\n    // spawn a pipe every 1 sec\n    game.loop(1, () => {\n        spawnPipe();\n    });\n\n    let score = 0;\n\n    // display score\n    const scoreLabel = game.add([\n        text(score.toString()),\n        anchor(\"center\"),\n        pos(width() / 2, 80),\n        fixed(),\n        z(100),\n    ]);\n\n    function addScore() {\n        score++;\n        scoreLabel.text = score.toString();\n        play(\"score\");\n    }\n\n    let curTween = null;\n\n    onKeyPress(\"p\", () => {\n        game.paused = !game.paused;\n        if (curTween) curTween.cancel();\n        curTween = tween(\n            pauseMenu.pos,\n            game.paused ? center() : center().add(0, 700),\n            1,\n            (p) => pauseMenu.pos = p,\n            easings.easeOutElastic,\n        );\n        if (game.paused) {\n            pauseMenu.hidden = false;\n            pauseMenu.paused = false;\n        }\n        else {\n            curTween.onEnd(() => {\n                pauseMenu.hidden = true;\n                pauseMenu.paused = true;\n            });\n        }\n    });\n\n    const pauseMenu = add([\n        rect(300, 400),\n        color(255, 255, 255),\n        outline(4),\n        anchor(\"center\"),\n        pos(center().add(0, 700)),\n    ]);\n\n    pauseMenu.hidden = true;\n    pauseMenu.paused = true;\n});\n\nscene(\"lose\", (score) => {\n    add([\n        sprite(\"bean\"),\n        pos(width() / 2, height() / 2 - 108),\n        scale(3),\n        anchor(\"center\"),\n    ]);\n\n    // display score\n    add([\n        text(score),\n        pos(width() / 2, height() / 2 + 108),\n        scale(3),\n        anchor(\"center\"),\n    ]);\n\n    // go back to game with space is pressed\n    onKeyPress(\"space\", () => go(\"game\"));\n    onClick(() => go(\"game\"));\n});\n\ngo(\"game\");",
         "difficulty": 1,
         "version": "master",
         "minVersion": "3001.0",
@@ -1210,7 +1210,7 @@
             "ui"
         ],
         "createdAt": "2020-12-30T22:25:20-05:00",
-        "updatedAt": "2025-04-22T17:04:48-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 65,
@@ -1230,12 +1230,12 @@
             "draw"
         ],
         "createdAt": "2025-03-21T06:51:00+09:00",
-        "updatedAt": "2025-04-26T13:48:50-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 66,
         "name": "platformEffector",
-        "formattedName": "One-way platforms 2",
+        "formattedName": "One-way Platforms",
         "sortName": "1-concepts-zzzz-9999-platformEffector",
         "category": "concepts",
         "group": "",
@@ -1249,7 +1249,7 @@
             "game"
         ],
         "createdAt": "2021-11-03T01:35:14-04:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 67,
@@ -1406,7 +1406,7 @@
         "sortName": "1-concepts-zzzz-9999-restitution",
         "category": "concepts",
         "group": "",
-        "description": "TBD.",
+        "description": "How to make objects bounce",
         "code": "kaplay({ scale: 0.5 });\n\nloadSprite(\"bean\", \"/sprites/bean.png\");\nloadSprite(\"grass\", \"/sprites/grass.png\");\n\nsetGravity(3200);\n\nconst level = addLevel([\n    \"@       =     \",\n    \"\",\n    \"=======       \",\n    \"      =       \",\n    \"      =========\",\n], {\n    tileWidth: 64,\n    tileHeight: 64,\n    pos: vec2(100, 200),\n    tiles: {\n        \"@\": () => [\n            sprite(\"bean\"),\n            area({ friction: 0, restitution: 1 }),\n            body(),\n            anchor(\"bot\"),\n            \"player\",\n        ],\n        \"=\": () => [\n            sprite(\"grass\"),\n            area({ friction: 0, restitution: 1 }),\n            body({ isStatic: true }),\n            anchor(\"bot\"),\n        ],\n    },\n});\n\nconst player = level.get(\"player\")[0];\nplayer.vel.x = 480;\ndebug.log(player.friction);",
         "difficulty": 0,
         "version": "master",
@@ -1415,7 +1415,7 @@
             "physics"
         ],
         "createdAt": "2024-10-06T10:05:00+09:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
         "id": 76,
