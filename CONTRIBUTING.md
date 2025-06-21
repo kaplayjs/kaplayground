@@ -13,6 +13,15 @@ pnpm dev # will start the development server
 pnpm fmt # before commit
 ```
 
+## Merge dev with master workflow
+
+```
+git checkout dev
+git merge master
+git checkout master
+git merge --ff-only dev
+```
+
 ## Commit messages
 
 Follow the KAPLAY repo [conventional commits guidelines.](https://github.com/kaplayjs/kaplay/blob/master/CONTRIBUTING.md#conventional-commits-guide)
