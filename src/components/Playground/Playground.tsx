@@ -25,12 +25,12 @@ const browserPrefersDark = window.matchMedia(
 
 document.documentElement.setAttribute(
     "data-theme",
-    defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
+    defaultTheme || (browserPrefersDark ? "Spiker" : "Spiker"),
 );
 
 localStorage.setItem(
     "theme",
-    defaultTheme || (browserPrefersDark ? "Spiker" : "Ghostiny"),
+    defaultTheme || (browserPrefersDark ? "Spiker" : "Spiker"),
 );
 
 const Playground = () => {

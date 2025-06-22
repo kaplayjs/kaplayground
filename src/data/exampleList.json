@@ -848,7 +848,7 @@
         "category": "basics",
         "group": "",
         "description": "How to use layer system",
-        "code": "kaplay();\n\nlayers([\"bg\", \"game\", \"ui\"], \"game\");\n\n// bg layer\nadd([\n    rect(width(), height()),\n    layer(\"bg\"),\n    color(rgb(64, 128, 255)),\n    // opacity(0.5)\n]).add([text(\"BG\")]);\n\n// game layer explicit\nadd([\n    pos(width() / 5, height() / 5),\n    rect(width() / 3, height() / 3),\n    layer(\"game\"),\n    color(rgb(255, 128, 64)),\n]).add([text(\"GAME\")]);\n\n// game layer implicit\nadd([\n    pos(3 * width() / 5, 3 * height() / 5),\n    rect(width() / 3, height() / 3),\n    color(rgb(255, 128, 64)),\n]).add([pos(width() / 3, height() / 3), text(\"GAME\"), anchor(\"botright\")]);\n\n// ui layer\nadd([\n    pos(center()),\n    rect(width() / 2, height() / 2),\n    anchor(\"center\"),\n    color(rgb(64, 255, 128)),\n]).add([text(\"UI\"), anchor(\"center\")]);",
+        "code": "kaplay();\n\nlayers([\"bg\", \"game\", \"ui\"], \"game\");\n\n// bg layer\nadd([\n    rect(width(), height()),\n    layer(\"bg\"),\n    color(rgb(64, 128, 255)),\n    // opacity(0.5)\n]).add([text(\"BG\")]);\n\n// game layer implicit\nadd([\n    pos(3 * width() / 5, 3 * height() / 5),\n    rect(width() / 3, height() / 3),\n    color(rgb(255, 128, 64)),\n]).add([pos(width() / 3, height() / 3), text(\"GAME\"), anchor(\"botright\")]);\n\n// ui layer\nadd([\n    pos(center()),\n    rect(width() / 2, height() / 2),\n    anchor(\"center\"),\n    layer(\"ui\"),\n    color(rgb(64, 255, 128)),\n]).add([text(\"UI\"), anchor(\"center\")]);\n\n// game layer explicit\nadd([\n    pos(width() / 5, height() / 5),\n    rect(width() / 3, height() / 3),\n    layer(\"game\"),\n    color(rgb(255, 128, 64)),\n]).add([text(\"GAME\")]);",
         "difficulty": 0,
         "version": "master",
         "minVersion": "3001.0",
@@ -858,7 +858,7 @@
             "ui"
         ],
         "createdAt": "2024-06-08T22:29:26+09:00",
-        "updatedAt": "2025-04-22T11:21:54-03:00"
+        "updatedAt": "2025-06-03T21:53:52+09:00"
     },
     {
         "id": 46,

@@ -36,11 +36,9 @@ export default {
                     error: "#ea6262",
                     "--animation-btn": 0,
                 },
-                "Ghostiny": {
-                    ...require("daisyui/src/theming/themes")["emerald"],
-                },
             },
         ],
+        defaultTheme: "Spiker",
         darkTheme: "Spiker",
         logs: false,
     },
