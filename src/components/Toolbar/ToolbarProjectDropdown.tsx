@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import { type FC, useRef } from "react";
+import { type FC, useRef, useState } from "react";
 import { buildProject } from "../../features/Projects/application/buildProject";
 import type { Asset } from "../../features/Projects/models/Asset";
 import type { File } from "../../features/Projects/models/File";
@@ -16,6 +16,8 @@ export const ToolbarProjectDropdown: FC = () => {
     const showNotification = useEditor((state) => state.showNotification);
     const createNewProject = useProject((state) => state.createNewProject);
     const newFileInput = useRef<HTMLInputElement>(null);
+    const importButton = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState<boolean>(false);
 
     const handleImport = () => {
         if (newFileInput.current) {
@@ -92,6 +94,7 @@ export const ToolbarProjectDropdown: FC = () => {
         };
 
         reader.readAsText(file);
+        setOpen(false);
     };
 
     const handleNewProject = () => {
@@ -109,6 +112,8 @@ export const ToolbarProjectDropdown: FC = () => {
             icon={assets.toolbox.outlined}
             text="Project"
             tip="Project Options"
+            open={open}
+            setOpen={setOpen}
         >
             <ToolbarDropdownButton
                 onClick={handleHTMLBuild}
@@ -119,7 +124,11 @@ export const ToolbarProjectDropdown: FC = () => {
             <KDropdownMenuSeparator />
 
             <ToolbarDropdownButton
+                ref={importButton}
                 onClick={handleImport}
+                onSelect={(e) => {
+                    e.preventDefault();
+                }}
             >
                 Import
             </ToolbarDropdownButton>

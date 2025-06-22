@@ -2,11 +2,15 @@ import {
     DropdownMenuItem,
     DropdownMenuItemProps,
 } from "@radix-ui/react-dropdown-menu";
-import type { FC, PropsWithChildren } from "react";
+import type { FC, PropsWithChildren, RefObject } from "react";
 
-type ToolbarDropdownButtonProps = PropsWithChildren<
-    DropdownMenuItemProps
->;
+interface ToolbarDropdownButtonProps extends
+    PropsWithChildren<
+        DropdownMenuItemProps
+    >
+{
+    ref?: RefObject<HTMLDivElement>;
+}
 
 export const ToolbarDropdownButton: FC<ToolbarDropdownButtonProps> = ({
     children,

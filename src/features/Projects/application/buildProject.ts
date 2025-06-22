@@ -16,9 +16,6 @@ export async function buildProject() {
 
     const kaplayLibDataUrl = toDataUrl(kaplayLib);
 
-    console.log("kaplayLib", kaplayLibDataUrl);
-    console.log("code", code);
-
     const projectCode = `
 <html>
 <head>
