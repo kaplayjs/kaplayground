@@ -36,6 +36,7 @@
     "daisyui": "^4.12.13",
     "esbuild-wasm": "^0.25.5",
     "magic-string": "^0.30.11",
+    "mime-types": "^3.0.1",
     "monaco-editor": "0.48.0",
     "pako": "^2.1.0",
     "query-registry": "^3.0.1",

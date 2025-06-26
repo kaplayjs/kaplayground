@@ -8,6 +8,7 @@ others are assumed as our hosted assets in public
 */
 
 import { assets } from "@kaplayjs/crew";
+import publicAssets from "../data/publicAssets.json";
 import { useProject } from "../features/Projects/stores/useProject";
 
 export const parseAssetPath = (path: string) => {
@@ -18,6 +19,15 @@ export const parseAssetPath = (path: string) => {
 
     if (pathInAssets) {
         path = pathInAssets.url;
+        return path;
+    }
+
+    const pathInPublic = publicAssets.assets.filter((asset) => {
+        if (asset.filename == normalPath) return asset;
+    })[0];
+
+    if (pathInPublic) {
+        path = pathInPublic.base64;
         return path;
     }
 

@@ -524,6 +524,22 @@
     },
     {
         "id": 28,
+        "name": "drawoncanvas",
+        "formattedName": "drawoncanvas",
+        "sortName": "9999-zzzz-9999-drawoncanvas",
+        "category": "",
+        "group": "",
+        "description": "",
+        "code": "kaplay();\n\nloadBean();\n\nloadShader(\n    \"invert\",\n    null,\n    `\nuniform float u_time;\n\nvec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {\n\tvec4 c = def_frag();\n\tfloat t = (sin(u_time * 4.0) + 1.0) / 2.0;\n\treturn mix(c, vec4(1.0 - c.r, 1.0 - c.g, 1.0 - c.b, c.a), t);\n}\n`,\n);\n\nonLoad(() => {\n    const canvas = makeCanvas(width(), height());\n\n    const cached = add([\n        drawon(canvas.fb, { childrenOnly: true, refreshOnly: true }),\n        {\n            draw() {\n                drawCanvas({\n                    canvas,\n                    shader: \"invert\",\n                    uniform: { \"u_time\": time() },\n                });\n            },\n        },\n        shader(\"invert\"),\n    ]);\n\n    const screen = new Rect(vec2(100, 100), width() - 200, height() - 200);\n\n    function addBean() {\n        const bean = cached.add([\n            pos(screen.random()),\n            sprite(\"bean\"),\n        ]);\n        cached.refresh();\n    }\n\n    addBean();\n\n    onKeyPress(\"space\", addBean);\n});",
+        "difficulty": null,
+        "version": "master",
+        "minVersion": "",
+        "tags": [],
+        "createdAt": "2025-05-21T13:19:51+09:00",
+        "updatedAt": "2025-05-21T13:19:51+09:00"
+    },
+    {
+        "id": 29,
         "name": "eatlove",
         "formattedName": "Eat Love",
         "sortName": "2-games-zzzz-9999-eatlove",
@@ -541,7 +557,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 29,
+        "id": 30,
         "name": "egg",
         "formattedName": "Egg",
         "sortName": "2-games-zzzz-9999-egg",
@@ -559,7 +575,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 30,
+        "id": 31,
         "name": "fadeIn",
         "formattedName": "Fade In",
         "sortName": "1-concepts-zzzz-9999-fadeIn",
@@ -578,7 +594,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 31,
+        "id": 32,
         "name": "fakeMouse",
         "formattedName": "Fake Mouse",
         "sortName": "1-concepts-zzzz-9999-fakeMouse",
@@ -597,7 +613,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 32,
+        "id": 33,
         "name": "flamebar",
         "formattedName": "Flame bar",
         "sortName": "1-concepts-zzzz-9999-flamebar",
@@ -616,7 +632,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 33,
+        "id": 34,
         "name": "flappy",
         "formattedName": "Flappy",
         "sortName": "2-games-zzzz-9999-flappy",
@@ -634,7 +650,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 34,
+        "id": 35,
         "name": "frames",
         "formattedName": "Frames",
         "sortName": "1-concepts-zzzz-9999-frames",
@@ -653,7 +669,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 35,
+        "id": 36,
         "name": "friction",
         "formattedName": "Friction",
         "sortName": "1-concepts-zzzz-9999-friction",
@@ -671,7 +687,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 36,
+        "id": 37,
         "name": "gamepad",
         "formattedName": "Gamepad",
         "sortName": "1-concepts-zzzz-9999-gamepad",
@@ -690,7 +706,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 37,
+        "id": 38,
         "name": "gamepadMulti",
         "formattedName": "Multi-Gamepad",
         "sortName": "1-concepts-zzzz-9999-gamepadMulti",
@@ -708,7 +724,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 38,
+        "id": 39,
         "name": "ghosthunting",
         "formattedName": "Ghost hunting",
         "sortName": "2-games-zzzz-9999-ghosthunting",
@@ -728,7 +744,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 39,
+        "id": 40,
         "name": "gravity",
         "formattedName": "Gravity",
         "sortName": "1-concepts-zzzz-9999-gravity",
@@ -747,7 +763,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 40,
+        "id": 41,
         "name": "health",
         "formattedName": "Health",
         "sortName": "1-concepts-zzzz-9999-health",
@@ -765,7 +781,7 @@
         "updatedAt": "2025-05-04T18:18:52-05:00"
     },
     {
-        "id": 41,
+        "id": 42,
         "name": "hover",
         "formattedName": "Hover",
         "sortName": "0-basics-zzzz-9999-hover",
@@ -783,7 +799,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 42,
+        "id": 43,
         "name": "kaboom",
         "formattedName": "Kaboom!",
         "sortName": "0-basics-zzzz-9999-kaboom",
@@ -802,7 +818,7 @@
         "updatedAt": "2025-05-01T18:12:12-03:00"
     },
     {
-        "id": 43,
+        "id": 44,
         "name": "kaplayLogoAnim",
         "formattedName": "KAPLAY Logo Animation",
         "sortName": "1-concepts-zzzz-9999-kaplayLogoAnim",
@@ -821,7 +837,7 @@
         "updatedAt": "2025-05-05T00:12:02+02:00"
     },
     {
-        "id": 44,
+        "id": 45,
         "name": "layer",
         "formattedName": "Layer",
         "sortName": "0-basics-zzzz-9999-layer",
@@ -841,7 +857,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 45,
+        "id": 46,
         "name": "layers",
         "formattedName": "Layers",
         "sortName": "0-basics-zzzz-9999-layers",
@@ -861,7 +877,7 @@
         "updatedAt": "2025-06-03T21:53:52+09:00"
     },
     {
-        "id": 46,
+        "id": 47,
         "name": "lerp",
         "formattedName": "Lerp",
         "sortName": "1-concepts-zzzz-9999-lerp",
@@ -880,7 +896,7 @@
         "updatedAt": "2025-04-27T12:50:27-05:00"
     },
     {
-        "id": 47,
+        "id": 48,
         "name": "level",
         "formattedName": "Level",
         "sortName": "0-basics-zzzz-9999-level",
@@ -899,7 +915,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 48,
+        "id": 49,
         "name": "levelRaycast",
         "formattedName": "Level Raycast",
         "sortName": "0-basics-zzzz-9999-levelRaycast",
@@ -918,7 +934,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 49,
+        "id": 50,
         "name": "levelcomp",
         "formattedName": "Level component",
         "sortName": "1-concepts-zzzz-9999-levelcomp",
@@ -937,7 +953,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 50,
+        "id": 51,
         "name": "lifespan",
         "formattedName": "Lifespan",
         "sortName": "0-basics-zzzz-9999-lifespan",
@@ -956,7 +972,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 51,
+        "id": 52,
         "name": "linecap",
         "formattedName": "Lines",
         "sortName": "1-concepts-zzzz-9999-linecap",
@@ -974,7 +990,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 52,
+        "id": 53,
         "name": "linejoin",
         "formattedName": "Line join",
         "sortName": "1-concepts-zzzz-9999-linejoin",
@@ -992,7 +1008,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 53,
+        "id": 54,
         "name": "livequery",
         "formattedName": "Live query",
         "sortName": "1-concepts-zzzz-9999-livequery",
@@ -1010,7 +1026,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 54,
+        "id": 55,
         "name": "loadingScreen",
         "formattedName": "Custom Loading Screen",
         "sortName": "1-concepts-zzzz-9999-loadingScreen",
@@ -1029,7 +1045,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 55,
+        "id": 56,
         "name": "maze",
         "formattedName": "Maze",
         "sortName": "1-concepts-zzzz-9999-maze",
@@ -1048,7 +1064,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 56,
+        "id": 57,
         "name": "mazeRaycastedLight",
         "formattedName": "Maze Raycasted Light",
         "sortName": "1-concepts-zzzz-9999-mazeRaycastedLight",
@@ -1068,7 +1084,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 57,
+        "id": 58,
         "name": "movement",
         "formattedName": "Movement",
         "sortName": "1-concepts-zzzz-9999-movement",
@@ -1087,7 +1103,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 58,
+        "id": 59,
         "name": "onLoadError",
         "formattedName": "Load Error",
         "sortName": "1-concepts-zzzz-9999-onLoadError",
@@ -1105,7 +1121,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 59,
+        "id": 60,
         "name": "out",
         "formattedName": "Out of Screen",
         "sortName": "1-concepts-zzzz-9999-out",
@@ -1123,7 +1139,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 60,
+        "id": 61,
         "name": "overlap",
         "formattedName": "Overlap",
         "sortName": "1-concepts-zzzz-9999-overlap",
@@ -1141,7 +1157,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 61,
+        "id": 62,
         "name": "particle",
         "formattedName": "Particle",
         "sortName": "1-concepts-particles-0-particle",
@@ -1159,7 +1175,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 62,
+        "id": 63,
         "name": "particleTrail",
         "formattedName": "Particle Trail",
         "sortName": "1-concepts-particles-1-particleTrail",
@@ -1177,7 +1193,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 63,
+        "id": 64,
         "name": "patrol",
         "formattedName": "Patrol",
         "sortName": "1-concepts-zzzz-9999-patrol",
@@ -1195,7 +1211,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 64,
+        "id": 65,
         "name": "pauseMenu",
         "formattedName": "Pause Menu",
         "sortName": "1-concepts-zzzz-9999-pauseMenu",
@@ -1213,7 +1229,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 65,
+        "id": 66,
         "name": "picture",
         "formattedName": "Picture",
         "sortName": "1-concepts-zzzz-9999-picture",
@@ -1233,7 +1249,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 66,
+        "id": 67,
         "name": "platformEffector",
         "formattedName": "One-way Platforms",
         "sortName": "1-concepts-zzzz-9999-platformEffector",
@@ -1252,7 +1268,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 67,
+        "id": 68,
         "name": "platformer",
         "formattedName": "Platformer",
         "sortName": "2-games-zzzz-9999-platformer",
@@ -1271,7 +1287,7 @@
         "updatedAt": "2025-05-01T20:31:48+09:00"
     },
     {
-        "id": 68,
+        "id": 69,
         "name": "polygon",
         "formattedName": "Polygon",
         "sortName": "1-concepts-zzzz-9999-polygon",
@@ -1290,7 +1306,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 69,
+        "id": 70,
         "name": "pong",
         "formattedName": "Pong",
         "sortName": "2-games-zzzz-9999-pong",
@@ -1309,7 +1325,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 70,
+        "id": 71,
         "name": "postEffect",
         "formattedName": "Post-Effect",
         "sortName": "1-concepts-zzzz-9999-postEffect",
@@ -1327,7 +1343,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 71,
+        "id": 72,
         "name": "query",
         "formattedName": "Query",
         "sortName": "1-concepts-zzzz-9999-query",
@@ -1345,7 +1361,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 72,
+        "id": 73,
         "name": "raycastObject",
         "formattedName": "Raycast Object",
         "sortName": "1-concepts-zzzz-9999-raycastObject",
@@ -1363,7 +1379,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 73,
+        "id": 74,
         "name": "raycastShape",
         "formattedName": "Raycast Shape",
         "sortName": "1-concepts-zzzz-9999-raycastShape",
@@ -1381,7 +1397,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 74,
+        "id": 75,
         "name": "raycaster3d",
         "formattedName": "3D",
         "sortName": "2-games-zzzz-9999-raycaster3d",
@@ -1400,7 +1416,7 @@
         "updatedAt": "2025-04-26T14:20:03-03:00"
     },
     {
-        "id": 75,
+        "id": 76,
         "name": "restitution",
         "formattedName": "Restitution",
         "sortName": "1-concepts-zzzz-9999-restitution",
@@ -1418,7 +1434,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 76,
+        "id": 77,
         "name": "rpg",
         "formattedName": "RPG",
         "sortName": "2-games-zzzz-9999-rpg",
@@ -1437,7 +1453,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 77,
+        "id": 78,
         "name": "runner",
         "formattedName": "Runner",
         "sortName": "2-games-zzzz-9999-runner",
@@ -1456,7 +1472,23 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 78,
+        "id": 79,
+        "name": "scaletest",
+        "formattedName": "scaletest",
+        "sortName": "9999-zzzz-9999-scaletest",
+        "category": "",
+        "group": "",
+        "description": "",
+        "code": "kaplay({\n    letterbox: true,\n    width: 640,\n    height: 360,\n});\n\n// load assets\nloadSprite(\"bean\", \"/sprites/bean.png\");\n\nonDraw(() => {\n    drawSprite({\n        pos: vec2(40, 10),\n        color: RED,\n        sprite: \"bean\",\n        scale: vec2(1),\n    });\n});\n\nadd([pos(vec2(10, 10)), sprite(\"bean\")]);",
+        "difficulty": null,
+        "version": "master",
+        "minVersion": "",
+        "tags": [],
+        "createdAt": "2025-05-26T19:50:38+09:00",
+        "updatedAt": "2025-05-26T19:50:38+09:00"
+    },
+    {
+        "id": 80,
         "name": "scenes",
         "formattedName": "Scenes",
         "sortName": "0-basics-zzzz-9999-scenes",
@@ -1474,7 +1506,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 79,
+        "id": 81,
         "name": "shader",
         "formattedName": "Shaders",
         "sortName": "0-basics-zzzz-9999-shader",
@@ -1493,7 +1525,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 80,
+        "id": 82,
         "name": "shapeRect",
         "formattedName": "Rect",
         "sortName": "0-basics-zzzz-9999-shapeRect",
@@ -1512,7 +1544,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 81,
+        "id": 83,
         "name": "shooter",
         "formattedName": "Shooter",
         "sortName": "2-games-zzzz-9999-shooter",
@@ -1531,7 +1563,7 @@
         "updatedAt": "2025-05-07T10:22:35-04:00"
     },
     {
-        "id": 82,
+        "id": 84,
         "name": "size",
         "formattedName": "Keep Aspect Ratio",
         "sortName": "0-basics-zzzz-9999-size",
@@ -1549,7 +1581,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 83,
+        "id": 85,
         "name": "slice9",
         "formattedName": "Slice-9",
         "sortName": "1-concepts-zzzz-9999-slice9",
@@ -1568,7 +1600,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 84,
+        "id": 86,
         "name": "sokoban",
         "formattedName": "Sokoban",
         "sortName": "2-games-zzzz-9999-sokoban",
@@ -1586,7 +1618,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 85,
+        "id": 87,
         "name": "sprite",
         "formattedName": "Sprites",
         "sortName": "0-basics-zzzz-9999-sprite",
@@ -1605,7 +1637,7 @@
         "updatedAt": "2025-05-04T23:04:38+02:00"
     },
     {
-        "id": 86,
+        "id": 88,
         "name": "spriteatlas",
         "formattedName": "Sprite-Atlas",
         "sortName": "1-concepts-zzzz-9999-spriteatlas",
@@ -1623,7 +1655,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 87,
+        "id": 89,
         "name": "text",
         "formattedName": "Text",
         "sortName": "0-basics-zzzz-9999-text",
@@ -1642,7 +1674,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 88,
+        "id": 90,
         "name": "textInput",
         "formattedName": "Text Input",
         "sortName": "0-basics-zzzz-9999-textInput",
@@ -1661,7 +1693,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 89,
+        "id": 91,
         "name": "tiled",
         "formattedName": "Tiled",
         "sortName": "1-concepts-zzzz-9999-tiled",
@@ -1680,7 +1712,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 90,
+        "id": 92,
         "name": "timer",
         "formattedName": "Timer",
         "sortName": "1-concepts-zzzz-9999-timer",
@@ -1698,7 +1730,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 91,
+        "id": 93,
         "name": "tween",
         "formattedName": "Tween",
         "sortName": "1-concepts-tween-0-tween",
@@ -1716,7 +1748,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 92,
+        "id": 94,
         "name": "tweenEasings",
         "formattedName": "Tween Easings",
         "sortName": "1-concepts-tween-1-tweenEasings",
@@ -1734,7 +1766,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 93,
+        "id": 95,
         "name": "tweenEasingsCustom",
         "formattedName": "Custom Easings",
         "sortName": "1-concepts-tween-2-tweenEasingsCustom",
@@ -1753,7 +1785,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 94,
+        "id": 96,
         "name": "video",
         "formattedName": "Video",
         "sortName": "1-concepts-zzzz-9999-video",
@@ -1771,7 +1803,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 95,
+        "id": 97,
         "name": "vn",
         "formattedName": "Visual Novel",
         "sortName": "2-games-zzzz-9999-vn",

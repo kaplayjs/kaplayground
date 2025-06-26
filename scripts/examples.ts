@@ -4,6 +4,7 @@
 import { execSync } from "child_process";
 import { parse } from "comment-parser";
 import fs from "fs";
+import mime from "mime-types";
 import path from "path";
 import type { Packument } from "query-registry";
 import examplesData from "../kaplay/examples/examples.json" with {
@@ -24,7 +25,56 @@ const defaultExamplesPath = path.join(
     "kaplay",
     "examples",
 );
+
 const distPath = path.join(import.meta.dirname, "..", "src", "data");
+
+export const generatePublicAssets = async (
+    examplesPath = defaultExamplesPath,
+) => {
+    function getAssetsRecursively(dir) {
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+        return entries.flatMap((entry) => {
+            const fullPath = path.join(dir, entry.name);
+
+            if (entry.isDirectory()) {
+                return getAssetsRecursively(fullPath);
+            }
+
+            if (path.extname(entry.name) !== ".js") {
+                const content = fs.readFileSync(fullPath);
+                const mimeType = mime.lookup(fullPath)
+                    || "application/octet-stream";
+                const base64 = content.toString("base64");
+                const dataUrl = `data:${mimeType};base64,${base64}`;
+                const relativePath = path.relative(
+                    defaultExamplesPath,
+                    fullPath,
+                ).replace(
+                    /\\/g,
+                    "/",
+                );
+
+                return [{
+                    filename: relativePath,
+                    base64: dataUrl,
+                }];
+            }
+
+            return [];
+        });
+    }
+
+    const assets = getAssetsRecursively(examplesPath);
+
+    // Write a JSON file with the examples
+    fs.writeFileSync(
+        path.join(distPath, "publicAssets.json"),
+        JSON.stringify({ assets: assets }, null, 4),
+    );
+
+    console.log("Generated publicAssets.json");
+};
 
 export const generateExamples = async (examplesPath = defaultExamplesPath) => {
     let exampleCount = 0;
@@ -116,3 +166,4 @@ function getFileTimestamp(
 }
 
 generateExamples();
+generatePublicAssets();
