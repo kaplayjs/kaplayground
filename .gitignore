@@ -27,3 +27,7 @@ pnpm-debug.log*
 public/kaboom.js
 public/kaboom.js.map
 lib.d.ts
+
+# Neutralino.JS
+bin/
+neutralinojs.log

@@ -16,7 +16,8 @@
     "dev:bin": "node scripts/cli.js --examples=fakeExamples",
     "prepare": "cd kaplay && pnpm i && cd .. && npm run generate:lib && npm run generate:examples && npm run generate:versions",
     "sandbox:build": "cd sandbox && vite build",
-    "sandbox:deploy": "cd sandbox && wrangler pages deploy"
+    "sandbox:deploy": "cd sandbox && wrangler pages deploy",
+    "neu": "neu"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.2.5",
