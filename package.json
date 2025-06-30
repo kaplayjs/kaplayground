@@ -1,7 +1,7 @@
 {
   "name": "kaplayground",
   "type": "module",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "bin": "scripts/cli.js",
   "scripts": {
     "dev": "vite dev",

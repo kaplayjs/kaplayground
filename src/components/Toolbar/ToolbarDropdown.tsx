@@ -1,18 +1,19 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import type { FC, PropsWithChildren } from "react";
+import type { ComponentProps, FC, PropsWithChildren } from "react";
 import { ToolbarButton } from "./ToolbarButton";
 
-interface ToolbarDropwdownProps extends PropsWithChildren {
-    icon: string;
-    tip: string;
-    text: string;
-}
+type ToolbarDropwdownProps =
+    & PropsWithChildren<ComponentProps<typeof ToolbarButton>>
+    & {
+        open?: boolean;
+        setOpen?: (v: boolean) => void;
+    };
 
 export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
-    { children, ...toolbarButtonProps },
+    { children, open, setOpen, ...toolbarButtonProps },
 ) => {
     return (
-        <DropdownMenu.Root>
+        <DropdownMenu.Root open={open} onOpenChange={setOpen}>
             <DropdownMenu.Trigger asChild>
                 <ToolbarButton
                     tabIndex={0}

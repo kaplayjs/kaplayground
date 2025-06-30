@@ -37,8 +37,7 @@ export const createAssetsSlice: StateCreator<
 ) => ({
     assetsLastId: 0,
     addAsset(asset) {
-        debug(0, "[assets] Adding asset", asset.path);
-
+        debug(0, "[assets] Adding asset", asset);
         const assets = get().project.assets;
 
         const foundAsset = assets.has(asset.path)
@@ -53,6 +52,8 @@ export const createAssetsSlice: StateCreator<
 
             set({});
         } else {
+            debug(0, "[assets] Asset added", asset);
+
             assets.set(asset.path, {
                 ...asset,
                 importFunction: loadByAsset(

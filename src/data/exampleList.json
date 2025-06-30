@@ -533,7 +533,7 @@
         "code": "kaplay();\n\nloadBean();\n\nloadShader(\n    \"invert\",\n    null,\n    `\nuniform float u_time;\n\nvec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {\n\tvec4 c = def_frag();\n\tfloat t = (sin(u_time * 4.0) + 1.0) / 2.0;\n\treturn mix(c, vec4(1.0 - c.r, 1.0 - c.g, 1.0 - c.b, c.a), t);\n}\n`,\n);\n\nonLoad(() => {\n    const canvas = makeCanvas(width(), height());\n\n    const cached = add([\n        drawon(canvas.fb, { childrenOnly: true, refreshOnly: true }),\n        {\n            draw() {\n                drawCanvas({\n                    canvas,\n                    shader: \"invert\",\n                    uniform: { \"u_time\": time() },\n                });\n            },\n        },\n        shader(\"invert\"),\n    ]);\n\n    const screen = new Rect(vec2(100, 100), width() - 200, height() - 200);\n\n    function addBean() {\n        const bean = cached.add([\n            pos(screen.random()),\n            sprite(\"bean\"),\n        ]);\n        cached.refresh();\n    }\n\n    addBean();\n\n    onKeyPress(\"space\", addBean);\n});",
         "difficulty": null,
         "version": "master",
-        "minVersion": "",
+        "minVersion": "noset",
         "tags": [],
         "createdAt": "2025-05-21T13:19:51+09:00",
         "updatedAt": "2025-05-21T13:19:51+09:00"
@@ -1482,7 +1482,7 @@
         "code": "kaplay({\n    letterbox: true,\n    width: 640,\n    height: 360,\n});\n\n// load assets\nloadSprite(\"bean\", \"/sprites/bean.png\");\n\nonDraw(() => {\n    drawSprite({\n        pos: vec2(40, 10),\n        color: RED,\n        sprite: \"bean\",\n        scale: vec2(1),\n    });\n});\n\nadd([pos(vec2(10, 10)), sprite(\"bean\")]);",
         "difficulty": null,
         "version": "master",
-        "minVersion": "",
+        "minVersion": "noset",
         "tags": [],
         "createdAt": "2025-05-26T19:50:38+09:00",
         "updatedAt": "2025-05-26T19:50:38+09:00"
