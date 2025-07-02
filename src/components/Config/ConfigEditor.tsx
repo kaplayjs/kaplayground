@@ -1,9 +1,20 @@
+import { confirm } from "../../util/confirm";
 import { ConfigCheckbox } from "./ConfigForm/ConfigCheckbox.tsx";
 import { ConfigSelect } from "./ConfigForm/ConfigSelect.tsx";
 
 export const ConfigEditor = () => {
-    const handleDeleteAllData = () => {
-        if (confirm("Are you sure you want to delete all data?")) {
+    const handleDeleteAllData = async () => {
+        if (
+            await confirm(
+                "Delete all data?",
+                "This action is irreversible! You will lose everything...",
+                {
+                    dismissText: "Oh, please no!",
+                    confirmText: "Yes, delete.",
+                    type: "danger",
+                },
+            )
+        ) {
             localStorage.clear();
             location.reload();
         }

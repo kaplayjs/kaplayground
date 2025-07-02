@@ -8,6 +8,7 @@ import type { File } from "../../features/Projects/models/File";
 import type { FileKind } from "../../features/Projects/models/FileKind";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
+import { confirm } from "../../util/confirm";
 
 type Props = {
     file: File;
@@ -57,14 +58,26 @@ export const FileEntry: FC<Props> = ({ file }) => {
         setCurrentFile(file.path);
     };
 
-    const handleDelete: MouseEventHandler = (e) => {
+    const handleDelete: MouseEventHandler = async (e) => {
         e.stopPropagation();
 
         if (file.kind === "kaplay" || file.kind === "main") {
-            return alert("You cannot remove this file");
+            await confirm("You cannot remove this file", null, {
+                type: "neutral",
+            });
         }
 
-        if (confirm("Are you sure you want to remove this scene?")) {
+        if (
+            await confirm(
+                `Remove the '${removeExtension(basename(file.path))}' scene?`,
+                null,
+                {
+                    confirmText: "Yes, remove",
+                    dismissText: "No, keep",
+                    type: "danger",
+                },
+            )
+        ) {
             removeFile(file.path);
             setCurrentFile("main.js");
         }

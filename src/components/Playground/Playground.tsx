@@ -14,6 +14,7 @@ import { AboutDialog } from "../About";
 import ConfigDialog from "../Config/ConfigDialog";
 import { ProjectBrowser } from "../ProjectBrowser";
 import ExampleList from "../Toolbar/ExampleList";
+import { ConfirmDialog } from "../UI/ConfirmDialog";
 import { LoadingPlayground } from "./LoadingPlayground";
 import { WorkspaceExample } from "./WorkspaceExample";
 import { WorkspaceProject } from "./WorkspaceProject";
@@ -156,6 +157,7 @@ const Playground = () => {
             <Tooltip id="global" />
             <Tooltip id="global-open" isOpen={true} />
             <ProjectBrowser />
+            <ConfirmDialog />
         </>
     );
 };
