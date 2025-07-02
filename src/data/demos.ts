@@ -56,8 +56,7 @@ export const demos = examplesList.map((example) => {
             name: tag,
             ...(tags as ExamplesDataRecord)?.[tag],
         })),
-        difficulty: difficulties[example.difficulty]
-            ?? difficulties[difficulties.length - 1],
+        difficulty: difficulties[example.difficulty ?? difficulties.length - 1],
         key: example.name,
     };
 
