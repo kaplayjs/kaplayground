@@ -5,6 +5,7 @@ export type ConfirmOptions = {
     confirmText?: string;
     dismissText?: string;
     type?: "danger" | "warning" | "neutral";
+    cancelImmediate?: boolean;
 };
 export type ConfrimCallback = (
     title: string,

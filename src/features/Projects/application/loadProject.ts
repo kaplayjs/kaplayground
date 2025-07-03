@@ -27,6 +27,7 @@ export const loadProject = async (projectKey: string) => {
             ...project,
             files: new Map(project.files),
             assets: new Map(project.assets),
+            buildMode: project.buildMode || "legacy",
         },
     });
 

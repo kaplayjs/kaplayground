@@ -12,6 +12,7 @@ import { decompressCode } from "../../util/compressCode";
 import { debug } from "../../util/logs";
 import { AboutDialog } from "../About";
 import ConfigDialog from "../Config/ConfigDialog";
+import ProjectPreferences from "../Project/ProjectPreferences";
 import { ProjectBrowser } from "../ProjectBrowser";
 import ExampleList from "../Toolbar/ExampleList";
 import { ConfirmDialog } from "../UI/ConfirmDialog";
@@ -157,6 +158,7 @@ const Playground = () => {
             <Tooltip id="global" />
             <Tooltip id="global-open" isOpen={true} />
             <ProjectBrowser />
+            <ProjectPreferences />
             <ConfirmDialog />
         </>
     );

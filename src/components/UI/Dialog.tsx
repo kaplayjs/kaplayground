@@ -1,4 +1,10 @@
-import { type ComponentProps, type FC, forwardRef } from "react";
+import {
+    type ComponentProps,
+    type FC,
+    forwardRef,
+    useImperativeHandle,
+    useRef,
+} from "react";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "../../util/cn";
 
@@ -10,6 +16,8 @@ interface DialogProps extends ComponentProps<"dialog"> {
     confirmText?: string;
     confirmType?: "danger" | "warning" | "neutral";
     dismissText?: string;
+    saveDisabled?: boolean;
+    cancelImmediate?: boolean;
     mainClass?: ClassNameValue;
     contentClass?: ClassNameValue;
 }
@@ -26,23 +34,51 @@ export const Dialog: FC<DialogProps> = forwardRef<
         confirmText,
         confirmType,
         dismissText,
+        saveDisabled,
+        cancelImmediate,
         mainClass,
         contentClass,
         ...props
     },
     ref,
 ) => {
+    const dialogRef = useRef<HTMLDialogElement>(null);
+    useImperativeHandle(ref, () => dialogRef.current as HTMLDialogElement);
+
     const confirmBtnClass = {
         "btn-error": confirmType == "danger",
         "btn-warning": confirmType == "warning",
         "btn-ghost bg-base-content/10": confirmType == "neutral",
     };
 
+    const onCancel = () => {
+        const dialog = dialogRef.current;
+        if (!dialog) return;
+
+        const cancel = () => {
+            onCloseWithoutSave?.();
+            onDismiss?.();
+            if (!cancelImmediate) {
+                dialog.removeEventListener("transitionend", cancel);
+            }
+        };
+
+        if (cancelImmediate) {
+            cancel();
+            return;
+        }
+
+        dialog.addEventListener("transitionend", cancel, {
+            once: true,
+        });
+    };
+
     return (
         <dialog
-            ref={ref}
+            ref={dialogRef}
             className="modal backdrop:opacity-0 bg-[#0a0c10]/50"
             id={props.id}
+            onCancel={onCancel}
         >
             <main
                 className={cn(
@@ -94,8 +130,9 @@ export const Dialog: FC<DialogProps> = forwardRef<
 
                                 {onSave && (
                                     <button
-                                        className="btn btn-primary py-3 min-h-0 h-auto only:ml-auto"
+                                        className="btn btn-primary py-3 min-h-0 h-auto only:ml-auto disabled:bg-neutral disabled:text-base-content/50"
                                         onClick={onSave}
+                                        disabled={saveDisabled}
                                     >
                                         Save Changes
                                     </button>
@@ -109,14 +146,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
                 method="dialog"
                 className="modal-backdrop"
             >
-                <button
-                    onClick={() => {
-                        onCloseWithoutSave && onCloseWithoutSave();
-                        onDismiss && onDismiss();
-                    }}
-                >
-                    Close
-                </button>
+                <button onClick={onCancel}>Close</button>
             </form>
         </dialog>
     );

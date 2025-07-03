@@ -107,6 +107,11 @@ export const ToolbarProjectDropdown: FC = () => {
         run();
     };
 
+    const handlePreferences = () => {
+        document.querySelector<HTMLDialogElement>("#project-preferences")
+            ?.showModal();
+    };
+
     return (
         <ToolbarDropdown
             icon={assets.toolbox.outlined}
@@ -115,6 +120,12 @@ export const ToolbarProjectDropdown: FC = () => {
             open={open}
             setOpen={setOpen}
         >
+            <ToolbarDropdownButton
+                onClick={handlePreferences}
+            >
+                Preferences
+            </ToolbarDropdownButton>
+
             <ToolbarDropdownButton
                 onClick={handleHTMLBuild}
             >

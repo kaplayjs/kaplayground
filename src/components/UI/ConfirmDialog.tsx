@@ -41,6 +41,7 @@ export const ConfirmDialog = () => {
             confirmText={options?.confirmText}
             confirmType={options?.type}
             dismissText={options?.dismissText}
+            cancelImmediate={options?.cancelImmediate}
         >
             {title && (
                 <h2 className="text-xl text-white font-bold mb-3 only:mb-0">
