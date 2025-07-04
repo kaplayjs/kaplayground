@@ -3,6 +3,7 @@ import type { FC, PropsWithChildren } from "react";
 import type { FileKind } from "../../features/Projects/models/FileKind";
 import { folderByKind } from "../../features/Projects/stores/slices/files";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { prompt } from "../../util/prompt";
 
 type Props = PropsWithChildren<{
     kind: FileKind;
@@ -21,8 +22,16 @@ export const FileToolbar: FC<Props> = (props) => {
     const addFile = useProject((s) => s.addFile);
     const getFile = useProject((s) => s.getFile);
 
-    const handleAddFile = () => {
-        const fileName = prompt("File name");
+    const handleAddFile = async () => {
+        const fileName = await prompt(
+            `New ${props.kind == "obj" ? "object" : props.kind} name`,
+            null,
+            null,
+            {
+                suffix: ".js",
+                confirmText: "Create",
+            },
+        );
         if (!fileName) return;
         if (getFile(`${folderByKind[props.kind]}/${fileName}.js`)) return;
 

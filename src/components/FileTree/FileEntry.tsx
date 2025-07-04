@@ -69,7 +69,9 @@ export const FileEntry: FC<Props> = ({ file }) => {
 
         if (
             await confirm(
-                `Remove the '${removeExtension(basename(file.path))}' scene?`,
+                `Remove the '${removeExtension(basename(file.path))}' ${
+                    file.kind == "obj" ? "object" : file.kind
+                }?`,
                 null,
                 {
                     confirmText: "Yes, remove",
