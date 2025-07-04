@@ -25,6 +25,9 @@ const ProjectPreferences = () => {
     const setProject = useProject((s) => s.setProject);
 
     const formRef = useRef<HTMLFormElement>(null);
+    const [prevBuildMode, setPrevBuildMode] = useState<ProjectBuildMode | null>(
+        null,
+    );
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +64,9 @@ const ProjectPreferences = () => {
                     cancelImmediate: true,
                 },
             )
-        ) e.target.value = project.buildMode;
+        ) e.target.value = prevBuildMode || project.buildMode;
+
+        setPrevBuildMode(e.target.value as ProjectBuildMode);
     };
 
     const handleSave = () => {
@@ -86,6 +91,7 @@ const ProjectPreferences = () => {
 
     const handleDismiss = () => {
         formRef.current?.reset();
+        setPrevBuildMode(null);
         setErrors({});
     };
 
