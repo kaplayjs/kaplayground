@@ -11,6 +11,7 @@ export type Project = {
     kaplayVersion: string;
     mode: ProjectMode;
     buildMode: ProjectBuildMode;
+    favicon: string;
     createdAt: string;
     updatedAt: string;
 };

@@ -28,6 +28,7 @@ export const loadProject = async (projectKey: string) => {
             files: new Map(project.files),
             assets: new Map(project.assets),
             buildMode: project.buildMode || "legacy",
+            favicon: project.favicon ?? "",
         },
     });
 

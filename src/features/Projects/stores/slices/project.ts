@@ -137,6 +137,7 @@ export const createProjectSlice: StateCreator<
         kaplayVersion: "",
         createdAt: "",
         updatedAt: "",
+        favicon: "",
     },
     projectKey: null,
     setProjectKey(key) {

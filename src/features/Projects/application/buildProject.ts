@@ -1,5 +1,7 @@
 import { getVersion, parseAssets } from "../../../util/compiler";
+import { useProject } from "../stores/useProject";
 import { buildCode } from "./buildCode";
+import { defaultFavicon } from "./defaultFavicon";
 
 const toDataUrl = (data: string) => {
     const base64 = btoa(data);
@@ -9,6 +11,7 @@ const toDataUrl = (data: string) => {
 export async function buildProject() {
     const code = await buildCode();
     const kaplayLib = await getVersion(true);
+    const project = useProject.getState().project;
 
     if (!kaplayLib) {
         throw new Error("Failed to fetch the library");
@@ -21,7 +24,8 @@ export async function buildProject() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Preview</title>
+    <title>${project.name}</title>
+    <link rel="icon" href="${project.favicon || defaultFavicon}">
     <style>
         * {
             margin: 0;

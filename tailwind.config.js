@@ -12,6 +12,10 @@ export default {
                 sans: ["\"Outfit Variable\"", ...defaultTheme.fontFamily.sans],
                 mono: ["\"DM Mono\"", ...defaultTheme.fontFamily.mono],
             },
+            colors: {
+                "base-highlight":
+                    "color-mix(in oklch, oklch(var(--bc)) 30%, oklch(var(--b1)))",
+            },
             backgroundPosition: {
                 "select-xs": "right 12px center, right 8px center",
             },

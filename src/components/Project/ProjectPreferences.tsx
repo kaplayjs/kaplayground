@@ -12,6 +12,7 @@ import {
     BuildModeLegacy,
     BuildModeModern,
 } from "./BuildModes/BuildModesInstructions";
+import { ProjectFavicon } from "./ProjectFavicon";
 
 const buildOptions = {
     esbuild: "Modern (ESBuild)",
@@ -93,6 +94,11 @@ const ProjectPreferences = () => {
         formRef.current?.reset();
         setPrevBuildMode(null);
         setErrors({});
+        setTimeout(() => {
+            (formRef.current!).querySelectorAll("[name]").forEach(el => {
+                el.dispatchEvent(new Event("reset", { bubbles: false }));
+            });
+        });
     };
 
     const resetError = (key: string) => {
@@ -121,42 +127,47 @@ const ProjectPreferences = () => {
                         key={projectKey}
                         onKeyDown={e => e.key == "Enter" && e.preventDefault()}
                     >
-                        <label className="label gap-2">
-                            <span className="flex flex-col gap-1">
-                                <span className="label-text font-medium cursor-pointer [.label:has([data-tooltip-content])_&]:text-error transition-colors">
-                                    Name
-                                </span>
-                            </span>
+                        <div className="mt-2 !px-0 space-y-1">
+                            <ProjectFavicon defaultValue={project.favicon} />
 
-                            <input
-                                name="name"
-                                className="input input-bordered input-sm w-full max-w-60 placeholder:text-base-content/45 data-[tooltip-content]:border-error data-[tooltip-content]:focus-visible:outline-error"
-                                defaultValue={project.name}
-                                placeholder={project.name}
-                                onInput={handleNameChange}
-                                onBlur={e =>
-                                    (!e.target.value)
-                                    && (e.target.value = project.name)}
-                                onKeyDownCapture={e => {
-                                    if (e.key != "Escape") return;
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    const target = e.target as HTMLInputElement;
-                                    target.value = project.name;
-                                    resetError("name");
-                                    target.blur();
-                                }}
-                                data-tooltip-id="project-preferences-tooltips"
-                                data-tooltip-content={errors?.name}
-                                data-tooltip-hidden={!errors?.name}
-                                data-tooltip-variant="error"
-                                data-tooltip-place="bottom-end"
-                            />
-                        </label>
+                            <label className="label gap-2 pl-3 pr-2 bg-base-200 rounded-xl border border-base-content/10">
+                                <span className="flex flex-col gap-1">
+                                    <span className="label-text font-medium cursor-pointer [.label:has([data-tooltip-content])_&]:text-error transition-colors">
+                                        Name
+                                    </span>
+                                </span>
+
+                                <input
+                                    name="name"
+                                    className="input input-bordered input-sm w-full max-w-60 placeholder:text-base-content/45 data-[tooltip-content]:border-error data-[tooltip-content]:focus-visible:outline-error"
+                                    defaultValue={project.name}
+                                    placeholder={project.name}
+                                    onInput={handleNameChange}
+                                    onBlur={e =>
+                                        (!e.target.value)
+                                        && (e.target.value = project.name)}
+                                    onKeyDownCapture={e => {
+                                        if (e.key != "Escape") return;
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        const target = e
+                                            .target as HTMLInputElement;
+                                        target.value = project.name;
+                                        resetError("name");
+                                        target.blur();
+                                    }}
+                                    data-tooltip-id="project-preferences-tooltips"
+                                    data-tooltip-content={errors?.name}
+                                    data-tooltip-hidden={!errors?.name}
+                                    data-tooltip-variant="error"
+                                    data-tooltip-place="bottom-end"
+                                />
+                            </label>
+                        </div>
 
                         {project.mode == "pj" && (
                             <>
-                                <div className="divider my-0 first:hidden">
+                                <div className="divider mt-1.5 mb-0 first:hidden">
                                 </div>
                                 <div className="label gap-2">
                                     <span className="flex flex-col gap-1">
