@@ -77,8 +77,8 @@ export const Dialog: FC<DialogProps> = forwardRef<
     return (
         <dialog
             ref={dialogRef}
-            className="modal backdrop:opacity-0 bg-[#0a0c10]/50"
             id={props.id}
+            className="modal"
             onCancel={onCancel}
         >
             <main

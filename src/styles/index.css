@@ -128,3 +128,6 @@ html, body, #root {
     }
 }
 
+.modal {
+    @apply backdrop:opacity-0 bg-[#0a0c10]/50;
+}
