@@ -5,6 +5,7 @@ import {
     useImperativeHandle,
     useRef,
 } from "react";
+import { Slide, ToastContainer } from "react-toastify";
 import { ClassNameValue } from "tailwind-merge";
 import { cn } from "../../util/cn";
 
@@ -148,6 +149,16 @@ export const Dialog: FC<DialogProps> = forwardRef<
             >
                 <button onClick={onCancel}>Close</button>
             </form>
+
+            {props.id && (
+                <div className="absolute bottom-0 right-0">
+                    <ToastContainer
+                        containerId={`${props.id}-toasts`}
+                        position="bottom-right"
+                        transition={Slide}
+                    />
+                </div>
+            )}
         </dialog>
     );
 });

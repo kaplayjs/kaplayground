@@ -152,9 +152,9 @@ const Playground = () => {
                     />
                 )}
 
+            <ToastContainer position="bottom-right" transition={Slide} />
             <AboutDialog />
             <ConfigDialog />
-            <ToastContainer position="bottom-right" transition={Slide} />
             <Tooltip id="global" />
             <Tooltip id="global-open" isOpen={true} />
             <ProjectBrowser />
