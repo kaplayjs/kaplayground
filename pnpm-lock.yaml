@@ -54,8 +54,8 @@ importers:
         specifier: ^4.12.13
         version: 4.12.13(postcss@8.4.47)
       esbuild-wasm:
-        specifier: ^0.25.6
-        version: 0.25.6
+        specifier: 0.25.8
+        version: 0.25.8
       magic-string:
         specifier: ^0.30.11
         version: 0.30.11
@@ -1714,8 +1714,8 @@ packages:
     resolution: {integrity: sha512-U9bFFjX8tFiATgtkJ1zg25+KviIXpgRvRHS8sau3GfhVzThRQrOeksPeT0BWW2MNZs1OEWJ1DPXOQMn0KKRkvg==}
     engines: {node: '>=0.12'}
 
-  esbuild-wasm@0.25.6:
-    resolution: {integrity: sha512-iYdYzDQgw0RQYUVInYITxPNj6qGfoQ1SWg/tAUMZQQFGw0bexdY9qrvAgGHl7k0Xf23qw/956KTF7EcBUU1PJA==}
+  esbuild-wasm@0.25.8:
+    resolution: {integrity: sha512-VFUDMoZdf/NsyCepv5heZqvNLYj9HL+xEKG5tktsFbx+shR8Dt9MchKBEdu/5the2RfTzgxkO6B/nUfzmsWN9Q==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -4230,7 +4230,7 @@ snapshots:
       d: 1.0.2
       ext: 1.7.0
 
-  esbuild-wasm@0.25.6: {}
+  esbuild-wasm@0.25.8: {}
 
   esbuild@0.21.5:
     optionalDependencies:

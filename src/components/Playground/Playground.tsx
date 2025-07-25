@@ -86,7 +86,7 @@ const Playground = () => {
 
         // Initialize ESBuild
         esbuild.initialize({
-            wasmURL: "https://unpkg.com/esbuild-wasm/esbuild.wasm",
+            wasmURL: "https://unpkg.com/esbuild-wasm@0.25.8/esbuild.wasm",
             worker: true,
         }).then(() => {
             // Loading the project, default project, shared project, etc.
