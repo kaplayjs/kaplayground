@@ -4,7 +4,7 @@ import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
@@ -55,6 +55,7 @@ export const ProjectBrowser = () => {
     const [examplesSort, setExamplesSort] = useState("topic");
     const [projectsGroup, setProjectsGroup] = useState("type");
     const [examplesGroup, setExamplesGroup] = useState("category");
+    const dialogRef = useRef<HTMLDialogElement>(null);
 
     const currentSort = useCallback(
         () => tab == "Projects" ? projectsSort : examplesSort,
@@ -191,10 +192,29 @@ export const ProjectBrowser = () => {
         setTab(projectMode == "ex" ? "Examples" : "Projects");
     }, [projectMode]);
 
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+
+        const ex = ["examples", "ex", "demos"];
+        const pj = ["projects", "pj"];
+        const browseType = searchParams.get("browse")?.toLowerCase() ?? "";
+        const tab = ex.includes(browseType)
+            ? "Examples"
+            : pj.includes(browseType)
+            ? "Projects"
+            : null;
+
+        if (searchParams.has("browse")) {
+            if (tab) setTab(tab);
+            dialogRef.current?.showModal();
+        }
+    }, []);
+
     return (
         <dialog
             id="examples-browser"
             className="modal bg-[#00000070]"
+            ref={dialogRef}
         >
             <div className="modal-box overflow-hidden max-w-screen-md p-0 flex flex-col w-dvw h-dvh max-h-[calc(100dvh-4.4rem)]">
                 <header
