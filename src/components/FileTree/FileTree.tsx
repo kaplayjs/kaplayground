@@ -72,7 +72,7 @@ export const FileTree = () => {
                         </li>
                         <li>
                             <a
-                                href="https://kaplayjs.com"
+                                href="https://kaplayjs.com/guides"
                                 target="_blank"
                                 className="btn btn-xs btn-ghost justify-start font-medium px-2 py-1.5 w-full h-auto"
                             >

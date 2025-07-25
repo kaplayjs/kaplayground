@@ -34,7 +34,7 @@ export const AboutDialog = () => {
 
                             <a
                                 className="inline-flex gap-2 items-center font-medium btn btn-sm btn-ghost bg-base-content/10 px-2"
-                                href={"https://kaplayjs.com"}
+                                href={"https://kaplayjs.com/guides"}
                                 target="_blank"
                             >
                                 <img
