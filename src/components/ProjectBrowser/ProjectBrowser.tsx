@@ -36,6 +36,7 @@ export const ProjectBrowser = () => {
     useProject((s) => s.projectKey);
     useProject((s) => s.project.name);
     useProject((s) => s.projectWasEdited);
+    const projectMode = useProject((s) => s.project.mode);
 
     const [tab, setTab] = useState("Projects");
     const getSavedProjects = useProject((s) => s.getSavedProjects);
@@ -186,8 +187,15 @@ export const ProjectBrowser = () => {
         />
     ));
 
+    useEffect(() => {
+        setTab(projectMode == "ex" ? "Examples" : "Projects");
+    }, [projectMode]);
+
     return (
-        <dialog id="examples-browser" className="modal bg-[#00000070]">
+        <dialog
+            id="examples-browser"
+            className="modal bg-[#00000070]"
+        >
             <div className="modal-box overflow-hidden max-w-screen-md p-0 flex flex-col w-dvw h-dvh max-h-[calc(100dvh-4.4rem)]">
                 <header
                     className="grow-0 space-y-4 bg-base-200 p-4 border border-b-0 border-px border-base-100 rounded-t-2xl"
