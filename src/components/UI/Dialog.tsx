@@ -37,6 +37,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
         dismissText,
         saveDisabled,
         cancelImmediate,
+        className,
         mainClass,
         contentClass,
         ...props
@@ -78,12 +79,12 @@ export const Dialog: FC<DialogProps> = forwardRef<
         <dialog
             ref={dialogRef}
             id={props.id}
-            className="modal"
+            className={cn("modal", className)}
             onCancel={onCancel}
         >
             <main
                 className={cn(
-                    "modal-box flex flex-col max-h-[calc(100vh-2rem)] overflow-hidden px-0 py-0 focus:outline-none",
+                    "modal-box flex flex-col max-h-[calc(100vh-2rem)] min-h-0 overflow-visible px-0 py-0 rounded-box focus:outline-none",
                     { "max-w-[468px]": onConfirm },
                     mainClass,
                 )}
@@ -91,7 +92,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
             >
                 <section
                     className={cn(
-                        "p-6 max-h-full overflow-y-auto [&:has(>p)]:space-y-3",
+                        "p-6 max-h-full overflow-x-hidden overflow-y-auto [&:has(>p)]:space-y-3 rounded-[inherit]",
                         contentClass,
                     )}
                 >
@@ -99,7 +100,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
                 </section>
 
                 {(onSave || onConfirm || onDismiss) && (
-                    <footer className="px-6 py-5 bg-base-200">
+                    <footer className="px-6 py-5 bg-base-200 rounded-b-box">
                         <div className="modal-action mt-0">
                             <form
                                 method="dialog"

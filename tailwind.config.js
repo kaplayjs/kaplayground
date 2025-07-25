@@ -8,6 +8,9 @@ export default {
     ],
     theme: {
         extend: {
+            screens: {
+                "2sm": "380px",
+            },
             fontFamily: {
                 sans: ["\"Outfit Variable\"", ...defaultTheme.fontFamily.sans],
                 mono: ["\"DM Mono\"", ...defaultTheme.fontFamily.mono],

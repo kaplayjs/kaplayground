@@ -3,7 +3,7 @@ import { ToolbarButton } from "../ToolbarButton";
 
 export const AboutButton = () => {
     const handleModalOpenClick = () => {
-        document.querySelector<HTMLDialogElement>("#my_modal_1")
+        document.querySelector<HTMLDialogElement>("#about-dialog")
             ?.showModal();
     };
 
