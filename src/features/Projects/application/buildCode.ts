@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild-wasm";
 import { useProject } from "../stores/useProject";
+import { buildCodeLegacy } from "./buildCodeLegacy";
 
 const virtualPlugin: esbuild.Plugin = {
     name: "virtual-fs",
@@ -33,6 +34,10 @@ const virtualPlugin: esbuild.Plugin = {
  * @returns - The built code as a string.
  */
 export async function buildCode() {
+    if (useProject.getState().project.buildMode == "legacy") {
+        return buildCodeLegacy();
+    }
+
     const result = await esbuild.build({
         entryPoints: ["/main.js"],
         bundle: true,

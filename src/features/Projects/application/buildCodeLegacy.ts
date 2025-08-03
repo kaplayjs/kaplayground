@@ -1,6 +1,6 @@
 import { useProject } from "../stores/useProject";
 
-export function wrapCode() {
+export function buildCodeLegacy() {
     let mainFile = useProject.getState().getMainFile()?.value ?? "";
     let parsedFiles = "";
 
