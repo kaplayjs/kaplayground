@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Preview</title>
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Game Preview</title>
+        <style>
         * {
             margin: 0;
             padding: 0;
@@ -22,19 +21,21 @@
             overflow: hidden;
             background: #171212;
         }
-    </style>
-</head>
+        </style>
+    </head>
 
-<body>
-    <script type="module">
+    <body>
+        <script type="module">
         const executeCode = (code) => {
-            const previousScripts = document.querySelectorAll('script[type="module"]');
+            const previousScripts = document.querySelectorAll(
+                "script[type=\"module\"]",
+            );
             previousScripts.forEach(script => {
                 script.remove();
             });
 
             try {
-                const script = document.createElement('script');
+                const script = document.createElement("script");
                 script.type = "module";
                 script.textContent = code;
                 document.body.appendChild(script);
@@ -55,7 +56,7 @@
 
             if (type == "REFRESH") {
                 console.log("[sandbox] Refreshing the page");
-                document.location.href = document.location.href
+                document.location.href = document.location.href;
             }
         });
 
@@ -65,39 +66,38 @@
 
         const originalLog = console.log;
 
-        console.log = function (...args) {
+        console.log = function(...args) {
             originalLog.apply(console, args);
             window.parent.postMessage({ type: "CONSOLE_LOG", data: args }, "*");
         };
 
         const originalError = console.error;
 
-        console.error = function (...args) {
+        console.error = function(...args) {
             originalError.apply(console, args);
             window.parent.postMessage({ type: "CONSOLE_ERROR", data: args }, "*");
         };
 
         const originalWarn = console.warn;
 
-        console.warn = function (...args) {
+        console.warn = function(...args) {
             originalWarn.apply(console, args);
             window.parent.postMessage({ type: "CONSOLE_WARN", data: args }, "*");
         };
 
         const originalInfo = console.info;
 
-        console.info = function (...args) {
+        console.info = function(...args) {
             originalInfo.apply(console, args);
             window.parent.postMessage({ type: "CONSOLE_INFO", data: args }, "*");
         };
 
         const originalDebug = console.debug;
 
-        console.debug = function (...args) {
+        console.debug = function(...args) {
             originalDebug.apply(console, args);
             window.parent.postMessage({ type: "CONSOLE_DEBUG", data: args }, "*");
         };
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>

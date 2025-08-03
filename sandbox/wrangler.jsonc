@@ -1,5 +1,5 @@
 {
-    "name": "iframe-kaplay",
-    "compatibility_date": "2025-04-27",
-    "pages_build_output_dir": "dist"
+  "name": "iframe-kaplay",
+  "compatibility_date": "2025-04-27",
+  "pages_build_output_dir": "dist",
 }
