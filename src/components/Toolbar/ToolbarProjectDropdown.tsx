@@ -66,28 +66,23 @@ export const ToolbarProjectDropdown: FC = () => {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            const project = JSON.parse(e.target?.result as string) as {
-                state: {
-                    project: Omit<Project, "files" | "assets"> & {
-                        assets: [string, Asset][];
-                        files: [string, File][];
-                    };
+            const file = JSON.parse(e.target?.result as string);
+
+            const project = (file?.state ? file.state.project : file) as
+                & Omit<Project, "files" | "assets">
+                & {
+                    assets: [string, Asset][];
+                    files: [string, File][];
                 };
-            };
 
-            const fileMap = new Map<string, File>();
-            const assetMap = new Map<string, Asset>();
+            const fileMap = new Map<string, File>(project.files);
+            const assetMap = new Map<string, Asset>(project.assets);
 
-            project.state.project.files.forEach((file) => {
-                fileMap.set(file[0], file[1]);
-            });
-
-            project.state.project.assets.forEach((asset) => {
-                assetMap.set(asset[0], asset[1]);
-            });
-
-            createNewProject(project.state.project.mode, {
-                ...project.state.project,
+            createNewProject(project.mode, {
+                ...project,
+                kaplayVersion: project.kaplayVersion == "none"
+                    ? "master"
+                    : project.kaplayVersion,
                 files: fileMap,
                 assets: assetMap,
             });
