@@ -112,9 +112,19 @@ export const ProjectStatus = () => {
         <div className="flex flex-row gap-2 items-center h-full">
             {!demoKey && (
                 <>
-                    <div className="uppercase badge badge-sm px-2 py-[3px] h-auto font-semibold tracking-wider bg-base-50 rounded-xl">
+                    <button
+                        className="btn btn-xs btn-ghost uppercase font-semibold tracking-wider bg-base-50 rounded-xl"
+                        type="button"
+                        onClick={() =>
+                            document.querySelector<HTMLDialogElement>(
+                                "#project-preferences",
+                            )?.showModal()}
+                        data-tooltip-id="global"
+                        data-tooltip-content={"Project Preferences"}
+                        data-tooltip-place="bottom-start"
+                    >
                         {projectMode === "pj" ? "Project" : "Example"}
-                    </div>
+                    </button>
 
                     <input
                         id="projectNameInput"
