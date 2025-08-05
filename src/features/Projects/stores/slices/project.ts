@@ -315,6 +315,7 @@ export const createProjectSlice: StateCreator<
                 kaplayVersion: version,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
+                favicon: "",
             },
         }));
 
