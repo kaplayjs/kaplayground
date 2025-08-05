@@ -258,13 +258,41 @@ export const ProjectBrowser = () => {
                         </div>
                     </div>
 
-                    <div className="flex join">
-                        <input
-                            type="search"
-                            placeholder="Search for examples/projects"
-                            className="input input-bordered w-full join-item"
-                            onChange={(ev) => setFilter(ev.target.value)}
-                        />
+                    <form className="flex join" action="javascript:void(0)">
+                        <label
+                            className="input input-bordered flex items-center gap-1 w-full join-item"
+                            aria-label="Search"
+                        >
+                            <input
+                                type="text"
+                                className="peer grow min-w-0"
+                                placeholder="Search for examples/projects"
+                                autoComplete="off"
+                                onChange={(e) => setFilter(e.target.value)}
+                            />
+
+                            <button
+                                type="reset"
+                                className="btn btn-xs btn-ghost -mr-1.5 px-1 shrink-0 peer-placeholder-shown:invisible peer-placeholder-shown:scale-0 peer-placeholder-shown:opacity-0 transition-[visibility,transform,opacity]"
+                                aria-label="Clear"
+                                onClick={() => setFilter("")}
+                            >
+                                <svg
+                                    width="14"
+                                    height="14"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </label>
 
                         <VersionFilter
                             value={currentFilterVersion()}
@@ -277,7 +305,7 @@ export const ProjectBrowser = () => {
                                 : false}
                             strictComparison={tab == "Projects"}
                         />
-                    </div>
+                    </form>
 
                     <TagsFilter
                         value={tags}
