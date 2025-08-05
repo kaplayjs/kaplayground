@@ -15,6 +15,7 @@ import { TabsList } from "../UI/TabsList";
 import { TabTrigger } from "../UI/TabTrigger";
 import { GroupBy, groupBy } from "./GroupBy";
 import { ProjectCreate } from "./ProjectCreate";
+import { ProjectNotFound } from "./ProjectNotFound";
 import {
     SortBy,
     sortEntries,
@@ -388,6 +389,11 @@ export const ProjectBrowser = () => {
                                         </div>
                                     ))}
 
+                                    {tab === "Projects"
+                                        && Object.entries(filteredProjects())
+                                                .length == 0
+                                        && <ProjectNotFound className="mb-4" />}
+
                                     <div className="sticky -bottom-5 -mb-5 -mx-4 px-5 bg-base-100">
                                         <div className="pt-5 pb-5 border-t border-base-content/10">
                                             <div className="examples-list gap-2 -mx-0.5">
@@ -535,6 +541,10 @@ export const ProjectBrowser = () => {
                                 </div>
                             </div>
                         ))}
+
+                        {tab === "Examples"
+                            && Object.entries(filteredExamples()).length == 0
+                            && <ProjectNotFound />}
                     </Tabs.Content>
                 </Tabs.Root>
             </div>
