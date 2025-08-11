@@ -260,12 +260,12 @@ export const ProjectBrowser = () => {
 
                     <form className="flex join" action="javascript:void(0)">
                         <label
-                            className="input input-bordered flex items-center gap-1 w-full join-item"
+                            className="input input-bordered flex items-center gap-1 w-full join-item focus-within:z-[1]"
                             aria-label="Search"
                         >
                             <input
                                 type="text"
-                                className="peer grow min-w-0"
+                                className="peer grow w-full h-full"
                                 placeholder="Search for examples/projects"
                                 autoComplete="off"
                                 onChange={(e) => setFilter(e.target.value)}
