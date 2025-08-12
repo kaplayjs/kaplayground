@@ -258,7 +258,10 @@ export const ProjectBrowser = () => {
                         </div>
                     </div>
 
-                    <form className="flex join" action="javascript:void(0)">
+                    <form
+                        className="flex join"
+                        onSubmit={e => e.preventDefault()}
+                    >
                         <label
                             className="input input-bordered flex items-center gap-1 w-full join-item focus-within:z-[1]"
                             aria-label="Search"
@@ -283,9 +286,9 @@ export const ProjectBrowser = () => {
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                     aria-hidden="true"
                                 >
                                     <path d="M18 6 6 18"></path>
