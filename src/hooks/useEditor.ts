@@ -1,6 +1,6 @@
 import type { Monaco } from "@monaco-editor/react";
 import confetti from "canvas-confetti";
-import type { editor } from "monaco-editor";
+import { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { kaplayVersions } from "../data/kaplayVersions.json";
@@ -27,6 +27,14 @@ interface EditorRuntime {
      * The current selection in the editor
      */
     currentFile: string;
+    /**
+     * The last saved editor value
+     */
+    editorLastSavedValue: string | null;
+    /**
+     * If file was modified and not saved
+     */
+    hasUnsavedChanges: boolean;
     /**
      * Decorations for the gylph images
      */
@@ -68,6 +76,8 @@ export interface EditorStore {
     updateModelMarkers: () => void;
     showNotification: (message: string) => void;
     setEditorValue: (value: string) => void;
+    updateEditorLastSavedValue: (value?: string) => void;
+    updateHasUnsavedChanges: () => void;
     updateAndRun: () => void;
 }
 
@@ -76,6 +86,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
         editor: null,
         monaco: null,
         currentFile: "main.js",
+        editorLastSavedValue: null,
+        hasUnsavedChanges: false,
         gylphDecorations: null,
         iframe: null,
         console: null,
@@ -143,6 +155,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 viewStates: viewStates,
             },
         }));
+
+        get().updateEditorLastSavedValue();
     },
     update: (customValue?: string) => {
         if (customValue) {
@@ -162,6 +176,8 @@ export const useEditor = create<EditorStore>((set, get) => ({
             "[monaco] Editor value forced updated with",
             currentFile.path.slice(0, 25) + "...",
         );
+
+        get().updateEditorLastSavedValue(currentFile.value);
 
         get().setEditorValue(currentFile.value);
         get().updateImageDecorations();
@@ -314,6 +330,27 @@ export const useEditor = create<EditorStore>((set, get) => ({
         );
 
         editor.setValue(value);
+    },
+    updateEditorLastSavedValue(value) {
+        set((state) => ({
+            runtime: {
+                ...state.runtime,
+                editorLastSavedValue:
+                    (value ?? get().runtime.editor?.getValue()) ?? null,
+            },
+        }));
+    },
+    updateHasUnsavedChanges() {
+        const editor = get().runtime.editor;
+        if (!editor) return;
+
+        set((state) => ({
+            runtime: {
+                ...state.runtime,
+                hasUnsavedChanges: get().getRuntime().editorLastSavedValue
+                    != editor.getValue(),
+            },
+        }));
     },
     updateAndRun() {
         get().getRuntime().editor?.setScrollTop(0);

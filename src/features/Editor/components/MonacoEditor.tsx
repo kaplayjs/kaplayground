@@ -1,6 +1,7 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { type FC, useEffect } from "react";
+import { useBeforeUnload } from "../../../hooks/useBeforeUnload";
 import { useConfig } from "../../../hooks/useConfig.ts";
 import { useEditor } from "../../../hooks/useEditor.ts";
 import { useProject } from "../../Projects/stores/useProject.ts";
@@ -16,13 +17,23 @@ interface MonacoEditorProps {
 export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     const updateFile = useProject((s) => s.updateFile);
     const getFile = useProject((s) => s.getFile);
+    const projectIsSaved = useProject((s) => s.projectIsSaved);
     const run = useEditor((s) => s.run);
     const update = useEditor((s) => s.update);
     const updateImageDecorations = useEditor((s) => s.updateImageDecorations);
     const setRuntime = useEditor((s) => s.setRuntime);
     const getRuntime = useEditor((s) => s.getRuntime);
+    const updateEditorLastSavedValue = useEditor((s) =>
+        s.updateEditorLastSavedValue
+    );
+    const updateHasUnsavedChanges = useEditor((s) => s.updateHasUnsavedChanges);
+    const hasUnsavedChanges = useEditor((s) =>
+        s.getRuntime().hasUnsavedChanges
+    );
     const getConfig = useConfig((s) => s.getConfig);
     const setConfigKey = useConfig((s) => s.setConfigKey);
+
+    useBeforeUnload(hasUnsavedChanges);
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
@@ -60,6 +71,13 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
 
         editor.onDidChangeModel(() => {
             updateImageDecorations();
+        });
+
+        editor.onDidChangeModelContent(() => {
+            const projectKey = useProject.getState().projectKey;
+            const isSaved = projectKey && projectIsSaved(projectKey);
+            if (isSaved) updateEditorLastSavedValue();
+            updateHasUnsavedChanges();
         });
 
         editor.onDidScrollChange(() => {

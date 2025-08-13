@@ -5,6 +5,7 @@ import type { Tag } from "../../data/demos";
 import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { cn } from "../../util/cn";
+import { confirmNavigate } from "../../util/confirmNavigate";
 
 export type ProjectEntryProject = {
     key: string;
@@ -100,13 +101,19 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
 
         if (!dialog?.open) return;
 
-        if (isProject) {
-            loadProject(project.key);
-        } else {
-            createNewProject("ex", {}, project.key);
+        if (isCurrent) {
+            return dialog?.close();
         }
 
-        dialog?.close();
+        confirmNavigate(() => {
+            if (isProject) {
+                loadProject(project.key);
+            } else {
+                createNewProject("ex", {}, project.key);
+            }
+
+            dialog?.close();
+        });
     };
 
     return (

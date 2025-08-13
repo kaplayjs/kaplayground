@@ -403,6 +403,9 @@ export const createProjectSlice: StateCreator<
         useConfig.getState().setConfig({
             lastOpenedProject: id,
         });
+
+        useEditor.getState().updateEditorLastSavedValue();
+        useEditor.getState().updateHasUnsavedChanges();
     },
 
     generateId(prefix) {

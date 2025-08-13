@@ -156,6 +156,7 @@ export const ProjectStatus = () => {
             )}
 
             <button
+                id="project-save-button"
                 className={cn(
                     "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full",
                     {

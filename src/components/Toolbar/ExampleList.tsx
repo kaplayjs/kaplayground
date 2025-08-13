@@ -2,6 +2,7 @@ import type { ChangeEvent, FC } from "react";
 import { demos } from "../../data/demos";
 import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { confirmNavigate } from "../../util/confirmNavigate";
 import { sortEntries } from "../ProjectBrowser/SortBy";
 
 const ExampleList: FC = () => {
@@ -16,11 +17,13 @@ const ExampleList: FC = () => {
             "data-demo-id",
         );
 
-        if (demoId) {
-            createNewProject("ex", {}, demoId);
-        } else {
-            loadProject(ev.target.value);
-        }
+        confirmNavigate(() => {
+            if (demoId) {
+                createNewProject("ex", {}, demoId);
+            } else {
+                loadProject(ev.target.value);
+            }
+        });
     };
 
     const getSortedProjects = (mode: "pj" | "ex") => (
