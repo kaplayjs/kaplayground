@@ -148,7 +148,10 @@ export const ProjectStatus = () => {
                         data-tooltip-place="bottom-start"
                         onKeyUpCapture={e => {
                             if (e.key === "Escape") resetValue();
-                            else if (e.key === "Enter" && !error) blur();
+                            else if (e.key === "Enter" && !error) {
+                                handleSaveProject();
+                                blur();
+                            };
                         }}
                     >
                     </input>
