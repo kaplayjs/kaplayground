@@ -34,9 +34,9 @@ export type ExamplesData = {
 const examplesData = examplesJson as ExamplesData;
 
 export const ProjectBrowser = () => {
-    useProject((s) => s.projectKey);
     useProject((s) => s.project.name);
     useProject((s) => s.projectWasEdited);
+    const projectKey = useProject((s) => s.projectKey);
     const projectMode = useProject((s) => s.project.mode);
 
     const [tab, setTab] = useState("Projects");
@@ -190,8 +190,8 @@ export const ProjectBrowser = () => {
     ));
 
     useEffect(() => {
-        setTab(projectMode == "ex" ? "Examples" : "Projects");
-    }, [projectMode]);
+        setTab(projectMode == "ex" && !projectKey ? "Examples" : "Projects");
+    }, [projectMode, projectKey]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
