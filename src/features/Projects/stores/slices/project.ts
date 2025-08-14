@@ -262,7 +262,7 @@ export const createProjectSlice: StateCreator<
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
         const possibleId = get().generateId(mode);
-        let loadDefault = false;
+        let loadDefaultFiles = false;
 
         let version = preferredVersion();
 
@@ -289,11 +289,11 @@ export const createProjectSlice: StateCreator<
                 debug(0, "[project] Demo loaded", foundDemo.name);
             } else {
                 debug(0, "[project] Created a new example project");
-                loadDefault = true;
+                loadDefaultFiles = !replace?.files;
             }
         } else {
             debug(0, "[project] Created a new project");
-            loadDefault = true;
+            loadDefaultFiles = !replace?.files;
         }
 
         if (lastVersion !== version) {
@@ -304,7 +304,7 @@ export const createProjectSlice: StateCreator<
             );
         }
 
-        set(() => ({
+        set({
             project: {
                 name: get().generateName(possibleId, mode, isShared),
                 version: "2.0.0", // fixed project version
@@ -316,17 +316,9 @@ export const createProjectSlice: StateCreator<
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 favicon: "",
+                ...replace,
             },
-        }));
-
-        if (replace) {
-            set({
-                project: {
-                    ...get().project,
-                    ...replace,
-                },
-            });
-        }
+        });
 
         if (demoName) {
             window.history.replaceState(
@@ -339,10 +331,11 @@ export const createProjectSlice: StateCreator<
         get().setProjectKey(null);
         get().setDemoKey(demoName ?? null);
 
-        if (loadDefault) {
+        if (loadDefaultFiles) {
             createDefaultFiles();
         }
 
+        if (mode === "pj") useEditor.getState().resetEditorModel();
         useEditor.getState().setCurrentFile("main.js");
         useEditor.getState().updateAndRun();
     },

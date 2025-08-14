@@ -68,6 +68,7 @@ export interface EditorStore {
     getRuntime: () => EditorRuntime;
     setRuntime: (runtime: Partial<EditorRuntime>) => void;
     setCurrentFile: (currentFile: string) => void;
+    resetEditorModel: () => void;
     setTheme: (theme: string) => void;
     /**
      * Update Gylph image decorations for loadXXXX functions
@@ -157,6 +158,19 @@ export const useEditor = create<EditorStore>((set, get) => ({
         }));
 
         get().updateEditorLastSavedValue();
+    },
+    resetEditorModel: () => {
+        const monaco = get().runtime.monaco;
+        if (!monaco) return;
+
+        set((state) => ({
+            runtime: {
+                ...state.runtime,
+                viewStates: {},
+            },
+        }));
+
+        monaco.editor.getModels().forEach(model => model.dispose());
     },
     update: (customValue?: string) => {
         if (customValue) {

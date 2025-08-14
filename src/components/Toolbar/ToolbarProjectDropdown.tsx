@@ -83,6 +83,7 @@ export const ToolbarProjectDropdown: FC = () => {
                 kaplayVersion: project.kaplayVersion == "none"
                     ? "master"
                     : project.kaplayVersion,
+                buildMode: project.buildMode || "legacy",
                 files: fileMap,
                 assets: assetMap,
             });
