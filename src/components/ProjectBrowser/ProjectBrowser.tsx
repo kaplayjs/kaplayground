@@ -425,9 +425,9 @@ export const ProjectBrowser = () => {
                                                 .length == 0
                                         && <ProjectNotFound className="mb-4" />}
 
-                                    <div className="sticky -bottom-5 -mb-5 -mx-4 px-5 bg-base-100">
+                                    <div className="[@media(min-height:680px)]:sticky -bottom-5 -mb-5 -mx-4 px-5 bg-base-100">
                                         <div className="pt-5 pb-5 border-t border-base-content/10">
-                                            <div className="examples-list gap-2 -mx-0.5">
+                                            <div className="examples-list max-sm:flex gap-2 -mx-0.5">
                                                 {createButtons}
                                             </div>
                                         </div>
