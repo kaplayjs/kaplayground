@@ -33,7 +33,7 @@ export const BuildModesDialog = () => {
                             Modern (ESBuild)
 
                             <img
-                                src={assets.lightening.outlined}
+                                src={assets?.lightning?.outlined}
                                 height={28}
                                 className="h-7 object-scale-down"
                                 alt="Lightning bolt"

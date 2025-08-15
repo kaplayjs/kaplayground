@@ -53,7 +53,7 @@ const transformAssetUrl = (regex: RegExp, code: string) => {
     const parsed = code.replace(regex, (match, asset: string) => {
         return match.replace(
             asset,
-            parseAssetPath(asset),
+            parseAssetPath(asset, match),
         );
     });
 

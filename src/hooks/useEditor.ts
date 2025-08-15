@@ -252,10 +252,10 @@ export const useEditor = create<EditorStore>((set, get) => ({
             const match = [...line.matchAll(MATCH_ASSET_URL_REGEX)]?.[0];
             const url = match?.[1];
 
-            if (!url) return;
+            if (!url || match?.[0]?.includes("Sound")) return;
 
             linesRange.push({
-                image: parseAssetPath(url),
+                image: parseAssetPath(url, match[0]),
                 line: index + 1,
             });
         });

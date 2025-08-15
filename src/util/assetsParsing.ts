@@ -11,20 +11,27 @@ import { assets } from "@kaplayjs/crew";
 import publicAssets from "../data/publicAssets.json";
 import { useProject } from "../features/Projects/stores/useProject";
 
-export const parseAssetPath = (path: string) => {
+type PublicAssets = Record<"assets", {
+    filename: string;
+    base64: string;
+}[]>;
+
+export const parseAssetPath = (path: string, match?: string) => {
     let normalPath = normalize(path);
 
     const projectAssets = useProject.getState().project.assets;
     const pathInAssets = projectAssets.get(normalPath);
+    const loadType = match?.match(/^load(\w+)/s)?.[1] ?? null;
 
     if (pathInAssets) {
         path = pathInAssets.url;
         return path;
     }
 
-    const pathInPublic = publicAssets.assets.filter((asset) => {
-        if (asset.filename == normalPath) return asset;
-    })[0];
+    const pathInPublic =
+        (publicAssets as PublicAssets).assets.filter((asset) => {
+            if (asset.filename == normalPath) return asset;
+        })[0];
 
     if (pathInPublic) {
         path = pathInPublic.base64;
@@ -41,9 +48,16 @@ export const parseAssetPath = (path: string) => {
         const isOutlined = crewName?.endsWith("-o");
         const crewEntry = assets[crewName as keyof typeof assets];
 
-        if (isOutlined && crewEntry.outlined) {
+        if (!crewEntry) return normalPath;
+
+        if (loadType == "Sound" && "sound" in crewEntry) {
+            normalPath = crewEntry.sound;
+        } else if ("spritesheet" in crewEntry) {
+            normalPath = crewEntry.spritesheet
+                ?.[isOutlined ? "outlined" : "sprite"]!;
+        } else if (isOutlined && "outlined" in crewEntry) {
             normalPath = crewEntry.outlined;
-        } else if (crewEntry.sprite) {
+        } else if ("sprite" in crewEntry) {
             normalPath = crewEntry.sprite;
         }
 
