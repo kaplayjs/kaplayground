@@ -249,6 +249,10 @@ export const useEditor = create<EditorStore>((set, get) => ({
         }[] = [];
 
         lines.forEach((line, index) => {
+            if (index < editor.getVisibleRanges()[0].startLineNumber - 1) {
+                return;
+            }
+
             const match = [...line.matchAll(MATCH_ASSET_URL_REGEX)]?.[0];
             const url = match?.[1];
 
