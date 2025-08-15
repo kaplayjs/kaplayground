@@ -1,4 +1,4 @@
-import { assets } from "@kaplayjs/crew";
+import { assets, SpriteCrewAsset } from "@kaplayjs/crew";
 import type { FC, MouseEventHandler } from "react";
 import { cn } from "../../util/cn";
 import { removeExtension } from "../../util/removeExtensions";
@@ -9,10 +9,6 @@ import type { FileKind } from "../../features/Projects/models/FileKind";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 import { confirm } from "../../util/confirm";
-
-type Props = {
-    file: File;
-};
 
 export const logoByKind: Record<FileKind, string> = {
     kaplay: assets.dino.outlined,
@@ -25,7 +21,7 @@ export const logoByKind: Record<FileKind, string> = {
 
 const FileButton: FC<{
     onClick: MouseEventHandler;
-    icon: keyof typeof assets;
+    icon: SpriteCrewAsset;
     rotate?: 0 | 90 | 180 | 270;
     hidden?: boolean;
 }> = (props) => {
@@ -45,7 +41,11 @@ const FileButton: FC<{
     );
 };
 
-export const FileEntry: FC<Props> = ({ file }) => {
+interface FileEntryProps {
+    file: File;
+}
+
+export const FileEntry: FC<FileEntryProps> = ({ file }) => {
     const removeFile = useProject((s) => s.removeFile);
     const projectFiles = useProject((s) => s.project.files);
     const setProject = useProject((s) => s.setProject);

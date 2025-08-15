@@ -2,14 +2,14 @@ import { assets } from "@kaplayjs/crew";
 import { FC } from "react";
 import { cn } from "../../util/cn";
 
-const notFoundAssets = ["ghosty", "ghostiny", "beant", "skuller"];
+const notFoundAssets = ["ghosty", "ghostiny", "beant", "skuller"] as const;
 let curNotFoundAsset = 0;
 
 export const ProjectNotFound: FC<{ className?: string }> = ({ className }) => {
     const asset = notFoundAssets[
         (++curNotFoundAsset + notFoundAssets.length)
         % notFoundAssets.length
-    ] as keyof typeof assets;
+    ];
 
     return (
         <article
