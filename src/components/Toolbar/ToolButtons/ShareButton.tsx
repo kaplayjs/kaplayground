@@ -41,7 +41,7 @@ export const ShareButton = () => {
 
     return (
         <ToolbarButton
-            icon={assets.bag.outlined}
+            icon={assets.share.outlined}
             text="Share"
             onClick={handleShare}
             tip="Share Project"
