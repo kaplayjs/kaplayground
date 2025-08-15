@@ -213,7 +213,7 @@ export const WelcomeDialog = ({ isLoading }: WelcomeDialogProps) => {
                                 </li>
                                 <li>
                                     <a
-                                        href="https://kaplayjs.com/guides"
+                                        href="https://kaplayjs.com/docs/guides/"
                                         target="_blank"
                                         className="btn btn-sm btn-ghost justify-start font-medium px-2 py-1.5 w-full h-auto bg-base-100"
                                     >
