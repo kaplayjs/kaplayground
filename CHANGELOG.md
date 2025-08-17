@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - TBD
+
+### Added
+
+- Welcome screen on the first time visit - @imaginarny
+- KAPLAY Version filter added to Projects Browser - @imaginarny
+- Config option for global preferred KAPLAY version used for new projects and filter - @imaginarny
+- New Project Preferences (Build Mode, Name, Favicon) - @imaginarny
+- Custom confirm and prompt dialogs added - @imaginarny
+- Native prompt will now notify you when leaving page with unsaved changes - @imaginarny
+- Added custom prompt when switching projects with unsaved changes - @imaginarny
+- Editor autoimport completion added - @lajbel
+- Made it possible to open Projects Browser with url param `?browse=``ex | examples | demos | pj | projects` - @imaginarny
+- Empty state screen when there are no search results in Projects Browser added - @imaginarny
+- Added clear button to Projects Browser search input - @imaginarny
+
+## Changed
+
+- Projects building now uses esbuild and is the default build mode - @lajbel
+- Default project and example - @lajbel
+- Updated Crew package to v2 - @lajbel, @imaginarny
+- Asset Brew in Example workspace now also includes sounds and animated spritesheets - @imaginarny
+- Improved search in Asset Brew by also using Crew searchTerms, name and tags - @imaginarny
+- Projects Browser now switches tabs depending on opened project (saved projects or demos) - @imaginarny
+- New Project is now also saved when Project Name input is submitted - @imaginarny
+- Share project icon changed from Bag to Share icon - @imaginarny
+- Editor scrolling is now smooth - @imaginarny
+
+## Fixed
+
+- Crew and public assets parsing was failing in some occasions - @lajbel
+- Project editor files not updating with new code after importing a project - @imaginarny
+- Configurations not being updated - @lajbel
+- Editor loadSprite image decorations being replaced with the first one on scroll - @imaginarny
+- Create buttons in Projects Browser were too big on small screens - @imaginarny
+- Example list select value not updating on demo switching - @imaginarny
+
 ## [2.3.6] - 2025-07-30
 
 ### Fixed
