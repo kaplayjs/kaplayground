@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Empty state screen when there are no search results in Projects Browser added - @imaginarny
 - Added clear button to Projects Browser search input - @imaginarny
 
-## Changed
+### Changed
 
 - Projects building now uses esbuild and is the default build mode - @lajbel
 - Default project and example - @lajbel
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Share project icon changed from Bag to Share icon - @imaginarny
 - Editor scrolling is now smooth - @imaginarny
 
-## Fixed
+### Fixed
 
 - Crew and public assets parsing was failing in some occasions - @lajbel
 - Project editor files not updating with new code after importing a project - @imaginarny
