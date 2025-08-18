@@ -27,7 +27,7 @@ export const GameView: FC = () => {
                 width: "100%",
                 height: "100%",
             }}
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads"
         />
     );
 };

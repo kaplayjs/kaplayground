@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Native prompt will now notify you when leaving page with unsaved changes - @imaginarny
 - Added custom prompt when switching projects with unsaved changes - @imaginarny
 - Editor autoimport completion added - @lajbel
-- Made it possible to open Projects Browser with url param `?browse=``ex | examples | demos | pj | projects` - @imaginarny
+- Made it possible to open Projects Browser with url param `?browse=` `ex | examples | demos | pj | projects` - @imaginarny
 - Empty state screen when there are no search results in Projects Browser added - @imaginarny
 - Added clear button to Projects Browser search input - @imaginarny
 
@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Editor loadSprite image decorations being replaced with the first one on scroll - @imaginarny
 - Create buttons in Projects Browser were too big on small screens - @imaginarny
 - Example list select value not updating on demo switching - @imaginarny
+- Pointer lock and download were blocked by iframe sandbox restrictions - @imaginarny
 
 ## [2.3.6] - 2025-07-30
 
