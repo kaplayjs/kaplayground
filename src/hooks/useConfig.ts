@@ -11,7 +11,7 @@ export interface Config {
     /** The last opened project, used for reload the playground */
     lastOpenedProject: string | null;
     /** Preferred KAPLAY version used as default */
-    preferredVersion: string;
+    preferredVersion: "master" | "4000.0" | "3001.0";
     /** It defines how deep it's the debugging logging in the browser console */
     debugLevel: number | null;
     /** If Editor should auto-run the format command */
@@ -24,7 +24,7 @@ export interface Config {
 
 const defaultConfig: Config = {
     lastOpenedProject: null,
-    preferredVersion: "3001.0",
+    preferredVersion: "4000.0",
     debugLevel: null,
     autoFormat: true,
     funFormat: false,

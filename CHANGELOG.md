@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Welcome screen on the first time visit - @imaginarny
 - KAPLAY Version filter added to Projects Browser - @imaginarny
-- Config option for global preferred KAPLAY version used for new projects and filter - @imaginarny
+- Config option for global preferred KAPLAY version used for new projects and filter (default v4000) - @imaginarny
 - New Project Preferences (Build Mode, Name, Favicon) - @imaginarny
 - Custom confirm and prompt dialogs added - @imaginarny
 - Native prompt will now notify you when leaving page with unsaved changes - @imaginarny
