@@ -57,7 +57,7 @@ export const VersionFilter: FC<Props> = (
             <div className="join-item col-start-1 row-start-1 select select-bordered text-xs sm:text-sm pr-8 gap-1 items-center pointer-events-none">
                 {optionFormatted(value)}
 
-                {(selectOptions?.[value]) && (
+                {value in selectOptions && (
                     <span className="badge badge-xs font-medium py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
                         {selectOptions[value]}
                     </span>
