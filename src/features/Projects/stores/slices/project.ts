@@ -6,7 +6,7 @@ import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
 import { createDefaultFiles } from "../../application/createDefaultFiles";
 import { preferredVersion } from "../../application/preferredVersion";
-import type { Asset } from "../../models/Asset";
+import type { Asset } from "../../models/Asset.ts";
 import type { File } from "../../models/File";
 import type { Project } from "../../models/Project";
 import type { ProjectMode } from "../../models/ProjectMode";

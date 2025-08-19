@@ -141,3 +141,4 @@ html, body, #root {
     0% { @apply bg-[#15191f]; }
     100% { @apply bg-[#0a0c10]/65; }
 }
+

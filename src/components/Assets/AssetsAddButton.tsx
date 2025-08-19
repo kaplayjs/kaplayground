@@ -8,7 +8,7 @@ interface AddButtonProps {
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-const AssetsAddButton: FC<AddButtonProps> = ({ accept, inputProps }) => {
+export const AssetsAddButton: FC<AddButtonProps> = ({ accept, inputProps }) => {
     return (
         <div className="absolute bottom-0 right-0 flex justify-end items-center min-h-10">
             <label>
@@ -30,5 +30,3 @@ const AssetsAddButton: FC<AddButtonProps> = ({ accept, inputProps }) => {
         </div>
     );
 };
-
-export default AssetsAddButton;

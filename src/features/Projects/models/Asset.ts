@@ -1,6 +1,10 @@
-import type { UploadAsset } from "./UploadAsset";
+import type { AssetKind } from "./AssetKind";
 
-export type Asset = UploadAsset & {
+export interface Asset {
+    name: string;
+    kind: AssetKind;
+    path: string;
+    url: string;
     // import function for kaplay
     importFunction: string;
-};
+}

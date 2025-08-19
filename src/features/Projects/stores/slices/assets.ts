@@ -1,13 +1,17 @@
 import type { StateCreator } from "zustand";
+import { fileToBase64 } from "../../../../util/fileToBase64";
 import { debug } from "../../../../util/logs";
 import { removeExtension } from "../../../../util/removeExtensions";
+import type { Asset } from "../../models/Asset";
 import type { AssetKind } from "../../models/AssetKind";
 import type { UploadAsset } from "../../models/UploadAsset";
 import type { ProjectStore } from "../useProject.ts";
 
 export interface AssetsSlice {
     assetsLastId: number;
-    addAsset: (asset: UploadAsset) => void;
+    uploadingAssets: Map<string, UploadAsset>;
+    addAsset: (asset: Asset) => void;
+    uploadAsset: (asset: UploadAsset) => void;
     removeAsset: (path: string) => void;
 }
 
@@ -17,7 +21,7 @@ const assetFuncByKind: Record<AssetKind, string> = {
     sound: "loadSound",
 };
 
-const loadByAsset = (
+export const getAssetImportFunction = (
     assetName: string,
     assetKind: AssetKind,
 ) => {
@@ -36,8 +40,16 @@ export const createAssetsSlice: StateCreator<
     get,
 ) => ({
     assetsLastId: 0,
+    uploadingAssets: new Map(),
     addAsset(asset) {
-        debug(0, "[assets] Adding asset", asset);
+        const assets = get().project.assets;
+        assets.set(asset.path, asset);
+
+        debug(0, "[assets] Asset added:", asset.name);
+
+        get().setProject({});
+    },
+    uploadAsset(asset) {
         const assets = get().project.assets;
 
         const foundAsset = assets.has(asset.path)
@@ -45,21 +57,31 @@ export const createAssetsSlice: StateCreator<
             : null;
 
         if (foundAsset) {
-            assets.set(asset.path, {
-                ...foundAsset,
-                url: asset.url,
-            });
+            // assets.set(asset.path, {
+            //     ...foundAsset,
+            //     url: asset.url,
+            // });
 
             set({});
         } else {
-            debug(0, "[assets] Asset added", asset);
+            debug(0, "[assets] Adding asset:", asset.name);
+            get().uploadingAssets.set(asset.path, asset);
+            const { file, ...sanitizedAsset } = asset;
 
-            assets.set(asset.path, {
-                ...asset,
-                importFunction: loadByAsset(
-                    asset.name,
-                    asset.kind,
-                ),
+            fileToBase64(file).then((url) => {
+                get().addAsset({
+                    ...sanitizedAsset,
+                    url: url,
+                    importFunction: getAssetImportFunction(
+                        asset.name,
+                        asset.kind,
+                    ),
+                });
+
+                get().uploadingAssets.delete(asset.path);
+
+                set({});
+            }).catch(() => {
             });
 
             set({});
@@ -70,6 +92,8 @@ export const createAssetsSlice: StateCreator<
 
         const assets = get().project.assets;
 
+        console.log(assets);
+
         if (assets.has(resourceId)) {
             assets.delete(resourceId);
         } else {
@@ -77,5 +101,6 @@ export const createAssetsSlice: StateCreator<
         }
 
         set({});
+        get().setProject({});
     },
 });

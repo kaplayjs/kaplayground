@@ -2,23 +2,22 @@ import * as Tabs from "@radix-ui/react-tabs";
 import * as React from "react";
 import Dropzone from "react-dropzone";
 import { useAssets } from "../../hooks/useAssets";
-import { fileToBase64 } from "../../util/fileToBase64";
-import AssetsAddButton from "./AssetsAddButton";
+import { AssetsAddButton } from "./AssetsAddButton";
 import AssetsList from "./AssetsList";
 import "./AssetsPanel.css";
 import type { AssetKind } from "../../features/Projects/models/AssetKind";
 import { useEditor } from "../../hooks/useEditor";
 import { cn } from "../../util/cn";
 
-type Props = {
+interface AssetsPanelProps {
     value: string;
     kind: AssetKind;
     visibleIcon?: string;
     accept: string;
-};
+}
 
-const AssetsPanel: React.FC<Props> = (props) => {
-    const { addAsset } = useAssets({ kind: props.kind });
+export const AssetsPanel: React.FC<AssetsPanelProps> = (props) => {
+    const { uploadAsset } = useAssets({ kind: props.kind });
     const showNotification = useEditor((s) => s.showNotification);
     const [isDragging, setIsDragging] = React.useState(false);
 
@@ -27,9 +26,9 @@ const AssetsPanel: React.FC<Props> = (props) => {
 
         acceptedFiles.forEach(async (file) => {
             try {
-                addAsset({
+                uploadAsset({
                     name: file.name,
-                    url: await fileToBase64(file),
+                    file: file,
                     kind: props.kind,
                     path: `${props.kind}s/${file.name}`,
                 });
@@ -85,5 +84,3 @@ const AssetsPanel: React.FC<Props> = (props) => {
         </Tabs.Content>
     );
 };
-
-export default AssetsPanel;

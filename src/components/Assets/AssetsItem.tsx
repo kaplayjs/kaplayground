@@ -2,7 +2,6 @@ import * as ContextMenu from "@radix-ui/react-context-menu";
 import React, { type FC } from "react";
 import type { Asset } from "../../features/Projects/models/Asset";
 import { useProject } from "../../features/Projects/stores/useProject";
-import { useAssets } from "../../hooks/useAssets";
 import { useEditor } from "../../hooks/useEditor";
 
 export type ResourceProps = {
@@ -11,9 +10,7 @@ export type ResourceProps = {
 };
 
 const AssetsItem: FC<ResourceProps> = ({ asset, visibleIcon }) => {
-    const { removeAsset } = useAssets({
-        kind: asset.kind,
-    });
+    const removeAsset = useProject((s) => s.removeAsset);
     const updateFile = useProject((s) => s.updateFile);
     const getAssetsFile = useProject((s) => s.getAssetsFile);
     const update = useEditor((s) => s.update);
@@ -43,17 +40,21 @@ const AssetsItem: FC<ResourceProps> = ({ asset, visibleIcon }) => {
                 id={asset.name}
                 data-label={asset.name}
                 data-url={asset.url}
+                data-tooltip-id="global"
+                data-tooltip-content={asset.name}
+                data-tooltip-place="top"
+                data-tooltip-delay-show={300}
                 onDragStartCapture={handleResourceDrag}
             >
-                <li>
-                    <div className="p-2 rounded-lg hover:bg-base-300 cursor-grab">
+                <li draggable>
+                    <div className="p-2 rounded-lg hover:bg-base-300 cursor-grab h-20 w-20">
                         <img
                             draggable={false}
                             src={visibleIcon ?? asset.url}
                             alt={`Asset ${asset.name}`}
-                            className="h-12 w-12 object-scale-down"
+                            className="h-12 w-12 object-scale-down mx-auto"
                         />
-                        <p className="text-xs text-center text-gray-500">
+                        <p className="text-xs text-center text-gray-500 truncate">
                             {asset.name}
                         </p>
                     </div>

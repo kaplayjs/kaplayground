@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made it possible to open Projects Browser with url param `?browse=` `ex | examples | demos | pj | projects` - @imaginarny
 - Empty state screen when there are no search results in Projects Browser added - @imaginarny
 - Added clear button to Projects Browser search input - @imaginarny
+- Added a message when there's an empty asset category in Assets Browser - @lajbel
 
 ### Changed
 
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Project is now also saved when Project Name input is submitted - @imaginarny
 - Share project icon changed from Bag to Share icon - @imaginarny
 - Editor scrolling is now smooth - @imaginarny
+- Now tab icons in asset browser are adapted to minimum sizes (kinda) - @lajbel
 
 ### Fixed
 
@@ -42,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create buttons in Projects Browser were too big on small screens - @imaginarny
 - Example list select value not updating on demo switching - @imaginarny
 - Pointer lock and download were blocked by iframe sandbox restrictions - @imaginarny
+- Assets Browser was not showing new loaded assets - @lajbel
+- Assets Browser was not deleting assets correctly - @lajbel
 
 ## [2.3.6] - 2025-07-30
 

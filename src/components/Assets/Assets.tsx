@@ -1,7 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import * as Tabs from "@radix-ui/react-tabs";
-import AssetsPanel from "./AssetsPanel";
-import AssetsTab from "./AssetsTab";
+import { AssetsPanel } from "./AssetsPanel";
+import { AssetsTab } from "./AssetsTab";
 
 export const Assets = () => {
     return (

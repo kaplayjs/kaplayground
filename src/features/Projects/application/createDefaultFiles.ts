@@ -1,6 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import type { Asset } from "../models/Asset";
 import type { File } from "../models/File";
+import { getAssetImportFunction } from "../stores/slices/assets";
 import { useProject } from "../stores/useProject";
 
 const mainExample = `// Starts a new game
@@ -91,10 +92,16 @@ const defaultFiles: File[] = [
 
 const defaultAssets: Omit<Asset, "importFunction">[] = [
     {
-        name: "bean",
-        path: "assets/sprites/bean.png",
-        url: assets.bean.sprite,
+        name: "mark.png",
+        path: "assets/sprites/mark.png",
+        url: assets.mark.sprite,
         kind: "sprite",
+    },
+    {   
+        name: "mark_voice.wav",
+        path: "assets/sounds/mark_voice.wav",
+        url: assets.mark_voice.sound,
+        kind: "sound",
     },
 ];
 
@@ -109,6 +116,10 @@ export function createDefaultFiles() {
         for (const asset of defaultAssets) {
             projectStore.addAsset({
                 ...asset,
+                importFunction: getAssetImportFunction(
+                    asset.name,
+                    asset.kind,
+                ),
             });
         }
     } else {
