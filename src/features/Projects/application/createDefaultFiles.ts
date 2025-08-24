@@ -1,4 +1,5 @@
 import { assets } from "@kaplayjs/crew";
+import { VERSION } from "../../../config/common";
 import type { Asset } from "../models/Asset";
 import type { File } from "../models/File";
 import { getAssetImportFunction } from "../stores/slices/assets";
@@ -37,7 +38,7 @@ scene("game", () => {
     addWelcomeText();
 
     add([
-        sprite("bean"),
+        sprite("mark"),
         pos(center()),
         scale(2),
         anchor("center"),
@@ -47,7 +48,7 @@ scene("game", () => {
 
 const welcomeTextFile = `export function addWelcomeText() {
     const txt = add([
-        text("Welcome to KAPLAYGROUND"),
+        text("Welcome to\\n KAPLAYGROUND\\n ${VERSION}", { align: "center" }),
         pos(center().add(0, -100)),
         anchor("center"),
     ]);
@@ -67,13 +68,14 @@ const defaultFiles: File[] = [
     {
         path: "assets.js",
         kind: "assets",
-        value: `loadSprite("bean", "assets/sprites/bean.png");\n`,
+        value: `loadSprite("mark", "assets/sprites/mark.png");\nloadHappy();\n`,
         language: "javascript",
     },
     {
         path: "kaplay.js",
         kind: "kaplay",
-        value: "kaplay({\n    focus: false,\n});\n",
+        value:
+            "kaplay({\n    focus: false,\n    font: \"happy\",\n    background: \"#4a3052\", \n});\n",
         language: "javascript",
     },
     {
@@ -97,7 +99,7 @@ const defaultAssets: Omit<Asset, "importFunction">[] = [
         url: assets.mark.sprite,
         kind: "sprite",
     },
-    {   
+    {
         name: "mark_voice.wav",
         path: "assets/sounds/mark_voice.wav",
         url: assets.mark_voice.sound,

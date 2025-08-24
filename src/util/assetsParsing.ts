@@ -20,11 +20,16 @@ export const parseAssetPath = (path: string, match?: string) => {
     let normalPath = normalize(path);
 
     const projectAssets = useProject.getState().project.assets;
-    const pathInAssets = projectAssets.get(normalPath);
     const loadType = match?.match(/^load(\w+)/s)?.[1] ?? null;
 
-    if (pathInAssets) {
-        path = pathInAssets.url;
+    if (normalPath.startsWith("assets/")) {
+        const pathInAssets = projectAssets.get(normalPath);
+        console.log(normalPath, pathInAssets, projectAssets);
+        if (pathInAssets) {
+            path = pathInAssets.url;
+            return path;
+        }
+
         return path;
     }
 
@@ -70,10 +75,6 @@ export const parseAssetPath = (path: string, match?: string) => {
 // TODO: Remplaze with normalize() from path.ts
 const normalize = (path: string) => {
     const normalizedPath = path.replace(/^\/|\/$/g, "").replace(/"/g, "");
-
-    if (normalizedPath.startsWith("assets/")) {
-        return normalizedPath.replace("assets/", "");
-    }
 
     return normalizedPath;
 };

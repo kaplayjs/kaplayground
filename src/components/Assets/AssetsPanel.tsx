@@ -30,7 +30,7 @@ export const AssetsPanel: React.FC<AssetsPanelProps> = (props) => {
                     name: file.name,
                     file: file,
                     kind: props.kind,
-                    path: `${props.kind}s/${file.name}`,
+                    path: `assets/${props.kind}s/${file.name}`,
                 });
             } catch (e) {
                 console.error(e);
