@@ -23,7 +23,7 @@ const bean = add([
 // Add the text
 add([
     text("Hello, KAWORLD!"), // add text
-    pos(center().add(0, -80)), // set position
+    pos(center().add(0, -130)), // set position
     anchor("center"), // set anchor, pivot
 ]);
 
@@ -49,7 +49,7 @@ scene("game", () => {
 const welcomeTextFile = `export function addWelcomeText() {
     const txt = add([
         text("Welcome to\\n KAPLAYGROUND\\n ${VERSION}", { align: "center" }),
-        pos(center().add(0, -100)),
+        pos(center().add(0, -130)),
         anchor("center"),
     ]);
 
