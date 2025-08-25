@@ -21,8 +21,8 @@ importers:
         specifier: ^0.0.38
         version: 0.0.38
       '@kaplayjs/crew':
-        specifier: link:../crew
-        version: link:../crew
+        specifier: ^2.0.0
+        version: 2.0.0(typescript@5.6.3)
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.48.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -599,6 +599,11 @@ packages:
 
   '@juggle/resize-observer@3.4.0':
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
+  '@kaplayjs/crew@2.0.0':
+    resolution: {integrity: sha512-VCCaHR2ylQSgJCdVUu1ndwNSbRdLxYIyTrwkNUlehcQSKKx6aD/naqjL0FT3ErO5dgfTRRKieYz8oqBqZk+QmQ==}
+    peerDependencies:
+      typescript: ^5.0.0
 
   '@kaplayjs/dprint-config@1.1.0':
     resolution: {integrity: sha512-yMcScoE/3cDrVyX+T5I5T2qIMq5pnzdbmTNSTonT3/toOUBQwHqfEsqLjj7+4MkHf16HgNrN8nu+bkZ8VZ36kQ==}
@@ -3146,6 +3151,10 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@juggle/resize-observer@3.4.0': {}
+
+  '@kaplayjs/crew@2.0.0(typescript@5.6.3)':
+    dependencies:
+      typescript: 5.6.3
 
   '@kaplayjs/dprint-config@1.1.0':
     dependencies:

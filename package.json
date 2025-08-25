@@ -24,7 +24,7 @@
     "@fontsource-variable/rubik": "^5.1.0",
     "@fontsource/dm-mono": "^5.2.5",
     "@formkit/drag-and-drop": "^0.0.38",
-    "@kaplayjs/crew": "link:../crew",
+    "@kaplayjs/crew": "^2.0.0",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-context-menu": "^2.2.2",
     "@radix-ui/react-dropdown-menu": "^2.1.14",
