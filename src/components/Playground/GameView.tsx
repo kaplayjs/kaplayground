@@ -19,7 +19,7 @@ export const GameView: FC = () => {
         <iframe
             id="game-view"
             tabIndex={0}
-            src="https://a114ff57.iframe-kaplay.pages.dev/"
+            src="https://kaplaypreview.kaplayjs.com/"
             className="rounded-xl"
             style={{
                 border: "none",

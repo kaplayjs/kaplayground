@@ -25,7 +25,7 @@
         "category": "concepts",
         "group": "",
         "description": "How to animate game object properties with animate() component",
-        "code": "kaplay();\n\nloadBean();\n\n// We add a bean that rotates with the animate component\nconst rotatingBean = add([\n    sprite(\"bean\"),\n    pos(50, 50),\n    anchor(\"center\"),\n    rotate(0),\n    animate(),\n]);\n\n// We use the 'animate()' function provided by the animate component\n// This will rotate the bean from 0 to 360 degrees in 2 seconds\n// The direction \"forwards\" means it will go back to 0 when it ends, which makes this a loop\nrotatingBean.animate(\"angle\", [0, 360], {\n    duration: 2,\n    direction: \"forward\",\n    loops: 1,\n});\n\nonClick(() => {\n    rotatingBean.animation.seek(0);\n});\n\nrotatingBean.onAnimateChannelFinished(name => {\n    debug.log(`${name} finished`);\n});\nrotatingBean.onAnimateFinished(() => {\n    debug.log(`All finished`);\n});\n\n// Now we'll move this bean from left to right\nconst movingBean = add([\n    sprite(\"bean\"),\n    pos(50, 150),\n    anchor(\"center\"),\n    animate(),\n]);\n\n// This will animate the bean from left to right in 2 seconds\n// The direction \"ping-pong\" means that when it goes to the right, it will move back to the left\nmovingBean.animate(\"pos\", [vec2(50, 150), vec2(150, 150)], {\n    duration: 2,\n    direction: \"ping-pong\",\n});\n\nonClick(() => {\n    movingBean.animation.paused = !movingBean.animation.paused;\n});\n\n// Same animation as before, but relative to the spawn position\nconst secondMovingBean = add([\n    sprite(\"bean\"),\n    pos(150, 0),\n    anchor(\"center\"),\n    animate({ relative: true }),\n]);\n\n// The fact that is relative, means that instead of setting the bean to these positions (vec2(50, 150), vec2(150, 150))\n// It will ADD those positions to the position the bean was spawned in\nsecondMovingBean.animate(\"pos\", [vec2(50, 150), vec2(150, 150)], {\n    duration: 2,\n    direction: \"ping-pong\",\n});\n\n// We'll change the color of the bean using a list of colors\nconst coloringBean = add([\n    sprite(\"bean\"),\n    pos(50, 300),\n    anchor(\"center\"),\n    color(WHITE),\n    animate(),\n]);\n\n// It will animate the color the bean color from white to red to green to blue to white\n// In 8 seconds, and when it's over i'll start over again\ncoloringBean.animate(\"color\", [WHITE, RED, GREEN, BLUE, WHITE], {\n    duration: 8,\n    direction: \"forward\",\n});\n\n// We'll change the opacity of the bean using a list of opacities\nconst opacitingBean = add([\n    sprite(\"bean\"),\n    pos(150, 300),\n    anchor(\"center\"),\n    opacity(1),\n    animate(),\n]);\n\n// We'll animate the opacity from 1, to 0, to 1 during 8 seconds\n// This time, we'll be using an easing!\nopacitingBean.animate(\"opacity\", [1, 0, 1], {\n    duration: 8,\n    easing: easings.easeInOutCubic,\n});\n\n// We'll move this bean in a square shape\nconst squaringBean = add([\n    sprite(\"bean\"),\n    pos(50, 400),\n    anchor(\"center\"),\n    animate(),\n]);\n\n// Passing an array of keyframes (the positions) it'll move in a square shape\nsquaringBean.animate(\n    \"pos\",\n    [\n        vec2(50, 400),\n        vec2(150, 400),\n        vec2(150, 500),\n        vec2(50, 500),\n        vec2(50, 400),\n    ],\n    { duration: 8 },\n);\n\n// We'll move the bean in a square shape again, but this time we'll be using timing\nconst timedSquaringBean = add([\n    sprite(\"bean\"),\n    pos(50, 400),\n    anchor(\"center\"),\n    animate(),\n]);\n\n// This will move the bean in the same positions as before in the same time\n// But the timings will make the movement from one keyframe to another quicker or slower\ntimedSquaringBean.animate(\n    \"pos\",\n    [\n        vec2(50, 400),\n        vec2(150, 400),\n        vec2(150, 500),\n        vec2(50, 500),\n        vec2(50, 400),\n    ],\n    {\n        duration: 8,\n        timing: [\n            0,\n            0.1,\n            0.3,\n            0.7,\n            1.0,\n        ],\n    },\n);\n\n// We'll move this bean in a curve\n// Using spline interpolation to move according to a smoothened path\nconst curvingBean = add([\n    sprite(\"bean\"),\n    pos(50, 400),\n    anchor(\"center\"),\n    animate({ followMotion: true }),\n    rotate(0),\n]);\n\n// This will move bean in these positions, but using a different interpolation\ncurvingBean.animate(\n    \"pos\",\n    [\n        vec2(200, 400),\n        vec2(250, 500),\n        vec2(300, 400),\n        vec2(350, 500),\n        vec2(400, 400),\n    ],\n    { duration: 8, direction: \"ping-pong\", interpolation: \"spline\" },\n);\n\n// We'll animate a little bean to rotate around the curvingBean!\n// Here we're creating a pivot\nconst littleBeanPivot = curvingBean.add([\n    animate(),\n    rotate(0),\n]);\n\n// And animating the pivot, you know this!\nlittleBeanPivot.animate(\"angle\", [0, 360], {\n    duration: 2,\n    direction: \"reverse\",\n});\n\n// We'll animate a little bean to rotate around the pivot\nconst littleBean = littleBeanPivot.add([\n    sprite(\"bean\"),\n    pos(50, 50),\n    anchor(\"center\"),\n    scale(0.25),\n    animate(),\n    rotate(0),\n]);\n\n// And here we animate the little bean\nlittleBean.animate(\"angle\", [0, 360], {\n    duration: 2,\n    direction: \"forward\",\n});\n\n// We'll the serialize an animation and log it to the console so we can see all the current animation channels\nconsole.log(JSON.stringify(serializeAnimation(curvingBean, \"root\"), null, 2));\n\n// Debug piece of code that draws a line in the curve that the curving bean goes through, don't mind it\n/*onDraw(() => {\n    drawCurve(t => evaluateCatmullRom(\n        vec2(200, 400),\n        vec2(250, 500),\n        vec2(300, 400),\n        vec2(350, 500), t), { color: RED })\n    drawCurve(catmullRom(\n        vec2(200, 400),\n        vec2(250, 500),\n        vec2(300, 400),\n        vec2(350, 500)), { color: GREEN })\n})*/",
+        "code": "kaplay();\n\nloadBean();\n\n// We add a bean that rotates with the animate component\nconst rotatingBean = add([\n    sprite(\"bean\"),\n    pos(50, 50),\n    anchor(\"center\"),\n    rotate(0),\n    animate(),\n]);\n\n// We use the 'animate()' function provided by the animate component\n// This will rotate the bean from 0 to 360 degrees in 2 seconds\n// The direction \"forwards\" means it will go back to 0 when it ends, which makes this a loop\nrotatingBean.animate(\"angle\", [0, 360], {\n    duration: 2,\n    direction: \"forward\",\n    loops: 1,\n});\n\nonClick(() => {\n    rotatingBean.animation.play();\n});\n\nrotatingBean.onAnimateChannelFinished(name => {\n    debug.log(`${name} finished`);\n});\nrotatingBean.onAnimateFinished(() => {\n    debug.log(`All finished`);\n});\n\n// Now we'll move this bean from left to right\nconst movingBean = add([\n    sprite(\"bean\"),\n    pos(50, 150),\n    anchor(\"center\"),\n    animate(),\n]);\n\n// This will animate the bean from left to right in 2 seconds\n// The direction \"ping-pong\" means that when it goes to the right, it will move back to the left\nmovingBean.animate(\"pos\", [vec2(50, 150), vec2(150, 150)], {\n    duration: 2,\n    direction: \"ping-pong\",\n});\n\nonClick(() => {\n    movingBean.animation.paused = !movingBean.animation.paused;\n});\n\n// Same animation as before, but relative to the spawn position\nconst secondMovingBean = add([\n    sprite(\"bean\"),\n    pos(150, 0),\n    anchor(\"center\"),\n    animate({ relative: true }),\n]);\n\n// The fact that is relative, means that instead of setting the bean to these positions (vec2(50, 150), vec2(150, 150))\n// It will ADD those positions to the position the bean was spawned in\nsecondMovingBean.animate(\"pos\", [vec2(50, 150), vec2(150, 150)], {\n    duration: 2,\n    direction: \"ping-pong\",\n});\n\n// We'll change the color of the bean using a list of colors\nconst coloringBean = add([\n    sprite(\"bean\"),\n    pos(50, 300),\n    anchor(\"center\"),\n    color(WHITE),\n    animate(),\n]);\n\n// It will animate the color the bean color from white to red to green to blue to white\n// In 8 seconds, and when it's over i'll start over again\ncoloringBean.animate(\"color\", [WHITE, RED, GREEN, BLUE, WHITE], {\n    duration: 8,\n    direction: \"forward\",\n});\n\n// We'll change the opacity of the bean using a list of opacities\nconst opacitingBean = add([\n    sprite(\"bean\"),\n    pos(150, 300),\n    anchor(\"center\"),\n    opacity(1),\n    animate(),\n]);\n\n// We'll animate the opacity from 1, to 0, to 1 during 8 seconds\n// This time, we'll be using an easing!\nopacitingBean.animate(\"opacity\", [1, 0, 1], {\n    duration: 8,\n    easing: easings.easeInOutCubic,\n});\n\n// We'll move this bean in a square shape\nconst squaringBean = add([\n    sprite(\"bean\"),\n    pos(50, 400),\n    anchor(\"center\"),\n    animate(),\n]);\n\n// Passing an array of keyframes (the positions) it'll move in a square shape\nsquaringBean.animate(\n    \"pos\",\n    [\n        vec2(50, 400),\n        vec2(150, 400),\n        vec2(150, 500),\n        vec2(50, 500),\n        vec2(50, 400),\n    ],\n    { duration: 8 },\n);\n\n// We'll move the bean in a square shape again, but this time we'll be using timing\nconst timedSquaringBean = add([\n    sprite(\"bean\"),\n    pos(50, 400),\n    anchor(\"center\"),\n    animate(),\n]);\n\n// This will move the bean in the same positions as before in the same time\n// But the timings will make the movement from one keyframe to another quicker or slower\ntimedSquaringBean.animate(\n    \"pos\",\n    [\n        vec2(50, 400),\n        vec2(150, 400),\n        vec2(150, 500),\n        vec2(50, 500),\n        vec2(50, 400),\n    ],\n    {\n        duration: 8,\n        timing: [\n            0,\n            0.1,\n            0.3,\n            0.7,\n            1.0,\n        ],\n    },\n);\n\n// We'll move this bean in a curve\n// Using spline interpolation to move according to a smoothened path\nconst curvingBean = add([\n    sprite(\"bean\"),\n    pos(50, 400),\n    anchor(\"center\"),\n    animate({ followMotion: true }),\n    rotate(0),\n]);\n\n// This will move bean in these positions, but using a different interpolation\ncurvingBean.animate(\n    \"pos\",\n    [\n        vec2(200, 400),\n        vec2(250, 500),\n        vec2(300, 400),\n        vec2(350, 500),\n        vec2(400, 400),\n    ],\n    { duration: 8, direction: \"ping-pong\", interpolation: \"spline\" },\n);\n\n// We'll animate a little bean to rotate around the curvingBean!\n// Here we're creating a pivot\nconst littleBeanPivot = curvingBean.add([\n    animate(),\n    rotate(0),\n]);\n\n// And animating the pivot, you know this!\nlittleBeanPivot.animate(\"angle\", [0, 360], {\n    duration: 2,\n    direction: \"reverse\",\n});\n\n// We'll animate a little bean to rotate around the pivot\nconst littleBean = littleBeanPivot.add([\n    sprite(\"bean\"),\n    pos(50, 50),\n    anchor(\"center\"),\n    scale(0.25),\n    animate(),\n    rotate(0),\n]);\n\n// And here we animate the little bean\nlittleBean.animation.get(\"rotate\").animate(\"angle\", [0, 360], {\n    duration: 2,\n    direction: \"forward\",\n});\nlittleBean.animation.play(\"rotate\");\n\n// We'll the serialize an animation and log it to the console so we can see all the current animation channels\nconsole.log(JSON.stringify(serializeAnimation(curvingBean, \"root\"), null, 2));\n\n// Debug piece of code that draws a line in the curve that the curving bean goes through, don't mind it\n/*onDraw(() => {\n    drawCurve(t => evaluateCatmullRom(\n        vec2(200, 400),\n        vec2(250, 500),\n        vec2(300, 400),\n        vec2(350, 500), t), { color: RED })\n    drawCurve(catmullRom(\n        vec2(200, 400),\n        vec2(250, 500),\n        vec2(300, 400),\n        vec2(350, 500)), { color: GREEN })\n})*/",
         "difficulty": 1,
         "version": "master",
         "minVersion": "3001.0",
@@ -34,7 +34,7 @@
             "animation"
         ],
         "createdAt": "2024-07-03T08:32:43+09:00",
-        "updatedAt": "2025-04-23T12:11:35-03:00"
+        "updatedAt": "2025-08-21T19:46:57+09:00"
     },
     {
         "id": 2,
@@ -451,6 +451,22 @@
     },
     {
         "id": 24,
+        "name": "decisiontree",
+        "formattedName": "decisiontree",
+        "sortName": "9999-zzzz-9999-decisiontree",
+        "category": "",
+        "group": "",
+        "description": "",
+        "code": "kaplay();\n\nconst t = DecisionTree.learnFromExamples(\n    [\n        [\n            \"sunny\",\n            \"sunny\",\n            \"overcast\",\n            \"rain\",\n            \"rain\",\n            \"rain\",\n            \"overcast\",\n            \"sunny\",\n            \"sunny\",\n            \"rain\",\n            \"sunny\",\n            \"overcast\",\n            \"overcast\",\n            \"rain\",\n        ],\n        [\n            \"hot\",\n            \"hot\",\n            \"hot\",\n            \"mild\",\n            \"cool\",\n            \"cool\",\n            \"cool\",\n            \"mild\",\n            \"cool\",\n            \"mild\",\n            \"mild\",\n            \"mild\",\n            \"hot\",\n            \"mild\",\n        ],\n        [\n            \"high\",\n            \"high\",\n            \"high\",\n            \"high\",\n            \"normal\",\n            \"normal\",\n            \"normal\",\n            \"high\",\n            \"normal\",\n            \"normal\",\n            \"normal\",\n            \"high\",\n            \"normal\",\n            \"high\",\n        ],\n        [\n            \"weak\",\n            \"strong\",\n            \"weak\",\n            \"weak\",\n            \"weak\",\n            \"strong\",\n            \"strong\",\n            \"weak\",\n            \"weak\",\n            \"weak\",\n            \"strong\",\n            \"strong\",\n            \"weak\",\n            \"strong\",\n        ],\n    ],\n    [\"outlook\", \"temperature\", \"humidity\", \"wind\"],\n    [\n        false,\n        false,\n        true,\n        true,\n        true,\n        false,\n        true,\n        false,\n        true,\n        true,\n        true,\n        true,\n        true,\n        false,\n    ],\n);\n\nconsole.log(t);",
+        "difficulty": null,
+        "version": "master",
+        "minVersion": "",
+        "tags": [],
+        "createdAt": "2025-08-21T19:47:15+09:00",
+        "updatedAt": "2025-08-21T19:47:15+09:00"
+    },
+    {
+        "id": 25,
         "name": "doublejump",
         "formattedName": "Double Jump",
         "sortName": "1-concepts-zzzz-9999-doublejump",
@@ -469,7 +485,7 @@
         "updatedAt": "2025-04-26T14:05:11-03:00"
     },
     {
-        "id": 25,
+        "id": 26,
         "name": "drag",
         "formattedName": "Drag",
         "sortName": "1-concepts-zzzz-9999-drag",
@@ -487,7 +503,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 26,
+        "id": 27,
         "name": "draw",
         "formattedName": "Draw",
         "sortName": "0-basics-zzzz-9999-draw",
@@ -505,7 +521,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 27,
+        "id": 28,
         "name": "drawon",
         "formattedName": "Drawon Component",
         "sortName": "1-concepts-zzzz-9999-drawon",
@@ -523,7 +539,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 28,
+        "id": 29,
         "name": "drawoncanvas",
         "formattedName": "drawoncanvas",
         "sortName": "9999-zzzz-9999-drawoncanvas",
@@ -539,7 +555,7 @@
         "updatedAt": "2025-05-21T13:19:51+09:00"
     },
     {
-        "id": 29,
+        "id": 30,
         "name": "eatlove",
         "formattedName": "Eat Love",
         "sortName": "2-games-zzzz-9999-eatlove",
@@ -557,7 +573,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 30,
+        "id": 31,
         "name": "egg",
         "formattedName": "Egg",
         "sortName": "2-games-zzzz-9999-egg",
@@ -575,7 +591,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 31,
+        "id": 32,
         "name": "fadeIn",
         "formattedName": "Fade In",
         "sortName": "1-concepts-zzzz-9999-fadeIn",
@@ -594,7 +610,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 32,
+        "id": 33,
         "name": "fakeMouse",
         "formattedName": "Fake Mouse",
         "sortName": "1-concepts-zzzz-9999-fakeMouse",
@@ -613,7 +629,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 33,
+        "id": 34,
         "name": "flamebar",
         "formattedName": "Flame bar",
         "sortName": "1-concepts-zzzz-9999-flamebar",
@@ -632,7 +648,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 34,
+        "id": 35,
         "name": "flappy",
         "formattedName": "Flappy",
         "sortName": "2-games-zzzz-9999-flappy",
@@ -650,7 +666,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 35,
+        "id": 36,
         "name": "frames",
         "formattedName": "Frames",
         "sortName": "1-concepts-zzzz-9999-frames",
@@ -669,7 +685,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 36,
+        "id": 37,
         "name": "friction",
         "formattedName": "Friction",
         "sortName": "1-concepts-zzzz-9999-friction",
@@ -687,7 +703,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 37,
+        "id": 38,
         "name": "gamepad",
         "formattedName": "Gamepad",
         "sortName": "1-concepts-zzzz-9999-gamepad",
@@ -706,7 +722,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 38,
+        "id": 39,
         "name": "gamepadMulti",
         "formattedName": "Multi-Gamepad",
         "sortName": "1-concepts-zzzz-9999-gamepadMulti",
@@ -724,7 +740,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 39,
+        "id": 40,
         "name": "ghosthunting",
         "formattedName": "Ghost hunting",
         "sortName": "2-games-zzzz-9999-ghosthunting",
@@ -744,7 +760,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 40,
+        "id": 41,
         "name": "gravity",
         "formattedName": "Gravity",
         "sortName": "1-concepts-zzzz-9999-gravity",
@@ -763,7 +779,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 41,
+        "id": 42,
         "name": "health",
         "formattedName": "Health",
         "sortName": "1-concepts-zzzz-9999-health",
@@ -781,7 +797,7 @@
         "updatedAt": "2025-05-04T18:18:52-05:00"
     },
     {
-        "id": 42,
+        "id": 43,
         "name": "hover",
         "formattedName": "Hover",
         "sortName": "0-basics-zzzz-9999-hover",
@@ -799,7 +815,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 43,
+        "id": 44,
         "name": "kaboom",
         "formattedName": "Kaboom!",
         "sortName": "0-basics-zzzz-9999-kaboom",
@@ -818,7 +834,7 @@
         "updatedAt": "2025-05-01T18:12:12-03:00"
     },
     {
-        "id": 44,
+        "id": 45,
         "name": "kaplayLogoAnim",
         "formattedName": "KAPLAY Logo Animation",
         "sortName": "1-concepts-zzzz-9999-kaplayLogoAnim",
@@ -837,7 +853,7 @@
         "updatedAt": "2025-05-05T00:12:02+02:00"
     },
     {
-        "id": 45,
+        "id": 46,
         "name": "layer",
         "formattedName": "Layer",
         "sortName": "0-basics-zzzz-9999-layer",
@@ -857,7 +873,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 46,
+        "id": 47,
         "name": "layers",
         "formattedName": "Layers",
         "sortName": "0-basics-zzzz-9999-layers",
@@ -877,7 +893,7 @@
         "updatedAt": "2025-06-03T21:53:52+09:00"
     },
     {
-        "id": 47,
+        "id": 48,
         "name": "lerp",
         "formattedName": "Lerp",
         "sortName": "1-concepts-zzzz-9999-lerp",
@@ -896,7 +912,7 @@
         "updatedAt": "2025-04-27T12:50:27-05:00"
     },
     {
-        "id": 48,
+        "id": 49,
         "name": "level",
         "formattedName": "Level",
         "sortName": "0-basics-zzzz-9999-level",
@@ -915,7 +931,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 49,
+        "id": 50,
         "name": "levelRaycast",
         "formattedName": "Level Raycast",
         "sortName": "0-basics-zzzz-9999-levelRaycast",
@@ -934,7 +950,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 50,
+        "id": 51,
         "name": "levelcomp",
         "formattedName": "Level component",
         "sortName": "1-concepts-zzzz-9999-levelcomp",
@@ -953,7 +969,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 51,
+        "id": 52,
         "name": "lifespan",
         "formattedName": "Lifespan",
         "sortName": "0-basics-zzzz-9999-lifespan",
@@ -972,7 +988,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 52,
+        "id": 53,
         "name": "linecap",
         "formattedName": "Lines",
         "sortName": "1-concepts-zzzz-9999-linecap",
@@ -990,7 +1006,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 53,
+        "id": 54,
         "name": "linejoin",
         "formattedName": "Line join",
         "sortName": "1-concepts-zzzz-9999-linejoin",
@@ -1008,7 +1024,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 54,
+        "id": 55,
         "name": "livequery",
         "formattedName": "Live query",
         "sortName": "1-concepts-zzzz-9999-livequery",
@@ -1026,7 +1042,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 55,
+        "id": 56,
         "name": "loadingScreen",
         "formattedName": "Custom Loading Screen",
         "sortName": "1-concepts-zzzz-9999-loadingScreen",
@@ -1045,7 +1061,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 56,
+        "id": 57,
         "name": "maze",
         "formattedName": "Maze",
         "sortName": "1-concepts-zzzz-9999-maze",
@@ -1064,7 +1080,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 57,
+        "id": 58,
         "name": "mazeRaycastedLight",
         "formattedName": "Maze Raycasted Light",
         "sortName": "1-concepts-zzzz-9999-mazeRaycastedLight",
@@ -1084,7 +1100,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 58,
+        "id": 59,
         "name": "movement",
         "formattedName": "Movement",
         "sortName": "1-concepts-zzzz-9999-movement",
@@ -1103,7 +1119,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 59,
+        "id": 60,
         "name": "onLoadError",
         "formattedName": "Load Error",
         "sortName": "1-concepts-zzzz-9999-onLoadError",
@@ -1121,7 +1137,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 60,
+        "id": 61,
         "name": "out",
         "formattedName": "Out of Screen",
         "sortName": "1-concepts-zzzz-9999-out",
@@ -1139,7 +1155,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 61,
+        "id": 62,
         "name": "overlap",
         "formattedName": "Overlap",
         "sortName": "1-concepts-zzzz-9999-overlap",
@@ -1157,7 +1173,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 62,
+        "id": 63,
         "name": "particle",
         "formattedName": "Particle",
         "sortName": "1-concepts-particles-0-particle",
@@ -1175,7 +1191,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 63,
+        "id": 64,
         "name": "particleTrail",
         "formattedName": "Particle Trail",
         "sortName": "1-concepts-particles-1-particleTrail",
@@ -1193,7 +1209,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 64,
+        "id": 65,
         "name": "patrol",
         "formattedName": "Patrol",
         "sortName": "1-concepts-zzzz-9999-patrol",
@@ -1211,7 +1227,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 65,
+        "id": 66,
         "name": "pauseMenu",
         "formattedName": "Pause Menu",
         "sortName": "1-concepts-zzzz-9999-pauseMenu",
@@ -1229,7 +1245,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 66,
+        "id": 67,
         "name": "picture",
         "formattedName": "Picture",
         "sortName": "1-concepts-zzzz-9999-picture",
@@ -1249,7 +1265,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 67,
+        "id": 68,
         "name": "platformEffector",
         "formattedName": "One-way Platforms",
         "sortName": "1-concepts-zzzz-9999-platformEffector",
@@ -1268,7 +1284,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 68,
+        "id": 69,
         "name": "platformer",
         "formattedName": "Platformer",
         "sortName": "2-games-zzzz-9999-platformer",
@@ -1287,7 +1303,7 @@
         "updatedAt": "2025-05-01T20:31:48+09:00"
     },
     {
-        "id": 69,
+        "id": 70,
         "name": "polygon",
         "formattedName": "Polygon",
         "sortName": "1-concepts-zzzz-9999-polygon",
@@ -1306,7 +1322,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 70,
+        "id": 71,
         "name": "pong",
         "formattedName": "Pong",
         "sortName": "2-games-zzzz-9999-pong",
@@ -1325,7 +1341,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 71,
+        "id": 72,
         "name": "postEffect",
         "formattedName": "Post-Effect",
         "sortName": "1-concepts-zzzz-9999-postEffect",
@@ -1343,7 +1359,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 72,
+        "id": 73,
         "name": "query",
         "formattedName": "Query",
         "sortName": "1-concepts-zzzz-9999-query",
@@ -1361,7 +1377,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 73,
+        "id": 74,
         "name": "raycastObject",
         "formattedName": "Raycast Object",
         "sortName": "1-concepts-zzzz-9999-raycastObject",
@@ -1379,7 +1395,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 74,
+        "id": 75,
         "name": "raycastShape",
         "formattedName": "Raycast Shape",
         "sortName": "1-concepts-zzzz-9999-raycastShape",
@@ -1397,7 +1413,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 75,
+        "id": 76,
         "name": "raycaster3d",
         "formattedName": "3D",
         "sortName": "2-games-zzzz-9999-raycaster3d",
@@ -1416,7 +1432,7 @@
         "updatedAt": "2025-04-26T14:20:03-03:00"
     },
     {
-        "id": 76,
+        "id": 77,
         "name": "restitution",
         "formattedName": "Restitution",
         "sortName": "1-concepts-zzzz-9999-restitution",
@@ -1434,7 +1450,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 77,
+        "id": 78,
         "name": "rpg",
         "formattedName": "RPG",
         "sortName": "2-games-zzzz-9999-rpg",
@@ -1453,7 +1469,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 78,
+        "id": 79,
         "name": "runner",
         "formattedName": "Runner",
         "sortName": "2-games-zzzz-9999-runner",
@@ -1472,7 +1488,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 79,
+        "id": 80,
         "name": "scaletest",
         "formattedName": "scaletest",
         "sortName": "9999-zzzz-9999-scaletest",
@@ -1488,7 +1504,7 @@
         "updatedAt": "2025-05-26T19:50:38+09:00"
     },
     {
-        "id": 80,
+        "id": 81,
         "name": "scenes",
         "formattedName": "Scenes",
         "sortName": "0-basics-zzzz-9999-scenes",
@@ -1506,7 +1522,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 81,
+        "id": 82,
         "name": "shader",
         "formattedName": "Shaders",
         "sortName": "0-basics-zzzz-9999-shader",
@@ -1525,7 +1541,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 82,
+        "id": 83,
         "name": "shapeRect",
         "formattedName": "Rect",
         "sortName": "0-basics-zzzz-9999-shapeRect",
@@ -1544,7 +1560,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 83,
+        "id": 84,
         "name": "shooter",
         "formattedName": "Shooter",
         "sortName": "2-games-zzzz-9999-shooter",
@@ -1563,7 +1579,7 @@
         "updatedAt": "2025-05-07T10:22:35-04:00"
     },
     {
-        "id": 84,
+        "id": 85,
         "name": "size",
         "formattedName": "Keep Aspect Ratio",
         "sortName": "0-basics-zzzz-9999-size",
@@ -1581,7 +1597,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 85,
+        "id": 86,
         "name": "slice9",
         "formattedName": "Slice-9",
         "sortName": "1-concepts-zzzz-9999-slice9",
@@ -1600,7 +1616,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 86,
+        "id": 87,
         "name": "sokoban",
         "formattedName": "Sokoban",
         "sortName": "2-games-zzzz-9999-sokoban",
@@ -1618,7 +1634,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 87,
+        "id": 88,
         "name": "spriteAnim",
         "formattedName": "Sprite Animations",
         "sortName": "0-basics-zzzz-9999-spriteAnim",
@@ -1637,7 +1653,7 @@
         "updatedAt": "2025-06-28T19:15:26-03:00"
     },
     {
-        "id": 88,
+        "id": 89,
         "name": "spriteatlas",
         "formattedName": "Sprite-Atlas",
         "sortName": "1-concepts-zzzz-9999-spriteatlas",
@@ -1655,7 +1671,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 89,
+        "id": 90,
         "name": "text",
         "formattedName": "Text",
         "sortName": "0-basics-zzzz-9999-text",
@@ -1674,7 +1690,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 90,
+        "id": 91,
         "name": "textInput",
         "formattedName": "Text Input",
         "sortName": "0-basics-zzzz-9999-textInput",
@@ -1693,7 +1709,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 91,
+        "id": 92,
         "name": "tiled",
         "formattedName": "Tiled",
         "sortName": "1-concepts-zzzz-9999-tiled",
@@ -1712,7 +1728,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 92,
+        "id": 93,
         "name": "timer",
         "formattedName": "Timer",
         "sortName": "1-concepts-zzzz-9999-timer",
@@ -1730,7 +1746,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 93,
+        "id": 94,
         "name": "tween",
         "formattedName": "Tween",
         "sortName": "1-concepts-tween-0-tween",
@@ -1748,7 +1764,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 94,
+        "id": 95,
         "name": "tweenEasings",
         "formattedName": "Tween Easings",
         "sortName": "1-concepts-tween-1-tweenEasings",
@@ -1766,7 +1782,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 95,
+        "id": 96,
         "name": "tweenEasingsCustom",
         "formattedName": "Custom Easings",
         "sortName": "1-concepts-tween-2-tweenEasingsCustom",
@@ -1785,7 +1801,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 96,
+        "id": 97,
         "name": "video",
         "formattedName": "Video",
         "sortName": "1-concepts-zzzz-9999-video",
@@ -1803,7 +1819,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 97,
+        "id": 98,
         "name": "vn",
         "formattedName": "Visual Novel",
         "sortName": "2-games-zzzz-9999-vn",
