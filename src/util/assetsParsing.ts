@@ -51,7 +51,8 @@ export const parseAssetPath = (path: string, match?: string) => {
                 ".",
             );
         const isOutlined = crewName?.endsWith("-o");
-        const crewEntry = assets[crewName as keyof typeof assets];
+        const crewKey = crewName?.replace(/-o$/, "");
+        const crewEntry = assets[crewKey as keyof typeof assets];
 
         if (!crewEntry) return normalPath;
 

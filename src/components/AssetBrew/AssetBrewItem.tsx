@@ -16,13 +16,13 @@ export const AssetBrewItem: FC<AssetBrewItemProps> = ({ asset: assetKey }) => {
         : null;
 
     const handleClick = () => {
-        insertAfterCursor(asset.imports.importInPG);
+        insertAfterCursor(asset.imports.importInPG.original);
     };
 
     const handleResourceDrag = (e: React.DragEvent) => {
         e.dataTransfer.setData(
             "text",
-            asset.imports.importInPG,
+            asset.imports.importInPG.original,
         );
     };
 
