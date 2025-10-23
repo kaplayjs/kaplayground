@@ -445,10 +445,10 @@ export const createProjectSlice: StateCreator<
 
     generateName(id, prefix, isShared = false) {
         const formattedName = prefix == "ex" ? "Example" : "Project";
-        const isSharedName = isShared ? "(Shared)" : "";
+        const isSharedName = isShared ? " (Shared)" : "";
         return `${formattedName} #${
             id.replace(`${prefix}-`, "")
-        } ${isSharedName}`;
+        }${isSharedName}`;
     },
 
     serializeProject(project = get().project) {
