@@ -2,6 +2,7 @@ import * as ContextMenu from "@radix-ui/react-context-menu";
 import { forwardRef, ReactNode, useImperativeHandle, useRef } from "react";
 import {
     confirmAndDeleteProject,
+    openProjectPreferences,
     showProjectDetails,
 } from "../../features/Projects/services/projectActions";
 import { ProjectEntryProject } from "./ProjectEntry";
@@ -28,14 +29,18 @@ export const ProjectContextMenu = forwardRef<
         },
     }));
 
-    const handleProjectDelete = async () => {
-        confirmAndDeleteProject(project.key, {
-            containerId: "projects-browser-toasts",
-        });
+    const handleProjectPreferences = () => {
+        openProjectPreferences(project.key);
     };
 
     const handleProjectDetails = () => {
         showProjectDetails(project.key);
+    };
+
+    const handleProjectDelete = async () => {
+        confirmAndDeleteProject(project.key, {
+            containerId: "projects-browser-toasts",
+        });
     };
 
     return (
@@ -55,6 +60,13 @@ export const ProjectContextMenu = forwardRef<
                     <ContextMenu.Label className="ml-3 mt-1.5 mb-1.5 font-semibold text-xs tracking-wider opacity-70">
                         Project
                     </ContextMenu.Label>
+
+                    <ContextMenu.Item
+                        className="btn btn-sm btn-ghost justify-start font-normal rounded-md"
+                        onClick={handleProjectPreferences}
+                    >
+                        Preferences
+                    </ContextMenu.Item>
 
                     <ContextMenu.Item
                         className="btn btn-sm btn-ghost justify-start font-normal rounded-md"

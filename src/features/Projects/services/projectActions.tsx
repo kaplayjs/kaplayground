@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { ProjectDetails } from "../../../components/Project/ProjectDetails";
 import { confirm } from "../../../util/confirm";
 import { downloadBlob } from "../../../util/download";
+import { openDialog } from "../../../util/openDialog";
 import { useProject } from "../stores/useProject";
 
 type DeleteOptions = {
@@ -181,4 +182,8 @@ export async function confirmAndDeleteProject(
     );
 
     return true;
+}
+
+export function openProjectPreferences(key?: string) {
+    openDialog("project-preferences", { ...(key && { projectKey: key }) });
 }

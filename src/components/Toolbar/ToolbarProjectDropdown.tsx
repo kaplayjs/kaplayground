@@ -7,6 +7,7 @@ import type { Project } from "../../features/Projects/models/Project";
 import {
     confirmAndDeleteProject,
     exportProject,
+    openProjectPreferences,
     showProjectDetails,
 } from "../../features/Projects/services/projectActions";
 import { useProject } from "../../features/Projects/stores/useProject";
@@ -94,11 +95,6 @@ export const ToolbarProjectDropdown: FC = () => {
         run();
     };
 
-    const handlePreferences = () => {
-        document.querySelector<HTMLDialogElement>("#project-preferences")
-            ?.showModal();
-    };
-
     return (
         <ToolbarDropdown
             icon={assets.toolbox.outlined}
@@ -108,7 +104,7 @@ export const ToolbarProjectDropdown: FC = () => {
             setOpen={setOpen}
         >
             <ToolbarDropdownButton
-                onClick={handlePreferences}
+                onClick={() => openProjectPreferences()}
             >
                 Preferences
             </ToolbarDropdownButton>

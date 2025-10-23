@@ -55,9 +55,9 @@ export interface ProjectSlice {
     getProjectMetadata: (id: string) => Example;
     createFromShared: (sharedCode: string, sharedVersion?: string) => void;
     /**
-     * Save current project in localStorage
+     * Save project in localStorage, current if not specified
      */
-    saveProject: () => void;
+    saveProject: (id?: string | null, project?: Project) => void;
     /**
      * Save current project as a new project in localStorage
      */
@@ -116,11 +116,11 @@ export interface ProjectSlice {
      */
     generateName(id: string, prefix: ProjectMode, isShared?: boolean): string;
     /**
-     * Serialize the current project to a string
+     * Serialize project to a string, current if not specified
      *
      * @returns Serialized project
      */
-    serializeProject(): string;
+    serializeProject(project?: Project): string;
     /**
      * Unserialize a project from localStorage
      *
@@ -389,11 +389,21 @@ export const createProjectSlice: StateCreator<
 
     // #region Project saving
 
-    saveProject() {
-        const id = get().projectKey;
+    saveProject(id = get().projectKey, project) {
+        if (!id) return;
 
-        if (id) {
-            debug(0, "[project] Saving changes...");
+        debug(0, "[project] Saving changes...");
+
+        if (id !== get().projectKey && project) {
+            localStorage.setItem(
+                id,
+                get().serializeProject({
+                    ...project,
+                    updatedAt: new Date().toISOString(),
+                }),
+            );
+            set({ savedProjects: [...get().savedProjects] });
+        } else {
             localStorage.setItem(id, get().serializeProject());
             get().setProjectWasEdited(true);
         }
@@ -441,9 +451,7 @@ export const createProjectSlice: StateCreator<
         } ${isSharedName}`;
     },
 
-    serializeProject() {
-        const project = get().project;
-
+    serializeProject(project = get().project) {
         return JSON.stringify({
             ...project,
             files: Array.from(project.files.entries()),
