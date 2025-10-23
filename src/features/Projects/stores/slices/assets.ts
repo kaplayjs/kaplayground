@@ -92,8 +92,6 @@ export const createAssetsSlice: StateCreator<
 
         const assets = get().project.assets;
 
-        console.log(assets);
-
         if (assets.has(resourceId)) {
             assets.delete(resourceId);
         } else {
