@@ -1,9 +1,9 @@
 import * as ContextMenu from "@radix-ui/react-context-menu";
-import { forwardRef, ReactNode, useImperativeHandle, useRef } from "react";
+import { forwardRef, type ReactNode, useImperativeHandle, useRef } from "react";
 import {
     confirmAndDeleteProject,
+    openProjectDetails,
     openProjectPreferences,
-    showProjectDetails,
 } from "../../features/Projects/services/projectActions";
 import { ProjectEntryProject } from "./ProjectEntry";
 
@@ -34,12 +34,12 @@ export const ProjectContextMenu = forwardRef<
     };
 
     const handleProjectDetails = () => {
-        showProjectDetails(project.key);
+        openProjectDetails(project.key);
     };
 
     const handleProjectDelete = async () => {
         confirmAndDeleteProject(project.key, {
-            containerId: "projects-browser-toasts",
+            toastContainerId: "projects-browser-toasts",
         });
     };
 

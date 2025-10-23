@@ -7,8 +7,8 @@ import type { Project } from "../../features/Projects/models/Project";
 import {
     confirmAndDeleteProject,
     exportProject,
+    openProjectDetails,
     openProjectPreferences,
-    showProjectDetails,
 } from "../../features/Projects/services/projectActions";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
@@ -116,7 +116,7 @@ export const ToolbarProjectDropdown: FC = () => {
             </ToolbarDropdownButton>
 
             <ToolbarDropdownButton
-                onClick={() => showProjectDetails()}
+                onClick={() => openProjectDetails()}
             >
                 Details
             </ToolbarDropdownButton>

@@ -28,7 +28,7 @@ interface ProjectEntryProps {
     isProject?: boolean;
     toggleTag?: Function;
     filterVersion?: string;
-    filterSctrictComparison?: boolean;
+    filterStrictComparison?: boolean;
 }
 
 const imagesPerDifficulty = [
@@ -51,7 +51,7 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
         isProject,
         toggleTag,
         filterVersion,
-        filterSctrictComparison = false,
+        filterStrictComparison = false,
     },
 ) => {
     const createNewProject = useProject((s) => s.createNewProject);
@@ -72,7 +72,7 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
     const isIncompatible = (() => {
         if (!filterVersion || filterVersion == "All") return false;
 
-        if (filterSctrictComparison) {
+        if (filterStrictComparison) {
             return project.minVersion != filterVersion;
         }
 

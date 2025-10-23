@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode } from "react";
 import { toast } from "react-toastify";
 import { ProjectDetails } from "../../../components/Project/ProjectDetails";
 import { confirm } from "../../../util/confirm";
@@ -6,10 +6,14 @@ import { downloadBlob } from "../../../util/download";
 import { openDialog } from "../../../util/openDialog";
 import { useProject } from "../stores/useProject";
 
+type ExportOptions = {
+    toastContainerId?: string;
+};
+
 type DeleteOptions = {
-    confirmContent?: React.ReactNode;
+    confirmContent?: ReactNode;
     confirmTitle?: string;
-    containerId?: string;
+    toastContainerId?: string;
     confirmProps?: {
         type?: "danger" | "warning" | "neutral";
         confirmText?: string;
@@ -17,11 +21,7 @@ type DeleteOptions = {
     };
 };
 
-type ExportOptions = {
-    containerId?: string;
-};
-
-export const showProjectDetails = (
+export const openProjectDetails = (
     key: string | null = useProject.getState().projectKey,
 ) => {
     if (!key) {
@@ -58,7 +58,8 @@ export const exportProject = (
     if (!key || !projectLocal) {
         toast(`Project${key ? ` '${key}'` : ""} does not exist!`, {
             type: "error",
-            ...(options?.containerId && { containerId: options?.containerId }),
+            ...(options?.toastContainerId
+                && { containerId: options?.toastContainerId }),
         });
         return;
     }
@@ -71,7 +72,8 @@ export const exportProject = (
 
     downloadBlob(blob, `${name.trim()}.kaplay`);
     toast("Downloading exported project...", {
-        ...(options?.containerId && { containerId: options?.containerId }),
+        ...(options?.toastContainerId
+            && { containerId: options?.toastContainerId }),
     });
 };
 
@@ -94,8 +96,8 @@ export async function confirmAndDeleteProject(
                 the window.
             </>,
             {
-                ...(options?.containerId
-                    && { containerId: options?.containerId }),
+                ...(options?.toastContainerId
+                    && { containerId: options?.toastContainerId }),
                 type: "error",
             },
         );
@@ -127,7 +129,7 @@ export async function confirmAndDeleteProject(
                         className="link text-white"
                         onClick={() =>
                             exportProject(key, {
-                                containerId: "confirm-dialog-toasts",
+                                toastContainerId: "confirm-dialog-toasts",
                             })}
                     >
                         export
@@ -176,7 +178,8 @@ export async function confirmAndDeleteProject(
             )}
         </div>,
         {
-            ...(options?.containerId && { containerId: options?.containerId }),
+            ...(options?.toastContainerId
+                && { containerId: options?.toastContainerId }),
             type: "success",
         },
     );

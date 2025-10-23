@@ -423,7 +423,7 @@ export const ProjectBrowser = () => {
                                                             key={project.name}
                                                             toggleTag={toggleTag}
                                                             filterVersion={currentFilterVersion()}
-                                                            filterSctrictComparison={true}
+                                                            filterStrictComparison={true}
                                                         />
                                                     ))}
                                                 </div>
