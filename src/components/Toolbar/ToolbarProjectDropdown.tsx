@@ -4,6 +4,7 @@ import { buildProject } from "../../features/Projects/application/buildProject";
 import type { Asset } from "../../features/Projects/models/Asset";
 import type { File } from "../../features/Projects/models/File";
 import type { Project } from "../../features/Projects/models/Project";
+import { exportProject } from "../../features/Projects/services/projectActions";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 import { downloadBlob } from "../../util/download";
@@ -25,22 +26,7 @@ export const ToolbarProjectDropdown: FC = () => {
         }
     };
 
-    const handleExport = () => {
-        const { projectKey, project } = useProject.getState();
-        const projectLocal = localStorage.getItem(projectKey ?? "");
-
-        if (!projectLocal) {
-            showNotification("No project to export... Remember to save!");
-            return;
-        }
-
-        const blob = new Blob([projectLocal], {
-            type: "application/json",
-        });
-
-        downloadBlob(blob, `${project.name.trim()}.kaplay`);
-        showNotification("Downloading exported project...");
-    };
+    const handleExport = () => exportProject();
 
     const handleHTMLBuild = async () => {
         const { project } = useProject.getState();

@@ -414,6 +414,22 @@
     },
     {
         "id": 22,
+        "name": "constraint",
+        "formattedName": "constraint",
+        "sortName": "9999-zzzz-9999-constraint",
+        "category": "",
+        "group": "",
+        "description": "",
+        "code": "kaplay();\n\nloadBean();\nsetGravity(150);\n\nconst obj1 = add([\n    pos(100, 100),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    // skew(-45, 0),\n    {\n        draw() {\n            drawCircle({\n                radius: 100,\n                fill: false,\n                outline: {\n                    size: 1,\n                },\n            });\n        },\n    },\n    \"obj\",\n]);\n\nconst obj2 = add([\n    pos(200, 200),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    constraint.distance(obj1, { distance: 100, mode: \"maximum\", strength: 1 }),\n    // constraint.translation(obj1, { strength: 0.75, offset: vec2(50, 0) }),\n    \"obj\",\n    \"constraint\",\n    // body()\n]);\n\nconst obj3 = add([\n    pos(100, 400),\n    rotate(0),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    \"obj\",\n]);\n\nconst obj4 = add([\n    pos(200, 400),\n    rotate(0),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    constraint.rotation(obj3, { strength: 1, offset: 90, scale: -1 }),\n    \"obj\",\n    \"constraint\",\n]);\n\nobj4.add([\n    pos(50, 0),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    scale(0.2),\n]);\n\n// Scale constraint\nconst obj5 = add([\n    pos(100, 700),\n    scale(1),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    \"obj\",\n]);\n\nconst obj6 = add([\n    pos(200, 700),\n    scale(1),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    constraint.scale(obj5, { strength: 1 }),\n    \"obj\",\n    \"constraint\",\n]);\n\n// CCD IK constraint\nconst obj10 = add([\n    pos(700, 300),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    \"obj\",\n    color(RED),\n]);\n\nconst obj7 = add([\n    pos(400, 300),\n    rotate(),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    constraint.bone(-90, 90),\n    {\n        draw() {\n            drawPolygon({\n                pts: [\n                    vec2(0, 0),\n                    vec2(10, -10),\n                    vec2(Math.sqrt(10000), 0),\n                    vec2(10, 10),\n                ],\n            });\n        },\n    },\n]);\n\nconst obj8 = obj7.add([\n    pos(100, 0),\n    rotate(),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    constraint.bone(-90, 90),\n    {\n        draw() {\n            drawPolygon({\n                pts: [\n                    vec2(0, 0),\n                    vec2(10, -10),\n                    vec2(Math.sqrt(10000), 0),\n                    vec2(10, 10),\n                ],\n            });\n        },\n    },\n]);\n\nconst obj9 = obj8.add([\n    pos(100, 0),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    constraint.ik(obj10, {\n        strength: 1,\n        iterations: 1,\n        depth: 2,\n        algorithm: \"CCD\",\n    }),\n]);\n\n// FABRIK IK constraint\nconst obj11 = add([\n    pos(700, 500),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    area(),\n    \"obj\",\n    color(RED),\n]);\n\nconst obj12 = add([\n    pos(400, 500),\n    rotate(),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    constraint.bone(-90, 90),\n    {\n        draw() {\n            drawPolygon({\n                pts: [\n                    vec2(0, 0),\n                    vec2(10, -10),\n                    vec2(Math.sqrt(10000), 0),\n                    vec2(10, 10),\n                ],\n            });\n        },\n    },\n]);\n\nconst obj13 = obj12.add([\n    pos(100, 0),\n    rotate(),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    constraint.bone(-90, 90),\n    {\n        draw() {\n            drawPolygon({\n                pts: [\n                    vec2(0, 0),\n                    vec2(10, -10),\n                    vec2(Math.sqrt(10000), 0),\n                    vec2(10, 10),\n                ],\n            });\n        },\n    },\n]);\n\nconst obj14 = obj13.add([\n    pos(100, 0),\n    sprite(\"bean\"),\n    anchor(\"center\"),\n    constraint.ik(obj11, {\n        strength: 1,\n        iterations: 1,\n        depth: 2,\n        algorithm: \"FABRIK\",\n    }),\n]);\n\nlet obj;\n\nonClick(\"obj\", (o) => {\n    obj = o;\n    if (obj.has(\"body\")) {\n        console.log(obj.gravityScale);\n        obj.gravityScale = 1;\n        console.log(obj.gravityScale);\n    }\n});\n\nonMouseMove((newPos, delta) => {\n    if (obj) {\n        if (obj.has(\"rotate\")) {\n            const oldPos = newPos.sub(delta);\n            const oldAngle = oldPos.sub(obj.pos).angle();\n            const newAngle = newPos.sub(obj.pos).angle();\n            const deltaAngle = newAngle - oldAngle;\n            obj.angle += deltaAngle;\n        }\n        else if (obj.has(\"scale\")) {\n            const oldPos = newPos.sub(delta);\n            const deltaScale = newPos.sub(obj.pos).len()\n                / oldPos.sub(obj.pos).len();\n            obj.scale = obj.scale.scale(deltaScale);\n        }\n        else {\n            obj.pos = obj.pos.add(delta);\n        }\n        // get(\"constraint\").forEach(o => o.apply());\n    }\n});\n\nonMouseRelease(() => {\n    if (obj && obj.has(\"body\")) {\n        obj.gravityScale = 1;\n    }\n    obj = null;\n});",
+        "difficulty": null,
+        "version": "master",
+        "minVersion": "",
+        "tags": [],
+        "createdAt": "2025-08-29T20:37:51+09:00",
+        "updatedAt": "2025-09-03T21:45:46+09:00"
+    },
+    {
+        "id": 23,
         "name": "curves",
         "formattedName": "Curves",
         "sortName": "1-concepts-zzzz-9999-curves",
@@ -431,7 +447,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 23,
+        "id": 24,
         "name": "customCompDebug",
         "formattedName": "Custom Components Debug",
         "sortName": "1-concepts-zzzz-9999-customCompDebug",
@@ -450,7 +466,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 24,
+        "id": 25,
         "name": "decisiontree",
         "formattedName": "decisiontree",
         "sortName": "9999-zzzz-9999-decisiontree",
@@ -466,7 +482,7 @@
         "updatedAt": "2025-08-21T19:47:15+09:00"
     },
     {
-        "id": 25,
+        "id": 26,
         "name": "doublejump",
         "formattedName": "Double Jump",
         "sortName": "1-concepts-zzzz-9999-doublejump",
@@ -485,7 +501,7 @@
         "updatedAt": "2025-04-26T14:05:11-03:00"
     },
     {
-        "id": 26,
+        "id": 27,
         "name": "drag",
         "formattedName": "Drag",
         "sortName": "1-concepts-zzzz-9999-drag",
@@ -503,7 +519,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 27,
+        "id": 28,
         "name": "draw",
         "formattedName": "Draw",
         "sortName": "0-basics-zzzz-9999-draw",
@@ -521,7 +537,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 28,
+        "id": 29,
         "name": "drawon",
         "formattedName": "Drawon Component",
         "sortName": "1-concepts-zzzz-9999-drawon",
@@ -539,7 +555,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 29,
+        "id": 30,
         "name": "drawoncanvas",
         "formattedName": "drawoncanvas",
         "sortName": "9999-zzzz-9999-drawoncanvas",
@@ -555,7 +571,7 @@
         "updatedAt": "2025-05-21T13:19:51+09:00"
     },
     {
-        "id": 30,
+        "id": 31,
         "name": "eatlove",
         "formattedName": "Eat Love",
         "sortName": "2-games-zzzz-9999-eatlove",
@@ -573,7 +589,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 31,
+        "id": 32,
         "name": "egg",
         "formattedName": "Egg",
         "sortName": "2-games-zzzz-9999-egg",
@@ -591,7 +607,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 32,
+        "id": 33,
         "name": "fadeIn",
         "formattedName": "Fade In",
         "sortName": "1-concepts-zzzz-9999-fadeIn",
@@ -610,7 +626,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 33,
+        "id": 34,
         "name": "fakeMouse",
         "formattedName": "Fake Mouse",
         "sortName": "1-concepts-zzzz-9999-fakeMouse",
@@ -629,7 +645,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 34,
+        "id": 35,
         "name": "flamebar",
         "formattedName": "Flame bar",
         "sortName": "1-concepts-zzzz-9999-flamebar",
@@ -648,7 +664,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 35,
+        "id": 36,
         "name": "flappy",
         "formattedName": "Flappy",
         "sortName": "2-games-zzzz-9999-flappy",
@@ -666,7 +682,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 36,
+        "id": 37,
         "name": "frames",
         "formattedName": "Frames",
         "sortName": "1-concepts-zzzz-9999-frames",
@@ -685,7 +701,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 37,
+        "id": 38,
         "name": "friction",
         "formattedName": "Friction",
         "sortName": "1-concepts-zzzz-9999-friction",
@@ -703,7 +719,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 38,
+        "id": 39,
         "name": "gamepad",
         "formattedName": "Gamepad",
         "sortName": "1-concepts-zzzz-9999-gamepad",
@@ -722,7 +738,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 39,
+        "id": 40,
         "name": "gamepadMulti",
         "formattedName": "Multi-Gamepad",
         "sortName": "1-concepts-zzzz-9999-gamepadMulti",
@@ -740,7 +756,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 40,
+        "id": 41,
         "name": "ghosthunting",
         "formattedName": "Ghost hunting",
         "sortName": "2-games-zzzz-9999-ghosthunting",
@@ -760,7 +776,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 41,
+        "id": 42,
         "name": "gravity",
         "formattedName": "Gravity",
         "sortName": "1-concepts-zzzz-9999-gravity",
@@ -779,7 +795,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 42,
+        "id": 43,
         "name": "health",
         "formattedName": "Health",
         "sortName": "1-concepts-zzzz-9999-health",
@@ -797,7 +813,7 @@
         "updatedAt": "2025-05-04T18:18:52-05:00"
     },
     {
-        "id": 43,
+        "id": 44,
         "name": "hover",
         "formattedName": "Hover",
         "sortName": "0-basics-zzzz-9999-hover",
@@ -815,7 +831,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 44,
+        "id": 45,
         "name": "kaboom",
         "formattedName": "Kaboom!",
         "sortName": "0-basics-zzzz-9999-kaboom",
@@ -834,7 +850,7 @@
         "updatedAt": "2025-05-01T18:12:12-03:00"
     },
     {
-        "id": 45,
+        "id": 46,
         "name": "kaplayLogoAnim",
         "formattedName": "KAPLAY Logo Animation",
         "sortName": "1-concepts-zzzz-9999-kaplayLogoAnim",
@@ -853,7 +869,7 @@
         "updatedAt": "2025-05-05T00:12:02+02:00"
     },
     {
-        "id": 46,
+        "id": 47,
         "name": "layer",
         "formattedName": "Layer",
         "sortName": "0-basics-zzzz-9999-layer",
@@ -873,7 +889,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 47,
+        "id": 48,
         "name": "layers",
         "formattedName": "Layers",
         "sortName": "0-basics-zzzz-9999-layers",
@@ -893,7 +909,7 @@
         "updatedAt": "2025-06-03T21:53:52+09:00"
     },
     {
-        "id": 48,
+        "id": 49,
         "name": "lerp",
         "formattedName": "Lerp",
         "sortName": "1-concepts-zzzz-9999-lerp",
@@ -912,7 +928,7 @@
         "updatedAt": "2025-04-27T12:50:27-05:00"
     },
     {
-        "id": 49,
+        "id": 50,
         "name": "level",
         "formattedName": "Level",
         "sortName": "0-basics-zzzz-9999-level",
@@ -931,7 +947,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 50,
+        "id": 51,
         "name": "levelRaycast",
         "formattedName": "Level Raycast",
         "sortName": "0-basics-zzzz-9999-levelRaycast",
@@ -950,7 +966,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 51,
+        "id": 52,
         "name": "levelcomp",
         "formattedName": "Level component",
         "sortName": "1-concepts-zzzz-9999-levelcomp",
@@ -969,7 +985,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 52,
+        "id": 53,
         "name": "lifespan",
         "formattedName": "Lifespan",
         "sortName": "0-basics-zzzz-9999-lifespan",
@@ -988,7 +1004,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 53,
+        "id": 54,
         "name": "linecap",
         "formattedName": "Lines",
         "sortName": "1-concepts-zzzz-9999-linecap",
@@ -1006,7 +1022,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 54,
+        "id": 55,
         "name": "linejoin",
         "formattedName": "Line join",
         "sortName": "1-concepts-zzzz-9999-linejoin",
@@ -1024,7 +1040,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 55,
+        "id": 56,
         "name": "livequery",
         "formattedName": "Live query",
         "sortName": "1-concepts-zzzz-9999-livequery",
@@ -1042,7 +1058,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 56,
+        "id": 57,
         "name": "loadingScreen",
         "formattedName": "Custom Loading Screen",
         "sortName": "1-concepts-zzzz-9999-loadingScreen",
@@ -1061,7 +1077,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 57,
+        "id": 58,
         "name": "maze",
         "formattedName": "Maze",
         "sortName": "1-concepts-zzzz-9999-maze",
@@ -1080,7 +1096,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 58,
+        "id": 59,
         "name": "mazeRaycastedLight",
         "formattedName": "Maze Raycasted Light",
         "sortName": "1-concepts-zzzz-9999-mazeRaycastedLight",
@@ -1100,7 +1116,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 59,
+        "id": 60,
         "name": "movement",
         "formattedName": "Movement",
         "sortName": "1-concepts-zzzz-9999-movement",
@@ -1119,7 +1135,23 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 60,
+        "id": 61,
+        "name": "multitexture",
+        "formattedName": "multitexture",
+        "sortName": "9999-zzzz-9999-multitexture",
+        "category": "",
+        "group": "",
+        "description": "",
+        "code": "// Start game\nkaplay();\n\n// Load assets\nloadSprite(\"bean\", \"/sprites/bean.png\");\nloadSprite(\"coin\", \"/sprites/coin.png\");\nloadSprite(\"spike\", \"/sprites/spike.png\");\nloadSprite(\"grass\", \"/sprites/grass.png\");\nloadSprite(\"ghosty\", \"/sprites/ghosty.png\");\nloadSound(\"score\", \"/sounds/score.mp3\");\nloadSprite(\n    \"swipe\",\n    \"https://guilhermesimoes.github.io/assets/images/gradients/enclosing-triangles.png\",\n    { singular: true },\n);\n\nloadShader(\n    \"swipe\",\n    null,\n    `\n\tuniform float cutoff;\n    uniform sampler2D mask;\n\t\n\tvec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {\n\t\tvec4 p = texture2D(mask, uv);\n        if (p.r < cutoff) {\n            return vec4(0, 0, 0, 1);\n        } else {\n            return texture2D(tex, uv);\n        }\n\t}\n`,\n);\n\nconst SPEED = 480;\n\nsetGravity(2400);\n\nconst level = addLevel([\n    // Design the level layout with symbols\n    \"@  ^ $$\",\n    \"=======\",\n], {\n    // The size of each grid\n    tileWidth: 64,\n    tileHeight: 64,\n    // The position of the top left block\n    pos: vec2(100, 200),\n    // Define what each symbol means (in components)\n    tiles: {\n        \"@\": () => [\n            sprite(\"bean\"),\n            area(),\n            body(),\n            anchor(\"bot\"),\n            \"player\",\n        ],\n        \"=\": () => [\n            sprite(\"grass\"),\n            area(),\n            body({ isStatic: true }),\n            anchor(\"bot\"),\n        ],\n        \"$\": () => [\n            sprite(\"coin\"),\n            area(),\n            anchor(\"bot\"),\n            \"coin\",\n        ],\n        \"^\": () => [\n            sprite(\"spike\"),\n            area(),\n            anchor(\"bot\"),\n            \"danger\",\n        ],\n    },\n});\n\n// Get the player object from tag\nconst player = level.get(\"player\")[0];\n\n// Movements\nonKeyPress(\"space\", () => {\n    if (player.isGrounded()) {\n        player.jump();\n    }\n});\n\nonKeyDown(\"left\", () => {\n    player.move(-SPEED, 0);\n});\n\nonKeyDown(\"right\", () => {\n    player.move(SPEED, 0);\n});\n\n// Back to the original position if hit a \"danger\" item\nplayer.onCollide(\"danger\", () => {\n    player.pos = level.tile2Pos(0, 0);\n});\n\n// Eat the coin!\nplayer.onCollide(\"coin\", (coin) => {\n    destroy(coin);\n    play(\"score\");\n});\n\n// Set the post effect\nonLoad(() => {\n    const swipe = getSprite(\"swipe\")?.data;\n    usePostEffect(\"swipe\", () => ({\n        cutoff: time() / 2 % 1,\n        mask: swipe.tex,\n    }));\n});",
+        "difficulty": null,
+        "version": "master",
+        "minVersion": "",
+        "tags": [],
+        "createdAt": "2021-11-03T01:35:14-04:00",
+        "updatedAt": "2025-09-04T21:54:28+09:00"
+    },
+    {
+        "id": 62,
         "name": "onLoadError",
         "formattedName": "Load Error",
         "sortName": "1-concepts-zzzz-9999-onLoadError",
@@ -1137,7 +1169,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 61,
+        "id": 63,
         "name": "out",
         "formattedName": "Out of Screen",
         "sortName": "1-concepts-zzzz-9999-out",
@@ -1155,7 +1187,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 62,
+        "id": 64,
         "name": "overlap",
         "formattedName": "Overlap",
         "sortName": "1-concepts-zzzz-9999-overlap",
@@ -1173,7 +1205,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 63,
+        "id": 65,
         "name": "particle",
         "formattedName": "Particle",
         "sortName": "1-concepts-particles-0-particle",
@@ -1191,7 +1223,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 64,
+        "id": 66,
         "name": "particleTrail",
         "formattedName": "Particle Trail",
         "sortName": "1-concepts-particles-1-particleTrail",
@@ -1209,7 +1241,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 65,
+        "id": 67,
         "name": "patrol",
         "formattedName": "Patrol",
         "sortName": "1-concepts-zzzz-9999-patrol",
@@ -1227,7 +1259,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 66,
+        "id": 68,
         "name": "pauseMenu",
         "formattedName": "Pause Menu",
         "sortName": "1-concepts-zzzz-9999-pauseMenu",
@@ -1245,7 +1277,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 67,
+        "id": 69,
         "name": "picture",
         "formattedName": "Picture",
         "sortName": "1-concepts-zzzz-9999-picture",
@@ -1265,7 +1297,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 68,
+        "id": 70,
         "name": "platformEffector",
         "formattedName": "One-way Platforms",
         "sortName": "1-concepts-zzzz-9999-platformEffector",
@@ -1284,7 +1316,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 69,
+        "id": 71,
         "name": "platformer",
         "formattedName": "Platformer",
         "sortName": "2-games-zzzz-9999-platformer",
@@ -1303,7 +1335,7 @@
         "updatedAt": "2025-05-01T20:31:48+09:00"
     },
     {
-        "id": 70,
+        "id": 72,
         "name": "polygon",
         "formattedName": "Polygon",
         "sortName": "1-concepts-zzzz-9999-polygon",
@@ -1322,7 +1354,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 71,
+        "id": 73,
         "name": "pong",
         "formattedName": "Pong",
         "sortName": "2-games-zzzz-9999-pong",
@@ -1341,7 +1373,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 72,
+        "id": 74,
         "name": "postEffect",
         "formattedName": "Post-Effect",
         "sortName": "1-concepts-zzzz-9999-postEffect",
@@ -1359,7 +1391,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 73,
+        "id": 75,
         "name": "query",
         "formattedName": "Query",
         "sortName": "1-concepts-zzzz-9999-query",
@@ -1377,7 +1409,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 74,
+        "id": 76,
         "name": "raycastObject",
         "formattedName": "Raycast Object",
         "sortName": "1-concepts-zzzz-9999-raycastObject",
@@ -1395,7 +1427,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 75,
+        "id": 77,
         "name": "raycastShape",
         "formattedName": "Raycast Shape",
         "sortName": "1-concepts-zzzz-9999-raycastShape",
@@ -1413,7 +1445,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 76,
+        "id": 78,
         "name": "raycaster3d",
         "formattedName": "3D",
         "sortName": "2-games-zzzz-9999-raycaster3d",
@@ -1432,7 +1464,7 @@
         "updatedAt": "2025-04-26T14:20:03-03:00"
     },
     {
-        "id": 77,
+        "id": 79,
         "name": "restitution",
         "formattedName": "Restitution",
         "sortName": "1-concepts-zzzz-9999-restitution",
@@ -1450,7 +1482,7 @@
         "updatedAt": "2025-05-16T21:59:30+02:00"
     },
     {
-        "id": 78,
+        "id": 80,
         "name": "rpg",
         "formattedName": "RPG",
         "sortName": "2-games-zzzz-9999-rpg",
@@ -1469,7 +1501,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 79,
+        "id": 81,
         "name": "runner",
         "formattedName": "Runner",
         "sortName": "2-games-zzzz-9999-runner",
@@ -1488,7 +1520,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 80,
+        "id": 82,
         "name": "scaletest",
         "formattedName": "scaletest",
         "sortName": "9999-zzzz-9999-scaletest",
@@ -1504,7 +1536,7 @@
         "updatedAt": "2025-05-26T19:50:38+09:00"
     },
     {
-        "id": 81,
+        "id": 83,
         "name": "scenes",
         "formattedName": "Scenes",
         "sortName": "0-basics-zzzz-9999-scenes",
@@ -1522,7 +1554,26 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 82,
+        "id": 84,
+        "name": "scopes",
+        "formattedName": "Lifetime Scopes",
+        "sortName": "0-basics-zzzz-9999-scopes",
+        "category": "basics",
+        "group": "",
+        "description": "How to use lifetime scopes",
+        "code": "// Lifetime scopes are a way to define the lifetime of an event handler. [💡]\n\nkaplay({\n    defaultLifetimeScope: \"scene\", // default is \"scene\", you can change it to \"app\"\n    background: \"#a6859f\",\n});\n\nloadBean();\n\n/* 💡 App Scope 💡\nThe event handler will be active while the game is running.\n*/\napp.onKeyPress(\"a\", () => {\n    debug.log(\n        \"A key pressed in app.onKeyPress(), this gonna work while the game is running.\",\n    );\n});\n\nscene(\"scene1\", () => {\n    debug.log(\"entered to game scene\");\n\n    const obj = add([\n        sprite(\"bean\"),\n        anchor(\"center\"),\n        pos(center()),\n    ]);\n\n    add([\n        text(\"Press A (app), S (scene), D (object) or F (go to scene2)\", {\n            width: width() - 20,\n        }),\n        stay(),\n    ]);\n\n    /* 💡 Scene Scope 💡\n    The event handler will be active while the scene is active.\n    */\n    scene.onKeyPress(\"s\", () => {\n        debug.log(\n            \"S key pressed in scene.onKeyPress(), this gonna work while the scene is active.\",\n        );\n    });\n\n    /* 💡 Object Scope 💡\n    The event handler will be active while the object exists.\n    */\n    obj.onKeyPress(\"d\", () => {\n        debug.log(\n            \"D key pressed in obj.onKeyPress(), this gonna work while the object exists.\",\n        );\n    });\n\n    /* 💡 Default Scope 💡\n    The event handler will be active based on the default scope defined in\n    the `defaultLifetimeScope`, which is \"scene\" by default.\n    */\n    onKeyPress(\"f\", () => {\n        debug.log(\n            \"F key pressed in onKeyPress() (default scope), going to scene2\",\n        );\n        go(\"scene2\");\n    });\n});\n\nscene(\"scene2\", (params) => {\n    debug.log(\"entered to gameover scene\");\n});\n\ngo(\"scene1\");",
+        "difficulty": 0,
+        "version": "master",
+        "minVersion": "3001.0",
+        "tags": [
+            "basics",
+            "events"
+        ],
+        "createdAt": "2025-10-11T09:29:40-03:00",
+        "updatedAt": "2025-10-11T09:29:40-03:00"
+    },
+    {
+        "id": 85,
         "name": "shader",
         "formattedName": "Shaders",
         "sortName": "0-basics-zzzz-9999-shader",
@@ -1541,7 +1592,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 83,
+        "id": 86,
         "name": "shapeRect",
         "formattedName": "Rect",
         "sortName": "0-basics-zzzz-9999-shapeRect",
@@ -1560,7 +1611,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 84,
+        "id": 87,
         "name": "shooter",
         "formattedName": "Shooter",
         "sortName": "2-games-zzzz-9999-shooter",
@@ -1579,7 +1630,7 @@
         "updatedAt": "2025-05-07T10:22:35-04:00"
     },
     {
-        "id": 85,
+        "id": 88,
         "name": "size",
         "formattedName": "Keep Aspect Ratio",
         "sortName": "0-basics-zzzz-9999-size",
@@ -1597,7 +1648,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 86,
+        "id": 89,
         "name": "slice9",
         "formattedName": "Slice-9",
         "sortName": "1-concepts-zzzz-9999-slice9",
@@ -1616,7 +1667,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 87,
+        "id": 90,
         "name": "sokoban",
         "formattedName": "Sokoban",
         "sortName": "2-games-zzzz-9999-sokoban",
@@ -1634,7 +1685,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 88,
+        "id": 91,
         "name": "spriteAnim",
         "formattedName": "Sprite Animations",
         "sortName": "0-basics-zzzz-9999-spriteAnim",
@@ -1653,7 +1704,7 @@
         "updatedAt": "2025-06-28T19:15:26-03:00"
     },
     {
-        "id": 89,
+        "id": 92,
         "name": "spriteatlas",
         "formattedName": "Sprite-Atlas",
         "sortName": "1-concepts-zzzz-9999-spriteatlas",
@@ -1671,7 +1722,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 90,
+        "id": 93,
         "name": "text",
         "formattedName": "Text",
         "sortName": "0-basics-zzzz-9999-text",
@@ -1690,7 +1741,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 91,
+        "id": 94,
         "name": "textInput",
         "formattedName": "Text Input",
         "sortName": "0-basics-zzzz-9999-textInput",
@@ -1709,7 +1760,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 92,
+        "id": 95,
         "name": "tiled",
         "formattedName": "Tiled",
         "sortName": "1-concepts-zzzz-9999-tiled",
@@ -1728,7 +1779,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 93,
+        "id": 96,
         "name": "timer",
         "formattedName": "Timer",
         "sortName": "1-concepts-zzzz-9999-timer",
@@ -1746,7 +1797,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 94,
+        "id": 97,
         "name": "tween",
         "formattedName": "Tween",
         "sortName": "1-concepts-tween-0-tween",
@@ -1764,7 +1815,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 95,
+        "id": 98,
         "name": "tweenEasings",
         "formattedName": "Tween Easings",
         "sortName": "1-concepts-tween-1-tweenEasings",
@@ -1782,7 +1833,7 @@
         "updatedAt": "2025-04-22T11:21:54-03:00"
     },
     {
-        "id": 96,
+        "id": 99,
         "name": "tweenEasingsCustom",
         "formattedName": "Custom Easings",
         "sortName": "1-concepts-tween-2-tweenEasingsCustom",
@@ -1801,7 +1852,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 97,
+        "id": 100,
         "name": "video",
         "formattedName": "Video",
         "sortName": "1-concepts-zzzz-9999-video",
@@ -1819,7 +1870,7 @@
         "updatedAt": "2025-04-23T12:11:35-03:00"
     },
     {
-        "id": 98,
+        "id": 101,
         "name": "vn",
         "formattedName": "Visual Novel",
         "sortName": "2-games-zzzz-9999-vn",

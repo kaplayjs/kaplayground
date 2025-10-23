@@ -78,11 +78,19 @@ export interface ProjectSlice {
      */
     projectIsSaved(id: string): boolean;
     /**
+     * Array of saved project ids
+     */
+    savedProjects: string[];
+    /**
      * Get all saved projects in localStorage
      *
      * @param filter - Filter for the projects
      */
     getSavedProjects: (filter?: ProjectMode) => string[];
+    /**
+     * Refresh savedProjects from localStorage
+     */
+    updateSavedProjects(): void;
     /**
      * Get KAPLAY versions used in projects
      *
@@ -119,6 +127,12 @@ export interface ProjectSlice {
      * @param id - Project id
      */
     unserializeProject(id: string): Project;
+    /**
+     * Remove project from localStorage
+     *
+     * @param id - Project id
+     */
+    removeProject(id: string): boolean;
 }
 
 export const createProjectSlice: StateCreator<
@@ -171,6 +185,7 @@ export const createProjectSlice: StateCreator<
     projectIsSaved: (id: string) => {
         return get().getSavedProjects().includes(id);
     },
+    savedProjects: [],
     getSavedProjects: (filter) => {
         const keys: string[] = [];
 
@@ -191,16 +206,21 @@ export const createProjectSlice: StateCreator<
 
         return keys;
     },
+    updateSavedProjects() {
+        set(() => ({
+            savedProjects: get().getSavedProjects(),
+        }));
+    },
     getProjectMetadata(key) {
         const project = get().unserializeProject(key);
         const metadata = {
             key: key,
             name: project.name,
             formattedName: project.name,
-            type: project.mode == "pj" ? "Projects" : "Examples",
+            type: project.mode == "pj" ? "Project" : "Example",
             category: "KAPLAY",
             code: "",
-            group: "",
+            group: project.mode == "pj" ? "Projects" : "Examples",
             minVersion: project.kaplayVersion.split(".").slice(0, 2).join("."),
             sortName: project.name,
             locked: true,
@@ -213,6 +233,7 @@ export const createProjectSlice: StateCreator<
             version: project.kaplayVersion,
             createdAt: project?.createdAt ?? "",
             updatedAt: project?.updatedAt ?? "",
+            buildMode: project.buildMode,
         };
 
         return metadata satisfies Example;
@@ -399,6 +420,10 @@ export const createProjectSlice: StateCreator<
 
         useEditor.getState().updateEditorLastSavedValue();
         useEditor.getState().updateHasUnsavedChanges();
+
+        set(() => ({
+            savedProjects: [...get().savedProjects, id],
+        }));
     },
 
     generateId(prefix) {
@@ -451,4 +476,26 @@ export const createProjectSlice: StateCreator<
         };
     },
     // #endregion
+
+    removeProject(id) {
+        if (localStorage.getItem(id) == null) return false;
+
+        localStorage.removeItem(id);
+
+        if (!get().savedProjects.includes(id)) return true;
+
+        set(() => ({
+            savedProjects: get().savedProjects.filter(pid => pid != id),
+        }));
+
+        if (get().projectKey === id) {
+            set(() => ({ projectKey: null, demoKey: null }));
+        }
+
+        if (useConfig.getState().config?.lastOpenedProject === id) {
+            useConfig.getState().setConfig({ lastOpenedProject: null });
+        }
+
+        return true;
+    },
 });
