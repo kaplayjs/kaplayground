@@ -45,7 +45,7 @@ export const exportProject = (
     key: string | null = useProject.getState().projectKey,
     options?: ExportOptions,
 ) => {
-    const { project, saveNewProject } = useProject.getState();
+    const { saveNewProject, getProjectMetadata } = useProject.getState();
 
     if (!key) {
         saveNewProject();
@@ -54,7 +54,7 @@ export const exportProject = (
 
     const projectLocal = localStorage.getItem(key ?? "");
 
-    if (!projectLocal) {
+    if (!key || !projectLocal) {
         toast(`Project${key ? ` '${key}'` : ""} does not exist!`, {
             type: "error",
             ...(options?.containerId && { containerId: options?.containerId }),
@@ -62,11 +62,13 @@ export const exportProject = (
         return;
     }
 
+    const { name } = getProjectMetadata(key);
+
     const blob = new Blob([projectLocal], {
         type: "application/json",
     });
 
-    downloadBlob(blob, `${project.name.trim()}.kaplay`);
+    downloadBlob(blob, `${name.trim()}.kaplay`);
     toast("Downloading exported project...", {
         ...(options?.containerId && { containerId: options?.containerId }),
     });

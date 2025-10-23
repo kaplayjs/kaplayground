@@ -26,11 +26,17 @@ export default {
             animation: {
                 "fade-in":
                     "fade-in 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                "scale-in":
+                    "scale-in 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
             },
             keyframes: {
                 "fade-in": {
                     "0%": { opacity: "0" },
-                    "100%": { transform: "1" },
+                    "100%": { opacity: "1" },
+                },
+                "scale-in": {
+                    "0%": { opacity: "0", transform: "scale(0)" },
+                    "100%": { opacity: "1", transform: "scale(1)" },
                 },
             },
         },
@@ -41,6 +47,7 @@ export default {
                 "Spiker": {
                     ...require("daisyui/src/theming/themes")["dim"],
                     primary: "#abdd64",
+                    success: "#6bc96c",
                     error: "#ea6262",
                     "--animation-btn": 0,
                 },

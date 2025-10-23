@@ -4,7 +4,11 @@ import { buildProject } from "../../features/Projects/application/buildProject";
 import type { Asset } from "../../features/Projects/models/Asset";
 import type { File } from "../../features/Projects/models/File";
 import type { Project } from "../../features/Projects/models/Project";
-import { exportProject } from "../../features/Projects/services/projectActions";
+import {
+    confirmAndDeleteProject,
+    exportProject,
+    showProjectDetails,
+} from "../../features/Projects/services/projectActions";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 import { downloadBlob } from "../../util/download";
@@ -16,6 +20,7 @@ export const ToolbarProjectDropdown: FC = () => {
     const run = useEditor((state) => state.run);
     const showNotification = useEditor((state) => state.showNotification);
     const createNewProject = useProject((state) => state.createNewProject);
+    const projectKey = useProject((state) => state.projectKey);
     const newFileInput = useRef<HTMLInputElement>(null);
     const importButton = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState<boolean>(false);
@@ -112,6 +117,20 @@ export const ToolbarProjectDropdown: FC = () => {
                 onClick={handleHTMLBuild}
             >
                 Build (HTML5)
+            </ToolbarDropdownButton>
+
+            <ToolbarDropdownButton
+                onClick={() => showProjectDetails()}
+            >
+                Details
+            </ToolbarDropdownButton>
+
+            <ToolbarDropdownButton
+                onClick={() => confirmAndDeleteProject()}
+                type="danger"
+                disabled={projectKey == null}
+            >
+                Delete
             </ToolbarDropdownButton>
 
             <KDropdownMenuSeparator />

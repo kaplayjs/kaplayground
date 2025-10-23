@@ -50,6 +50,7 @@ export const ConfirmDialog = () => {
 
     return (
         <Dialog
+            id="confirm-dialog"
             ref={dialogRef}
             onConfirm={handleConfirm}
             onDismiss={handleDismiss}
