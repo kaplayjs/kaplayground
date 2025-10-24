@@ -460,10 +460,19 @@ export const createProjectSlice: StateCreator<
     },
 
     generateId(prefix) {
-        const countWithPrefix = get().getSavedProjects(prefix).length;
-        const id = `${prefix}-${countWithPrefix + 1}`;
+        const keys = get().getSavedProjects(prefix);
+        const nums = keys
+            .map((k) => {
+                const m = k.match(`^${prefix}-(\\d+)$`);
+                return m ? parseInt(m[1], 10) : NaN;
+            })
+            .filter((n) => !Number.isNaN(n));
 
-        return id;
+        const used = new Set(nums);
+        let i = 1;
+        while (used.has(i)) i++;
+
+        return `${prefix}-${i}`;
     },
 
     generateName(id, prefix, isShared = false) {
