@@ -16,6 +16,7 @@ export type Tag = {
 
 export type Example = {
     key: string;
+    type: string;
     name: string;
     formattedName: string;
     sortName: string;
@@ -58,6 +59,7 @@ export const demos = examplesList.map((example) => {
         })),
         difficulty: difficulties[example.difficulty ?? difficulties.length - 1],
         key: example.name,
+        type: "Example",
     };
 
     return obj;

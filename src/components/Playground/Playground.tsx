@@ -84,6 +84,9 @@ const Playground = () => {
             kaplayVersion: preferredVersion(),
         });
 
+        // Init saved projects array
+        useProject.getState().updateSavedProjects();
+
         // Initialize ESBuild
         esbuild.initialize({
             wasmURL: "https://unpkg.com/esbuild-wasm@0.25.8/esbuild.wasm",

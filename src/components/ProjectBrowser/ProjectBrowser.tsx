@@ -4,7 +4,8 @@ import type { Example, ExamplesDataRecord } from "../../data/demos";
 import { ProjectEntry } from "./ProjectEntry";
 import "./ProjectBrowser.css";
 import { assets } from "@kaplayjs/crew";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Slide, toast, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
 import examplesJson from "../../../kaplay/examples/examples.json";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
@@ -34,14 +35,14 @@ export type ExamplesData = {
 const examplesData = examplesJson as ExamplesData;
 
 export const ProjectBrowser = () => {
-    useProject((s) => s.project.name);
-    useProject((s) => s.projectWasEdited);
+    const projectName = useProject((s) => s.project.name);
+    const wasEdited = useProject((s) => s.projectWasEdited);
     const projectKey = useProject((s) => s.projectKey);
+    const demoKey = useProject((s) => s.demoKey);
     const projectMode = useProject((s) => s.project.mode);
 
     const [tab, setTab] = useState("Projects");
-    const getSavedProjects = useProject((s) => s.getSavedProjects);
-    const getProjectMetadata = useProject((s) => s.getProjectMetadata);
+    const savedProjects = useProject((s) => s.savedProjects);
     const getProjectMinVersions = useProject((s) => s.getProjectMinVersions);
     const preferredVersion = useConfig((s) => s.config.preferredVersion);
     const [filter, setFilter] = useState("");
@@ -54,7 +55,7 @@ export const ProjectBrowser = () => {
     const [projectsFilterVersion, setProjectsFilterVersion] = useState("All");
     const [projectsSort, setProjectsSort] = useState("latest");
     const [examplesSort, setExamplesSort] = useState("topic");
-    const [projectsGroup, setProjectsGroup] = useState("type");
+    const [projectsGroup, setProjectsGroup] = useState("group");
     const [examplesGroup, setExamplesGroup] = useState("category");
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -72,9 +73,12 @@ export const ProjectBrowser = () => {
     const sortFn = (a: Example, b: Example): number =>
         sortEntries(currentSort(), tab, a, b);
 
-    const projects = useCallback(
-        () => getSavedProjects().map(project => getProjectMetadata(project)),
-        [getSavedProjects],
+    const projects = useMemo(
+        () =>
+            savedProjects.map(project =>
+                useProject.getState().getProjectMetadata(project)
+            ),
+        [savedProjects, wasEdited, projectName],
     );
 
     const currentGroup = useCallback(
@@ -89,10 +93,10 @@ export const ProjectBrowser = () => {
         }
     };
 
-    const filteredProjects = useCallback(
+    const filteredProjects = useMemo(
         () =>
             groupBy(
-                (projects()).filter((project) =>
+                projects.filter((project) =>
                     project.name.toLowerCase().includes(filter.toLowerCase())
                     && (!filterTags.length
                         || project.tags.some(({ name }) =>
@@ -101,9 +105,9 @@ export const ProjectBrowser = () => {
                 ).sort(sortFn),
                 projectsGroup,
             ),
-        [filter, filterTags, currentSort, projectsGroup],
+        [projects, filter, filterTags, currentSort, projectsGroup],
     );
-    const filteredExamples = useCallback(
+    const filteredExamples = useMemo(
         () =>
             groupBy(
                 demos.filter((example) =>
@@ -156,7 +160,7 @@ export const ProjectBrowser = () => {
 
     const tags = useCallback((): string[] => {
         const set = new Set<string>();
-        ((tab == "Projects" ? projects() : demos) as Example[]).sort(
+        ((tab == "Projects" ? projects : demos) as Example[]).sort(
             sortFn,
         ).forEach(
             entry => {
@@ -190,8 +194,12 @@ export const ProjectBrowser = () => {
     ));
 
     useEffect(() => {
-        setTab(projectMode == "ex" && !projectKey ? "Examples" : "Projects");
-    }, [projectMode, projectKey]);
+        setTab(
+            projectMode == "ex" && !projectKey && demoKey
+                ? "Examples"
+                : "Projects",
+        );
+    }, [projectMode, projectKey, demoKey]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -214,8 +222,11 @@ export const ProjectBrowser = () => {
     return (
         <dialog
             id="examples-browser"
-            className="modal bg-[#00000070]"
+            className="modal has-[[data-radix-menu-content][data-state='open']]:pointer-events-none bg-[#00000070]"
             ref={dialogRef}
+            onClose={() => {
+                toast.dismiss({ containerId: "projects-browser-toasts" });
+            }}
         >
             <div className="modal-box overflow-hidden max-w-screen-md p-0 flex flex-col w-dvw h-dvh max-h-[calc(100dvh-4.4rem)]">
                 <header
@@ -233,7 +244,7 @@ export const ProjectBrowser = () => {
                                 onChange={setCurrentGroup}
                                 options={tab == "Projects"
                                     ? [
-                                        "type",
+                                        ["group", "Type"],
                                         ["minVersion", "Version"],
                                         "none",
                                     ]
@@ -303,7 +314,7 @@ export const ProjectBrowser = () => {
                             onChange={setCurrentFilterVersion}
                             allOption={tab == "Projects"
                                 ? ({
-                                    "All": getSavedProjects().length,
+                                    "All": savedProjects.length,
                                 })
                                 : false}
                             strictComparison={tab == "Projects"}
@@ -330,13 +341,13 @@ export const ProjectBrowser = () => {
                             label="My Projects & Examples"
                             value="Projects"
                             icon={assets.api_book.outlined}
-                            count={entriesCount(filteredProjects())}
+                            count={entriesCount(filteredProjects)}
                         />
                         <TabTrigger
                             label="KAPLAY Demos"
                             value="Examples"
                             icon={assets.apple.outlined}
-                            count={entriesCount(filteredExamples())}
+                            count={entriesCount(filteredExamples)}
                         />
                     </TabsList>
 
@@ -347,10 +358,10 @@ export const ProjectBrowser = () => {
                         forceMount
                         hidden={tab !== "Projects"}
                     >
-                        {getSavedProjects().length > 0
+                        {savedProjects.length > 0
                             ? (
                                 <>
-                                    {Object.entries(filteredProjects()).map((
+                                    {Object.entries(filteredProjects).map((
                                         [groupName, projects],
                                         index,
                                     ) => (
@@ -412,7 +423,7 @@ export const ProjectBrowser = () => {
                                                             key={project.name}
                                                             toggleTag={toggleTag}
                                                             filterVersion={currentFilterVersion()}
-                                                            filterSctrictComparison={true}
+                                                            filterStrictComparison={true}
                                                         />
                                                     ))}
                                                 </div>
@@ -421,7 +432,7 @@ export const ProjectBrowser = () => {
                                     ))}
 
                                     {tab === "Projects"
-                                        && Object.entries(filteredProjects())
+                                        && Object.entries(filteredProjects)
                                                 .length == 0
                                         && <ProjectNotFound className="mb-4" />}
 
@@ -473,10 +484,10 @@ export const ProjectBrowser = () => {
 
                                         Check out KAPLAY Demos
 
-                                        {!!entriesCount(filteredExamples()) && (
+                                        {!!entriesCount(filteredExamples) && (
                                             <span className="badge badge-xs font-medium py-1 px-1.5 min-w-5 h-auto bg-base-content/15 border-0">
                                                 {entriesCount(
-                                                    filteredExamples(),
+                                                    filteredExamples,
                                                 )}
                                             </span>
                                         )}
@@ -491,7 +502,7 @@ export const ProjectBrowser = () => {
                         forceMount
                         hidden={tab !== "Examples"}
                     >
-                        {Object.entries(filteredExamples()).map((
+                        {Object.entries(filteredExamples).map((
                             [groupName, examples],
                             index,
                         ) => (
@@ -574,7 +585,7 @@ export const ProjectBrowser = () => {
                         ))}
 
                         {tab === "Examples"
-                            && Object.entries(filteredExamples()).length == 0
+                            && Object.entries(filteredExamples).length == 0
                             && <ProjectNotFound />}
                     </Tabs.Content>
                 </Tabs.Root>
@@ -585,6 +596,14 @@ export const ProjectBrowser = () => {
             </form>
 
             <Tooltip id="projects-browser" />
+
+            <div className="absolute bottom-0 right-0">
+                <ToastContainer
+                    containerId="projects-browser-toasts"
+                    position="bottom-right"
+                    transition={Slide}
+                />
+            </div>
         </dialog>
     );
 };

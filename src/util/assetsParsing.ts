@@ -24,7 +24,7 @@ export const parseAssetPath = (path: string, match?: string) => {
 
     if (normalPath.startsWith("assets/")) {
         const pathInAssets = projectAssets.get(normalPath);
-        console.log(normalPath, pathInAssets, projectAssets);
+
         if (pathInAssets) {
             path = pathInAssets.url;
             return path;

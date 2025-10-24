@@ -79,7 +79,10 @@ export const Dialog: FC<DialogProps> = forwardRef<
         <dialog
             ref={dialogRef}
             id={props.id}
-            className={cn("modal", className)}
+            className={cn(
+                "modal has-[[data-radix-menu-content][data-state='open']]:pointer-events-none",
+                className,
+            )}
             onCancel={onCancel}
         >
             <main
@@ -105,6 +108,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
                             <form
                                 method="dialog"
                                 className="flex flex-wrap justify-between gap-2 w-full"
+                                key={confirmType}
                             >
                                 {onDismiss && confirmType != "neutral" && (
                                     <button
@@ -118,7 +122,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
                                 {onConfirm && (
                                     <button
                                         className={cn(
-                                            "btn btn-primary py-3 min-h-0 h-auto only:ml-auto",
+                                            "btn py-3 min-h-0 h-auto only:ml-auto",
                                             confirmBtnClass,
                                         )}
                                         onClick={onConfirm}

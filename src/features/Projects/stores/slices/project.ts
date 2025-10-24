@@ -6,6 +6,7 @@ import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
 import { createDefaultFiles } from "../../application/createDefaultFiles";
 import { preferredVersion } from "../../application/preferredVersion";
+import { validateProjectName } from "../../application/validateProjectName";
 import type { Asset } from "../../models/Asset.ts";
 import type { File } from "../../models/File";
 import type { Project } from "../../models/Project";
@@ -55,9 +56,12 @@ export interface ProjectSlice {
     getProjectMetadata: (id: string) => Example;
     createFromShared: (sharedCode: string, sharedVersion?: string) => void;
     /**
-     * Save current project in localStorage
+     * Save project in localStorage, current if not specified
+     *
+     * @param id - Optional project id
+     * @param project - Optional Project object
      */
-    saveProject: () => void;
+    saveProject: (id?: string | null, project?: Project) => void;
     /**
      * Save current project as a new project in localStorage
      */
@@ -68,6 +72,8 @@ export interface ProjectSlice {
     projectWasEdited: boolean;
     /**
      * Set current project edited state
+     *
+     * @param bool - If the project was edited
      */
     setProjectWasEdited: (bool: boolean) => void;
     /**
@@ -78,47 +84,76 @@ export interface ProjectSlice {
      */
     projectIsSaved(id: string): boolean;
     /**
+     * Array of saved project ids
+     */
+    savedProjects: string[];
+    /**
      * Get all saved projects in localStorage
      *
-     * @param filter - Filter for the projects
+     * @param filter - Optional filter for the projects
+     * @returns Array of saved project ids
      */
     getSavedProjects: (filter?: ProjectMode) => string[];
     /**
+     * Refresh savedProjects from localStorage
+     */
+    updateSavedProjects(): void;
+    /**
      * Get KAPLAY versions used in projects
      *
-     * @param filter - Filter for the projects
+     * @returns Object of all versions and their cound used in projects
      */
     getProjectVersions: () => Record<string, number>;
     /**
      * Get KAPLAY minimal versions used in projects
      *
-     * @param filter - Filter for the projects
+     * @returns Object of all minimal versions and their count used in projects
      */
     getProjectMinVersions: () => Record<string, number>;
     /**
      * Generate a new id for a project
      *
      * @param prefix - Prefix for the id
+     * @returns Generated project id
      */
     generateId(prefix: ProjectMode): string;
     /**
      * Generate a name from an id
      *
+     * @param id - Project id
      * @param prefix - Prefix for the id
+     * @param isShared - If not own project
+     * @returns Generated project name
      */
     generateName(id: string, prefix: ProjectMode, isShared?: boolean): string;
     /**
-     * Serialize the current project to a string
+     * Serialize project to a string, current if not specified
      *
+     * @param project - Optional Project object
      * @returns Serialized project
      */
-    serializeProject(): string;
+    serializeProject(project?: Project): string;
     /**
      * Unserialize a project from localStorage
      *
      * @param id - Project id
+     * @returns Project object
      */
     unserializeProject(id: string): Project;
+    /**
+     * Remove project from localStorage, current if not specified
+     *
+     * @param id - Optional roject id
+     * @returns If cloned project successfully
+     */
+    cloneProject(id?: string | null): boolean;
+    /**
+     * Remove project from localStorage
+     *
+     * @param id - Project id
+     * @returns If removed project successfully
+     */
+    removeProject(id: string): boolean;
 }
 
 export const createProjectSlice: StateCreator<
@@ -171,6 +206,7 @@ export const createProjectSlice: StateCreator<
     projectIsSaved: (id: string) => {
         return get().getSavedProjects().includes(id);
     },
+    savedProjects: [],
     getSavedProjects: (filter) => {
         const keys: string[] = [];
 
@@ -191,16 +227,23 @@ export const createProjectSlice: StateCreator<
 
         return keys;
     },
+    updateSavedProjects() {
+        set(() => ({
+            savedProjects: get().getSavedProjects(),
+        }));
+    },
     getProjectMetadata(key) {
-        const project = get().unserializeProject(key);
+        const project = key == get().projectKey
+            ? get().project
+            : get().unserializeProject(key);
         const metadata = {
             key: key,
             name: project.name,
             formattedName: project.name,
-            type: project.mode == "pj" ? "Projects" : "Examples",
+            type: project.mode == "pj" ? "Project" : "Example",
             category: "KAPLAY",
             code: "",
-            group: "",
+            group: project.mode == "pj" ? "Projects" : "Examples",
             minVersion: project.kaplayVersion.split(".").slice(0, 2).join("."),
             sortName: project.name,
             locked: true,
@@ -213,6 +256,7 @@ export const createProjectSlice: StateCreator<
             version: project.kaplayVersion,
             createdAt: project?.createdAt ?? "",
             updatedAt: project?.updatedAt ?? "",
+            buildMode: project.buildMode,
         };
 
         return metadata satisfies Example;
@@ -368,11 +412,21 @@ export const createProjectSlice: StateCreator<
 
     // #region Project saving
 
-    saveProject() {
-        const id = get().projectKey;
+    saveProject(id = get().projectKey, project) {
+        if (!id) return;
 
-        if (id) {
-            debug(0, "[project] Saving changes...");
+        debug(0, "[project] Saving changes...");
+
+        if (id !== get().projectKey && project) {
+            localStorage.setItem(
+                id,
+                get().serializeProject({
+                    ...project,
+                    updatedAt: new Date().toISOString(),
+                }),
+            );
+            set({ savedProjects: [...get().savedProjects] });
+        } else {
             localStorage.setItem(id, get().serializeProject());
             get().setProjectWasEdited(true);
         }
@@ -399,6 +453,10 @@ export const createProjectSlice: StateCreator<
 
         useEditor.getState().updateEditorLastSavedValue();
         useEditor.getState().updateHasUnsavedChanges();
+
+        set(() => ({
+            savedProjects: [...get().savedProjects, id],
+        }));
     },
 
     generateId(prefix) {
@@ -410,15 +468,13 @@ export const createProjectSlice: StateCreator<
 
     generateName(id, prefix, isShared = false) {
         const formattedName = prefix == "ex" ? "Example" : "Project";
-        const isSharedName = isShared ? "(Shared)" : "";
+        const isSharedName = isShared ? " (Shared)" : "";
         return `${formattedName} #${
             id.replace(`${prefix}-`, "")
-        } ${isSharedName}`;
+        }${isSharedName}`;
     },
 
-    serializeProject() {
-        const project = get().project;
-
+    serializeProject(project = get().project) {
         return JSON.stringify({
             ...project,
             files: Array.from(project.files.entries()),
@@ -450,5 +506,70 @@ export const createProjectSlice: StateCreator<
             assets: new Map(project.assets),
         };
     },
+
+    cloneProject(id = get().projectKey) {
+        if (!id) return false;
+
+        const project = id == get().projectKey
+            ? get().project
+            : get().unserializeProject(id);
+
+        const newId = get().generateId(project.mode);
+
+        const suffixedName = (name: string): string => {
+            const suffix = name.match(/\s*\(copy(?:\s+(\d+))?\)$/);
+            if (suffix) {
+                const version = parseInt(suffix[1] || "1", 10);
+                return name.replace(
+                    /\s*\(copy(?:\s+\d+)?\)$/,
+                    ` (copy ${version + 1})`,
+                );
+            }
+            return `${name} (copy)`;
+        };
+
+        let newName = suffixedName(project.name);
+
+        while (!validateProjectName(newName, id)[0]) {
+            newName = suffixedName(newName);
+        }
+
+        localStorage.setItem(
+            newId,
+            get().serializeProject({
+                ...project,
+                name: newName,
+                createdAt: new Date().toISOString(),
+            }),
+        );
+
+        set(() => ({
+            savedProjects: [...get().savedProjects, newId],
+        }));
+
+        return true;
+    },
     // #endregion
+
+    removeProject(id) {
+        if (localStorage.getItem(id) == null) return false;
+
+        localStorage.removeItem(id);
+
+        if (!get().savedProjects.includes(id)) return true;
+
+        set(() => ({
+            savedProjects: get().savedProjects.filter(pid => pid != id),
+        }));
+
+        if (get().projectKey === id) {
+            set(() => ({ projectKey: null, demoKey: null }));
+        }
+
+        if (useConfig.getState().config?.lastOpenedProject === id) {
+            useConfig.getState().setConfig({ lastOpenedProject: null });
+        }
+
+        return true;
+    },
 });
