@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.2] - 2025-10-24
+
+### Added
+
+- Added Project Management features: - @imaginarny
+  - Project Details, including updated/created dates and project size
+  - Preferences, now editable for projects not currently loaded
+  - Cloning projects
+  - Deleting projects
+- Added Context menu for project management in the Projects Browser
+- Added Details and Delete project actions to the main toolbar
+
+### Fixed
+
+- Fixed trailing whitespace on newly generated project names - @imaginarny
+
 ## [2.4.1] - 2025-09-19
 
 ### Fixed
