@@ -6,7 +6,7 @@ import { downloadBlob } from "../../../util/download";
 import { openDialog } from "../../../util/openDialog";
 import { useProject } from "../stores/useProject";
 
-type ExportOptions = {
+type ToastOptions = {
     toastContainerId?: string;
 };
 
@@ -44,7 +44,7 @@ export const openProjectDetails = (
 
 export const exportProject = (
     key: string | null = useProject.getState().projectKey,
-    options?: ExportOptions,
+    options?: ToastOptions,
 ) => {
     const { saveNewProject, getProjectMetadata } = useProject.getState();
 
@@ -75,6 +75,21 @@ export const exportProject = (
         ...(options?.toastContainerId
             && { containerId: options?.toastContainerId }),
     });
+};
+
+export const cloneProject = (key?: string, options?: ToastOptions) => {
+    const clonedOk = useProject.getState().cloneProject(key);
+
+    toast(
+        clonedOk
+            ? "Project was cloned successfully!"
+            : "Something went wrong, try cloning again!",
+        {
+            type: clonedOk ? "success" : "error",
+            ...(options?.toastContainerId
+                && { containerId: options?.toastContainerId }),
+        },
+    );
 };
 
 export async function confirmAndDeleteProject(

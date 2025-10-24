@@ -1,6 +1,7 @@
 import * as ContextMenu from "@radix-ui/react-context-menu";
 import { forwardRef, type ReactNode, useImperativeHandle, useRef } from "react";
 import {
+    cloneProject,
     confirmAndDeleteProject,
     openProjectDetails,
     openProjectPreferences,
@@ -35,6 +36,12 @@ export const ProjectContextMenu = forwardRef<
 
     const handleProjectDetails = () => {
         openProjectDetails(project.key);
+    };
+
+    const handleProjectClone = async () => {
+        cloneProject(project.key, {
+            toastContainerId: "projects-browser-toasts",
+        });
     };
 
     const handleProjectDelete = async () => {
@@ -76,6 +83,13 @@ export const ProjectContextMenu = forwardRef<
                     </ContextMenu.Item>
 
                     <ContextMenu.Separator className="my-1 h-px bg-base-content/10" />
+
+                    <ContextMenu.Item
+                        className="btn btn-sm btn-ghost justify-start font-normal rounded-md"
+                        onClick={handleProjectClone}
+                    >
+                        Clone
+                    </ContextMenu.Item>
 
                     <ContextMenu.Item
                         className="btn btn-sm btn-ghost justify-start font-normal rounded-md hover:bg-error hover:text-error-content"

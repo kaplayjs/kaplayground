@@ -6,6 +6,7 @@ import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
 import { createDefaultFiles } from "../../application/createDefaultFiles";
 import { preferredVersion } from "../../application/preferredVersion";
+import { validateProjectName } from "../../application/validateProjectName";
 import type { Asset } from "../../models/Asset.ts";
 import type { File } from "../../models/File";
 import type { Project } from "../../models/Project";
@@ -139,6 +140,13 @@ export interface ProjectSlice {
      * @returns Project object
      */
     unserializeProject(id: string): Project;
+    /**
+     * Remove project from localStorage, current if not specified
+     *
+     * @param id - Optional roject id
+     * @returns If cloned project successfully
+     */
+    cloneProject(id?: string | null): boolean;
     /**
      * Remove project from localStorage
      *
@@ -497,6 +505,49 @@ export const createProjectSlice: StateCreator<
             files: new Map(project.files),
             assets: new Map(project.assets),
         };
+    },
+
+    cloneProject(id = get().projectKey) {
+        if (!id) return false;
+
+        const project = id == get().projectKey
+            ? get().project
+            : get().unserializeProject(id);
+
+        const newId = get().generateId(project.mode);
+
+        const suffixedName = (name: string): string => {
+            const suffix = name.match(/\s*\(copy(?:\s+(\d+))?\)$/);
+            if (suffix) {
+                const version = parseInt(suffix[1] || "1", 10);
+                return name.replace(
+                    /\s*\(copy(?:\s+\d+)?\)$/,
+                    ` (copy ${version + 1})`,
+                );
+            }
+            return `${name} (copy)`;
+        };
+
+        let newName = suffixedName(project.name);
+
+        while (!validateProjectName(newName, id)[0]) {
+            newName = suffixedName(newName);
+        }
+
+        localStorage.setItem(
+            newId,
+            get().serializeProject({
+                ...project,
+                name: newName,
+                createdAt: new Date().toISOString(),
+            }),
+        );
+
+        set(() => ({
+            savedProjects: [...get().savedProjects, newId],
+        }));
+
+        return true;
     },
     // #endregion
 
