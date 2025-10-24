@@ -56,6 +56,9 @@ export interface ProjectSlice {
     createFromShared: (sharedCode: string, sharedVersion?: string) => void;
     /**
      * Save project in localStorage, current if not specified
+     *
+     * @param id - Optional project id
+     * @param project - Optional Project object
      */
     saveProject: (id?: string | null, project?: Project) => void;
     /**
@@ -68,6 +71,8 @@ export interface ProjectSlice {
     projectWasEdited: boolean;
     /**
      * Set current project edited state
+     *
+     * @param bool - If the project was edited
      */
     setProjectWasEdited: (bool: boolean) => void;
     /**
@@ -84,7 +89,8 @@ export interface ProjectSlice {
     /**
      * Get all saved projects in localStorage
      *
-     * @param filter - Filter for the projects
+     * @param filter - Optional filter for the projects
+     * @returns Array of saved project ids
      */
     getSavedProjects: (filter?: ProjectMode) => string[];
     /**
@@ -94,30 +100,35 @@ export interface ProjectSlice {
     /**
      * Get KAPLAY versions used in projects
      *
-     * @param filter - Filter for the projects
+     * @returns Object of all versions and their cound used in projects
      */
     getProjectVersions: () => Record<string, number>;
     /**
      * Get KAPLAY minimal versions used in projects
      *
-     * @param filter - Filter for the projects
+     * @returns Object of all minimal versions and their count used in projects
      */
     getProjectMinVersions: () => Record<string, number>;
     /**
      * Generate a new id for a project
      *
      * @param prefix - Prefix for the id
+     * @returns Generated project id
      */
     generateId(prefix: ProjectMode): string;
     /**
      * Generate a name from an id
      *
+     * @param id - Project id
      * @param prefix - Prefix for the id
+     * @param isShared - If not own project
+     * @returns Generated project name
      */
     generateName(id: string, prefix: ProjectMode, isShared?: boolean): string;
     /**
      * Serialize project to a string, current if not specified
      *
+     * @param project - Optional Project object
      * @returns Serialized project
      */
     serializeProject(project?: Project): string;
@@ -125,12 +136,14 @@ export interface ProjectSlice {
      * Unserialize a project from localStorage
      *
      * @param id - Project id
+     * @returns Project object
      */
     unserializeProject(id: string): Project;
     /**
      * Remove project from localStorage
      *
      * @param id - Project id
+     * @returns If removed project successfully
      */
     removeProject(id: string): boolean;
 }
@@ -212,7 +225,9 @@ export const createProjectSlice: StateCreator<
         }));
     },
     getProjectMetadata(key) {
-        const project = get().unserializeProject(key);
+        const project = key == get().projectKey
+            ? get().project
+            : get().unserializeProject(key);
         const metadata = {
             key: key,
             name: project.name,
