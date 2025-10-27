@@ -141,7 +141,7 @@ export interface ProjectSlice {
      */
     unserializeProject(id: string): Project;
     /**
-     * Remove project from localStorage, current if not specified
+     * Clone any stored project, current if not specified
      *
      * @param id - Optional roject id
      * @returns If cloned project successfully

@@ -21,9 +21,13 @@ type DeleteOptions = {
     };
 };
 
-export const openProjectDetails = (
+export function openProjectPreferences(key?: string) {
+    openDialog("project-preferences", { ...(key && { projectKey: key }) });
+}
+
+export function openProjectDetails(
     key: string | null = useProject.getState().projectKey,
-) => {
+) {
     if (!key) {
         throw new Error(
             `Project doesn't exist: ${key}`,
@@ -40,12 +44,12 @@ export const openProjectDetails = (
             confirmText: "Close",
         },
     );
-};
+}
 
-export const exportProject = (
+export function exportProject(
     key: string | null = useProject.getState().projectKey,
     options?: ToastOptions,
-) => {
+) {
     const { saveNewProject, getProjectMetadata } = useProject.getState();
 
     if (!key) {
@@ -75,9 +79,9 @@ export const exportProject = (
         ...(options?.toastContainerId
             && { containerId: options?.toastContainerId }),
     });
-};
+}
 
-export const cloneProject = (key?: string, options?: ToastOptions) => {
+export function cloneProject(key?: string, options?: ToastOptions) {
     const clonedOk = useProject.getState().cloneProject(key);
 
     toast(
@@ -90,7 +94,7 @@ export const cloneProject = (key?: string, options?: ToastOptions) => {
                 && { containerId: options?.toastContainerId }),
         },
     );
-};
+}
 
 export async function confirmAndDeleteProject(
     key: string | null = useProject.getState().projectKey,
@@ -200,8 +204,4 @@ export async function confirmAndDeleteProject(
     );
 
     return true;
-}
-
-export function openProjectPreferences(key?: string) {
-    openDialog("project-preferences", { ...(key && { projectKey: key }) });
 }

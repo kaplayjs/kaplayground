@@ -10,6 +10,7 @@ type ProjectDetailsProps = {
         createdAt: string;
         updatedAt: string;
         buildMode?: string;
+        version: string;
     };
 };
 
@@ -37,6 +38,17 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
             [project.key],
         );
 
+        const showBuildMode = project.type == "Project" && project.buildMode;
+
+        const ProjectSize = () => (
+            <div className="flex flex-col gap-0.5 flex-1 only:contents">
+                <h3 className="flex-1 font-medium text-white">
+                    Project Size
+                </h3>
+                <div className="flex-1">{fileSize(size)}</div>
+            </div>
+        );
+
         return (
             <div
                 className="space-y-3 text-sm [&>*+*]:pt-3 [&>*+*]:border-t [&>*+*]:border-base-content/[8%]"
@@ -61,7 +73,9 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
                     <div className="flex flex-col gap-0.5 flex-1">
                         <h3 className="font-medium text-white">Last Updated</h3>
                         <div>
-                            {new Date(project.updatedAt).toLocaleString()}
+                            {project.updatedAt
+                                ? new Date(project.updatedAt).toLocaleString()
+                                : "Unknown"}
                         </div>
                     </div>
 
@@ -76,22 +90,32 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
                 </div>
 
                 <div className="flex flex-wrap gap-x-4 gap-y-1.5">
-                    {(project.type == "Project" && project.buildMode) && (
-                        <div className="flex flex-col gap-0.5 flex-1 only:contents">
-                            <h3 className="flex-1 font-medium text-white">
-                                Build Mode
-                            </h3>
-                            <div className="flex-1">{project.buildMode}</div>
-                        </div>
-                    )}
-
                     <div className="flex flex-col gap-0.5 flex-1 only:contents">
                         <h3 className="flex-1 font-medium text-white">
-                            Project Size
+                            KAPLAY Version
                         </h3>
-                        <div className="flex-1">{fileSize(size)}</div>
+                        <div className="flex-1">{project.version}</div>
                     </div>
+
+                    {showBuildMode
+                        ? (
+                            <div className="flex flex-col gap-0.5 flex-1 only:contents">
+                                <h3 className="flex-1 font-medium text-white">
+                                    Build Mode
+                                </h3>
+                                <div className="flex-1">
+                                    {project.buildMode}
+                                </div>
+                            </div>
+                        )
+                        : <ProjectSize />}
                 </div>
+
+                {showBuildMode && (
+                    <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                        <ProjectSize />
+                    </div>
+                )}
 
                 {tags.length > 0 && (
                     <div className="flex flex-wrap gap-x-4 gap-y-1.5">
