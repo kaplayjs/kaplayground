@@ -4,7 +4,7 @@ on:
     branches:
       - master
   workflow_run:
-    workflows: ["Sync Submodules"]
+    workflows: [Sync Submodules]
     types:
       - completed
     branches: 
