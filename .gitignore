@@ -31,3 +31,8 @@ lib.d.ts
 # Neutralino.JS
 bin/
 neutralinojs.log
+
+# Generated Files
+src/data/exampleList.json
+src/data/kaplayVersions.json
+src/data/publicAssets.json
