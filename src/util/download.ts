@@ -1,10 +1,12 @@
 export const downloadBlob = async (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const reader = new FileReader();
 
-    a.href = url;
-    a.download = filename;
-    a.click();
+    reader.onloadend = () => {
+        const a = document.createElement("a");
+        a.href = reader.result as string;
+        a.download = filename;
+        a.click();
+    };
 
-    URL.revokeObjectURL(url);
+    reader.readAsDataURL(blob);
 };
