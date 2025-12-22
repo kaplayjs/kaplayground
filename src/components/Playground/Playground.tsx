@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Slide, ToastContainer } from "react-toastify";
 import { Tooltip } from "react-tooltip";
+import { connectDB } from "../../db/client/db";
 import { loadProject } from "../../features/Projects/application/loadProject";
 import { preferredVersion } from "../../features/Projects/application/preferredVersion";
 import { useProject } from "../../features/Projects/stores/useProject";
@@ -76,94 +77,105 @@ const Playground = () => {
 
     // First paint
     useEffect(() => {
-        // Load global config
-        loadConfig();
+        (async () => {
+            await connectDB();
 
-        // Set initial project KAPLAY version
-        setProject({
-            kaplayVersion: preferredVersion(),
-        });
+            // Load global config
+            loadConfig();
 
-        // Init saved projects array
-        useProject.getState().updateSavedProjects();
+            // Set initial project KAPLAY version
+            setProject({
+                kaplayVersion: preferredVersion(),
+            });
 
-        // Initialize ESBuild
-        esbuild.initialize({
-            wasmURL: "https://unpkg.com/esbuild-wasm@0.25.8/esbuild.wasm",
-            worker: true,
-        }).then(() => {
-            // Loading the project, default project, shared project, etc.
-            const urlParams = new URLSearchParams(window.location.search);
-            const lastOpenedPj =
-                useConfig.getState().getConfig().lastOpenedProject;
-            const sharedCode = urlParams.get("code");
-            const sharedVersion = urlParams.get("version");
-            const exampleName = urlParams.get("example");
+            // Init saved projects array
+            useProject.getState().updateSavedProjects();
 
-            if (sharedCode) {
-                loadShare(sharedCode, sharedVersion ?? undefined);
-            } else if (exampleName) {
-                loadDemo(exampleName);
-            } else if (lastOpenedPj) {
-                loadLastOpenedProject(lastOpenedPj);
-            } else {
-                loadNewProject();
-            }
-        });
+            // Initialize ESBuild
+            esbuild.initialize({
+                wasmURL: "https://unpkg.com/esbuild-wasm@0.25.8/esbuild.wasm",
+                worker: true,
+            }).then(() => {
+                // Loading the project, default project, shared project, etc.
+                const urlParams = new URLSearchParams(window.location.search);
+                const lastOpenedPj =
+                    useConfig.getState().getConfig().lastOpenedProject;
+                const sharedCode = urlParams.get("code");
+                const sharedVersion = urlParams.get("version");
+                const exampleName = urlParams.get("example");
+
+                if (sharedCode) {
+                    loadShare(sharedCode, sharedVersion ?? undefined);
+                } else if (exampleName) {
+                    loadDemo(exampleName);
+                } else if (lastOpenedPj) {
+                    loadLastOpenedProject(lastOpenedPj);
+                } else {
+                    loadNewProject();
+                }
+            });
+        })();
     }, []);
-
-    if (loadingProject) {
-        return (
-            <LoadingPlayground
-                isLoading={loadingEditor}
-                isPortrait={isPortrait}
-                isProject={projectMode === "pj"}
-            />
-        );
-    }
-
-    if (projectMode === "pj" && isPortrait) {
-        return (
-            <div className="h-full flex flex-col items-center justify-center bg-base-300 p-4 gap-4">
-                <img src={assets.burpman.outlined} />
-
-                <p>
-                    Projects are currently not supported in mobile! Please use a
-                    desktop device, anyway you can still view demos.
-                </p>
-
-                <ExampleList />
-                <ProjectBrowser />
-            </div>
-        );
-    }
 
     return (
         <>
-            {projectMode === "pj"
+            {loadingProject
                 ? (
-                    <WorkspaceProject
-                        editorIsLoading={loadingEditor}
+                    <LoadingPlayground
+                        isLoading={loadingEditor}
                         isPortrait={isPortrait}
-                        onMount={handleMount}
+                        isProject={projectMode === "pj"}
                     />
                 )
+                : (projectMode === "pj" && isPortrait)
+                ? (
+                    <>
+                        <div className="h-full flex flex-col items-center justify-center bg-base-300 p-4 gap-4">
+                            <img src={assets.burpman.outlined} />
+
+                            <p>
+                                Projects are currently not supported in mobile!
+                                Please use a desktop device, anyway you can
+                                still view demos.
+                            </p>
+
+                            <ExampleList />
+                            <ProjectBrowser />
+                        </div>
+                    </>
+                )
                 : (
-                    <WorkspaceExample
-                        editorIsLoading={loadingEditor}
-                        isPortrait={isPortrait}
-                        onMount={handleMount}
-                    />
+                    <>
+                        {projectMode === "pj"
+                            ? (
+                                <WorkspaceProject
+                                    editorIsLoading={loadingEditor}
+                                    isPortrait={isPortrait}
+                                    onMount={handleMount}
+                                />
+                            )
+                            : (
+                                <WorkspaceExample
+                                    editorIsLoading={loadingEditor}
+                                    isPortrait={isPortrait}
+                                    onMount={handleMount}
+                                />
+                            )}
+
+                        <ToastContainer
+                            position="bottom-right"
+                            transition={Slide}
+                        />
+                        <AboutDialog />
+                        <ConfigDialog />
+                        <Tooltip id="global" />
+                        <Tooltip id="global-open" isOpen={true} />
+                        <ProjectBrowser />
+                        <ProjectPreferences />
+                        <WelcomeDialog isLoading={loadingEditor} />
+                    </>
                 )}
 
-            <ToastContainer position="bottom-right" transition={Slide} />
-            <AboutDialog />
-            <ConfigDialog />
-            <Tooltip id="global" />
-            <Tooltip id="global-open" isOpen={true} />
-            <ProjectBrowser />
-            <ProjectPreferences />
-            <WelcomeDialog isLoading={loadingEditor} />
             <ConfirmDialog />
         </>
     );

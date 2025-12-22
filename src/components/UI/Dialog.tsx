@@ -122,7 +122,7 @@ export const Dialog: FC<DialogProps> = forwardRef<
                                 {onConfirm && (
                                     <button
                                         className={cn(
-                                            "btn py-3 min-h-0 h-auto only:ml-auto",
+                                            "btn py-3 btn-primary min-h-0 h-auto only:ml-auto",
                                             confirmBtnClass,
                                         )}
                                         onClick={onConfirm}

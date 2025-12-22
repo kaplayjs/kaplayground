@@ -1,3 +1,4 @@
+import { db } from "../../../db/client/db";
 import { useConfig } from "../../../hooks/useConfig";
 import { useEditor } from "../../../hooks/useEditor";
 import { debug } from "../../../util/logs";
@@ -11,7 +12,13 @@ export const loadProject = async (projectKey: string) => {
 
     debug(0, "[project] Loading project", projectKey);
 
-    const project = projectStore.unserializeProject(projectKey);
+    const project = await db.get("projects", projectKey);
+
+    if (!project) {
+        throw new Error(
+            `Tried to load a project that doesn't exist: ${projectKey}`,
+        );
+    }
 
     if (editorStore.runtime.editor) {
         clearModels();
