@@ -9,27 +9,27 @@ type Props = {
 
 export const sortMapExamples: Record<
     string,
-    (item: Example) => string | number
+    (item: Partial<Example>) => string | number
 > = {
-    topic: item => item.sortName,
-    title: item => item.formattedName,
+    topic: item => item.sortName || "",
+    title: item => item.formattedName || item.name || "",
     latest: item => new Date(item?.updatedAt || 0).getTime(),
     difficulty: item => item.difficulty?.level ?? 0,
 };
 export const sortMapProjects: Record<
     string,
-    (item: Example) => string | number
+    (item: Partial<Example>) => string | number
 > = {
     latest: item => new Date(item?.updatedAt || 0).getTime(),
-    type: item => item?.tags[0]?.name,
-    title: item => item.name,
+    type: item => item.tags ? item?.tags[0]?.name : "ex",
+    title: item => item.name || "",
 };
 
 export const sortEntries = (
     value: Props["value"],
     type: string | "Projects" | "Examples",
-    a: Example,
-    b: Example,
+    a: Partial<Example>,
+    b: Partial<Example>,
 ): number => {
     const accessor = type == "Projects"
         ? sortMapProjects?.[value]

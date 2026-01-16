@@ -69,9 +69,9 @@ const Playground = () => {
         setLoadingProject(false);
     };
 
-    const loadLastOpenedProject = (lastOpenedProjectId: string) => {
+    const loadLastOpenedProject = async (lastOpenedProjectId: string) => {
         debug(0, "[init] Loading last opened project...");
-        loadProject(lastOpenedProjectId);
+        await loadProject(lastOpenedProjectId);
         setLoadingProject(false);
     };
 

@@ -1,9 +1,12 @@
 import { toast } from "react-toastify";
 import type { StateCreator } from "zustand";
 import { demos, type Example } from "../../../../data/demos";
+import { db } from "../../../../db/client/db";
+import { Schema } from "../../../../db/client/schema";
 import { useConfig } from "../../../../hooks/useConfig";
 import { useEditor } from "../../../../hooks/useEditor";
 import { debug } from "../../../../util/logs";
+import { uuidv7 } from "../../../../util/uuidv7";
 import { createDefaultFiles } from "../../application/createDefaultFiles";
 import { preferredVersion } from "../../application/preferredVersion";
 import { validateProjectName } from "../../application/validateProjectName";
@@ -15,11 +18,11 @@ import { type ProjectStore } from "../useProject.ts";
 
 export interface ProjectSlice {
     /**
-     * Current project associated localStorage key
+     * Current project associated idb key
      */
     projectKey: string | null;
     /**
-     * Set current project associated localStorage key
+     * Set current project associated idb key
      */
     setProjectKey: (key: string | null) => void;
     /**
@@ -53,19 +56,32 @@ export interface ProjectSlice {
         demoName?: string,
         isShared?: boolean,
     ): void;
-    getProjectMetadata: (id: string) => Example;
-    createFromShared: (sharedCode: string, sharedVersion?: string) => void;
     /**
-     * Save project in localStorage, current if not specified
+     * Get project metadata compatible with example demos
+     *
+     * @param id - Project id
+     * @returns Project <Example> object with metadata
+     */
+    getProjectMetadata(id: string): Promise<Example>;
+    /**
+     * Create and load new project from passed code
+     *
+     * @sharedCode string - example code
+     * @sharedVersion string - kaplay lib version used
+     */
+    createFromShared(sharedCode: string, sharedVersion?: string): void;
+    /**
+     * Save project in idb, current if not specified
      *
      * @param id - Optional project id
      * @param project - Optional Project object
      */
     saveProject: (id?: string | null, project?: Project) => void;
     /**
-     * Save current project as a new project in localStorage
+     * Save current project as a new project in idb
+     * @returns Newly created project id
      */
-    saveNewProject(): void;
+    saveNewProject(): string;
     /**
      * Current project edited state
      */
@@ -77,25 +93,35 @@ export interface ProjectSlice {
      */
     setProjectWasEdited: (bool: boolean) => void;
     /**
-     * Check if a project is saved in localStorage
+     * Check if a project is saved in idb
      *
      * @param id - Project id
      * @returns If the project is saved
      */
-    projectIsSaved(id: string): boolean;
+    projectIsSaved(id: string): Promise<boolean>;
     /**
      * Array of saved project ids
      */
     savedProjects: string[];
     /**
-     * Get all saved projects in localStorage
+     * Get all saved projects in idb
+     *
+     * @param filter - Optional filter for the projects
+     * @returns Array of raw projects from idb
+     */
+    getSavedProjects(
+        filter?: ProjectMode,
+    ): Promise<Schema["projects"]["value"][]>;
+    /**
+    /**
+     * Get all ids of saved projects in idb
      *
      * @param filter - Optional filter for the projects
      * @returns Array of saved project ids
      */
-    getSavedProjects: (filter?: ProjectMode) => string[];
+    getSavedProjectIds(filter?: ProjectMode): Promise<string[]>;
     /**
-     * Refresh savedProjects from localStorage
+     * Refresh savedProjects from idb
      */
     updateSavedProjects(): void;
     /**
@@ -103,29 +129,35 @@ export interface ProjectSlice {
      *
      * @returns Object of all versions and their cound used in projects
      */
-    getProjectVersions: () => Record<string, number>;
+    getProjectVersions(): Promise<Record<string, number>>;
     /**
      * Get KAPLAY minimal versions used in projects
      *
      * @returns Object of all minimal versions and their count used in projects
      */
-    getProjectMinVersions: () => Record<string, number>;
+    getProjectMinVersions(): Promise<Record<string, number>>;
     /**
      * Generate a new id for a project
      *
-     * @param prefix - Prefix for the id
-     * @returns Generated project id
+     * @param createdAt - Optional ISO string date used as the base timestamp
+     * @returns Generated project uuidv7 id
      */
-    generateId(prefix: ProjectMode): string;
+    generateId(createdAt?: string): string;
     /**
-     * Generate a name from an id
+     * Generate a name based on project mode
      *
-     * @param id - Project id
-     * @param prefix - Prefix for the id
+     * @param mode - Will be formatted and used as prefix
      * @param isShared - If not own project
      * @returns Generated project name
      */
-    generateName(id: string, prefix: ProjectMode, isShared?: boolean): string;
+    generateName(mode: ProjectMode, isShared?: boolean): Promise<string>;
+    /**
+     * Get project from idb
+     *
+     * @param id - Project id
+     * @returns Project object
+     */
+    getProject(id: string): Promise<Project>;
     /**
      * Serialize project to a string, current if not specified
      *
@@ -134,21 +166,21 @@ export interface ProjectSlice {
      */
     serializeProject(project?: Project): string;
     /**
-     * Unserialize a project from localStorage
+     * Unserialize a project from idb
      *
-     * @param id - Project id
+     * @param project - Serialized project
      * @returns Project object
      */
-    unserializeProject(id: string): Project;
+    unserializeProject(project: string): Project;
     /**
      * Clone any stored project, current if not specified
      *
      * @param id - Optional roject id
      * @returns If cloned project successfully
      */
-    cloneProject(id?: string | null): boolean;
+    cloneProject(id?: string | null): Promise<boolean>;
     /**
-     * Remove project from localStorage
+     * Remove project from idb
      *
      * @param id - Project id
      * @returns If removed project successfully
@@ -203,39 +235,29 @@ export const createProjectSlice: StateCreator<
             projectWasEdited: bool,
         }));
     },
-    projectIsSaved: (id: string) => {
-        return get().getSavedProjects().includes(id);
+    async projectIsSaved(id: string) {
+        return (await get().getSavedProjectIds()).includes(id);
     },
     savedProjects: [],
-    getSavedProjects: (filter) => {
-        const keys: string[] = [];
-
-        for (let i = 0, len = localStorage.length; i < len; ++i) {
-            const localKey = localStorage.key(i);
-            if (!localKey) continue;
-
-            if (filter) {
-                if (localKey.startsWith(`${filter}-`)) {
-                    keys.push(localKey);
-                }
-            } else {
-                if (localKey.startsWith("pj-") || localKey.startsWith("ex-")) {
-                    keys.push(localKey);
-                }
-            }
-        }
-
-        return keys;
+    async getSavedProjects(filter) {
+        return (await db.transaction("projects").store.index("mode").getAll(
+            filter,
+        ));
     },
-    updateSavedProjects() {
+    async getSavedProjectIds(filter) {
+        return (await get().getSavedProjects(filter)).map(p => p.id);
+    },
+    async updateSavedProjects() {
+        const savedProjects = await get().getSavedProjectIds();
+
         set(() => ({
-            savedProjects: get().getSavedProjects(),
+            savedProjects,
         }));
     },
-    getProjectMetadata(key) {
+    async getProjectMetadata(key) {
         const project = key == get().projectKey
             ? get().project
-            : get().unserializeProject(key);
+            : await get().getProject(key);
         const metadata = {
             key: key,
             name: project.name,
@@ -261,9 +283,9 @@ export const createProjectSlice: StateCreator<
 
         return metadata satisfies Example;
     },
-    getProjectVersions() {
-        const projectVersions = get().getSavedProjects().map(project =>
-            get().getProjectMetadata(project).version
+    async getProjectVersions() {
+        const projectVersions = (await get().getSavedProjects()).map(project =>
+            project.kaplayVersion
         );
 
         return Object.fromEntries(
@@ -277,9 +299,9 @@ export const createProjectSlice: StateCreator<
                 ),
         );
     },
-    getProjectMinVersions() {
-        const projectMinVersions = get().getSavedProjects().map(project =>
-            get().getProjectMetadata(project).minVersion
+    async getProjectMinVersions() {
+        const projectMinVersions = (await get().getSavedProjects()).map(
+            project => project.kaplayVersion.split(".").slice(0, 2).join("."),
         );
 
         return Object.fromEntries(
@@ -296,7 +318,7 @@ export const createProjectSlice: StateCreator<
 
     // #region Project Creation
 
-    createNewProject(
+    async createNewProject(
         mode,
         replace,
         demoName,
@@ -305,7 +327,6 @@ export const createProjectSlice: StateCreator<
         const files = new Map<string, File>();
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
-        const possibleId = get().generateId(mode);
         let loadDefaultFiles = false;
 
         let version = preferredVersion();
@@ -350,7 +371,7 @@ export const createProjectSlice: StateCreator<
 
         set({
             project: {
-                name: get().generateName(possibleId, mode, isShared),
+                name: await get().generateName(mode, isShared),
                 version: "2.0.0", // fixed project version
                 files: files,
                 assets: assets,
@@ -418,16 +439,14 @@ export const createProjectSlice: StateCreator<
         debug(0, "[project] Saving changes...");
 
         if (id !== get().projectKey && project) {
-            localStorage.setItem(
+            db.put("projects", {
+                ...project,
+                updatedAt: new Date().toISOString(),
                 id,
-                get().serializeProject({
-                    ...project,
-                    updatedAt: new Date().toISOString(),
-                }),
-            );
+            });
             set({ savedProjects: [...get().savedProjects] });
         } else {
-            localStorage.setItem(id, get().serializeProject());
+            db.put("projects", { ...get().project, id });
             get().setProjectWasEdited(true);
         }
     },
@@ -435,8 +454,8 @@ export const createProjectSlice: StateCreator<
     saveNewProject() {
         debug(0, "[project] Saving new project...");
 
-        const id = get().generateId(get().project.mode);
-        localStorage.setItem(id, get().serializeProject());
+        const id = get().generateId(get().project.createdAt);
+        db.put("projects", { ...get().project, id });
 
         get().setProjectKey(id);
         get().setDemoKey(null);
@@ -457,30 +476,50 @@ export const createProjectSlice: StateCreator<
         set(() => ({
             savedProjects: [...get().savedProjects, id],
         }));
+
+        return id;
     },
 
-    generateId(prefix) {
-        const keys = get().getSavedProjects(prefix);
-        const nums = keys
-            .map((k) => {
-                const m = k.match(`^${prefix}-(\\d+)$`);
-                return m ? parseInt(m[1], 10) : NaN;
-            })
-            .filter((n) => !Number.isNaN(n));
-
-        const used = new Set(nums);
-        let i = 1;
-        while (used.has(i)) i++;
-
-        return `${prefix}-${i}`;
+    generateId(createdAt) {
+        return uuidv7(
+            createdAt
+                ? {
+                    msecs: Date.parse(createdAt),
+                }
+                : {},
+        );
     },
 
-    generateName(id, prefix, isShared = false) {
-        const formattedName = prefix == "ex" ? "Example" : "Project";
-        const isSharedName = isShared ? " (Shared)" : "";
-        return `${formattedName} #${
-            id.replace(`${prefix}-`, "")
-        }${isSharedName}`;
+    async generateName(mode, isShared = false) {
+        const modePrefix = mode == "ex" ? "Example" : "Project";
+        const isSharedSufix = isShared ? " (Shared)" : "";
+        const projects = await db.transaction("projects").store.index("mode")
+            .getAll(mode);
+
+        const name = (num: number) => `${modePrefix} #${num}`;
+        const nameIsTaken = (num: number) =>
+            projects.some(project =>
+                [name(num), name(num) + isSharedSufix].includes(
+                    project.name.trim(),
+                )
+            );
+
+        let num = projects.length + 1;
+        while (nameIsTaken(num)) num++;
+
+        return name(num) + isSharedSufix;
+    },
+
+    async getProject(id: string) {
+        const project = await db.get("projects", id);
+
+        if (!project) {
+            throw new Error(
+                `Tried to load a project that doesn't exist: ${id}`,
+            );
+        }
+
+        return project;
     },
 
     serializeProject(project = get().project) {
@@ -491,39 +530,36 @@ export const createProjectSlice: StateCreator<
         });
     },
 
-    unserializeProject(id: string) {
-        const projectSerialized = localStorage.getItem(id);
+    unserializeProject(project) {
+        const unserialized = JSON.parse(project);
 
-        if (!projectSerialized) {
-            throw new Error(
-                `Tried to load a project that doesn't exist: ${id}`,
-            );
-        }
-
-        const savedProject = JSON.parse(projectSerialized);
-        let project = null;
-
-        if (savedProject.state?.project) {
-            project = savedProject.state.project;
-        } else {
-            project = savedProject;
-        }
+        const parsedProject =
+            (unserialized?.state ? unserialized.state.project : unserialized) as
+                & Omit<Project, "files" | "assets">
+                & {
+                    assets: [string, Asset][];
+                    files: [string, File][];
+                };
 
         return {
-            ...project,
-            files: new Map(project.files),
-            assets: new Map(project.assets),
+            ...parsedProject,
+            kaplayVersion: parsedProject.kaplayVersion == "none"
+                ? "master"
+                : parsedProject.kaplayVersion,
+            buildMode: parsedProject.buildMode || "legacy",
+            files: new Map<string, File>(parsedProject.files),
+            assets: new Map<string, Asset>(parsedProject.assets),
         };
     },
 
-    cloneProject(id = get().projectKey) {
+    async cloneProject(id = get().projectKey) {
         if (!id) return false;
 
         const project = id == get().projectKey
             ? get().project
-            : get().unserializeProject(id);
+            : await get().getProject(id);
 
-        const newId = get().generateId(project.mode);
+        const newId = get().generateId();
 
         const suffixedName = (name: string): string => {
             const suffix = name.match(/\s*\(copy(?:\s+(\d+))?\)$/);
@@ -539,18 +575,16 @@ export const createProjectSlice: StateCreator<
 
         let newName = suffixedName(project.name);
 
-        while (!validateProjectName(newName, id)[0]) {
+        while (!(await validateProjectName(newName, id))[0]) {
             newName = suffixedName(newName);
         }
 
-        localStorage.setItem(
-            newId,
-            get().serializeProject({
-                ...project,
-                name: newName,
-                createdAt: new Date().toISOString(),
-            }),
-        );
+        await db.put("projects", {
+            ...project,
+            name: newName,
+            createdAt: new Date().toISOString(),
+            id: newId,
+        });
 
         set(() => ({
             savedProjects: [...get().savedProjects, newId],
@@ -561,11 +595,9 @@ export const createProjectSlice: StateCreator<
     // #endregion
 
     removeProject(id) {
-        if (localStorage.getItem(id) == null) return false;
+        if (!get().savedProjects.includes(id)) return false;
 
-        localStorage.removeItem(id);
-
-        if (!get().savedProjects.includes(id)) return true;
+        db.delete("projects", id);
 
         set(() => ({
             savedProjects: get().savedProjects.filter(pid => pid != id),

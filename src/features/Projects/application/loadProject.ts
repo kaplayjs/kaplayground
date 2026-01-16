@@ -44,4 +44,10 @@ export const loadProject = async (projectKey: string) => {
     });
 
     editorStore.updateAndRun();
+
+    window.history.replaceState(
+        {},
+        "",
+        `${window.location.origin}/`,
+    );
 };

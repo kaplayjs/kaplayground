@@ -1,5 +1,5 @@
 import {
-    deleteDB,
+    deleteDB as deleteIDB,
     type IDBPDatabase,
     type IDBPTransaction,
     openDB,
@@ -119,9 +119,7 @@ export async function connectDB(): Promise<{
 
             if (error && !isAttempt) {
                 if (curMigrationVerIdx == 0) {
-                    db.close();
-                    deleteDB("kadb");
-                    localStorage.setItem("kadb-v", "0");
+                    deleteDB();
                 } else {
                     const version = `${(curMigrationVerIdx * 10)}`;
                     localStorage.setItem("kadb-v", version);
@@ -386,4 +384,12 @@ export function setMigrationSuccessful(name: string) {
 
 export function getCurrentVersion() {
     return parseInt(localStorage.getItem("kadb-v") ?? "0");
+}
+
+export async function deleteDB() {
+    db.close();
+    await deleteIDB("kadb");
+    Object.keys(localStorage).forEach(key =>
+        key?.startsWith("kadb") && localStorage.removeItem(key)
+    );
 }

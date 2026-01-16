@@ -1,12 +1,11 @@
 import { assets } from "@kaplayjs/crew";
 import { useEffect, useRef, useState } from "react";
+import { validateProjectName } from "../../features/Projects/application/validateProjectName";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
 
 export const ProjectStatus = () => {
-    const getSavedProjects = useProject((s) => s.getSavedProjects);
-    const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const saveNewProject = useProject((s) => s.saveNewProject);
     const projectMode = useProject((s) => s.project.mode);
     const kaplayVersion = useProject((s) => s.project.kaplayVersion);
@@ -22,7 +21,6 @@ export const ProjectStatus = () => {
     // the current value of the input that will be displayed
     const [inputValue, setInputValue] = useState(() => projectName);
     const nameInput = useRef<HTMLInputElement>(null);
-    const [usedNames, setUsedNames] = useState<string[] | null>(null);
     const [error, setError] = useState<string>("");
 
     const setNameInputValue = (value: string) => {
@@ -41,8 +39,8 @@ export const ProjectStatus = () => {
         return Boolean(projectKey);
     };
 
-    const handleSaveProject = () => {
-        if (!isSaved()) saveNewProject();
+    const handleSaveProject = async () => {
+        if (!isSaved() && await isValid()) saveNewProject();
     };
 
     const setProjectName = (newName = initialName) => {
@@ -73,26 +71,17 @@ export const ProjectStatus = () => {
         setTimeout(blur);
     };
 
-    const isValid = () => {
-        let names = usedNames;
-        if (!names) {
-            names = getSavedProjects()
-                .filter(k => k !== projectKey)
-                .map(k => getProjectMetadata(k).name);
-            setUsedNames(names);
-        }
-        const nameAlreadyUsed = inputValue && names?.includes(inputValue);
-        setError(
-            nameAlreadyUsed ? "Project with that name already exists!" : "",
-        );
-        return !nameAlreadyUsed;
+    const isValid = async () => {
+        const [valid, err] = await validateProjectName(inputValue);
+        setError(err ? err : "");
+        return valid;
     };
 
     // Save project name
     useEffect(() => {
-        const timeout = setTimeout(() => {
+        const timeout = setTimeout(async () => {
             if (inputValue == projectName) return;
-            setProjectName(isValid() ? inputValue : initialName);
+            setProjectName(await isValid() ? inputValue : initialName);
         }, 500);
         return () => clearTimeout(timeout);
     }, [inputValue]);
@@ -104,7 +93,6 @@ export const ProjectStatus = () => {
         setInitialName(projectName);
         setNameInputValue(projectName);
         setInputValue(projectName);
-        setUsedNames(null);
         setError("");
     }, [projectKey, projectName]);
 
@@ -151,7 +139,7 @@ export const ProjectStatus = () => {
                             else if (e.key === "Enter" && !error) {
                                 handleSaveProject();
                                 blur();
-                            };
+                            }
                         }}
                     >
                     </input>

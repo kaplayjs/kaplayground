@@ -31,15 +31,15 @@ export const ProjectContextMenu = forwardRef<
     }));
 
     const handleProjectPreferences = () => {
-        openProjectPreferences(project.key);
+        openProjectPreferences(project.key, true);
     };
 
-    const handleProjectDetails = () => {
-        openProjectDetails(project.key);
+    const handleProjectDetails = async () => {
+        await openProjectDetails(project.key);
     };
 
     const handleProjectClone = async () => {
-        cloneProject(project.key, {
+        await cloneProject(project.key, {
             toastContainerId: "projects-browser-toasts",
         });
     };
