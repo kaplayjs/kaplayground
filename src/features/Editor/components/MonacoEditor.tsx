@@ -168,7 +168,10 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     }, []);
 
     return (
-        <div id="monaco-editor-wrapper" className="h-full rounded-xl relative">
+        <div
+            id="monaco-editor-wrapper"
+            className="h-full bg-base-200 rounded-xl relative"
+        >
             <Editor
                 defaultPath={getRuntime().currentFile}
                 defaultLanguage="javascript"
@@ -176,6 +179,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 beforeMount={handleEditorBeforeMount}
                 onMount={handleEditorMount}
                 theme={"Spiker"}
+                loading={null}
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",

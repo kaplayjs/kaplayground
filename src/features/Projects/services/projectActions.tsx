@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import { toast } from "react-toastify";
 import { ProjectDetails } from "../../../components/Project/ProjectDetails";
+import { db } from "../../../db/client/db";
 import { confirm } from "../../../util/confirm";
 import { downloadBlob } from "../../../util/download";
 import { openDialog } from "../../../util/openDialog";
@@ -21,11 +22,13 @@ type DeleteOptions = {
     };
 };
 
-export function openProjectPreferences(key?: string) {
-    openDialog("project-preferences", { ...(key && { projectKey: key }) });
+export function openProjectPreferences(key?: string, lazy: boolean = false) {
+    openDialog("project-preferences", {
+        ...(key && { projectKey: key, lazy }),
+    });
 }
 
-export function openProjectDetails(
+export async function openProjectDetails(
     key: string | null = useProject.getState().projectKey,
 ) {
     if (!key) {
@@ -37,7 +40,7 @@ export function openProjectDetails(
     confirm(
         "Project Details",
         <ProjectDetails
-            project={useProject.getState().getProjectMetadata(key)}
+            project={await useProject.getState().getProjectMetadata(key)}
         />,
         {
             type: "neutral",
@@ -46,20 +49,18 @@ export function openProjectDetails(
     );
 }
 
-export function exportProject(
+export async function exportProject(
     key: string | null = useProject.getState().projectKey,
     options?: ToastOptions,
 ) {
-    const { saveNewProject, getProjectMetadata } = useProject.getState();
+    const { saveNewProject, getProjectMetadata, serializeProject } = useProject
+        .getState();
 
-    if (!key) {
-        saveNewProject();
-        key = useProject.getState().projectKey;
-    }
+    key ??= saveNewProject();
 
-    const projectLocal = localStorage.getItem(key ?? "");
+    const project = await db.get("projects", key);
 
-    if (!key || !projectLocal) {
+    if (!key || !project) {
         toast(`Project${key ? ` '${key}'` : ""} does not exist!`, {
             type: "error",
             ...(options?.toastContainerId
@@ -68,9 +69,9 @@ export function exportProject(
         return;
     }
 
-    const { name } = getProjectMetadata(key);
+    const { name } = await getProjectMetadata(key);
 
-    const blob = new Blob([projectLocal], {
+    const blob = new Blob([serializeProject(project)], {
         type: "application/json",
     });
 
@@ -81,8 +82,8 @@ export function exportProject(
     });
 }
 
-export function cloneProject(key?: string, options?: ToastOptions) {
-    const clonedOk = useProject.getState().cloneProject(key);
+export async function cloneProject(key?: string, options?: ToastOptions) {
+    const clonedOk = await useProject.getState().cloneProject(key);
 
     toast(
         clonedOk
@@ -128,8 +129,8 @@ export async function confirmAndDeleteProject(
 
     const currentProjectKey = useProject.getState().projectKey;
 
-    const projectName =
-        useProject.getState().getProjectMetadata(key).formattedName ?? key;
+    const projectName = (await useProject.getState().getProject(key)).name
+        ?? key;
     const title = options?.confirmTitle ?? `Delete project '${projectName}'?`;
     const content = options?.confirmContent
         ?? (
@@ -166,7 +167,7 @@ export async function confirmAndDeleteProject(
 
     if (!confirmOk) return false;
 
-    const serialized = localStorage.getItem(key);
+    const copy = await db.get("projects", key);
     const result = useProject.getState().removeProject(key);
 
     if (!result) {
@@ -178,15 +179,15 @@ export async function confirmAndDeleteProject(
         <div className="flex items-center justify-between gap-3 text-sm leading-tight">
             Project '{projectName}' was deleted
 
-            {serialized != null && (
+            {copy != null && (
                 <button
                     type="button"
                     className="btn btn-xs btn-success rounded-md"
-                    onClick={() => {
+                    onClick={async () => {
                         if (currentProjectKey == key) {
                             useProject.getState().saveNewProject();
                         } else {
-                            localStorage.setItem(key, serialized);
+                            await db.put("projects", copy);
                             useProject.getState().updateSavedProjects();
                         }
                         toast.dismiss(successToast);

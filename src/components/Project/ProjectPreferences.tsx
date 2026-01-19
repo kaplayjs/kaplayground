@@ -23,15 +23,14 @@ const ProjectPreferences = () => {
     const currentProject = useProject((s) => s.project);
     const projectKey = useProject((s) => s.projectKey);
     const setProject = useProject((s) => s.setProject);
+    const getProject = useProject((s) => s.getProject);
     const saveProject = useProject((s) => s.saveProject);
 
     const [editedKey, setEditedKey] = useState<string | null>(null);
-
-    const editedProject: Project = useMemo(() => {
-        if (!editedKey) return currentProject;
-        const p = useProject.getState().unserializeProject(editedKey);
-        return (p ?? currentProject) as Project;
-    }, [editedKey, currentProject]);
+    const [openedProject, setOpenedProject] = useState<Project>(currentProject);
+    const editedProject = useMemo(() => (
+        !editedKey ? currentProject : openedProject
+    ), [currentProject, editedKey, openedProject]);
 
     const projectDataKeys = Object.keys(editedProject);
     const formRef = useRef<HTMLFormElement>(null);
@@ -40,10 +39,13 @@ const ProjectPreferences = () => {
     );
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const key = e.target.name;
         const value = e.target.value;
-        const [_, error] = validateProjectName(value, editedKey ?? projectKey);
+        const [_, error] = await validateProjectName(
+            value,
+            editedKey ?? projectKey,
+        );
 
         if (error) {
             setErrors({
@@ -80,10 +82,19 @@ const ProjectPreferences = () => {
     };
 
     useEffect(() => {
-        const handler = (e: Event) => {
+        const handler = async (e: Event) => {
             const d = (e as CustomEvent).detail;
             if (!d || d.id !== "project-preferences") return;
-            setEditedKey(d.params?.projectKey ?? null);
+
+            const newKey = d.params?.projectKey;
+            setOpenedProject(
+                newKey
+                    ? (await getProject(newKey) ?? currentProject)
+                    : currentProject,
+            );
+            setEditedKey(newKey ?? null);
+
+            if (d.params?.lazy) setTimeout(d.open);
         };
         window.addEventListener("dialog-open", handler);
         return () => window.removeEventListener("dialog-open", handler);
@@ -114,15 +125,12 @@ const ProjectPreferences = () => {
                 )
             ) setProject(projectData);
         }
-
-        setEditedKey(null);
     };
 
     const handleDismiss = () => {
         formRef.current?.reset();
         setPrevBuildMode(null);
         setErrors({});
-        setEditedKey(null);
         setTimeout(() => {
             (formRef.current!).querySelectorAll("[name]").forEach(el => {
                 el.dispatchEvent(new Event("reset", { bubbles: false }));

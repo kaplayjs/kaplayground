@@ -1,3 +1,4 @@
+import { deleteDB } from "../../db/client/db";
 import { confirm } from "../../util/confirm";
 import { ConfigCheckbox } from "./ConfigForm/ConfigCheckbox.tsx";
 import { ConfigSelect } from "./ConfigForm/ConfigSelect.tsx";
@@ -15,6 +16,7 @@ export const ConfigEditor = () => {
                 },
             )
         ) {
+            await deleteDB();
             localStorage.clear();
             location.reload();
         }

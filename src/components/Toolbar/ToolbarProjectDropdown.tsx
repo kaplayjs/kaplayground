@@ -1,9 +1,6 @@
 import { assets } from "@kaplayjs/crew";
 import { type FC, useRef, useState } from "react";
 import { buildProject } from "../../features/Projects/application/buildProject";
-import type { Asset } from "../../features/Projects/models/Asset";
-import type { File } from "../../features/Projects/models/File";
-import type { Project } from "../../features/Projects/models/Project";
 import {
     confirmAndDeleteProject,
     exportProject,
@@ -21,6 +18,7 @@ export const ToolbarProjectDropdown: FC = () => {
     const run = useEditor((state) => state.run);
     const showNotification = useEditor((state) => state.showNotification);
     const createNewProject = useProject((state) => state.createNewProject);
+    const unserializeProject = useProject((state) => state.unserializeProject);
     const projectKey = useProject((state) => state.projectKey);
     const newFileInput = useRef<HTMLInputElement>(null);
     const importButton = useRef<HTMLDivElement>(null);
@@ -32,7 +30,7 @@ export const ToolbarProjectDropdown: FC = () => {
         }
     };
 
-    const handleExport = () => exportProject();
+    const handleExport = async () => await exportProject();
 
     const handleHTMLBuild = async () => {
         const { project } = useProject.getState();
@@ -58,27 +56,8 @@ export const ToolbarProjectDropdown: FC = () => {
         const reader = new FileReader();
 
         reader.onload = (e) => {
-            const file = JSON.parse(e.target?.result as string);
-
-            const project = (file?.state ? file.state.project : file) as
-                & Omit<Project, "files" | "assets">
-                & {
-                    assets: [string, Asset][];
-                    files: [string, File][];
-                };
-
-            const fileMap = new Map<string, File>(project.files);
-            const assetMap = new Map<string, Asset>(project.assets);
-
-            createNewProject(project.mode, {
-                ...project,
-                kaplayVersion: project.kaplayVersion == "none"
-                    ? "master"
-                    : project.kaplayVersion,
-                buildMode: project.buildMode || "legacy",
-                files: fileMap,
-                assets: assetMap,
-            });
+            const project = unserializeProject(e.target?.result as string);
+            createNewProject(project.mode, project);
         };
 
         reader.readAsText(file);

@@ -1,4 +1,4 @@
-import type { ChangeEvent, FC } from "react";
+import { type ChangeEvent, type FC, useEffect, useState } from "react";
 import { demos } from "../../data/demos";
 import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
@@ -6,11 +6,22 @@ import { confirmNavigate } from "../../util/confirmNavigate";
 import { sortEntries } from "../ProjectBrowser/SortBy";
 
 const ExampleList: FC = () => {
+    const savedProjects = useProject((s) => s.savedProjects);
+    const projectKey = useProject((s) =>
+        s.projectKey || s.demoKey || s.project.mode
+    );
+    const demoKey = useProject((s) => s.demoKey);
+    const projectName = useProject((s) => s.project.name);
+    const projectMode = useProject((s) => s.project.mode);
     const getSavedProjects = useProject((s) => s.getSavedProjects);
-    const getProjectMetadata = useProject((s) => s.getProjectMetadata);
     const createNewProject = useProject((s) => s.createNewProject);
-    const projectKey = useProject((s) => s.projectKey || s.demoKey);
-    useProject((s) => s.project.name);
+
+    const initProjectList = !demoKey
+        ? [{
+            id: projectKey,
+            name: projectName,
+        }]
+        : [];
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const demoId = ev.target.selectedOptions[0].getAttribute(
@@ -26,43 +37,58 @@ const ExampleList: FC = () => {
         });
     };
 
-    const getSortedProjects = (mode: "pj" | "ex") => (
-        getSavedProjects(mode)
-            .map(pId => getProjectMetadata(pId))
-            .sort((a, b) =>
-                sortEntries(
-                    "latest",
-                    mode == "pj" ? "Projects" : "Examples",
-                    a,
-                    b,
-                )
-            )
+    const [projectsList, setProjectsList] = useState<typeof initProjectList>(
+        projectMode == "pj" ? initProjectList : [],
     );
+    const [examplesList, setExamplesList] = useState<typeof initProjectList>(
+        projectMode == "ex" ? initProjectList : [],
+    );
+
+    const getSortedProjects = async (mode: "pj" | "ex") => {
+        const projects = await getSavedProjects(mode);
+        return projects.sort((a, b) =>
+            sortEntries(
+                "latest",
+                mode == "pj" ? "Projects" : "Examples",
+                a,
+                b,
+            )
+        );
+    };
+
+    useEffect(() => {
+        (async () => {
+            const pj = await getSortedProjects("pj");
+            const ex = await getSortedProjects("ex");
+            setProjectsList(pj);
+            setExamplesList(ex);
+        })();
+    }, [projectName, savedProjects]);
 
     return (
         <div className="join border border-base-100">
             <select
                 className="join-item | select select-xs w-full max-w-xs"
                 onChange={handleExampleChange}
-                value={projectKey ?? "untitled"}
+                value={projectKey}
             >
-                <option className="text-md" disabled value="untitled">
+                <option className="text-md" disabled value="pj">
                     My Projects
                 </option>
 
-                {getSortedProjects("pj").map((project) => (
-                    <option key={project.key} value={project.key}>
-                        {project.formattedName}
+                {projectsList.map((project) => (
+                    <option key={project.id} value={project.id}>
+                        {project.name}
                     </option>
                 ))}
 
-                <option className="text-md" disabled value="nothing">
+                <option className="text-md" disabled value="ex">
                     My Examples
                 </option>
 
-                {getSortedProjects("ex").map((project) => (
-                    <option key={project.key} value={project.key}>
-                        {project.formattedName}
+                {examplesList.map((project) => (
+                    <option key={project.id} value={project.id}>
+                        {project.name}
                     </option>
                 ))}
 

@@ -36,10 +36,11 @@ const examplesData = examplesJson as ExamplesData;
 
 export const ProjectBrowser = () => {
     const projectName = useProject((s) => s.project.name);
-    const wasEdited = useProject((s) => s.projectWasEdited);
     const projectKey = useProject((s) => s.projectKey);
-    const demoKey = useProject((s) => s.demoKey);
+    const projectVersion = useProject((s) => s.project.kaplayVersion);
     const projectMode = useProject((s) => s.project.mode);
+    const wasEdited = useProject((s) => s.projectWasEdited);
+    const demoKey = useProject((s) => s.demoKey);
 
     const [tab, setTab] = useState("Projects");
     const savedProjects = useProject((s) => s.savedProjects);
@@ -73,13 +74,18 @@ export const ProjectBrowser = () => {
     const sortFn = (a: Example, b: Example): number =>
         sortEntries(currentSort(), tab, a, b);
 
-    const projects = useMemo(
-        () =>
-            savedProjects.map(project =>
-                useProject.getState().getProjectMetadata(project)
-            ),
-        [savedProjects, wasEdited, projectName],
-    );
+    const [projects, setProjects] = useState<Example[]>([]);
+    useEffect(() => {
+        (async () => {
+            setProjects(
+                await Promise.all(
+                    savedProjects.map((project) =>
+                        useProject.getState().getProjectMetadata(project)
+                    ),
+                ),
+            );
+        })();
+    }, [savedProjects, wasEdited, projectName]);
 
     const currentGroup = useCallback(
         () => tab == "Projects" ? projectsGroup : examplesGroup,
@@ -135,9 +141,16 @@ export const ProjectBrowser = () => {
             setExamplesFilterVersion(value);
         }
     };
-    const versions = useCallback(
-        () => tab == "Projects" ? getProjectMinVersions() : demoVersions,
-        [tab, projects],
+
+    const [projectVersions, setProjectVersions] = useState<
+        Record<string, number>
+    >({});
+    useEffect(() => {
+        (async () => setProjectVersions(await getProjectMinVersions()))();
+    }, [projects, projectVersion]);
+    const versions = useMemo(
+        () => tab == "Projects" ? projectVersions : demoVersions,
+        [tab, projectVersions],
     );
 
     const getDefaultDemoFilterVersion = () => {
@@ -171,7 +184,7 @@ export const ProjectBrowser = () => {
         );
 
         return [...set];
-    }, [tab]);
+    }, [tab, projects]);
     const toggleTag = (tag: string) =>
         setFilterTags(prev =>
             prev.includes(tag)
@@ -310,7 +323,7 @@ export const ProjectBrowser = () => {
 
                         <VersionFilter
                             value={currentFilterVersion()}
-                            options={versions()}
+                            options={versions}
                             onChange={setCurrentFilterVersion}
                             allOption={tab == "Projects"
                                 ? ({

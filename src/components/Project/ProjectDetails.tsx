@@ -1,4 +1,5 @@
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
+import { useProject } from "../../features/Projects/stores/useProject";
 import { fileSize } from "../../util/fileSize";
 
 type ProjectDetailsProps = {
@@ -22,6 +23,10 @@ const Tag = ({ name }: { name: string }) => (
 
 export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
     ({ project, ...props }, ref) => {
+        const serializeProject = useProject((s) => s.serializeProject);
+        const getProject = useProject((s) => s.getProject);
+        const [size, setSize] = useState<string>("Calculating..");
+
         const tags = useMemo(
             () =>
                 project.tags?.filter(t =>
@@ -29,14 +34,19 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
                 ),
             [project?.tags],
         );
-        const size = useMemo(
-            () =>
-                new TextEncoder().encode(
-                    localStorage.getItem(project.key) || "",
-                )
-                    .length,
+
+        const calcSize = useCallback(
+            async () =>
+                setSize(fileSize(
+                    new TextEncoder().encode(
+                        serializeProject(await getProject(project.key)) || "",
+                    ).length,
+                )),
             [project.key],
         );
+        useEffect(() => {
+            calcSize();
+        }, [calcSize, project.key]);
 
         const showBuildMode = project.type == "Project" && project.buildMode;
 
@@ -45,7 +55,7 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
                 <h3 className="flex-1 font-medium text-white">
                     Project Size
                 </h3>
-                <div className="flex-1">{fileSize(size)}</div>
+                <div className="flex-1">{size}</div>
             </div>
         );
 

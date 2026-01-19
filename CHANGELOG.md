@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.4] - WIP
+
+### Changed
+
+- Project store moved from the localStorage to IndexedDB - @imaginarny
+- Notably, project keys were changed to `uuidv7` instead of issues inducing `<mode>-<count>` - @imaginarny
+
+### Fixed
+
+- Saving issues due to low localStorage limit were resolved - @imaginarny
+
 ## [2.4.3] - 2025-11-01
 
 ### Added

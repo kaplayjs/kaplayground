@@ -3,19 +3,19 @@ import { useProject } from "../stores/useProject";
 let usedNames: string[] | null = null;
 let lastCheckActiveProject: string | null = null;
 
-export const validateProjectName = (
+export const validateProjectName = async (
     name: string,
     key?: string | null,
-): [boolean, string | null] => {
+): Promise<[boolean, string | null]> => {
     const projectStore = useProject.getState();
-    const { projectKey, getSavedProjects, getProjectMetadata } = projectStore;
+    const { projectKey, getSavedProjects } = projectStore;
 
     key ||= projectKey;
 
     if (!usedNames || lastCheckActiveProject != key) {
-        usedNames = getSavedProjects()
-            .filter(k => k !== key)
-            .map(k => getProjectMetadata(k).name);
+        usedNames = (await getSavedProjects())
+            .filter(p => p.id !== key)
+            .map(p => p.name);
     }
 
     lastCheckActiveProject = key;
