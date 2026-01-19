@@ -49,7 +49,10 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     <Allotment.Pane snap>
                         <Allotment
                             vertical
-                            defaultSizes={getAllotmentSize("brew")}
+                            defaultSizes={getAllotmentSize("brew", [
+                                9999,
+                                assetBrewHeight,
+                            ])}
                             onChange={e => setAllotmentSize("brew", e)}
                             onDragStart={handleDragStart}
                             onDragEnd={handleDragEnd}
@@ -74,7 +77,10 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     <Allotment.Pane snap>
                         <Allotment
                             vertical
-                            defaultSizes={getAllotmentSize("console")}
+                            defaultSizes={getAllotmentSize("console", [
+                                9999,
+                                34,
+                            ])}
                             onChange={e => setAllotmentSize("console", e)}
                             className="pr-px pb-px"
                         >
