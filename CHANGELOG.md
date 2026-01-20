@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Saving issues due to low localStorage limit were resolved - @imaginarny
+- Normalized demo example version parsing and excluded comments from the version filter - @imaginarny
+- Fixed project version switching not reflected in Projects Browser - @imaginarny
+- Fixed z-indexes of some tooltips, focused inputs, and dropdowns - @imaginarny
 
 ## [2.4.3] - 2025-11-01
 
