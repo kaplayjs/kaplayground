@@ -1,27 +1,30 @@
-import { type ChangeEvent, type FC, useEffect, useState } from "react";
+import {
+    type ChangeEvent,
+    type FC,
+    useCallback,
+    useEffect,
+    useState,
+} from "react";
 import { demos } from "../../data/demos";
 import { loadProject } from "../../features/Projects/application/loadProject";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { confirmNavigate } from "../../util/confirmNavigate";
 import { sortEntries } from "../ProjectBrowser/SortBy";
 
+interface ListItem {
+    id: string;
+    name: string;
+}
+
 const ExampleList: FC = () => {
     const savedProjects = useProject((s) => s.savedProjects);
-    const projectKey = useProject((s) =>
-        s.projectKey || s.demoKey || s.project.mode
-    );
+    const projectKey = useProject((s) => s.projectKey);
     const demoKey = useProject((s) => s.demoKey);
     const projectName = useProject((s) => s.project.name);
     const projectMode = useProject((s) => s.project.mode);
+    const selectedValue = projectKey || demoKey || projectMode;
     const getSavedProjects = useProject((s) => s.getSavedProjects);
     const createNewProject = useProject((s) => s.createNewProject);
-
-    const initProjectList = !demoKey
-        ? [{
-            id: projectKey,
-            name: projectName,
-        }]
-        : [];
 
     const handleExampleChange = (ev: ChangeEvent<HTMLSelectElement>) => {
         const demoId = ev.target.selectedOptions[0].getAttribute(
@@ -37,12 +40,8 @@ const ExampleList: FC = () => {
         });
     };
 
-    const [projectsList, setProjectsList] = useState<typeof initProjectList>(
-        projectMode == "pj" ? initProjectList : [],
-    );
-    const [examplesList, setExamplesList] = useState<typeof initProjectList>(
-        projectMode == "ex" ? initProjectList : [],
-    );
+    const [projectsList, setProjectsList] = useState<ListItem[]>([]);
+    const [examplesList, setExamplesList] = useState<ListItem[]>([]);
 
     const getSortedProjects = async (mode: "pj" | "ex") => {
         const projects = await getSavedProjects(mode);
@@ -56,6 +55,14 @@ const ExampleList: FC = () => {
         );
     };
 
+    const isKeyInList = useCallback(() => {
+        if (!projectKey) return false;
+        if (projectsList.some((p) => p.id === projectKey)) return true;
+        if (examplesList.some((p) => p.id === projectKey)) return true;
+        if (demos.some((d) => d.key === projectKey)) return true;
+        return false;
+    }, [projectKey, projectsList, examplesList]);
+
     useEffect(() => {
         (async () => {
             const pj = await getSortedProjects("pj");
@@ -68,10 +75,17 @@ const ExampleList: FC = () => {
     return (
         <div className="join border border-base-100">
             <select
-                className="join-item | select select-xs w-full max-w-xs"
+                className="join-item select select-xs w-full max-w-xs"
                 onChange={handleExampleChange}
-                value={projectKey}
+                value={selectedValue}
             >
+                {/* Prevents selection flash if current existing item is not in the list yet */}
+                {(projectKey && !isKeyInList()) && (
+                    <option key={projectKey} value={projectKey}>
+                        {projectName}
+                    </option>
+                )}
+
                 <option className="text-md" disabled value="pj">
                     My Projects
                 </option>
