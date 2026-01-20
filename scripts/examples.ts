@@ -122,8 +122,8 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
             description: tags?.description || "",
             code: codeWithoutMeta,
             difficulty: parseInt(tags?.difficulty) ?? 4,
-            version: (tags?.ver)?.trim() || "master",
-            minVersion: (tags?.minver)?.trim() || "",
+            version: normalizeVersion(tags?.ver, "master"),
+            minVersion: normalizeVersion(tags?.minver, ""),
             tags: tags?.tags?.trim().split(", ") || [],
             createdAt: getFileTimestamp(filePath),
             updatedAt: getFileTimestamp(filePath, "updated"),
@@ -163,6 +163,13 @@ function getFileTimestamp(
         console.log(err);
         return "";
     }
+}
+
+function normalizeVersion(ver: string | undefined, fallback: string) {
+    if (!ver) return fallback;
+
+    ver = ver.split("//")[0].trim();
+    return !ver.includes(".") ? `${ver}.0` : ver;
 }
 
 generateExamples();
