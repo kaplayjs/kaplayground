@@ -55,7 +55,7 @@ export interface ProjectSlice {
         replace?: Partial<Project>,
         demoName?: string,
         isShared?: boolean,
-    ): void;
+    ): Promise<void>;
     /**
      * Get project metadata compatible with example demos
      *
@@ -69,7 +69,7 @@ export interface ProjectSlice {
      * @sharedCode string - example code
      * @sharedVersion string - kaplay lib version used
      */
-    createFromShared(sharedCode: string, sharedVersion?: string): void;
+    createFromShared(sharedCode: string, sharedVersion?: string): Promise<void>;
     /**
      * Save project in idb, current if not specified
      *
@@ -166,7 +166,7 @@ export interface ProjectSlice {
      */
     serializeProject(project?: Project): string;
     /**
-     * Unserialize a project from idb
+     * Unserialize a project
      *
      * @param project - Serialized project
      * @returns Project object
@@ -369,9 +369,11 @@ export const createProjectSlice: StateCreator<
             );
         }
 
+        const name = await get().generateName(mode, isShared);
+
         set({
             project: {
-                name: await get().generateName(mode, isShared),
+                name: name,
                 version: "2.0.0", // fixed project version
                 files: files,
                 assets: assets,
@@ -405,8 +407,8 @@ export const createProjectSlice: StateCreator<
         useEditor.getState().updateAndRun();
     },
 
-    createFromShared(sharedCode, sharedVersion) {
-        get().createNewProject(
+    async createFromShared(sharedCode, sharedVersion) {
+        await get().createNewProject(
             "ex",
             {
                 assets: new Map(),

@@ -51,21 +51,21 @@ const Playground = () => {
         setLoadingEditor(false);
     };
 
-    const loadShare = (sharedCode: string, sharedVersion?: string) => {
+    const loadShare = async (sharedCode: string, sharedVersion?: string) => {
         debug(0, "[init] Importing shared code...", decompressCode(sharedCode));
-        loadSharedDemo(decompressCode(sharedCode), sharedVersion);
+        await loadSharedDemo(decompressCode(sharedCode), sharedVersion);
         setLoadingProject(false);
     };
 
-    const loadDemo = (demo: string) => {
+    const loadDemo = async (demo: string) => {
         debug(0, "[init] Loading demo...", demo);
-        createNewProject("ex", undefined, demo);
+        await createNewProject("ex", undefined, demo);
         setLoadingProject(false);
     };
 
-    const loadNewProject = () => {
+    const loadNewProject = async () => {
         debug(0, "[init] No project found, creating a new one...");
-        createNewProject("pj");
+        await createNewProject("pj");
         setLoadingProject(false);
     };
 

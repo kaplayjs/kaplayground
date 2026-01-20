@@ -15,7 +15,6 @@ import { ToolbarDropdown } from "./ToolbarDropdown";
 import { ToolbarDropdownButton } from "./ToolbarDropdownButton";
 
 export const ToolbarProjectDropdown: FC = () => {
-    const run = useEditor((state) => state.run);
     const showNotification = useEditor((state) => state.showNotification);
     const createNewProject = useProject((state) => state.createNewProject);
     const unserializeProject = useProject((state) => state.unserializeProject);
@@ -55,9 +54,9 @@ export const ToolbarProjectDropdown: FC = () => {
 
         const reader = new FileReader();
 
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             const project = unserializeProject(e.target?.result as string);
-            createNewProject(project.mode, project);
+            await createNewProject(project.mode, project);
         };
 
         reader.readAsText(file);
@@ -66,12 +65,10 @@ export const ToolbarProjectDropdown: FC = () => {
 
     const handleNewProject = () => {
         createNewProject("pj");
-        run();
     };
 
     const handleNewExample = () => {
         createNewProject("ex");
-        run();
     };
 
     return (
