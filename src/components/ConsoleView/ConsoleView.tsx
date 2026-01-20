@@ -75,7 +75,7 @@ export const ConsoleView = () => {
     return (
         <div
             id="console-wrapper"
-            className="relative h-full w-full bg-base-300 rounded-xl overflow-hidden"
+            className="relative h-full w-full bg-base-300 rounded-xl overflow-hidden z-0"
         >
             <div className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin ">
                 {logs.length > 0 && (

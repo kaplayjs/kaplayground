@@ -283,7 +283,7 @@ export const ProjectBrowser = () => {
                     </div>
 
                     <form
-                        className="flex join"
+                        className="relative flex join z-0"
                         onSubmit={e => e.preventDefault()}
                     >
                         <label

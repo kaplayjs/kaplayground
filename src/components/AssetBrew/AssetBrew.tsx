@@ -81,7 +81,7 @@ export const AssetBrew = () => {
 
     return (
         <>
-            <div className="bg-base-200 rounded-xl h-full w-full overflow-clip">
+            <div className="relative bg-base-200 rounded-xl h-full w-full overflow-clip z-0">
                 <div className="flex flex-row max-h-56 gap-1 items-center p-2 overflow-auto scrollbar-thin">
                     <div className="sticky -left-2 -m-2 -mr-1 p-2 pr-1 bg-base-200 rounded-r-3xl z-10">
                         <input
