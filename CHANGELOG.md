@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Normalized demo example version parsing and excluded comments from the version filter - @imaginarny
 - Fixed project version switching not reflected in Projects Browser - @imaginarny
 - Fixed z-indexes of some tooltips, focused inputs, and dropdowns - @imaginarny
+- Fixed iframe reruns with the same KAPLAY context resulting in warning - @imaginarny
 
 ## [2.4.3] - 2025-11-01
 

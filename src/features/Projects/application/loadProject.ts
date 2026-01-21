@@ -5,10 +5,13 @@ import { debug } from "../../../util/logs";
 import { clearModels } from "../../Editor/application/clearModels";
 import { useProject } from "../stores/useProject";
 
+let isInitialLoad = true;
+
 export const loadProject = async (projectKey: string) => {
     const projectStore = useProject.getState();
     const editorStore = useEditor.getState();
     const configStore = useConfig.getState();
+    const prevMode = projectStore.project.mode;
 
     debug(0, "[project] Loading project", projectKey);
 
@@ -24,12 +27,10 @@ export const loadProject = async (projectKey: string) => {
         clearModels();
     }
 
-    projectStore.setProjectKey(projectKey);
-    projectStore.setProjectWasEdited(false);
-    projectStore.setDemoKey(null);
-    editorStore.setCurrentFile("main.js");
-
     useProject.setState({
+        projectKey,
+        projectWasEdited: false,
+        demoKey: null,
         project: {
             ...project,
             files: new Map(project.files),
@@ -39,15 +40,22 @@ export const loadProject = async (projectKey: string) => {
         },
     });
 
+    editorStore.setCurrentFile("main.js");
+
     configStore.setConfig({
         lastOpenedProject: projectKey,
     });
 
-    editorStore.updateAndRun();
+    // It's already updated and run on mount by editor
+    if (!isInitialLoad && prevMode == project.mode) {
+        editorStore.updateAndRun();
 
-    window.history.replaceState(
-        {},
-        "",
-        `${window.location.origin}/`,
-    );
+        window.history.replaceState(
+            {},
+            "",
+            `${window.location.origin}/`,
+        );
+    }
+
+    isInitialLoad = false;
 };

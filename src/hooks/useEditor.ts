@@ -208,28 +208,33 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const iframe = document.querySelector<HTMLIFrameElement>(
             "#game-view",
         );
-        if (!iframe) return;
 
         // Refresh the iframe
-        iframe.src = iframe.src;
+        if (iframe) iframe.src = iframe.src;
 
-        iframe.onload = () => {
-            console.log("[game] iframe loaded");
-            const code = wrapGame();
-            const iframeContentWindow = iframe.contentWindow;
+        window.addEventListener(
+            "message",
+            ({ data, source }: MessageEvent<{ type: string }>) => {
+                if (data.type != "READY") return;
 
-            if (!iframeContentWindow) return;
+                console.log("[game] iframe loaded");
+                const code = wrapGame();
+                const iframeContentWindow = source as Window;
 
-            code.then((d) => {
-                iframeContentWindow.postMessage(
-                    {
-                        type: "UPDATE_CODE",
-                        code: d,
-                    },
-                    "*",
-                );
-            });
-        };
+                if (!iframeContentWindow) return;
+
+                code.then((d) => {
+                    iframeContentWindow.postMessage(
+                        {
+                            type: "UPDATE_CODE",
+                            code: d,
+                        },
+                        "*",
+                    );
+                });
+            },
+            { once: true, passive: true },
+        );
     },
     updateImageDecorations() {
         debug(0, "[monaco] Updating gylph decorations");

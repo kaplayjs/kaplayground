@@ -327,6 +327,7 @@ export const createProjectSlice: StateCreator<
         const files = new Map<string, File>();
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
+        const prevMode = get().project.mode;
         let loadDefaultFiles = false;
 
         let version = preferredVersion();
@@ -385,26 +386,25 @@ export const createProjectSlice: StateCreator<
                 favicon: "",
                 ...replace,
             },
+            projectKey: null,
+            demoKey: demoName ?? null,
         });
 
-        if (demoName) {
-            window.history.replaceState(
-                {},
-                "",
-                `${window.location.origin}/?example=${demoName}`,
-            );
-        }
-
-        get().setProjectKey(null);
-        get().setDemoKey(demoName ?? null);
+        window.history.replaceState(
+            {},
+            "",
+            `${window.location.origin}/${
+                demoName ? `?example=${demoName}` : ""
+            }`,
+        );
 
         if (loadDefaultFiles) {
             createDefaultFiles();
         }
 
-        if (mode === "pj") useEditor.getState().resetEditorModel();
+        if (mode != prevMode) useEditor.getState().resetEditorModel();
         useEditor.getState().setCurrentFile("main.js");
-        useEditor.getState().updateAndRun();
+        if (mode == prevMode) useEditor.getState().updateAndRun();
     },
 
     async createFromShared(sharedCode, sharedVersion) {
