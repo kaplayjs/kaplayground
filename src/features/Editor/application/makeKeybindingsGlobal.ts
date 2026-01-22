@@ -7,6 +7,8 @@ export const toMonacoKey = (e: KeyboardEvent): number => {
     let key = 0;
 
     if (e.ctrlKey || e.metaKey) key |= KeyMod.CtrlCmd;
+    if (e.shiftKey) key |= KeyMod.Shift;
+    if (e.altKey) key |= KeyMod.Alt;
 
     if (eKey == "s") key |= KeyCode.KeyS;
     if (eKey == "p") key |= KeyCode.KeyP;
