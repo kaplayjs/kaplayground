@@ -77,7 +77,7 @@ export const ConsoleView = () => {
             id="console-wrapper"
             className="relative h-full w-full bg-base-300 rounded-xl overflow-hidden z-0"
         >
-            <div className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin ">
+            <div className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin [&>*+*_:last-child]:border-b-transparent">
                 {logs.length > 0 && (
                     <div className="sticky flex items-end self-end bottom-0.5 right-0.5 h-0 overflow-visible z-20">
                         <button

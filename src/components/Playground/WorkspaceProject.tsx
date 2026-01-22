@@ -89,7 +89,6 @@ export const WorkspaceProject: FC<Props> = (props) => {
                                     34,
                                 ])}
                                 onChange={e => setAllotmentSize("console", e)}
-                                className="pr-px pb-px"
                             >
                                 <Allotment.Pane>
                                     <GameView />
