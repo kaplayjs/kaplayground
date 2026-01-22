@@ -19,6 +19,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     const getFile = useProject((s) => s.getFile);
     const projectIsSaved = useProject((s) => s.projectIsSaved);
     const run = useEditor((s) => s.run);
+    const pause = useEditor((s) => s.pause);
     const update = useEditor((s) => s.update);
     const updateImageDecorations = useEditor((s) => s.updateImageDecorations);
     const setRuntime = useEditor((s) => s.setRuntime);
@@ -121,10 +122,23 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         });
 
         editor.addAction({
+            id: "pause-game",
+            label: "Pause Game",
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP,
+            ],
+            contextMenuGroupId: "navigation",
+            contextMenuOrder: 1.51,
+            run: () => {
+                pause();
+            },
+        });
+
+        editor.addAction({
             id: "sync-file",
             label: "Sync File with Project",
             contextMenuGroupId: "navigation",
-            contextMenuOrder: 1.5,
+            contextMenuOrder: 1.6,
             run: () => {
                 update();
             },
