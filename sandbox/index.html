@@ -68,35 +68,50 @@
 
         console.log = function(...args) {
             originalLog.apply(console, args);
-            window.parent.postMessage({ type: "CONSOLE_LOG", data: args }, "*");
+            window.parent.postMessage(
+                { type: "CONSOLE_LOG", data: cloneLog(args) },
+                "*",
+            );
         };
 
         const originalError = console.error;
 
         console.error = function(...args) {
             originalError.apply(console, args);
-            window.parent.postMessage({ type: "CONSOLE_ERROR", data: args }, "*");
+            window.parent.postMessage(
+                { type: "CONSOLE_ERROR", data: cloneLog(args) },
+                "*",
+            );
         };
 
         const originalWarn = console.warn;
 
         console.warn = function(...args) {
             originalWarn.apply(console, args);
-            window.parent.postMessage({ type: "CONSOLE_WARN", data: args }, "*");
+            window.parent.postMessage(
+                { type: "CONSOLE_WARN", data: cloneLog(args) },
+                "*",
+            );
         };
 
         const originalInfo = console.info;
 
         console.info = function(...args) {
             originalInfo.apply(console, args);
-            window.parent.postMessage({ type: "CONSOLE_INFO", data: args }, "*");
+            window.parent.postMessage(
+                { type: "CONSOLE_INFO", data: cloneLog(args) },
+                "*",
+            );
         };
 
         const originalDebug = console.debug;
 
         console.debug = function(...args) {
             originalDebug.apply(console, args);
-            window.parent.postMessage({ type: "CONSOLE_DEBUG", data: args }, "*");
+            window.parent.postMessage(
+                { type: "CONSOLE_DEBUG", data: cloneLog(args) },
+                "*",
+            );
         };
 
         const keysToPreventDefault = ["s", "p"];
@@ -127,6 +142,47 @@
                 },
             }, "*");
         });
+
+        function cloneLog(value, circular = new WeakMap(), path = "root") {
+            if (
+                value === null
+                || typeof value === "string"
+                || typeof value === "number"
+                || typeof value === "bigint"
+                || typeof value === "boolean"
+            ) {
+                return value;
+            }
+
+            if (typeof value === "function") return "[Function]";
+
+            if (typeof value === "object") {
+                if (circular.has(value)) return `[Circular: ${circular.get(value)}]`;
+                circular.set(value, path);
+
+                if (Array.isArray(value)) {
+                    return value.map((v, i) =>
+                        cloneLog(v, circular, `${path}${i > 0 ? `[${i}]` : ""}`)
+                    );
+                }
+
+                const plainObj = {};
+                for (const key of Object.keys(value)) {
+                    try {
+                        plainObj[key] = cloneLog(
+                            value[key],
+                            circular,
+                            `${path}.${key}`,
+                        );
+                    } catch {
+                        plainObj[key] = "[Unserializable]";
+                    }
+                }
+                return plainObj;
+            }
+
+            return String(value);
+        }
         </script>
     </body>
 </html>
