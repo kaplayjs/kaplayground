@@ -6,6 +6,7 @@ import { useConfig } from "../../../hooks/useConfig.ts";
 import { useEditor } from "../../../hooks/useEditor.ts";
 import { useProject } from "../../Projects/stores/useProject.ts";
 import { loadFileInModel } from "../application/loadFileInModel";
+import makeKeybindingsGlobal from "../application/makeKeybindingsGlobal";
 import { formatAction } from "../monaco/actions/format.ts";
 import { createConfetti } from "../monaco/fun/createConfetti";
 import { configMonaco } from "../monaco/monacoConfig.ts";
@@ -104,7 +105,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         });
 
         // Editor Shortcuts
-        editor.addAction({
+        editor.addAction(makeKeybindingsGlobal({
             id: "run-game",
             label: "Run Game",
             keybindings: [
@@ -119,9 +120,9 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                     editor.getAction("format-kaplay")?.run();
                 }
             },
-        });
+        }));
 
-        editor.addAction({
+        editor.addAction(makeKeybindingsGlobal({
             id: "pause-game",
             label: "Pause Game",
             keybindings: [
@@ -132,7 +133,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
             run: () => {
                 pause();
             },
-        });
+        }));
 
         editor.addAction({
             id: "sync-file",
