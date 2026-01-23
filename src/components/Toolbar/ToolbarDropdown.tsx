@@ -24,6 +24,7 @@ export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
                 <DropdownMenu.Content
                     className="rounded-btn p-1 bg-base-100 flex flex-col shadow-xl mt-px"
                     align="end"
+                    onCloseAutoFocus={(e) => e.preventDefault()}
                 >
                     {children}
                 </DropdownMenu.Content>

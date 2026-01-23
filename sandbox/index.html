@@ -58,6 +58,14 @@
                 console.log("[sandbox] Refreshing the page");
                 document.location.href = document.location.href;
             }
+
+            if (type == "PAUSE") {
+                if (!debug) return;
+                console.log(
+                    `[sandbox] ${debug.paused ? "Resuming" : "Pausing"} the game`,
+                );
+                debug.paused = !debug.paused;
+            }
         });
 
         window.addEventListener("load", () => {

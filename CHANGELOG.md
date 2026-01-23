@@ -5,17 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.4.4] - WIP
+## [2.5.0] - WIP
+
+### Added
+
+- You can now Pause/Resume game from the toolbar's More Actions dropdown or by `Ctrl+P` - @imaginarny
+- You can now Stop game from the toolbar's More Actions dropdown or by `Ctrl+Alt+S` - @imaginarny
+- You can also load the page with the game stopped using the `?stopped` URL parameter - @imaginarny
 
 ### Changed
 
 - Project store moved from the localStorage to IndexedDB - @imaginarny
 - Notably, project keys were changed to `uuidv7` instead of issues inducing `<mode>-<count>` - @imaginarny
+- Keyboard shortcuts like Run (`Ctrl+S`) now work even when the file editor isn't focused - @imaginarny
+- Responsive design of example workspace was improved - @imaginarny
 
 ### Fixed
 
 - Saving issues due to low localStorage limit were resolved - @imaginarny
-- Normalized demo example version parsing and excluded comments from the version filter - @imaginarny
+- Normalized demo example versions parsing and excluded comments from the version filter - @imaginarny
+- Fixed console logs not showing up in the console view - @imaginarny
 - Fixed project version switching not reflected in Projects Browser - @imaginarny
 - Fixed z-indexes of some tooltips, focused inputs, and dropdowns - @imaginarny
 - Fixed iframe reruns with the same KAPLAY context resulting in warning - @imaginarny

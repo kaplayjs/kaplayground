@@ -1,5 +1,6 @@
 import { Allotment } from "allotment";
 import type { FC } from "react";
+import { useMediaQuery } from "react-responsive";
 import { MonacoEditor } from "../../features/Editor/components/MonacoEditor.tsx";
 import { allotmentStorage } from "../../util/allotmentStorage.ts";
 import { cn } from "../../util/cn";
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export const WorkspaceExample: FC<Props> = (props) => {
+    const isWidescreen = useMediaQuery({ query: "(min-width: 900px)" });
     const { getAllotmentSize, setAllotmentSize } = allotmentStorage("example");
 
     const { scrollbarThinHeight } = scrollbarSize();
@@ -34,8 +36,8 @@ export const WorkspaceExample: FC<Props> = (props) => {
                 "hidden": props.editorIsLoading,
             })}
         >
-            <header className="h-9 flex">
-                {props.isPortrait && <ToolbarToolsMenu /> || <Toolbar />}
+            <header className="h-9 flex flex-col">
+                {isWidescreen ? <Toolbar /> : <ToolbarToolsMenu />}
             </header>
 
             <main className="h-full min-h-0 overflow-hidden">
@@ -45,6 +47,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                     onChange={e => setAllotmentSize("editor", e)}
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
+                    key={`vertical-${props.isPortrait}`}
                 >
                     <Allotment.Pane snap>
                         <Allotment
@@ -100,8 +103,8 @@ export const WorkspaceExample: FC<Props> = (props) => {
                 </Allotment>
             </main>
 
-            {props.isPortrait && (
-                <footer className="h-10 flex justify-center items-center -mt-px bg-base-300 rounded-t-xl">
+            {!isWidescreen && (
+                <footer className="h-9 flex justify-center items-center -mt-px px-1 bg-base-300 rounded-t-xl">
                     <ExampleList />
                 </footer>
             )}

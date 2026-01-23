@@ -63,10 +63,11 @@ interface EditorRuntime {
 
 export interface EditorStore {
     runtime: EditorRuntime;
-    paused: boolean;
+    stopped: boolean;
     update: (value?: string) => void;
     run: () => void;
     pause: () => void;
+    stop: () => void;
     getRuntime: () => EditorRuntime;
     setRuntime: (runtime: Partial<EditorRuntime>) => void;
     setCurrentFile: (currentFile: string) => void;
@@ -98,7 +99,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         kaplayVersions: kaplayVersions,
         confettiCanvas: null,
     },
-    paused: (new URL(window.location.href)).searchParams.has("paused"),
+    stopped: (new URL(window.location.href)).searchParams.has("stopped"),
     setRuntime: (runtime) => {
         set((state) => ({
             runtime: {
@@ -209,16 +210,16 @@ export const useEditor = create<EditorStore>((set, get) => ({
     },
     run() {
         if (
-            get().paused
-            && new URLSearchParams(window.location.search).has("paused")
+            get().stopped
+            && new URLSearchParams(window.location.search).has("stopped")
         ) {
             const url = new URL(window.location.href);
-            url.searchParams.delete("paused");
+            url.searchParams.delete("stopped");
             window.history.replaceState({}, "", url);
             return;
         }
 
-        set({ paused: false });
+        set({ stopped: false });
 
         const iframe = document.querySelector<HTMLIFrameElement>(
             "#game-view",
@@ -252,7 +253,17 @@ export const useEditor = create<EditorStore>((set, get) => ({
         );
     },
     pause() {
-        set({ paused: true });
+        if (!get().stopped) {
+            get().runtime.iframe?.contentWindow?.postMessage(
+                { type: "PAUSE" },
+                "*",
+            );
+        } else {
+            get().run();
+        }
+    },
+    stop() {
+        set({ stopped: true });
     },
     updateImageDecorations() {
         debug(0, "[monaco] Updating gylph decorations");

@@ -6,7 +6,7 @@ import ToolbarToolsMenu from "./ToolbarToolsMenu";
 export const Toolbar = () => {
     return (
         <div
-            className="flex flex-1 justify-between items-center bg-base-300 rounded-b-xl"
+            className="flex flex-1 justify-between items-center bg-base-300 rounded-b-xl pl-1 mg:pl-0"
             role="toolbar"
         >
             <a

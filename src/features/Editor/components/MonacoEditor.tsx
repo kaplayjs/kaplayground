@@ -21,6 +21,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     const projectIsSaved = useProject((s) => s.projectIsSaved);
     const run = useEditor((s) => s.run);
     const pause = useEditor((s) => s.pause);
+    const stop = useEditor((s) => s.stop);
     const update = useEditor((s) => s.update);
     const updateImageDecorations = useEditor((s) => s.updateImageDecorations);
     const setRuntime = useEditor((s) => s.setRuntime);
@@ -123,8 +124,8 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         }));
 
         editor.addAction(makeKeybindingsGlobal({
-            id: "pause-game",
-            label: "Pause Game",
+            id: "pause-resume-game",
+            label: "Pause/Resume Game",
             keybindings: [
                 monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP,
             ],
@@ -132,6 +133,20 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
             contextMenuOrder: 1.51,
             run: () => {
                 pause();
+            },
+        }));
+
+        editor.addAction(makeKeybindingsGlobal({
+            id: "stop-game",
+            label: "Stop Game",
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KeyP,
+                monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KeyS,
+            ],
+            contextMenuGroupId: "navigation",
+            contextMenuOrder: 1.52,
+            run: () => {
+                stop();
             },
         }));
 

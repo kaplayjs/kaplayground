@@ -3,12 +3,12 @@ import { type FC, useEffect } from "react";
 import { useEditor } from "../../hooks/useEditor";
 
 export const GameView: FC = () => {
-    const paused = useEditor((s) => s.paused);
+    const stopped = useEditor((s) => s.stopped);
     const setRuntime = useEditor((state) => state.setRuntime);
     const run = useEditor((s) => s.run);
 
     useEffect(() => {
-        if (paused) return;
+        if (stopped) return;
 
         const iframe = document.getElementById(
             "game-view",
@@ -20,11 +20,11 @@ export const GameView: FC = () => {
         (window as any).iframeWindow = iframeWindow;
 
         setRuntime({ iframe: iframe, console: iframeWindow?.console });
-    }, [paused]);
+    }, [stopped]);
 
     return (
         <div className="relative size-full bg-black/50 rounded-xl z-0">
-            {!paused
+            {!stopped
                 ? (
                     <iframe
                         id="game-view"
@@ -43,14 +43,14 @@ export const GameView: FC = () => {
                 : (
                     <div className="relative flex flex-col gap-4 size-full items-center justify-center select-none">
                         <img
-                            className="absolute pixelated -z-[1] opacity-[.03] grayscale pointer-events-none"
-                            src={assets.pause.outlined}
+                            className="absolute pixelated -z-[1] opacity-[.03] grayscale-[0.8] pointer-events-none"
+                            src={assets.ghosty.outlined}
                             width={300}
                             height={300}
                             aria-hidden="true"
                         />
                         <h2 className="font-semibold text-3xl text-white">
-                            Game is paused
+                            Game is stopped!
                         </h2>
                         <button
                             onClick={run}
@@ -61,7 +61,7 @@ export const GameView: FC = () => {
                                 className="h-5 w-5 object-contain"
                                 aria-hidden="true"
                             />
-                            Resume Game
+                            Restart Game
                         </button>
                     </div>
                 )}

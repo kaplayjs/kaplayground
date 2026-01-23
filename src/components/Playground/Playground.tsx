@@ -133,7 +133,7 @@ const Playground = () => {
                         <div className="h-full flex flex-col items-center justify-center bg-base-300 p-4 gap-4">
                             <img src={assets.burpman.outlined} />
 
-                            <p>
+                            <p className="max-w-md text-center">
                                 Projects are currently not supported in mobile!
                                 Please use a desktop device, anyway you can
                                 still view demos.

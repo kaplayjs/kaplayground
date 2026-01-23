@@ -4,6 +4,7 @@ import { validateProjectName } from "../../features/Projects/application/validat
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
+import { ToolbarSeparator } from "./ToolbarSeparator";
 
 export const ProjectStatus = () => {
     const saveNewProject = useProject((s) => s.saveNewProject);
@@ -118,7 +119,7 @@ export const ProjectStatus = () => {
                         id="projectNameInput"
                         ref={nameInput}
                         className={cn(
-                            "input input-xs placeholder:text-base-content/45",
+                            "input input-xs w-32 lg:w-auto placeholder:text-base-content/45",
                             {
                                 "border-error focus-visible:outline-error":
                                     error,
@@ -170,7 +171,7 @@ export const ProjectStatus = () => {
                 />
             </button>
 
-            <div className="divider divider-horizontal mx-0 px-0"></div>
+            <ToolbarSeparator className="-ml-2 -mr-0.5" />
 
             <select
                 className="select select-xs"

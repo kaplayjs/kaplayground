@@ -73,9 +73,9 @@ const ExampleList: FC = () => {
     }, [projectName, savedProjects]);
 
     return (
-        <div className="join border border-base-100">
+        <div className="join border border-base-100 max-w-full">
             <select
-                className="join-item select select-xs w-full max-w-xs"
+                className="join-item select select-xs min-w-0 w-full md:w-28 lg:w-48 xl:w-full max-w-xs [footer_&]:w-auto"
                 onChange={handleExampleChange}
                 value={selectedValue}
             >
