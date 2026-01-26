@@ -225,32 +225,46 @@ export const useEditor = create<EditorStore>((set, get) => ({
             "#game-view",
         );
 
+        const updateCode = (iframeContentWindow: Window | null) => {
+            if (!iframeContentWindow) return;
+
+            console.log("[game] iframe loaded");
+            const code = wrapGame();
+
+            code.then((d) => {
+                iframeContentWindow?.postMessage(
+                    {
+                        type: "UPDATE_CODE",
+                        code: d,
+                    },
+                    "*",
+                );
+            });
+        };
+
+        const iframeReadyListener = (
+            { data, source }: MessageEvent<{ type: string }>,
+        ) => {
+            if (data.type == "READY") updateCode(source as Window);
+        };
+
         // Refresh the iframe
-        if (iframe) iframe.src = iframe.src;
+        if (iframe) {
+            // Remove leftover listener in case the iframe was recreated before it loaded the last time
+            window.removeEventListener("message", iframeReadyListener);
 
-        window.addEventListener(
-            "message",
-            ({ data, source }: MessageEvent<{ type: string }>) => {
-                if (data.type != "READY") return;
+            iframe.addEventListener("load", (e: Event) => {
+                updateCode((e.target as HTMLIFrameElement).contentWindow);
+            }, { once: true, passive: true });
 
-                console.log("[game] iframe loaded");
-                const code = wrapGame();
-                const iframeContentWindow = source as Window;
-
-                if (!iframeContentWindow) return;
-
-                code.then((d) => {
-                    iframeContentWindow.postMessage(
-                        {
-                            type: "UPDATE_CODE",
-                            code: d,
-                        },
-                        "*",
-                    );
-                });
-            },
-            { once: true, passive: true },
-        );
+            iframe.src = iframe.src;
+        } // If iframe is being recreated at the very moment
+        else {
+            window.addEventListener("message", iframeReadyListener, {
+                once: true,
+                passive: true,
+            });
+        }
     },
     pause() {
         if (!get().stopped) {
