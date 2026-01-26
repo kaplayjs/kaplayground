@@ -60,6 +60,7 @@
             }
 
             if (type == "PAUSE") {
+                const debug = window.debug ?? window._k_debug;
                 if (!debug) return;
                 console.log(
                     `[sandbox] ${debug.paused ? "Resuming" : "Pausing"} the game`,
