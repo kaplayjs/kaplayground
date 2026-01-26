@@ -1,32 +1,32 @@
 import { assets } from "@kaplayjs/crew";
-import { type FC, useEffect } from "react";
+import { type FC, useCallback, useEffect, useState } from "react";
 import { useEditor } from "../../hooks/useEditor";
 
 export const GameView: FC = () => {
     const stopped = useEditor((s) => s.stopped);
     const setRuntime = useEditor((state) => state.setRuntime);
     const run = useEditor((s) => s.run);
+    const [iframeHidden, setIframeHidden] = useState(stopped);
 
-    useEffect(() => {
-        if (stopped) return;
-
-        const iframe = document.getElementById(
-            "game-view",
-        ) as HTMLIFrameElement;
-
+    const iframeRef = useCallback((iframe: HTMLIFrameElement) => {
         if (!iframe) return;
 
         const iframeWindow = iframe.contentWindow?.window;
         (window as any).iframeWindow = iframeWindow;
 
         setRuntime({ iframe: iframe, console: iframeWindow?.console });
-    }, [stopped]);
+    }, []);
+
+    useEffect(() => {
+        setTimeout(() => setIframeHidden(stopped));
+    }, [stopped, setIframeHidden]);
 
     return (
         <div className="relative size-full bg-black/50 rounded-xl z-0">
-            {!stopped
+            {!iframeHidden
                 ? (
                     <iframe
+                        ref={iframeRef}
                         id="game-view"
                         tabIndex={0}
                         src="https://kaplaypreview.kaplayjs.com/"
@@ -36,6 +36,7 @@ export const GameView: FC = () => {
                             outline: "none",
                             width: "100%",
                             height: "100%",
+                            opacity: stopped ? 0 : 1,
                         }}
                         sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads"
                     />
