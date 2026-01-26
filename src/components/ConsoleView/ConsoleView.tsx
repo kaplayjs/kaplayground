@@ -1,9 +1,11 @@
 import { assets } from "@kaplayjs/crew";
 import { Console, Hook, Unhook } from "console-feed";
 import { useEffect, useState } from "react";
+import { useProject } from "../../features/Projects/stores/useProject";
 
 export const ConsoleView = () => {
     const [logs, setLogs] = useState<any[]>([]);
+    const projectKey = useProject((s) => s.projectKey || s.demoKey);
 
     useEffect(() => {
         const hookedConsole = Hook(
@@ -16,7 +18,7 @@ export const ConsoleView = () => {
             false,
         );
 
-        window.addEventListener("message", (event) => {
+        const messageHandler = (event: MessageEvent) => {
             if (
                 event.data?.type?.startsWith("CONSOLE_")
                 && String(event.data?.data?.[0])?.startsWith("[sandbox]")
@@ -58,12 +60,19 @@ export const ConsoleView = () => {
                     ...log,
                 );
             }
-        });
+        };
+
+        window.addEventListener("message", messageHandler, { passive: true });
 
         return () => {
             Unhook(hookedConsole);
+            window.removeEventListener("message", messageHandler);
         };
     }, []);
+
+    useEffect(() => {
+        setLogs([]);
+    }, [projectKey]);
 
     useEffect(() => {
         const consoleWrapper = document.getElementById("console-wrapper");

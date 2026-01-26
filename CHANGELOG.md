@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notably, project keys were changed to `uuidv7` instead of issues inducing `<mode>-<count>` - @imaginarny
 - Keyboard shortcuts like Run (`Ctrl+S`) now work even when the file editor isn't focused - @imaginarny
 - Responsive design of example workspace was improved - @imaginarny
+- Logs in console view are now cleared on project switch - @imaginarny
 
 ### Fixed
 
