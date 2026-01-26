@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - You can now Pause/Resume game from the toolbar's More Actions dropdown or by `Ctrl+P` - @imaginarny
 - You can now Stop game from the toolbar's More Actions dropdown or by `Ctrl+Alt+S` - @imaginarny
 - You can also load the page with the game stopped using the `?stopped` URL parameter - @imaginarny
+- Added keyboard shortcuts also for editor focus `Ctrl+E` and switching focus between editor and game `Ctrl+\` or `` Ctrl+` `` - @imaginarny
 
 ### Changed
 

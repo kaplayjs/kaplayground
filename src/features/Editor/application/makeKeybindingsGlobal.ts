@@ -10,8 +10,11 @@ export const toMonacoKey = (e: KeyboardEvent): number => {
     if (e.shiftKey) key |= KeyMod.Shift;
     if (e.altKey) key |= KeyMod.Alt;
 
-    if (eKey == "s") key |= KeyCode.KeyS;
+    if (eKey == "e") key |= KeyCode.KeyE;
     if (eKey == "p") key |= KeyCode.KeyP;
+    if (eKey == "s") key |= KeyCode.KeyS;
+    if (eKey == "\\") key |= KeyCode.Backslash;
+    if (eKey == "`") key |= KeyCode.Backquote;
 
     return key;
 };

@@ -175,6 +175,35 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
             },
         });
 
+        editor.addAction(makeKeybindingsGlobal({
+            id: "focus-editor",
+            label: "Focus Editor",
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyE,
+            ],
+            run: () => {
+                editor.focus();
+            },
+        }));
+
+        editor.addAction(makeKeybindingsGlobal({
+            id: "focus-editor-game",
+            label: "Focus between Editor and Game",
+            keybindings: [
+                monaco.KeyMod.CtrlCmd | monaco.KeyCode.Backquote,
+                monaco.KeyMod.CtrlCmd | monaco.KeyCode.Backslash,
+            ],
+            run: () => {
+                if (editor?.hasTextFocus()) {
+                    const iframe = getRuntime().iframe?.contentWindow;
+                    iframe?.focus();
+                    iframe?.postMessage({ type: "FOCUS" }, "*");
+                } else {
+                    editor.focus();
+                }
+            },
+        }));
+
         let decorations = editor.createDecorationsCollection([]);
 
         setRuntime({

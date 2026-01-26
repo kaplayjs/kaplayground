@@ -67,6 +67,11 @@
                 );
                 debug.paused = !debug.paused;
             }
+
+            if (type == "FOCUS") {
+                console.log("[sandbox] Focusing the game");
+                document.querySelector("canvas")?.focus();
+            }
         });
 
         window.addEventListener("load", () => {
@@ -123,7 +128,7 @@
             );
         };
 
-        const keysToPreventDefault = ["s", "p"];
+        const keysToPreventDefault = ["e", "p", "s"];
 
         window.addEventListener("keydown", (e) => {
             if (
