@@ -4,6 +4,7 @@ import { validateProjectName } from "../../features/Projects/application/validat
 import { Project } from "../../features/Projects/models/Project";
 import { ProjectBuildMode } from "../../features/Projects/models/ProjectBuildMode";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { useEditor } from "../../hooks/useEditor";
 import { confirm } from "../../util/confirm";
 import { openDialog } from "../../util/openDialog";
 import { Dialog } from "../UI/Dialog";
@@ -20,65 +21,104 @@ const buildOptions = {
 };
 
 const ProjectPreferences = () => {
-    const currentProject = useProject((s) => s.project);
     const projectKey = useProject((s) => s.projectKey);
+    const projectName = useProject((s) => s.project.name);
+    const projectMode = useProject((s) => s.project.mode);
+    const projectFavicon = useProject((s) => s.project.favicon);
+    const projectBuildMode = useProject((s) => s.project.buildMode);
     const setProject = useProject((s) => s.setProject);
     const getProject = useProject((s) => s.getProject);
     const saveProject = useProject((s) => s.saveProject);
+    const updateAndRun = useEditor((s) => s.updateAndRun);
 
     const [editedKey, setEditedKey] = useState<string | null>(null);
-    const [openedProject, setOpenedProject] = useState<Project>(currentProject);
-    const editedProject = useMemo(() => (
-        !editedKey ? currentProject : openedProject
-    ), [currentProject, editedKey, openedProject]);
+    const [openedProject, setOpenedProject] = useState<Partial<Project>>({
+        name: projectName,
+        favicon: projectFavicon,
+        buildMode: projectBuildMode,
+        mode: projectMode,
+    });
 
-    const projectDataKeys = Object.keys(editedProject);
+    const editedProject = useMemo(() => (
+        !editedKey
+            ? {
+                name: projectName,
+                favicon: projectFavicon,
+                buildMode: projectBuildMode,
+                mode: projectMode,
+            }
+            : openedProject
+    ), [
+        projectName,
+        projectFavicon,
+        projectBuildMode,
+        projectMode,
+        editedKey,
+        openedProject,
+    ]);
+
     const formRef = useRef<HTMLFormElement>(null);
     const [prevBuildMode, setPrevBuildMode] = useState<ProjectBuildMode | null>(
         null,
     );
     const [errors, setErrors] = useState<Record<string, string>>({});
 
+    const [name, setName] = useState<string>(editedProject.name || "");
+    useEffect(() => setName(editedProject.name || ""), [editedProject.name]);
+
+    const [buildMode, setBuildMode] = useState<ProjectBuildMode>(
+        editedProject.buildMode ?? "legacy",
+    );
+    useEffect(() => setBuildMode(editedProject.buildMode ?? "legacy"), [
+        editedProject.buildMode,
+    ]);
+
     const handleNameChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const key = e.target.name;
         const value = e.target.value;
-        const [_, error] = await validateProjectName(
+        setName(value);
+        const [, error] = await validateProjectName(
             value,
             editedKey ?? projectKey,
         );
 
         if (error) {
-            setErrors({
-                ...errors,
-                [key]: error,
-            });
+            setErrors((prev) => ({ ...prev, [key]: error }));
+            return;
         }
 
         if ((!value || !error) && errors?.[key]) resetError(key);
     };
 
     const handleBuildModeChange = async (e: ChangeEvent<HTMLSelectElement>) => {
-        const value = e.target.value as ProjectBuildMode;
+        const newValue = e.target.value as ProjectBuildMode;
+        setBuildMode(newValue);
 
-        if (
-            !await confirm(
-                `Change build mode to ${
-                    buildOptions[value as keyof typeof buildOptions]
-                }?`,
-                value == "esbuild" ? <BuildModeModern /> : <BuildModeLegacy />,
-                {
-                    confirmText: `Yes, change`,
-                    dismissText: `No, keep the ${
-                        buildOptions[
-                            editedProject.buildMode as keyof typeof buildOptions
-                        ]
-                    }`,
-                    cancelImmediate: true,
-                },
-            )
-        ) e.target.value = prevBuildMode || editedProject.buildMode;
+        const confirmed = await confirm(
+            `Change build mode to ${
+                buildOptions[newValue as keyof typeof buildOptions]
+            }?`,
+            newValue == "esbuild" ? <BuildModeModern /> : <BuildModeLegacy />,
+            {
+                confirmText: `Yes, change`,
+                dismissText: `No, keep the ${
+                    buildOptions[
+                        editedProject.buildMode as keyof typeof buildOptions
+                    ]
+                }`,
+                cancelImmediate: true,
+            },
+        );
 
-        setPrevBuildMode(e.target.value as ProjectBuildMode);
+        if (!confirmed) {
+            setBuildMode(
+                prevBuildMode ?? (editedProject.buildMode as ProjectBuildMode)
+                    ?? "legacy",
+            );
+            return;
+        }
+
+        setPrevBuildMode(newValue);
     };
 
     useEffect(() => {
@@ -87,43 +127,65 @@ const ProjectPreferences = () => {
             if (!d || d.id !== "project-preferences") return;
 
             const newKey = d.params?.projectKey;
-            setOpenedProject(
-                newKey
-                    ? (await getProject(newKey) ?? currentProject)
-                    : currentProject,
-            );
+
+            if (newKey) {
+                const pj = await getProject(newKey);
+                if (pj) {
+                    setOpenedProject(pj);
+                    setName(pj.name ?? "");
+                    setBuildMode(pj.buildMode ?? "legacy");
+                }
+            } else {
+                setOpenedProject({
+                    name: projectName,
+                    favicon: projectFavicon,
+                    buildMode: projectBuildMode,
+                    mode: projectMode,
+                });
+                setName(projectName ?? "");
+                setBuildMode(projectBuildMode ?? "legacy");
+            }
+
             setEditedKey(newKey ?? null);
 
             if (d.params?.lazy) setTimeout(d.open);
         };
+
         window.addEventListener("dialog-open", handler);
         return () => window.removeEventListener("dialog-open", handler);
-    }, []);
+    }, [
+        getProject,
+        projectName,
+        projectFavicon,
+        projectBuildMode,
+        projectMode,
+    ]);
 
     const handleSave = () => {
-        let projectData: Partial<Project> = {};
+        let shouldRerun = false;
+        const projectData: Partial<Project> = {};
+        const favicon = new FormData(formRef.current!).get("favicon");
 
-        for (const [key, value] of new FormData(formRef.current!).entries()) {
-            if (
-                !projectDataKeys.includes(key)
-                || typeof value != "string"
-                || typeof editedProject[key as keyof Project] != "string"
-            ) continue;
-
-            projectData[key as keyof Project] = value as any;
+        if (name !== editedProject.name) projectData.name = name;
+        if (buildMode !== editedProject.buildMode) {
+            projectData.buildMode = buildMode as ProjectBuildMode;
+            shouldRerun = true;
         }
+        if (
+            typeof favicon === "string"
+            && favicon !== (editedProject.favicon ?? "")
+        ) projectData.favicon = favicon;
 
         if (!Object.keys(projectData).length) return;
 
         if (editedKey && editedKey !== projectKey) {
-            saveProject(editedKey, { ...editedProject, ...projectData });
+            saveProject(editedKey, {
+                ...(editedProject as Project),
+                ...projectData,
+            });
         } else {
-            if (
-                Object.entries(projectData).some(
-                    ([key, value]) =>
-                        editedProject[key as keyof Project] != value,
-                )
-            ) setProject(projectData);
+            setProject(projectData);
+            if (shouldRerun) updateAndRun();
         }
     };
 
@@ -131,6 +193,9 @@ const ProjectPreferences = () => {
         formRef.current?.reset();
         setPrevBuildMode(null);
         setErrors({});
+        setName(editedProject.name ?? "");
+        setBuildMode(editedProject.buildMode ?? "legacy");
+
         setTimeout(() => {
             (formRef.current!).querySelectorAll("[name]").forEach(el => {
                 el.dispatchEvent(new Event("reset", { bubbles: false }));
@@ -179,22 +244,23 @@ const ProjectPreferences = () => {
                                 <input
                                     name="name"
                                     className="input input-bordered input-sm w-full max-w-60 placeholder:text-base-content/45 data-[tooltip-content]:border-error data-[tooltip-content]:focus-visible:outline-error"
-                                    defaultValue={editedProject.name}
+                                    value={name}
                                     placeholder={editedProject.name}
-                                    onInput={handleNameChange}
-                                    onBlur={e =>
-                                        (!e.target.value)
-                                        && (e.target.value =
-                                            editedProject.name)}
+                                    onChange={handleNameChange}
+                                    onBlur={() => {
+                                        if (!name) {
+                                            setName(
+                                                editedProject.name ?? "",
+                                            );
+                                        }
+                                    }}
                                     onKeyDownCapture={e => {
                                         if (e.key != "Escape") return;
                                         e.preventDefault();
                                         e.stopPropagation();
-                                        const target = e
-                                            .target as HTMLInputElement;
-                                        target.value = editedProject.name;
+                                        setName(editedProject.name ?? "");
                                         resetError("name");
-                                        target.blur();
+                                        (e.target as HTMLInputElement).blur();
                                     }}
                                     data-tooltip-id="project-preferences-tooltips"
                                     data-tooltip-content={errors?.name}
@@ -236,7 +302,7 @@ const ProjectPreferences = () => {
                                         id="build-mode"
                                         name="buildMode"
                                         className="select select-bordered select-sm"
-                                        defaultValue={editedProject.buildMode}
+                                        value={buildMode}
                                         onChange={handleBuildModeChange}
                                     >
                                         {Object.entries(buildOptions).map((

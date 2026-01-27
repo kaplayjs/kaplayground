@@ -63,12 +63,18 @@ export const ProjectFavicon = ({ defaultValue, className }: FaviconProps) => {
     };
 
     useEffect(() => {
+        const img = imgRef.current;
         const input = inputRef.current;
-        if (!input) return;
 
-        input.addEventListener("reset", handleReset);
+        setFilled(!!defaultValue);
+        if (img) img.src = defaultValue || defaultFavicon;
 
-        return () => input.removeEventListener("reset", handleReset);
+        if (input) {
+            input.value = defaultValue || "";
+            input.addEventListener("reset", handleReset);
+
+            return () => input.removeEventListener("reset", handleReset);
+        }
     }, [defaultValue]);
 
     return (
