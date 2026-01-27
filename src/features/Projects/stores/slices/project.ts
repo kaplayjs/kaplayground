@@ -402,7 +402,9 @@ export const createProjectSlice: StateCreator<
             createDefaultFiles();
         }
 
-        if (mode != prevMode) useEditor.getState().resetEditorModel();
+        if (mode != prevMode || mode === "pj") {
+            useEditor.getState().resetEditorModel();
+        }
         useEditor.getState().setCurrentFile("main.js");
         if (mode == prevMode) useEditor.getState().updateAndRun();
     },
