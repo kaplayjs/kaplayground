@@ -5,13 +5,12 @@ import { debug } from "../../../util/logs";
 import { clearModels } from "../../Editor/application/clearModels";
 import { useProject } from "../stores/useProject";
 
-let isInitialLoad = true;
-
 export const loadProject = async (projectKey: string) => {
     const projectStore = useProject.getState();
     const editorStore = useEditor.getState();
     const configStore = useConfig.getState();
     const prevMode = projectStore.project.mode;
+    const isInitialLoad = !projectStore.project.createdAt;
 
     debug(0, "[project] Loading project", projectKey);
 
@@ -54,6 +53,4 @@ export const loadProject = async (projectKey: string) => {
     const url = new URL(window.location.href);
     url.searchParams.delete("example");
     window.history.replaceState({}, "", url);
-
-    isInitialLoad = false;
 };

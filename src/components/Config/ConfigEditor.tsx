@@ -16,8 +16,8 @@ export const ConfigEditor = () => {
                 },
             )
         ) {
-            await deleteDB();
             localStorage.clear();
+            await deleteDB();
             location.reload();
         }
     };

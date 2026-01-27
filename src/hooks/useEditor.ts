@@ -245,7 +245,9 @@ export const useEditor = create<EditorStore>((set, get) => ({
         const iframeReadyListener = (
             { data, source }: MessageEvent<{ type: string }>,
         ) => {
-            if (data.type == "READY") updateCode(source as Window);
+            if (data.type != "READY") return;
+            window.removeEventListener("message", iframeReadyListener);
+            updateCode(source as Window);
         };
 
         // Refresh the iframe
@@ -255,15 +257,12 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
             iframe.addEventListener("load", (e: Event) => {
                 updateCode((e.target as HTMLIFrameElement).contentWindow);
-            }, { once: true, passive: true });
+            }, { once: true });
 
             iframe.src = iframe.src;
         } // If iframe is being recreated at the very moment
         else {
-            window.addEventListener("message", iframeReadyListener, {
-                once: true,
-                passive: true,
-            });
+            window.addEventListener("message", iframeReadyListener);
         }
     },
     pause() {

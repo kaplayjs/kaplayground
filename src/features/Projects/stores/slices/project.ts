@@ -328,6 +328,7 @@ export const createProjectSlice: StateCreator<
         const assets = new Map<string, Asset>();
         const lastVersion = get().project.kaplayVersion;
         const prevMode = get().project.mode;
+        const isInitialLoad = !get().project.createdAt;
         let loadDefaultFiles = false;
 
         let version = preferredVersion();
@@ -406,7 +407,9 @@ export const createProjectSlice: StateCreator<
             useEditor.getState().resetEditorModel();
         }
         useEditor.getState().setCurrentFile("main.js");
-        if (mode == prevMode) useEditor.getState().updateAndRun();
+        if (!isInitialLoad && mode == prevMode) {
+            useEditor.getState().updateAndRun();
+        }
     },
 
     async createFromShared(sharedCode, sharedVersion) {
