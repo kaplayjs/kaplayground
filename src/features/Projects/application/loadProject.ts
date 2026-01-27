@@ -49,13 +49,11 @@ export const loadProject = async (projectKey: string) => {
     // It's already updated and run on mount by editor
     if (!isInitialLoad && prevMode == project.mode) {
         editorStore.updateAndRun();
-
-        window.history.replaceState(
-            {},
-            "",
-            `${window.location.origin}/`,
-        );
     }
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete("example");
+    window.history.replaceState({}, "", url);
 
     isInitialLoad = false;
 };

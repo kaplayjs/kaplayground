@@ -390,13 +390,13 @@ export const createProjectSlice: StateCreator<
             demoKey: demoName ?? null,
         });
 
-        window.history.replaceState(
-            {},
-            "",
-            `${window.location.origin}/${
-                demoName ? `?example=${demoName}` : ""
-            }`,
-        );
+        const url = new URL(window.location.href);
+        if (demoName) {
+            url.searchParams.set("example", demoName);
+        } else {
+            url.searchParams.delete("example");
+        }
+        window.history.replaceState({}, "", url);
 
         if (loadDefaultFiles) {
             createDefaultFiles();

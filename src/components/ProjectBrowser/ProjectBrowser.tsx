@@ -229,6 +229,9 @@ export const ProjectBrowser = () => {
         if (searchParams.has("browse")) {
             if (tab) setTab(tab);
             dialogRef.current?.showModal();
+            const url = new URL(window.location.href);
+            url.searchParams.delete("browse");
+            window.history.replaceState({}, "", url);
         }
     }, []);
 
