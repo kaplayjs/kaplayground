@@ -40,6 +40,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
 
     const handleEditorBeforeMount = (monaco: Monaco) => {
         configMonaco(monaco);
+        run();
     };
 
     const handleEditorMount = (
@@ -211,7 +212,6 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         });
 
         updateImageDecorations();
-        run();
 
         for (const file of useProject.getState().project.files.values()) {
             loadFileInModel(file);
