@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - You can now Pause/Resume game from the toolbar's More Actions dropdown or by `Ctrl+P` - @imaginarny
 - You can now Stop game from the toolbar's More Actions dropdown or by `Ctrl+Alt+S` - @imaginarny
 - You can also load the page with the game stopped using the `?stopped` URL parameter - @imaginarny
-- Added keyboard shortcuts also for editor focus `Ctrl+E` and switching focus between editor and game `Ctrl+\` or `` Ctrl+` `` - @imaginarny
+- Added keyboard shortcuts also for: - @imaginarny
+  - Editor focus `Ctrl+E`
+  - Switching focus between the editor and the game `Ctrl+\` or `` Ctrl+` ``
 
 ### Changed
 
@@ -20,16 +22,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Notably, project keys were changed to `uuidv7` instead of issues inducing `<mode>-<count>` - @imaginarny
 - Keyboard shortcuts like Run (`Ctrl+S`) now work even when the file editor isn't focused - @imaginarny
 - Responsive design of example workspace was improved - @imaginarny
-- Logs in console view are now cleared on project switch - @imaginarny
+- Logs in the console view are now cleared on project switch - @imaginarny
 
 ### Fixed
 
 - Saving issues due to low localStorage limit were resolved - @imaginarny
 - Normalized demo example versions parsing and excluded comments from the version filter - @imaginarny
 - Fixed console logs not showing up in the console view - @imaginarny
-- Fixed project version switching not reflected in Projects Browser - @imaginarny
+- Fixed console log duplication when switching project/example workspaces - @imaginarny
+- Fixed project KAPLAY version switching not reflected in Projects Browser - @imaginarny
+- Prevented the same code iframe reruns resulting in the same KAPLAY context runtime warning - @imaginarny
+- Optimized iframe run execution to prevent excessive and out-of-sync reruns - @imaginarny
+- Fixed cases where switching from a demo to a saved project didn't clear the URL parameter - @imaginarny
+- Fixed Project Preference values sometimes going stale when switching projects - @imaginarny
+- Optimized Project Preferences to avoid re-rendering when updating unrelated project properties - @imaginarny
 - Fixed z-indexes of some tooltips, focused inputs, and dropdowns - @imaginarny
-- Fixed iframe reruns with the same KAPLAY context resulting in warning - @imaginarny
+- Prevented layout shift on initial workspace switch - @imaginarny
 
 ## [2.4.3] - 2025-11-01
 
