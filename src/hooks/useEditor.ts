@@ -83,6 +83,7 @@ export interface EditorStore {
     updateEditorLastSavedValue: (value?: string) => void;
     updateHasUnsavedChanges: () => void;
     updateAndRun: () => void;
+    focusGame: () => void;
 }
 
 export const useEditor = create<EditorStore>((set, get) => ({
@@ -421,5 +422,13 @@ export const useEditor = create<EditorStore>((set, get) => ({
         get().getRuntime().editor?.setScrollTop(0);
         get().update();
         get().run();
+    },
+    focusGame() {
+        const iframe = get().getRuntime().iframe;
+        if (!iframe) return;
+
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.postMessage({ type: "FOCUS" }, "*");
+        iframe.dispatchEvent(new CustomEvent("focusiframe"));
     },
 }));

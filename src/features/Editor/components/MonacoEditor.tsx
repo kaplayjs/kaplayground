@@ -1,6 +1,10 @@
 import { Editor, type Monaco } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
 import { type FC, useEffect } from "react";
+import {
+    FocusFrame,
+    useFocusFrameRef,
+} from "../../../components/UI/FocusFrame";
 import { useBeforeUnload } from "../../../hooks/useBeforeUnload";
 import { useConfig } from "../../../hooks/useConfig.ts";
 import { useEditor } from "../../../hooks/useEditor.ts";
@@ -26,6 +30,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     const updateImageDecorations = useEditor((s) => s.updateImageDecorations);
     const setRuntime = useEditor((s) => s.setRuntime);
     const getRuntime = useEditor((s) => s.getRuntime);
+    const focusGame = useEditor((s) => s.focusGame);
     const updateEditorLastSavedValue = useEditor((s) =>
         s.updateEditorLastSavedValue
     );
@@ -35,6 +40,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
     );
     const getConfig = useConfig((s) => s.getConfig);
     const setConfigKey = useConfig((s) => s.setConfigKey);
+    const focusFrameRef = useFocusFrameRef();
 
     useBeforeUnload(hasUnsavedChanges);
 
@@ -184,6 +190,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
             ],
             run: () => {
                 editor.focus();
+                focusFrameRef.current?.blink();
             },
         }));
 
@@ -195,12 +202,11 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 monaco.KeyMod.CtrlCmd | monaco.KeyCode.Backslash,
             ],
             run: () => {
-                if (editor?.hasTextFocus()) {
-                    const iframe = getRuntime().iframe?.contentWindow;
-                    iframe?.focus();
-                    iframe?.postMessage({ type: "FOCUS" }, "*");
+                if (editor?.hasTextFocus() && getRuntime().iframe) {
+                    focusGame();
                 } else {
                     editor.focus();
+                    focusFrameRef.current?.blink();
                 }
             },
         }));
@@ -267,6 +273,8 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                     smoothScrolling: true,
                 }}
             />
+
+            <FocusFrame ref={focusFrameRef} />
         </div>
     );
 };

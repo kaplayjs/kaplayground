@@ -1,12 +1,14 @@
 import { assets } from "@kaplayjs/crew";
 import { type FC, useCallback, useEffect, useState } from "react";
 import { useEditor } from "../../hooks/useEditor";
+import { FocusFrame, useFocusFrameRef } from "../UI/FocusFrame";
 
 export const GameView: FC = () => {
     const stopped = useEditor((s) => s.stopped);
     const setRuntime = useEditor((state) => state.setRuntime);
     const run = useEditor((s) => s.run);
     const [iframeHidden, setIframeHidden] = useState(stopped);
+    const focusFrameRef = useFocusFrameRef();
 
     const iframeRef = useCallback((iframe: HTMLIFrameElement) => {
         if (!iframe) return;
@@ -15,10 +17,15 @@ export const GameView: FC = () => {
         (window as any).iframeWindow = iframeWindow;
 
         setRuntime({ iframe: iframe, console: iframeWindow?.console });
+
+        iframe.addEventListener("focusiframe", () => {
+            focusFrameRef.current?.blink();
+        });
     }, []);
 
     useEffect(() => {
         setTimeout(() => setIframeHidden(stopped));
+        if (stopped) setRuntime({ iframe: null });
     }, [stopped, setIframeHidden]);
 
     return (
@@ -66,6 +73,8 @@ export const GameView: FC = () => {
                         </button>
                     </div>
                 )}
+
+            <FocusFrame ref={focusFrameRef} className="border-primary" />
         </div>
     );
 };
