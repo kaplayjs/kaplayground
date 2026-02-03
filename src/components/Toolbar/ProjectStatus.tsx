@@ -16,6 +16,9 @@ export const ProjectStatus = () => {
     const projectName = useProject((s) => s.project.name);
     const projectKey = useProject((s) => s.projectKey);
     const demoKey = useProject((s) => s.demoKey);
+    const hasUnsavedChanges = useEditor((s) =>
+        s.getRuntime().hasUnsavedChanges
+    );
     const [isEditing, setIsEditing] = useState(false);
     const [initialName, setInitialName] = useState(() => projectName);
     // the name is the name of the project
@@ -99,7 +102,7 @@ export const ProjectStatus = () => {
 
     return (
         <div className="flex flex-row gap-2 items-center h-full">
-            {!demoKey && (
+            {(!demoKey || hasUnsavedChanges) && (
                 <>
                     <button
                         className="btn btn-xs btn-ghost uppercase font-semibold tracking-wider bg-base-50 rounded-xl"

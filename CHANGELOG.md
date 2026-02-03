@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.5.1] - 2026-02-03
 
+### Changed
+
+- You can now rename an edited demo before saving - @imaginarny
+
 ### Fixed
 
 - Asset parsing was updated to support `loadSpriteAtlas()` with uploaded sprites - @imaginarny
