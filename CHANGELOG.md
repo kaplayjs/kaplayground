@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Asset parsing was updated to support `loadSpriteAtlas()` with uploaded sprites - @imaginarny
 - Fixed glitchy preview images in the code editor next to loaded assets - @imaginarny
+- Fixed code tooltip widgets getting cut off when overflowing the editor - @imaginarny
 
 ## [2.5.0] - 2026-01-29
 

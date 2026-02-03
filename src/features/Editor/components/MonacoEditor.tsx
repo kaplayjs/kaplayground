@@ -249,6 +249,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                     hideCursorInOverviewRuler: true,
                     wordWrap: getConfig().wordWrap ? "on" : "off",
                     smoothScrolling: true,
+                    fixedOverflowWidgets: true,
                 }}
             />
 
