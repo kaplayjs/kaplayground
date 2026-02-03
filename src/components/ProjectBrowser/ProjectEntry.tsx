@@ -135,6 +135,23 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
         );
     };
 
+    const VersionLabel: FC<{ className?: string }> = ({ className }) => (
+        <span
+            className={cn(
+                labelBaseClass,
+                "normal-case bg-error/60 animate-fade-in",
+                className,
+            )}
+        >
+            {![project.version, project.minVersion]
+                .includes("master") && "v"}
+            {project.version != "master"
+                ? project.version
+                : project.minVersion
+                    + (!project.locked ? "+" : "")}
+        </span>
+    );
+
     return (
         <ConditionalWrap
             condition={isProject}
@@ -160,12 +177,12 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                 onKeyUpCapture={e => e.key == "Enter" && handleClick()}
                 tabIndex={0}
                 role="button"
-                data-wrong-version={isIncompatible || undefined}
+                data-wrong-version={(isIncompatible && !isCurrent) || undefined}
                 data-current={isCurrent || undefined}
             >
                 <div className="relative flex flex-col gap-1.5 flex-1 [&>*]:transition-opacity">
                     {(isProject || isNewOrUpdated || isIncompatible) && (
-                        <div className="absolute -top-3 -right-4 flex justify-end gap-1 mr-px p-0.5 max-w-full overflow-hidden [[data-wrong-version]:not(:hover)_&~*]:opacity-40">
+                        <div className="absolute -top-3 -right-4 flex justify-end items-center gap-1 mr-px p-0.5 max-w-full overflow-hidden [[data-wrong-version]:not(:hover)_&~*]:opacity-40">
                             {isNewOrUpdated && (
                                 <span
                                     className={cn(
@@ -183,20 +200,9 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                                 </span>
                             )}
 
-                            {(isIncompatible || exampleHasMaxVersion) && (
-                                <span
-                                    className={cn(
-                                        labelBaseClass,
-                                        "normal-case bg-error/60 animate-fade-in",
-                                    )}
-                                >
-                                    {![project.version, project.minVersion]
-                                        .includes("master") && "v"}
-                                    {project.version != "master"
-                                        ? project.version
-                                        : project.minVersion
-                                            + (!project.locked ? "+" : "")}
-                                </span>
+                            {!isProject
+                                && (isIncompatible || exampleHasMaxVersion) && (
+                                <VersionLabel />
                             )}
 
                             {isProject && (
@@ -262,53 +268,61 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                             </p>
                         )}
 
-                        {!!project?.tags?.length && (
-                            toggleTag
-                                ? (
-                                    <ToggleGroup.Root
-                                        className="flex flex-wrap gap-1 -mx-1.5"
-                                        type="multiple"
-                                    >
-                                        {project.tags?.map((tag) => (
-                                            <ToggleGroup.Item
-                                                value="tag"
-                                                key={tag.name}
-                                                className={cn(
-                                                    "btn btn-xs btn-ghost bg-base-content/10 h-auto min-h-0 py-1 font-medium leading-none capitalize rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 focus-visible:outline-offset-0 [.group:hover_&:not(:hover)]:bg-base-200 [.group[data-state='open']_&]:bg-base-200 transition-colors",
-                                                    {
-                                                        "bg-base-200":
-                                                            isCurrent,
-                                                    },
-                                                )}
-                                                onClick={e => {
-                                                    e.stopPropagation();
-                                                    toggleTag(tag.name);
-                                                }}
-                                            >
-                                                {tag?.displayName ?? tag.name}
-                                            </ToggleGroup.Item>
-                                        ))}
-                                    </ToggleGroup.Root>
-                                )
-                                : (
-                                    <div className="flex flex-wrap gap-1 -mx-1.5">
-                                        {project.tags?.map((tag) => (
-                                            <span
-                                                key={tag.name}
-                                                className={cn(
-                                                    "badge bg-base-content/10 badge-xs font-medium h-auto px-2 py-1 border-none [.group:hover_&:not(:hover)]:bg-base-200 hover:bg-base-200",
-                                                    {
-                                                        "bg-base-200":
-                                                            isCurrent,
-                                                    },
-                                                )}
-                                            >
-                                                {tag?.displayName ?? tag.name}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )
-                        )}
+                        <div className="flex flex-wrap items-center gap-2">
+                            {!!project?.tags?.length && (
+                                toggleTag
+                                    ? (
+                                        <ToggleGroup.Root
+                                            className="flex flex-wrap gap-1 -mx-1.5 mr-auto"
+                                            type="multiple"
+                                        >
+                                            {project.tags?.map((tag) => (
+                                                <ToggleGroup.Item
+                                                    value="tag"
+                                                    key={tag.name}
+                                                    className={cn(
+                                                        "btn btn-xs btn-ghost bg-base-content/10 h-auto min-h-0 py-1 font-medium leading-none capitalize rounded-full hover:bg-base-content hover:text-neutral focus-visible:z-10 focus-visible:outline-offset-0 [.group:hover_&:not(:hover)]:bg-base-200 [.group[data-state='open']_&]:bg-base-200 transition-colors",
+                                                        {
+                                                            "bg-base-200":
+                                                                isCurrent,
+                                                        },
+                                                    )}
+                                                    onClick={e => {
+                                                        e.stopPropagation();
+                                                        toggleTag(tag.name);
+                                                    }}
+                                                >
+                                                    {tag?.displayName
+                                                        ?? tag.name}
+                                                </ToggleGroup.Item>
+                                            ))}
+                                        </ToggleGroup.Root>
+                                    )
+                                    : (
+                                        <div className="flex flex-wrap gap-1 -mx-1.5">
+                                            {project.tags?.map((tag) => (
+                                                <span
+                                                    key={tag.name}
+                                                    className={cn(
+                                                        "badge bg-base-content/10 badge-xs font-medium h-auto px-2 py-1 border-none [.group:hover_&:not(:hover)]:bg-base-200 hover:bg-base-200",
+                                                        {
+                                                            "bg-base-200":
+                                                                isCurrent,
+                                                        },
+                                                    )}
+                                                >
+                                                    {tag?.displayName
+                                                        ?? tag.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )
+                            )}
+
+                            {isProject && isIncompatible && (
+                                <VersionLabel className="-mb-1 -mx-1" />
+                            )}
+                        </div>
                     </div>
                 </div>
             </article>
