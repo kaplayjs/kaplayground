@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - You can now rename an edited demo before saving - @imaginarny
+- Allowed saving demos and new examples/projects via Project Preferences - @imaginarny
 
 ### Fixed
 

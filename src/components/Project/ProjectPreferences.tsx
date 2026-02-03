@@ -29,6 +29,7 @@ const ProjectPreferences = () => {
     const setProject = useProject((s) => s.setProject);
     const getProject = useProject((s) => s.getProject);
     const saveProject = useProject((s) => s.saveProject);
+    const saveNewProject = useProject((s) => s.saveNewProject);
     const updateAndRun = useEditor((s) => s.updateAndRun);
 
     const [editedKey, setEditedKey] = useState<string | null>(null);
@@ -176,7 +177,9 @@ const ProjectPreferences = () => {
             && favicon !== (editedProject.favicon ?? "")
         ) projectData.favicon = favicon;
 
-        if (!Object.keys(projectData).length) return;
+        if (!Object.keys(projectData).length && (projectKey || editedKey)) {
+            return;
+        }
 
         if (editedKey && editedKey !== projectKey) {
             saveProject(editedKey, {
@@ -186,6 +189,8 @@ const ProjectPreferences = () => {
         } else {
             setProject(projectData);
             if (shouldRerun) updateAndRun();
+
+            if (!projectKey) saveNewProject();
         }
     };
 
