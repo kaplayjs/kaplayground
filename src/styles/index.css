@@ -68,6 +68,11 @@ html, body, #root {
     @apply ml-2 before:rounded-sm;
 }
 
+.react-tooltip {
+    --rt-color-error: color-mix(in oklch, oklch(var(--er)) 94%, #000);
+}
+
+/* monaco */
 
 #monaco-editor-wrapper .monaco-editor {
     @apply rounded-xl outline-none;
@@ -93,28 +98,20 @@ html, body, #root {
         outline: 1px solid oklch(var(--bc) / 0.2);
         outline-offset: 1px;
     }
-}
 
-.react-tooltip {
-    --rt-color-error: color-mix(in oklch, oklch(var(--er)) 94%, #000);
-}
+    .monaco-glyph-margin-preview-image {
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
-/* temp */
+    .overflow-guard {
+        @apply rounded-xl;
+    }
 
-.monaco-glyph-margin-preview-image {
-	width: 40px;
-    background-size: 20px;
-	background-repeat: no-repeat;
-    background-position: center;
-    background-image: var(--image);
-    display: inline-block;
-    width: 40px;
-    height: 20px;
-    content:"";
-}
-
-.overflow-guard {
-    @apply rounded-xl;
+    .monaco-editor-hover {
+        z-index: 1000;
+    }
 }
 
 /* daisyUI */
@@ -141,4 +138,3 @@ html, body, #root {
     0% { @apply bg-[#15191f]; }
     100% { @apply bg-[#0a0c10]/65; }
 }
-

@@ -90,28 +90,6 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
             updateHasUnsavedChanges();
         });
 
-        editor.onDidScrollChange(() => {
-            updateImageDecorations();
-        });
-
-        editor.onDidChangeModelDecorations(() => {
-            const decorations = document.querySelectorAll<HTMLElement>(
-                ".monaco-glyph-margin-preview-image",
-            );
-
-            decorations.forEach((e, i) => {
-                const decRange = getRuntime().gylphDecorations?.getRange(i);
-                if (!decRange) return;
-
-                const dec = editor.getDecorationsInRange(decRange)?.[0];
-                const realImage = dec?.options.hoverMessage!;
-
-                if (!Array.isArray(realImage) && realImage?.value) {
-                    e.style.setProperty("--image", `url("${realImage.value}")`);
-                }
-            });
-        });
-
         // Editor Shortcuts
         editor.addAction(makeKeybindingsGlobal({
             id: "run-game",
@@ -214,7 +192,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         let decorations = editor.createDecorationsCollection([]);
 
         setRuntime({
-            gylphDecorations: decorations,
+            glyphDecorations: decorations,
         });
 
         updateImageDecorations();

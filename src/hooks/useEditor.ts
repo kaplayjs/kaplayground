@@ -36,9 +36,9 @@ interface EditorRuntime {
      */
     hasUnsavedChanges: boolean;
     /**
-     * Decorations for the gylph images
+     * Decorations for the glyph images
      */
-    gylphDecorations: editor.IEditorDecorationsCollection | null;
+    glyphDecorations: editor.IEditorDecorationsCollection | null;
     /**
      * Iframe element for the game view
      */
@@ -74,7 +74,7 @@ export interface EditorStore {
     resetEditorModel: () => void;
     setTheme: (theme: string) => void;
     /**
-     * Update Gylph image decorations for loadXXXX functions
+     * Update glyph image decorations for loadXXXX functions
      */
     updateImageDecorations: () => void;
     updateModelMarkers: () => void;
@@ -93,7 +93,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         currentFile: "main.js",
         editorLastSavedValue: null,
         hasUnsavedChanges: false,
-        gylphDecorations: null,
+        glyphDecorations: null,
         iframe: null,
         console: null,
         viewStates: {},
@@ -280,61 +280,50 @@ export const useEditor = create<EditorStore>((set, get) => ({
         set({ stopped: true });
     },
     updateImageDecorations() {
-        debug(0, "[monaco] Updating gylph decorations");
-        const editor = get().runtime.editor;
-        const monaco = get().runtime.monaco;
-        const gylphDecorations = get().runtime.gylphDecorations;
+        debug(0, "[monaco] Updating glyph decorations");
+        const { editor, monaco, glyphDecorations } = get().runtime;
         const model = editor?.getModel();
 
-        if (!editor || !monaco || !model || !gylphDecorations) return;
+        if (!editor || !monaco || !model || !glyphDecorations) return;
 
-        // for each every line
-        const lines = editor.getModel()?.getLinesContent() ?? [];
-
-        let linesRange: {
-            image: string;
-            line: number;
-        }[] = [];
+        const supportedLoadTypes = ["Sprite", "SpriteAtlas", "BitmapFont"];
+        const lines = model.getLinesContent() ?? [];
+        const decorations: editor.IModelDeltaDecoration[] = [];
 
         lines.forEach((line, index) => {
-            if (index < editor.getVisibleRanges()[0].startLineNumber - 1) {
-                return;
-            }
-
             const match = [...line.matchAll(MATCH_ASSET_URL_REGEX)]?.[0];
             const url = match?.[1];
+            const loadType = match?.[0]?.match(/^load(\w+)/s)?.[1] ?? "";
+            if (!url || !supportedLoadTypes.includes(loadType)) return;
 
-            if (!url || match?.[0]?.includes("Sound")) return;
+            const image = parseAssetPath(url, match[0]);
+            const classId = `monaco-glyph-${btoa(url).replace(/=/g, "")}`;
+            const className = `.monaco-glyph-margin-preview-image.${classId}`;
 
-            linesRange.push({
-                image: parseAssetPath(url, match[0]),
-                line: index + 1,
+            if (!document.getElementById(classId)) {
+                const style = document.createElement("style");
+                style.id = classId;
+                style.textContent =
+                    `${className} { background-image: url("${image}") }`;
+                document.head.appendChild(style);
+            }
+
+            decorations.push({
+                range: new monaco.Range(index + 1, 1, index + 1, 1),
+                options: {
+                    glyphMarginClassName: className,
+                    glyphMarginHoverMessage: {
+                        value: `![image](${image})`,
+                        isTrusted: true,
+                    },
+                },
             });
         });
 
-        const decorations = linesRange.map(
-            ({ image, line }) => {
-                return {
-                    range: new monaco.Range(line, 1, line, 1),
-                    options: {
-                        glyphMarginClassName:
-                            "monaco-glyph-margin-preview-image",
-                        glyphMarginHoverMessage: {
-                            value: `![image](${image})`,
-                            isTrusted: true,
-                        },
-                        hoverMessage: {
-                            value: image,
-                        },
-                    },
-                } satisfies editor.IModelDeltaDecoration;
-            },
-        );
-
-        gylphDecorations.set(decorations);
+        glyphDecorations.set(decorations);
     },
     updateModelMarkers() {
-        debug(0, "[monaco] Updating gylph decorations");
+        debug(0, "[monaco] Updating glyph decorations");
         const editor = get().runtime.editor;
         const monaco = get().runtime.monaco;
         const model = editor?.getModel();

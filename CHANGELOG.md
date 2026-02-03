@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Asset parsing was updated to support `loadSpriteAtlas()` with uploaded sprites - @imaginarny
+- Fixed glitchy preview images in the code editor next to loaded assets - @imaginarny
 
 ## [2.5.0] - 2026-01-29
 
