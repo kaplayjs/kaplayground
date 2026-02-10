@@ -26,7 +26,9 @@
 
     <body>
         <script type="module">
-        window.console = createConsoleProxy();
+        import Hook from "console-feed/lib/Hook";
+
+        Hook(window.console, hookConsole);
         window.addEventListener("error", e => console.error(e.message));
 
         const executeCode = (code) => {
@@ -105,81 +107,14 @@
             }, "*");
         });
 
-        function createConsoleProxy() {
-            return new Proxy(console, {
-                get(target, prop) {
-                    if (typeof target[prop] !== "function") return target[prop];
-
-                    return (...args) => {
-                        try {
-                            window.parent.postMessage(
-                                {
-                                    type: "CONSOLE",
-                                    method: prop,
-                                    messages: cloneLog(args),
-                                },
-                                "*",
-                            );
-                        } catch {
-                            window.parent.postMessage(
-                                {
-                                    type: "CONSOLE",
-                                    method: "warn",
-                                    messages: [
-                                        "Unsupported message (see browser console)",
-                                    ],
-                                },
-                                "*",
-                            );
-                        }
-
-                        target[prop](...args);
-                    };
+        function hookConsole(log) {
+            window.parent.postMessage(
+                {
+                    type: "CONSOLE",
+                    log: log,
                 },
-            });
-        }
-
-        function cloneLog(value, circular = new WeakMap(), path = "root") {
-            if (
-                value === null
-                || typeof value === "string"
-                || typeof value === "number"
-                || typeof value === "bigint"
-                || typeof value === "boolean"
-            ) {
-                return value;
-            }
-
-            if (typeof value === "function") return "[Function]";
-
-            if (value instanceof Error) return String(value);
-
-            if (typeof value === "object") {
-                if (circular.has(value)) return `[Circular: ${circular.get(value)}]`;
-                circular.set(value, path);
-
-                if (Array.isArray(value)) {
-                    return value.map((v, i) =>
-                        cloneLog(v, circular, `${path}${i > 0 ? `[${i}]` : ""}`)
-                    );
-                }
-
-                const plainObj = {};
-                for (const key of Object.keys(value)) {
-                    try {
-                        plainObj[key] = cloneLog(
-                            value[key],
-                            circular,
-                            `${path}.${key}`,
-                        );
-                    } catch {
-                        plainObj[key] = "[Unserializable]";
-                    }
-                }
-                return plainObj;
-            }
-
-            return String(value);
+                "*",
+            );
         }
         </script>
     </body>

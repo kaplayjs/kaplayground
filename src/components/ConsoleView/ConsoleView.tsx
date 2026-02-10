@@ -1,5 +1,6 @@
 import { assets } from "@kaplayjs/crew";
-import { Console, Hook, Unhook } from "console-feed";
+import { Console, Decode } from "console-feed";
+import { Message } from "console-feed/lib/definitions/Console";
 import { useEffect, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 
@@ -7,72 +8,39 @@ export const ConsoleView = () => {
     const [logs, setLogs] = useState<any[]>([]);
     const projectKey = useProject((s) => s.projectKey || s.demoKey);
 
-    const sanitize = (v: any): any => {
-        if (Array.isArray(v)) {
-            return Array.from(
-                { length: v.length },
-                (_, i) => i in v ? sanitize(v[i]) : "<empty>",
-            );
-        }
-
-        if (v && typeof v === "object") {
-            return Object.fromEntries(
-                Object.entries(v).map(([k, v]) => [k, sanitize(v)]),
-            );
-        }
-
-        return v;
+    const handleClear = () => {
+        setLogs([]);
     };
 
     useEffect(() => {
-        const hookedConsole = Hook(
-            window.console,
-            (log) => {
-                if (log.data?.[0] !== "[game]") return;
-
-                setLogs(currLogs => [
-                    ...currLogs,
-                    { ...log, data: log.data?.map(sanitize) },
-                ]);
-            },
-            false,
-        );
-
         const messageHandler = (
-            event: MessageEvent<
-                {
-                    type: string;
-                    method: "log" | "error" | "warn" | "debug";
-                    messages: any[];
-                }
-            >,
+            event: MessageEvent<{
+                type: string;
+                log: Message[];
+            }>,
         ) => {
             if (
-                event.data?.type?.startsWith("CONSOLE")
-                && String(event.data?.messages?.[0])?.startsWith("[sandbox]")
+                !event.data?.type?.startsWith("CONSOLE")
+                || !event.data?.log
+                || String(event.data.log?.[0].data?.[0])?.startsWith(
+                    "[sandbox]",
+                )
             ) return;
 
-            console?.[event.data?.method]?.("[game]", ...event.data?.messages);
+            setLogs(currLogs => [
+                ...currLogs,
+                Decode(event.data.log),
+            ]);
         };
 
         window.addEventListener("message", messageHandler, { passive: true });
 
         return () => {
-            Unhook(hookedConsole);
             window.removeEventListener("message", messageHandler);
         };
     }, []);
 
-    useEffect(() => {
-        setLogs([]);
-    }, [projectKey]);
-
-    useEffect(() => {
-        const consoleWrapper = document.getElementById("console-wrapper");
-        consoleWrapper?.scroll({
-            top: consoleWrapper.scrollHeight,
-        });
-    }, [logs]);
+    useEffect(handleClear, [projectKey]);
 
     return (
         <div
@@ -84,7 +52,7 @@ export const ConsoleView = () => {
                     <div className="sticky flex items-end self-end bottom-0.5 right-0.5 h-0 overflow-visible z-20">
                         <button
                             className="btn btn-ghost btn-xs p-1 h-auto rounded-lg"
-                            onClick={() => setLogs([])}
+                            onClick={handleClear}
                             data-tooltip-id="global"
                             data-tooltip-html={"Clear console"}
                             data-tooltip-place="top-end"
