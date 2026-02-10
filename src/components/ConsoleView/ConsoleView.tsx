@@ -7,59 +7,52 @@ export const ConsoleView = () => {
     const [logs, setLogs] = useState<any[]>([]);
     const projectKey = useProject((s) => s.projectKey || s.demoKey);
 
+    const sanitize = (v: any): any => {
+        if (Array.isArray(v)) {
+            return Array.from(
+                { length: v.length },
+                (_, i) => i in v ? sanitize(v[i]) : "<empty>",
+            );
+        }
+
+        if (v && typeof v === "object") {
+            return Object.fromEntries(
+                Object.entries(v).map(([k, v]) => [k, sanitize(v)]),
+            );
+        }
+
+        return v;
+    };
+
     useEffect(() => {
         const hookedConsole = Hook(
             window.console,
             (log) => {
                 if (log.data?.[0] !== "[game]") return;
 
-                setLogs((currLogs) => [...currLogs, log]);
+                setLogs(currLogs => [
+                    ...currLogs,
+                    { ...log, data: log.data?.map(sanitize) },
+                ]);
             },
             false,
         );
 
-        const messageHandler = (event: MessageEvent) => {
+        const messageHandler = (
+            event: MessageEvent<
+                {
+                    type: string;
+                    method: "log" | "error" | "warn" | "debug";
+                    messages: any[];
+                }
+            >,
+        ) => {
             if (
-                event.data?.type?.startsWith("CONSOLE_")
-                && String(event.data?.data?.[0])?.startsWith("[sandbox]")
+                event.data?.type?.startsWith("CONSOLE")
+                && String(event.data?.messages?.[0])?.startsWith("[sandbox]")
             ) return;
 
-            if (event.data?.type === "CONSOLE_LOG") {
-                const log: string[] = event.data?.data;
-
-                console.log(
-                    "[game]",
-                    ...log,
-                );
-            } else if (event.data?.type === "CONSOLE_ERROR") {
-                const log: string[] = event.data?.data;
-
-                console.error(
-                    "[game]",
-                    ...log,
-                );
-            } else if (event.data?.type === "CONSOLE_WARN") {
-                const log: string[] = event.data?.data;
-
-                console.warn(
-                    "[game]",
-                    ...log,
-                );
-            } else if (event.data?.type === "CONSOLE_DEBUG") {
-                const log: string[] = event.data?.data;
-
-                console.debug(
-                    "[game]",
-                    ...log,
-                );
-            } else if (event.data?.type === "CONSOLE_INFO") {
-                const log: string[] = event.data?.data;
-
-                console.info(
-                    "[game]",
-                    ...log,
-                );
-            }
+            console?.[event.data?.method]?.("[game]", ...event.data?.messages);
         };
 
         window.addEventListener("message", messageHandler, { passive: true });
