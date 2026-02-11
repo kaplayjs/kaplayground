@@ -4,32 +4,60 @@ import { Message } from "console-feed/lib/definitions/Console";
 import { useEffect, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 
+type LogMessageEvent = MessageEvent<{
+    type: string;
+    log: Message[];
+}>;
+
 export const ConsoleView = () => {
     const [logs, setLogs] = useState<any[]>([]);
     const projectKey = useProject((s) => s.projectKey || s.demoKey);
+    const ignoredFilter = ["[sandbox]", "[vite]"];
 
     const handleClear = () => {
         setLogs([]);
     };
 
+    const normalizeData: any = (value: Message["data"], c = new Set()) => {
+        if (value && typeof value === "object") {
+            if (c.has(value)) return value;
+            c.add(value);
+
+            if (Array.isArray(value)) {
+                return value.map(v => normalizeData(v, c));
+            }
+
+            const obj: Record<string, Message["data"]> = {};
+            for (const [k, v] of Object.entries(value)) {
+                // Minified object constructor names are useless noise
+                if (
+                    k === "constructor" && ((v as any)?.name?.length ?? 0) < 3
+                ) continue;
+
+                obj[k] = normalizeData(v, c);
+            }
+
+            return obj;
+        }
+
+        return value;
+    };
+
     useEffect(() => {
-        const messageHandler = (
-            event: MessageEvent<{
-                type: string;
-                log: Message[];
-            }>,
-        ) => {
+        const messageHandler = ({ data }: LogMessageEvent) => {
             if (
-                !event.data?.type?.startsWith("CONSOLE")
-                || !event.data?.log
-                || String(event.data.log?.[0].data?.[0])?.startsWith(
-                    "[sandbox]",
+                !data?.type?.startsWith("CONSOLE")
+                || !data?.log
+                || ignoredFilter.some(
+                    s => (String(data.log?.[0]?.data?.[0] ?? "").startsWith(s)),
                 )
             ) return;
 
+            const log = Decode(data.log);
+
             setLogs(currLogs => [
                 ...currLogs,
-                Decode(event.data.log),
+                { ...log, data: log.data?.map(v => normalizeData(v)) },
             ]);
         };
 

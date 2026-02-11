@@ -28,16 +28,17 @@
         <script type="module">
         import Hook from "console-feed/lib/Hook";
 
-        Hook(window.console, hookConsole);
+        Hook(
+            window.console,
+            log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
+        );
         window.addEventListener("error", e => console.error(e.message));
 
         const executeCode = (code) => {
             const previousScripts = document.querySelectorAll(
                 "script[type=\"module\"]",
             );
-            previousScripts.forEach(script => {
-                script.remove();
-            });
+            previousScripts.forEach(script => script.remove());
 
             try {
                 const script = document.createElement("script");
@@ -45,32 +46,40 @@
                 script.textContent = code;
                 document.body.appendChild(script);
             } catch (error) {
-                console.error("Error executing code:", error);
+                console.error("Error executing code:", error.message);
             }
         };
 
-        window.addEventListener("message", (event) => {
-            const { type, code } = event.data;
-
-            if (type == "UPDATE_CODE") {
+        const messageEventHandlers = {
+            UPDATE_CODE({ code }) {
                 console.groupCollapsed("[sandbox] Received code update");
                 console.log("[sandbox] Code:", code);
                 console.groupEnd();
                 executeCode(code);
-            } else if (type == "REFRESH") {
+            },
+
+            REFRESH() {
                 console.log("[sandbox] Refreshing the page");
-                document.location.href = document.location.href;
-            } else if (type == "PAUSE") {
+                window.location.reload();
+            },
+
+            PAUSE() {
                 const debug = window.debug ?? window._k_debug;
                 if (!debug) return;
                 console.log(
                     `[sandbox] ${debug.paused ? "Resuming" : "Pausing"} the game`,
                 );
                 debug.paused = !debug.paused;
-            } else if (type == "FOCUS") {
+            },
+
+            FOCUS() {
                 console.log("[sandbox] Focusing the game");
                 document.querySelector("canvas")?.focus();
-            }
+            },
+        };
+
+        window.addEventListener("message", (event) => {
+            messageEventHandlers[event.data?.type]?.(event.data);
         });
 
         window.addEventListener("load", () => {
@@ -106,16 +115,6 @@
                 },
             }, "*");
         });
-
-        function hookConsole(log) {
-            window.parent.postMessage(
-                {
-                    type: "CONSOLE",
-                    log: log,
-                },
-                "*",
-            );
-        }
         </script>
     </body>
 </html>
