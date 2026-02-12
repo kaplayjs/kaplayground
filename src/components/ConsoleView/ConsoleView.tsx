@@ -85,7 +85,7 @@ export const ConsoleView = () => {
             ]);
         };
 
-        window.addEventListener("message", messageHandler, { passive: true });
+        window.addEventListener("message", messageHandler);
 
         return () => {
             window.removeEventListener("message", messageHandler);
@@ -101,7 +101,7 @@ export const ConsoleView = () => {
         >
             <div
                 ref={scrollDivRef}
-                className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin [&>*+*_:last-child]:border-b-transparent"
+                className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin"
                 onClick={handleExpandLogs}
             >
                 {logs.length > 0 && (
@@ -127,24 +127,35 @@ export const ConsoleView = () => {
                     variant="dark"
                     styles={{
                         BASE_FONT_FAMILY: "'DM Mono', monospace",
+                        BASE_BACKGROUND_COLOR: "rgb(0 0 0 / 0)",
 
                         PADDING: "0.425rem 0",
 
+                        LOG_ICON: "var(--i-log)",
                         LOG_BORDER: "oklch(var(--b1))",
 
+                        LOG_ERROR_ICON: "var(--i-error)",
                         LOG_ERROR_COLOR: "oklch(var(--er))",
                         LOG_ERROR_BACKGROUND: "oklch(var(--er) / 0.1)",
                         LOG_ERROR_BORDER: "oklch(var(--er) / 0.1)",
 
+                        LOG_WARN_ICON: "var(--i-warn)",
                         LOG_WARN_COLOR: "oklch(var(--wa))",
                         LOG_WARN_BACKGROUND: "oklch(var(--wa) / 0.1)",
                         LOG_WARN_BORDER: "oklch(var(--wa) / 0.05)",
 
-                        LOG_DEBUG_COLOR: "rgb(141 183 255)",
+                        LOG_INFO_ICON: "var(--i-info)",
+                        LOG_INFO_BACKGROUND: "oklch(var(--in) / 0.03)",
+                        LOG_INFO_BORDER: "oklch(var(--in) / 0.03)",
 
-                        BASE_BACKGROUND_COLOR: "rgb(0 0 0 / 0)",
+                        LOG_DEBUG_ICON: "var(--i-debug)",
+                        LOG_DEBUG_COLOR: "rgb(141 183 255)",
+                        LOG_DEBUG_BACKGROUND: "oklch(var(--inc) / 0.1)",
 
                         OBJECT_VALUE_STRING_COLOR: "rgb(233 150 122)",
+
+                        ARROW_COLOR: "oklch(var(--bc))",
+                        ARROW_FONT_SIZE: "inherit",
                     }}
                 />
 
