@@ -1,7 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import { Console, Decode } from "console-feed";
 import { Message } from "console-feed/lib/definitions/Console";
-import { useEffect, useState } from "react";
+import { type MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 
 type LogMessageEvent = MessageEvent<{
@@ -12,10 +12,34 @@ type LogMessageEvent = MessageEvent<{
 export const ConsoleView = () => {
     const [logs, setLogs] = useState<any[]>([]);
     const projectKey = useProject((s) => s.projectKey || s.demoKey);
+    const scrollDivRef = useRef<HTMLDivElement>(null);
     const ignoredFilter = ["[sandbox]", "[vite]"];
 
     const handleClear = () => {
         setLogs([]);
+    };
+
+    const handleExpandLogs: MouseEventHandler = (e) => {
+        const el = e.target as Element;
+        if (!el) return;
+
+        let toggle = el.closest("[aria-expanded]");
+        if (!toggle) return;
+
+        requestAnimationFrame(() => {
+            const elRect = el.getBoundingClientRect();
+            const scrollDivRect = scrollDivRef.current!.getBoundingClientRect();
+            if (elRect.top > scrollDivRect.top - 5) return;
+
+            const isNested = el.matches(
+                `${"[aria-expanded] ".repeat(2)} ${el.tagName.toLowerCase()}`,
+            );
+            const expandedEl =
+                (isNested ? toggle : toggle?.closest("[data-method]"))
+                    ?? toggle;
+
+            expandedEl.scrollIntoView({ block: "start", behavior: "instant" });
+        });
     };
 
     const normalizeData: any = (value: Message["data"], c = new Set()) => {
@@ -75,7 +99,11 @@ export const ConsoleView = () => {
             id="console-wrapper"
             className="relative h-full w-full bg-base-300 rounded-xl overflow-hidden z-0"
         >
-            <div className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin [&>*+*_:last-child]:border-b-transparent">
+            <div
+                ref={scrollDivRef}
+                className="relative flex flex-col-reverse h-full w-full overflow-auto scrollbar-thin [&>*+*_:last-child]:border-b-transparent"
+                onClick={handleExpandLogs}
+            >
                 {logs.length > 0 && (
                     <div className="sticky flex items-end self-end bottom-0.5 right-0.5 h-0 overflow-visible z-20">
                         <button
