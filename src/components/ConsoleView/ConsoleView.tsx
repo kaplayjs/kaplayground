@@ -3,6 +3,8 @@ import { Console, Decode } from "console-feed";
 import { Message } from "console-feed/lib/definitions/Console";
 import { type MouseEventHandler, useEffect, useRef, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { useConfig } from "../../hooks/useConfig";
+import { useEditor } from "../../hooks/useEditor";
 
 type LogMessageEvent = MessageEvent<{
     type: string;
@@ -14,9 +16,14 @@ export const ConsoleView = () => {
     const projectKey = useProject((s) => s.projectKey || s.demoKey);
     const scrollDivRef = useRef<HTMLDivElement>(null);
     const ignoredFilter = ["[sandbox]", "[vite]"];
+    const isConsoleEnabled = useConfig((s) => s.config.console);
 
     const handleClear = () => {
         setLogs([]);
+    };
+
+    const handleEnable = () => {
+        useConfig.getState().setConfig({ console: true });
     };
 
     const handleExpandLogs: MouseEventHandler = (e) => {
@@ -85,10 +92,31 @@ export const ConsoleView = () => {
             ]);
         };
 
-        window.addEventListener("message", messageHandler);
+        if (isConsoleEnabled) {
+            window.addEventListener("message", messageHandler);
+        }
+
+        const unsubscribeConsole = useConfig.subscribe(
+            (s) => s.config.console,
+            (enabled) => {
+                useEditor.getState().getRuntime().iframe?.contentWindow
+                    ?.postMessage({
+                        type: "TOGGLE_CONSOLE",
+                        enabled,
+                    });
+
+                if (enabled) {
+                    window.addEventListener("message", messageHandler);
+                } else {
+                    window.removeEventListener("message", messageHandler);
+                    handleClear();
+                }
+            },
+        );
 
         return () => {
             window.removeEventListener("message", messageHandler);
+            unsubscribeConsole();
         };
     }, []);
 
@@ -107,7 +135,7 @@ export const ConsoleView = () => {
                 {logs.length > 0 && (
                     <div className="sticky flex items-end self-end bottom-0.5 right-0.5 h-0 overflow-visible z-20">
                         <button
-                            className="btn btn-ghost btn-xs p-1 h-auto rounded-lg"
+                            className="btn btn-ghost btn-xs p-1 h-auto rounded-[0.625rem]"
                             onClick={handleClear}
                             data-tooltip-id="global"
                             data-tooltip-html={"Clear console"}
@@ -159,12 +187,30 @@ export const ConsoleView = () => {
                     }}
                 />
 
-                {logs.length == 0 && (
-                    <div className="px-4 py-2 text-xs font-mono opacity-70">
-                        <span className="mr-3">&gt;</span>
-                        Console is empty
-                    </div>
-                )}
+                {isConsoleEnabled
+                    ? logs.length == 0 && (
+                        <div className="px-4 py-2 text-xs font-mono opacity-70">
+                            <span className="mr-3">&gt;</span>
+                            Console is empty
+                        </div>
+                    )
+                    : (
+                        <div className="flex items-center justify-between gap-2 pl-4 pr-1 min-h-8 text-xs">
+                            <div className="font-mono">
+                                <span className="mr-3 opacity-70">&gt;</span>
+                                <span className="opacity-70">Console is</span>
+                                {" "}
+                                <span className="text-error">disabled</span>!
+                            </div>
+
+                            <button
+                                className="btn btn-xs btn-ghost bg-primary/10 text-primary hover:bg-primary/20 mb-px"
+                                onClick={handleEnable}
+                            >
+                                Enable
+                            </button>
+                        </div>
+                    )}
             </div>
         </div>
     );

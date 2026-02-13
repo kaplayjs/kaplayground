@@ -1,6 +1,7 @@
 import { Allotment, LayoutPriority } from "allotment";
 import type { FC } from "react";
 import { MonacoEditor } from "../../features/Editor/components/MonacoEditor.tsx";
+import useConsolePane from "../../hooks/useConsolePane";
 import { allotmentStorage } from "../../util/allotmentStorage";
 import { cn } from "../../util/cn";
 import { Assets } from "../Assets";
@@ -17,6 +18,8 @@ type Props = {
 
 export const WorkspaceProject: FC<Props> = (props) => {
     const { getAllotmentSize, setAllotmentSize } = allotmentStorage("project");
+
+    const { consoleVisible, consoleMinSize, consoleSize } = useConsolePane();
 
     const handleDragStart = () =>
         document.documentElement.classList.toggle("select-none", true);
@@ -84,10 +87,12 @@ export const WorkspaceProject: FC<Props> = (props) => {
                         <Allotment.Pane snap>
                             <Allotment
                                 vertical
-                                defaultSizes={getAllotmentSize("console", [
-                                    9999,
-                                    34,
-                                ])}
+                                defaultSizes={consoleVisible
+                                    ? getAllotmentSize("console", [
+                                        9999,
+                                        consoleSize,
+                                    ])
+                                    : [9999, 0]}
                                 onChange={e => setAllotmentSize("console", e)}
                             >
                                 <Allotment.Pane>
@@ -96,8 +101,9 @@ export const WorkspaceProject: FC<Props> = (props) => {
                                 <Allotment.Pane
                                     className="pt-px"
                                     snap
-                                    minSize={34}
-                                    preferredSize={34}
+                                    minSize={consoleMinSize}
+                                    preferredSize={consoleSize}
+                                    visible={consoleVisible}
                                 >
                                     <ConsoleView />
                                 </Allotment.Pane>

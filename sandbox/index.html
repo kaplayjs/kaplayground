@@ -27,11 +27,12 @@
     <body>
         <script type="module">
         import Hook from "console-feed/lib/Hook";
+        import Unhook from "console-feed/lib/Unhook";
 
-        Hook(
-            window.console,
-            log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
-        );
+        const params = new URLSearchParams(window.location.search);
+        const isConsoleEnabled = (params.get("console") ?? "true") == "true";
+
+        let hookedConsole = isConsoleEnabled ? hookConsole() : null;
         window.addEventListener("error", e => console.error(e.message));
 
         const executeCode = (code) => {
@@ -76,6 +77,16 @@
                 console.log("[sandbox] Focusing the game");
                 document.querySelector("canvas")?.focus();
             },
+
+            TOGGLE_CONSOLE({ enabled }) {
+                if (enabled) {
+                    console.log("[sandbox] Hooking the console");
+                    hookedConsole ??= hookConsole();
+                } else {
+                    console.log("[sandbox] Unhooking the console");
+                    uhookConsole();
+                }
+            },
         };
 
         window.addEventListener("message", (event) => {
@@ -115,6 +126,19 @@
                 },
             }, "*");
         });
+
+        function hookConsole() {
+            return Hook(
+                window.console,
+                log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
+            );
+        }
+
+        function uhookConsole() {
+            if (!hookedConsole) return;
+            Unhook(hookedConsole);
+            hookedConsole = null;
+        }
         </script>
     </body>
 </html>

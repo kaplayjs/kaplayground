@@ -46,6 +46,11 @@ export const ConfigEditor = () => {
 
             <ConfigCheckbox configKey="wordWrap" label="Word Wrap" />
 
+            <ConfigCheckbox
+                configKey="console"
+                label="Console Panel"
+            />
+
             <ConfigSelect configKey="debugLevel" label="Debug Level">
                 <option value="0">Level 1</option>
                 <option value="1">Level 2</option>

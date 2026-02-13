@@ -1,5 +1,5 @@
 import { assets } from "@kaplayjs/crew";
-import { type FC, useCallback, useEffect, useState } from "react";
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useEditor } from "../../hooks/useEditor";
 import { FocusFrame, useFocusFrameRef } from "../UI/FocusFrame";
 
@@ -9,6 +9,7 @@ export const GameView: FC = () => {
     const run = useEditor((s) => s.run);
     const [iframeHidden, setIframeHidden] = useState(stopped);
     const focusFrameRef = useFocusFrameRef();
+    const iframeSrc = useMemo(() => useEditor.getState().getIframeSrc(), []);
 
     const iframeRef = useCallback((iframe: HTMLIFrameElement) => {
         if (!iframe) return;
@@ -36,7 +37,7 @@ export const GameView: FC = () => {
                         ref={iframeRef}
                         id="game-view"
                         tabIndex={0}
-                        src="https://kaplaypreview.kaplayjs.com/"
+                        src={iframeSrc}
                         className="bg-black/30 rounded-xl"
                         style={{
                             border: "none",
