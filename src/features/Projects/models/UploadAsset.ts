@@ -4,5 +4,6 @@ export interface UploadAsset {
     name: string;
     kind: AssetKind;
     path: string;
-    file: File;
+    file?: File;
+    url?: string;
 }

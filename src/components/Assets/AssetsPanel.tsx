@@ -8,6 +8,8 @@ import "./AssetsPanel.css";
 import type { AssetKind } from "../../features/Projects/models/AssetKind";
 import { useEditor } from "../../hooks/useEditor";
 import { cn } from "../../util/cn";
+import { AssetsDrawButton } from "./AssetsDrawButton";
+import { AssetsDraw } from "./AssetsDraw";
 
 interface AssetsPanelProps {
     value: string;
@@ -20,6 +22,8 @@ export const AssetsPanel: React.FC<AssetsPanelProps> = (props) => {
     const { uploadAsset } = useAssets({ kind: props.kind });
     const showNotification = useEditor((s) => s.showNotification);
     const [isDragging, setIsDragging] = React.useState(false);
+
+    const [isDrawing, setIsDrawing] = React.useState(false);
 
     const handleAssetUpload = async (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
@@ -77,10 +81,24 @@ export const AssetsPanel: React.FC<AssetsPanelProps> = (props) => {
                                 kind={props.kind}
                                 inputProps={getInputProps()}
                             />
+                            {props.kind === "sprite" && (
+                                <AssetsDrawButton
+                                    kind={props.kind}
+                                    onClick={() => {
+                                        setIsDrawing(true);
+                                    }}
+                                />
+                            )}
                         </div>
                     </div>
                 )}
             </Dropzone>
+            {isDrawing && (
+                <AssetsDraw
+                    kind={props.kind}
+                    onClose={() => setIsDrawing(false)}
+                />
+            )}
         </Tabs.Content>
     );
 };

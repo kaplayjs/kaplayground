@@ -24,10 +24,13 @@ const assetFuncByKind: Record<AssetKind, string> = {
 export const getAssetImportFunction = (
     assetName: string,
     assetKind: AssetKind,
+    url?: string,
 ) => {
+    const importSource = url ? url : `assets/${assetKind}s/${assetName}`;
+
     return `${assetFuncByKind[assetKind]}("${
         removeExtension(assetName)
-    }", "assets/${assetKind}s/${assetName}");`;
+    }", "${importSource}");`;
 };
 
 export const createAssetsSlice: StateCreator<
@@ -67,6 +70,27 @@ export const createAssetsSlice: StateCreator<
             debug(0, "[assets] Adding asset:", asset.name);
             get().uploadingAssets.set(asset.path, asset);
             const { file, ...sanitizedAsset } = asset;
+
+            if (asset.url) {
+                get().addAsset({
+                    ...sanitizedAsset,
+                    url: asset.url,
+                    importFunction: getAssetImportFunction(
+                        asset.name,
+                        asset.kind,
+                        asset.url,
+                    ),
+                });
+
+                get().uploadingAssets.delete(asset.path);
+                set({});
+                return;
+            }
+
+            if (!file) {
+               console.error("Asset upload failed: no file provided");
+               return;
+            }
 
             fileToBase64(file).then((url) => {
                 get().addAsset({
