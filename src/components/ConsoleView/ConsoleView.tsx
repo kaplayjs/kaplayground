@@ -103,7 +103,7 @@ export const ConsoleView = () => {
                     ?.postMessage({
                         type: "TOGGLE_CONSOLE",
                         enabled,
-                    });
+                    }, "*");
 
                 if (enabled) {
                     window.addEventListener("message", messageHandler);
