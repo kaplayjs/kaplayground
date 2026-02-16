@@ -32,7 +32,7 @@
         const params = new URLSearchParams(window.location.search);
         const isConsoleEnabled = (params.get("console") ?? "true") == "true";
 
-        let hookedConsole = isConsoleEnabled ? hookConsole() : null;
+        let hookedConsole = consoleHook(isConsoleEnabled);
         window.addEventListener("error", e => console.error(e.message));
 
         const executeCode = (code) => {
@@ -81,10 +81,10 @@
             TOGGLE_CONSOLE({ enabled }) {
                 if (enabled) {
                     console.log("[sandbox] Hooking the console");
-                    hookedConsole ??= hookConsole();
+                    hookedConsole.hook();
                 } else {
                     console.log("[sandbox] Unhooking the console");
-                    uhookConsole();
+                    hookedConsole.unhook();
                 }
             },
         };
@@ -127,17 +127,25 @@
             }, "*");
         });
 
-        function hookConsole() {
-            return Hook(
-                window.console,
-                log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
-            );
-        }
+        function consoleHook(enabled) {
+            let hooked = null;
 
-        function uhookConsole() {
-            if (!hookedConsole) return;
-            Unhook(hookedConsole);
-            hookedConsole = null;
+            const hook = () => {
+                hooked ??= Hook(
+                    window.console,
+                    log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
+                );
+            };
+
+            const unhook = () => {
+                if (!hooked) return;
+                Unhook(hooked);
+                hooked = null;
+            };
+
+            if (enabled) hook();
+
+            return { hook, unhook };
         }
         </script>
     </body>
