@@ -56,7 +56,17 @@
                 console.groupCollapsed("[sandbox] Received code update");
                 console.log("[sandbox] Code:", code);
                 console.groupEnd();
-                executeCode(code);
+
+                if (document.visibilityState == "visible") {
+                    executeCode(code);
+                    return;
+                }
+
+                document.addEventListener("visibilitychange", function onChange() {
+                    if (document.visibilityState != "visible") return;
+                    document.removeEventListener("visibilitychange", onChange);
+                    executeCode(code);
+                });
             },
 
             REFRESH() {

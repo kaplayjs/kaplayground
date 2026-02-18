@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed crash when logging an array with an empty slot/item - @imaginarny
 - Thrown errors were not included in the console - @imaginarny
+- Prevented wrong game dimensions when loaded in a background tab by postponing execution until visible - @imaginarny
 
 ## [2.5.1] - 2026-02-03
 
