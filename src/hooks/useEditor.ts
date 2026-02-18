@@ -9,6 +9,7 @@ import { useProject } from "../features/Projects/stores/useProject";
 import { parseAssetPath } from "../util/assetsParsing";
 import { debug } from "../util/logs";
 import { MATCH_ASSET_URL_REGEX } from "../util/regex";
+import { useConfig } from "./useConfig";
 
 interface EditorRuntime {
     /**
@@ -44,6 +45,10 @@ interface EditorRuntime {
      */
     iframe: HTMLIFrameElement | null;
     /**
+     * Iframe element for the game view
+     */
+    iframeSrc: string;
+    /**
      * Console element for the game view
      */
     console: Console | null;
@@ -70,6 +75,7 @@ export interface EditorStore {
     stop: () => void;
     getRuntime: () => EditorRuntime;
     setRuntime: (runtime: Partial<EditorRuntime>) => void;
+    getIframeSrc: () => string;
     setCurrentFile: (currentFile: string) => void;
     resetEditorModel: () => void;
     setTheme: (theme: string) => void;
@@ -95,6 +101,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         hasUnsavedChanges: false,
         glyphDecorations: null,
         iframe: null,
+        iframeSrc: "https://kaplaypreview.kaplayjs.com/",
         console: null,
         viewStates: {},
         kaplayVersions: kaplayVersions,
@@ -209,6 +216,14 @@ export const useEditor = create<EditorStore>((set, get) => ({
             theme,
         });
     },
+    getIframeSrc: () => {
+        const url = new URL(get().runtime.iframeSrc);
+        url.searchParams.set(
+            "console",
+            (useConfig.getState().getConfig().console ?? true).toString(),
+        );
+        return url.href;
+    },
     run() {
         if (
             get().stopped
@@ -260,7 +275,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 updateCode((e.target as HTMLIFrameElement).contentWindow);
             }, { once: true });
 
-            iframe.src = iframe.src;
+            iframe.src = get().getIframeSrc();
         } // If iframe is being recreated at the very moment
         else {
             window.addEventListener("message", iframeReadyListener);

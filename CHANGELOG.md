@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.2] - WIP
+
+### Added
+
+- Option to disable the Console panel was added to the editor Config - @imaginarny
+
+### Changed
+
+- Console values now match the browser console as close as possible - @imaginarny
+- Console now keeps the scroll position anchored to the expanded content (e.g. the object tree) - @imaginarny
+- Updated console log colors and icons - @imaginarny
+
+### Fixed
+
+- Fixed crash when logging an array with an empty slot/item - @imaginarny
+- Thrown errors were not included in the console - @imaginarny
+
 ## [2.5.1] - 2026-02-03
 
 ### Changed

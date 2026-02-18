@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import { debug } from "../util/logs.ts";
 
 // This interacts with the local storage to save/load data about the layout,
@@ -20,6 +21,8 @@ export interface Config {
     funFormat: boolean;
     /** Toggles editor word-wrapping */
     wordWrap: boolean;
+    /** Toggles editor console view */
+    console: boolean;
 }
 
 const defaultConfig: Config = {
@@ -29,6 +32,7 @@ const defaultConfig: Config = {
     autoFormat: true,
     funFormat: false,
     wordWrap: false,
+    console: true,
 };
 
 type Store = {
@@ -40,7 +44,7 @@ type Store = {
     saveConfig: () => void;
 };
 
-export const useConfig = create<Store>()((set, get) => ({
+export const useConfig = create<Store>()(subscribeWithSelector((set, get) => ({
     config: defaultConfig,
     setConfigKey(key, value) {
         debug(0, "[config] Setting config key", key, "to", value);
@@ -83,4 +87,4 @@ export const useConfig = create<Store>()((set, get) => ({
             }));
         }
     },
-}));
+})));

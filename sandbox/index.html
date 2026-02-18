@@ -26,13 +26,20 @@
 
     <body>
         <script type="module">
+        import Hook from "console-feed/lib/Hook";
+        import Unhook from "console-feed/lib/Unhook";
+
+        const params = new URLSearchParams(window.location.search);
+        const isConsoleEnabled = (params.get("console") ?? "true") == "true";
+
+        let hookedConsole = consoleHook(isConsoleEnabled);
+        window.addEventListener("error", e => console.error(e.message));
+
         const executeCode = (code) => {
             const previousScripts = document.querySelectorAll(
                 "script[type=\"module\"]",
             );
-            previousScripts.forEach(script => {
-                script.remove();
-            });
+            previousScripts.forEach(script => script.remove());
 
             try {
                 const script = document.createElement("script");
@@ -40,93 +47,55 @@
                 script.textContent = code;
                 document.body.appendChild(script);
             } catch (error) {
-                console.error("Error executing code:", error);
+                console.error("Error executing code:", error.message);
             }
         };
 
-        window.addEventListener("message", (event) => {
-            const { type, code } = event.data;
-
-            if (type == "UPDATE_CODE") {
+        const messageEventHandlers = {
+            UPDATE_CODE({ code }) {
                 console.groupCollapsed("[sandbox] Received code update");
                 console.log("[sandbox] Code:", code);
                 console.groupEnd();
                 executeCode(code);
-            }
+            },
 
-            if (type == "REFRESH") {
+            REFRESH() {
                 console.log("[sandbox] Refreshing the page");
-                document.location.href = document.location.href;
-            }
+                window.location.reload();
+            },
 
-            if (type == "PAUSE") {
+            PAUSE() {
                 const debug = window.debug ?? window._k_debug;
                 if (!debug) return;
                 console.log(
                     `[sandbox] ${debug.paused ? "Resuming" : "Pausing"} the game`,
                 );
                 debug.paused = !debug.paused;
-            }
+            },
 
-            if (type == "FOCUS") {
+            FOCUS() {
                 console.log("[sandbox] Focusing the game");
                 document.querySelector("canvas")?.focus();
-            }
+            },
+
+            TOGGLE_CONSOLE({ enabled }) {
+                if (enabled) {
+                    console.log("[sandbox] Hooking the console");
+                    hookedConsole.hook();
+                } else {
+                    console.log("[sandbox] Unhooking the console");
+                    hookedConsole.unhook();
+                }
+            },
+        };
+
+        window.addEventListener("message", (event) => {
+            messageEventHandlers[event.data?.type]?.(event.data);
         });
 
         window.addEventListener("load", () => {
             window.parent.postMessage({ type: "READY" }, "*");
         });
-
-        const originalLog = console.log;
-
-        console.log = function(...args) {
-            originalLog.apply(console, args);
-            window.parent.postMessage(
-                { type: "CONSOLE_LOG", data: cloneLog(args) },
-                "*",
-            );
-        };
-
-        const originalError = console.error;
-
-        console.error = function(...args) {
-            originalError.apply(console, args);
-            window.parent.postMessage(
-                { type: "CONSOLE_ERROR", data: cloneLog(args) },
-                "*",
-            );
-        };
-
-        const originalWarn = console.warn;
-
-        console.warn = function(...args) {
-            originalWarn.apply(console, args);
-            window.parent.postMessage(
-                { type: "CONSOLE_WARN", data: cloneLog(args) },
-                "*",
-            );
-        };
-
-        const originalInfo = console.info;
-
-        console.info = function(...args) {
-            originalInfo.apply(console, args);
-            window.parent.postMessage(
-                { type: "CONSOLE_INFO", data: cloneLog(args) },
-                "*",
-            );
-        };
-
-        const originalDebug = console.debug;
-
-        console.debug = function(...args) {
-            originalDebug.apply(console, args);
-            window.parent.postMessage(
-                { type: "CONSOLE_DEBUG", data: cloneLog(args) },
-                "*",
-            );
-        };
 
         const keysToPreventDefault = ["e", "p", "s"];
 
@@ -158,45 +127,25 @@
             }, "*");
         });
 
-        function cloneLog(value, circular = new WeakMap(), path = "root") {
-            if (
-                value === null
-                || typeof value === "string"
-                || typeof value === "number"
-                || typeof value === "bigint"
-                || typeof value === "boolean"
-            ) {
-                return value;
-            }
+        function consoleHook(enabled) {
+            let hooked = null;
 
-            if (typeof value === "function") return "[Function]";
+            const hook = () => {
+                hooked ??= Hook(
+                    window.console,
+                    log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
+                );
+            };
 
-            if (typeof value === "object") {
-                if (circular.has(value)) return `[Circular: ${circular.get(value)}]`;
-                circular.set(value, path);
+            const unhook = () => {
+                if (!hooked) return;
+                Unhook(hooked);
+                hooked = null;
+            };
 
-                if (Array.isArray(value)) {
-                    return value.map((v, i) =>
-                        cloneLog(v, circular, `${path}${i > 0 ? `[${i}]` : ""}`)
-                    );
-                }
+            if (enabled) hook();
 
-                const plainObj = {};
-                for (const key of Object.keys(value)) {
-                    try {
-                        plainObj[key] = cloneLog(
-                            value[key],
-                            circular,
-                            `${path}.${key}`,
-                        );
-                    } catch {
-                        plainObj[key] = "[Unserializable]";
-                    }
-                }
-                return plainObj;
-            }
-
-            return String(value);
+            return { hook, unhook };
         }
         </script>
     </body>
