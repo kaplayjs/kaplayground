@@ -29,6 +29,10 @@
         import Hook from "console-feed/lib/Hook";
         import Unhook from "console-feed/lib/Unhook";
 
+        const PARENT_ORIGIN = document.referrer
+            ? new URL(document.referrer).origin
+            : null;
+
         const params = new URLSearchParams(window.location.search);
         const isConsoleEnabled = (params.get("console") ?? "true") == "true";
 
@@ -100,11 +104,12 @@
         };
 
         window.addEventListener("message", (event) => {
+            if (event.origin !== PARENT_ORIGIN) return;
             messageEventHandlers[event.data?.type]?.(event.data);
         });
 
         window.addEventListener("load", () => {
-            window.parent.postMessage({ type: "READY" }, "*");
+            window.parent.postMessage({ type: "READY" }, PARENT_ORIGIN);
         });
 
         const keysToPreventDefault = ["e", "p", "s"];
@@ -134,7 +139,7 @@
                     altKey: e.altKey,
                     key: e.key,
                 },
-            }, "*");
+            }, PARENT_ORIGIN);
         });
 
         function consoleHook(enabled) {
@@ -143,7 +148,11 @@
             const hook = () => {
                 hooked ??= Hook(
                     window.console,
-                    log => window.parent.postMessage({ type: "CONSOLE", log }, "*"),
+                    log =>
+                        window.parent.postMessage(
+                            { type: "CONSOLE", log },
+                            PARENT_ORIGIN,
+                        ),
                 );
             };
 

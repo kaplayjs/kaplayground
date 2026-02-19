@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Console values now match the browser console as close as possible - @imaginarny
 - Console now keeps the scroll position anchored to the expanded content (e.g. the object tree) - @imaginarny
 - Updated console log colors and icons - @imaginarny
+- Restricted sandbox communication using origin validation - @imaginarny
 
 ### Fixed
 

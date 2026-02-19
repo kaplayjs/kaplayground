@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import { editor } from "monaco-editor";
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import { SANDBOX_ORIGIN, SANDBOX_URL } from "../config/common";
 import { kaplayVersions } from "../data/kaplayVersions.json";
 import { wrapGame } from "../features/Projects/application/wrapGame";
 import { useProject } from "../features/Projects/stores/useProject";
@@ -101,7 +102,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         hasUnsavedChanges: false,
         glyphDecorations: null,
         iframe: null,
-        iframeSrc: "https://kaplaypreview.kaplayjs.com/",
+        iframeSrc: SANDBOX_URL,
         console: null,
         viewStates: {},
         kaplayVersions: kaplayVersions,
@@ -253,15 +254,16 @@ export const useEditor = create<EditorStore>((set, get) => ({
                         type: "UPDATE_CODE",
                         code: d,
                     },
-                    "*",
+                    SANDBOX_ORIGIN,
                 );
             });
         };
 
         const iframeReadyListener = (
-            { data, source }: MessageEvent<{ type: string }>,
+            { origin, data, source }: MessageEvent<{ type: string }>,
         ) => {
-            if (data.type != "READY") return;
+            if (origin !== SANDBOX_ORIGIN) return;
+            if (data?.type !== "READY") return;
             window.removeEventListener("message", iframeReadyListener);
             updateCode(source as Window);
         };
@@ -285,7 +287,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         if (!get().stopped) {
             get().runtime.iframe?.contentWindow?.postMessage(
                 { type: "PAUSE" },
-                "*",
+                SANDBOX_ORIGIN,
             );
         } else {
             get().run();
@@ -432,7 +434,7 @@ export const useEditor = create<EditorStore>((set, get) => ({
         if (!iframe) return;
 
         iframe.contentWindow?.focus();
-        iframe.contentWindow?.postMessage({ type: "FOCUS" }, "*");
+        iframe.contentWindow?.postMessage({ type: "FOCUS" }, SANDBOX_ORIGIN);
         iframe.dispatchEvent(new CustomEvent("focusiframe"));
     },
 }));

@@ -2,6 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import { Console, Decode } from "console-feed";
 import { Message } from "console-feed/lib/definitions/Console";
 import { type MouseEventHandler, useEffect, useRef, useState } from "react";
+import { SANDBOX_ORIGIN } from "../../config/common";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useConfig } from "../../hooks/useConfig";
 import { useEditor } from "../../hooks/useEditor";
@@ -75,7 +76,9 @@ export const ConsoleView = () => {
     };
 
     useEffect(() => {
-        const messageHandler = ({ data }: LogMessageEvent) => {
+        const messageHandler = ({ origin, data }: LogMessageEvent) => {
+            if (origin !== SANDBOX_ORIGIN) return;
+
             if (
                 !data?.type?.startsWith("CONSOLE")
                 || !data?.log
@@ -103,7 +106,7 @@ export const ConsoleView = () => {
                     ?.postMessage({
                         type: "TOGGLE_CONSOLE",
                         enabled,
-                    }, "*");
+                    }, SANDBOX_ORIGIN);
 
                 if (enabled) {
                     window.addEventListener("message", messageHandler);
