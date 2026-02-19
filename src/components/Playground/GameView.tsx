@@ -46,7 +46,8 @@ export const GameView: FC = () => {
                             height: "100%",
                             opacity: stopped ? 0 : 1,
                         }}
-                        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads"
+                        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-downloads allow-popups allow-popups-to-escape-sandbox"
+                        allowFullScreen={true}
                     />
                 )
                 : (
