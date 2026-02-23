@@ -14,9 +14,9 @@ export const TabTrigger: FC<TabTriggerProps> = (
     return (
         <Tabs.Trigger
             value={value}
-            className="tab px-6 data-[selected]:tab-active text-sm hover:bg-base-300/70"
+            className="tab px-6 data-[selected]:tab-active whitespace-nowrap w-full text-sm transition-[background-color] hover:bg-base-300/70 before:content-none last:before:!w-full last:before:-left-[var(--tab-radius)]"
         >
-            <div className="flex gap-2 items-center justify-center">
+            <div className="flex gap-2 items-center justify-center w-max">
                 <img
                     src={icon}
                     alt={label}

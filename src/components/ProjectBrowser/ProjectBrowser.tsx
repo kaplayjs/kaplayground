@@ -250,7 +250,7 @@ export const ProjectBrowser = () => {
                     tabIndex={0}
                 >
                     <div className="flex flex-wrap items-baseline justify-between gap-3">
-                        <h2 className="shrink-0 text-3xl text-white font-semibold">
+                        <h2 className="shrink-0 text-2xl sm:text-3xl text-white font-semibold">
                             Projects Browser
                         </h2>
 
@@ -290,7 +290,7 @@ export const ProjectBrowser = () => {
                         onSubmit={e => e.preventDefault()}
                     >
                         <label
-                            className="input input-bordered flex items-center gap-1 w-full join-item focus-within:z-[1]"
+                            className="input input-bordered max-sm:pl-3.5 max-sm:h-10 flex items-center gap-1 w-full join-item focus-within:z-[1]"
                             aria-label="Search"
                         >
                             <input
@@ -303,7 +303,7 @@ export const ProjectBrowser = () => {
 
                             <button
                                 type="reset"
-                                className="btn btn-xs btn-ghost -mr-1.5 px-1 shrink-0 peer-placeholder-shown:invisible peer-placeholder-shown:scale-0 peer-placeholder-shown:opacity-0 transition-[visibility,transform,opacity]"
+                                className="btn btn-xs btn-ghost -mr-2.5 sm:-mr-1.5 px-1 shrink-0 peer-placeholder-shown:invisible peer-placeholder-shown:scale-0 peer-placeholder-shown:opacity-0 transition-[visibility,transform,opacity]"
                                 aria-label="Clear"
                                 onClick={() => setFilter("")}
                             >
@@ -352,7 +352,7 @@ export const ProjectBrowser = () => {
                     onValueChange={tab => setTab(tab)}
                     className="flex flex-col flex-1 min-h-0"
                 >
-                    <TabsList className="auto-cols-fr -mx-px w-auto mb-[2px]">
+                    <TabsList className="sm:auto-cols-fr -mx-px w-auto mb-[2px]">
                         <TabTrigger
                             label="My Projects & Examples"
                             value="Projects"

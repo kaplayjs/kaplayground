@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated console log colors and icons - @imaginarny
 - Restricted sandbox communication using origin validation - @imaginarny
 - Allowed sandbox fullscreen and link opening - @imaginarny
+- Improved the Projects Browser above the fold responsive on small screens - @imaginarny
 
 ### Fixed
 

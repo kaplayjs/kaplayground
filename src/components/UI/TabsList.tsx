@@ -17,7 +17,7 @@ export const TabsList: FC<TabsListProps> = (props) => {
     return (
         <Tabs.List
             className={cn(
-                "tabs tabs-lifted tabs-lg bg-base-200 w-full",
+                "tabs tabs-lifted tabs-lg bg-base-200 w-full overflow-x-auto",
                 className,
             )}
         >

@@ -1,5 +1,6 @@
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { FC, useEffect, useRef, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { Tooltip } from "react-tooltip";
 import tween from "tweenkie";
 import type { ExamplesDataRecord } from "../../data/demos";
@@ -29,6 +30,7 @@ export const TagsFilter: FC<Props> = (
     const tagsRef = useRef<HTMLDivElement | null>(null);
     const [tagsExpanded, setTagsExpanded] = useState(true);
     const [userToggled, setUserToggled] = useState(false);
+    const isWidescreen = useMediaQuery({ query: "(min-width: 640px)" });
 
     const toggleTags = () => {
         setUserToggled(true);
@@ -37,7 +39,9 @@ export const TagsFilter: FC<Props> = (
 
     useEffect(() => {
         if (!userToggled) {
-            setTagsExpanded(value().length < 22 && value().length != 0);
+            setTagsExpanded(
+                isWidescreen && value().length != 0 && value().length < 22,
+            );
         }
         if (filterTags.length > 0) {
             setFilterTags(filterTags.filter(tag => value().includes(tag)));

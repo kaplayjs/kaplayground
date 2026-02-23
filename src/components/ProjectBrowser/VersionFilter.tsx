@@ -29,7 +29,7 @@ export const VersionFilter: FC<Props> = (
         <div className="grid">
             <select
                 value={value}
-                className="col-start-1 row-start-1 select select-bordered font-sans text-xs sm:text-sm pr-8 opacity-0"
+                className="col-start-1 row-start-1 select select-bordered max-sm:pl-3 max-sm:h-10 max-sm:min-h-10 font-sans text-xs sm:text-sm pr-8 opacity-0"
                 onChange={e => onChange(e.target.value ?? "")}
                 data-tooltip-id="projects-browser"
                 data-tooltip-content={strictComparison
@@ -54,11 +54,11 @@ export const VersionFilter: FC<Props> = (
                 ))}
             </select>
 
-            <div className="join-item col-start-1 row-start-1 select select-bordered text-xs sm:text-sm pr-8 gap-1 items-center pointer-events-none">
+            <div className="join-item col-start-1 row-start-1 select select-bordered max-sm:pl-3 max-sm:h-10 max-sm:min-h-10 text-xs sm:text-sm pr-8 gap-1 items-center pointer-events-none">
                 {optionFormatted(value)}
 
                 {value in selectOptions && (
-                    <span className="badge badge-xs font-medium py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
+                    <span className="badge badge-xs max-sm:text-[0.625rem] font-medium py-1 px-1 min-w-5 h-auto bg-base-content/15 border-0">
                         {selectOptions[value]}
                     </span>
                 )}
