@@ -39,7 +39,7 @@
         const isConsoleEnabled = (params.get("console") ?? "true") == "true";
 
         let hookedConsole = consoleHook(isConsoleEnabled);
-        window.addEventListener("error", e => console.error(e.message));
+        window.addEventListener("error", e => e?.error && console.error(e.message));
 
         const executeCode = (code) => {
             const previousScripts = document.querySelectorAll(
