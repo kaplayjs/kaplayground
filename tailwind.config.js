@@ -19,6 +19,7 @@ export default {
             colors: {
                 "base-highlight":
                     "color-mix(in oklch, oklch(var(--bc)) 30%, oklch(var(--b1)))",
+                "subheadings": "color-mix(in oklch, currentColor 55%, white)",
             },
             backgroundPosition: {
                 "select-xs": "right 12px center, right 8px center",
