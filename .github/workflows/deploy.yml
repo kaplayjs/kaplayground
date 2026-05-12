@@ -9,6 +9,7 @@ on:
       - completed
     branches:
       - master
+  workflow_dispatch:
 
 
 jobs:
