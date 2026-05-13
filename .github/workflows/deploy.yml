@@ -24,16 +24,20 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
           submodules: true
           fetch-depth: 0
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: "24"
+          cache: "pnpm"
       - name: Install dependencies
-        run: npm clean-install
+        run: pnpm install
       - name: Build app
-        run: npm run build
+        run: pnpm build
       - name: Deploy app
         uses: cloudflare/wrangler-action@v3
         with:
+          packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_WORKERS_KEY }}
           command: pages deploy dist --project-name=kaplay
