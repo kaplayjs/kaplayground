@@ -19,25 +19,21 @@ jobs:
     if: github.repository_owner == 'kaplayjs'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
           submodules: true
           fetch-depth: 0
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "24"
-          cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install
+        run: npm clean-install
       - name: Build app
-        run: pnpm build
+        run: npm run build
       - name: Deploy app
         uses: cloudflare/wrangler-action@v3
         with:
-          packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_WORKERS_KEY }}
           command: pages deploy dist --project-name=kaplay

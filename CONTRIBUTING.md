@@ -6,7 +6,6 @@ for contributing in the repository.
 ## Pre-requisites
 
 - [Node.js](https://nodejs.org/en)
-- [pnpm](https://pnpm.io/) package manager
 
 ## Conventions
 
@@ -24,9 +23,9 @@ So what branch should I use for developing features and then creating PR? **dev*
 ```sh
 git clone https://github.com/kaplayjs/kaplayground.git
 cd kaplayground
-pnpm i # will install and setup stuff of submodules
-pnpm dev # will start the development server
-pnpm fmt # before commit
+npm i # will install and setup stuff of submodules
+npm run dev # will start the development server
+npm run fmt # before commit
 ```
 
 ## Merge dev with master workflow
