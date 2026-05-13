@@ -36,7 +36,7 @@ jobs:
       - name: Build app
         run: pnpm build
       - name: Deploy app
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_WORKERS_KEY }}
