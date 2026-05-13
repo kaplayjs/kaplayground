@@ -31,6 +31,8 @@ jobs:
         with:
           node-version: "24"
           cache: "pnpm"
+      - name: Approve builds on pnpm  
+        run: pnpm approve-builds -all 
       - name: Install dependencies
         run: pnpm install
       - name: Build app
