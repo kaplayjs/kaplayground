@@ -1,1 +1,7 @@
 packages: []
+allowBuilds:
+  bufferutil: true
+  dprint: true
+  es5-ext: true
+  esbuild: true
+  utf-8-validate: true
