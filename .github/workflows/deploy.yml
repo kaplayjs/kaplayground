@@ -40,4 +40,5 @@ jobs:
         with:
           packageManager: pnpm
           apiToken: ${{ secrets.CLOUDFLARE_WORKERS_KEY }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=kaplay
