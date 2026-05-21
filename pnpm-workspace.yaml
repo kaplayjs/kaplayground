@@ -1,0 +1,8 @@
+allowBuilds:
+  bufferutil: true
+  dprint: true
+  es5-ext: true
+  esbuild: true
+  sharp: true
+  utf-8-validate: true
+  workerd: true
