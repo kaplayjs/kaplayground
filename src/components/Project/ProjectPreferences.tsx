@@ -326,7 +326,7 @@ const ProjectPreferences = () => {
 
                 <Tooltip
                     id="project-preferences-tooltips"
-                    className="text-xs !px-3 !py-2"
+                    className="text-xs !py-0.5"
                     isOpen={true}
                 />
             </Dialog>

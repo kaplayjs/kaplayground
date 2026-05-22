@@ -213,7 +213,7 @@ export const ProjectEntry: FC<ProjectEntryProps> = (
                                     data-tooltip-content="Manage"
                                     data-tooltip-place="left"
                                     data-tooltip-delay-show={400}
-                                    data-tooltip-class-name="!py-1 !px-2 !text-xs"
+                                    data-tooltip-class-name="[&>:first-child]:!px-2 [&>:first-child]:!py-1 !text-xs"
                                     data-tooltip-offset={6}
                                     onClick={handleContextMenuTrigger}
                                 >
