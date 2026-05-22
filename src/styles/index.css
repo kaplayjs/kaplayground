@@ -9,6 +9,7 @@ html, body, #root {
     overflow: hidden;
     scrollbar-width: none;
     font-family: 'Outfit Variable', sans-serif;
+    accent-color: oklch(var(--p));
 }
 
 :root {
@@ -19,6 +20,10 @@ html, body, #root {
 :root .react-tooltip {
     --rt-color-dark: rgba(23, 27, 34, 0.95);
     @apply rounded-md;
+}
+
+::selection {
+    background-color: #9bc26633;
 }
 
 @layer utilities {
@@ -77,6 +82,10 @@ html, body, #root {
 #monaco-editor-wrapper .monaco-editor {
     @apply rounded-xl outline-none;
 
+    .quick-input-widget .monaco-inputbox.synthetic-focus {
+        @apply !border-none rounded-md;
+    }
+
     .quick-input-widget .monaco-highlighted-label .highlight {
         color: oklch(var(--p));
     }
@@ -106,12 +115,18 @@ html, body, #root {
     }
 
     .overflow-guard {
-        @apply rounded-xl;
+        @apply relative rounded-xl z-0;
     }
 
     .monaco-editor-hover {
         z-index: 1000;
     }
+}
+/* find widget tooltips bug */
+body:has(.monaco-editor .find-widget.visible) .context-view.monaco-component {
+    position: fixed !important;
+    translate: 0 2.25rem;
+    pointer-events: none;
 }
 
 /* console */
