@@ -200,6 +200,25 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         for (const file of useProject.getState().project.files.values()) {
             loadFileInModel(file);
         }
+
+        // #4386 pasting bug treating plaintext as a snippet with escaped string adding '$0' at the end
+        editor.getContainerDomNode().addEventListener("drop", e => {
+            e.preventDefault();
+            const data = e.dataTransfer?.getData("text/plain");
+            if (!data) return;
+
+            const position = editor.getTargetAtClientPoint(
+                e.clientX,
+                e.clientY,
+            );
+            if (!position?.range) return;
+
+            editor.executeEdits("drop", [{
+                range: position.range,
+                text: data,
+                forceMoveMarkers: true,
+            }]);
+        });
     };
 
     useEffect(() => {
