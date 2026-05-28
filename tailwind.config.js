@@ -22,7 +22,8 @@ export default {
                 "subheadings": "color-mix(in oklch, currentColor 55%, white)",
             },
             backgroundPosition: {
-                "select-xs": "right 12px center, right 8px center",
+                "select-xs":
+                    "calc(100% - 6px) calc(1px + 50%), calc(100% - 6px) calc(1px + 50%)",
             },
             animation: {
                 "fade-in":

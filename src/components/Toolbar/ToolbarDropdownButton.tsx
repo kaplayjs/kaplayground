@@ -18,13 +18,14 @@ type ToolbarDropdownButtonProps = PropsWithChildren<
 export const ToolbarDropdownButton = forwardRef<
     HTMLDivElement,
     ToolbarDropdownButtonProps
->(({ children, type, icon, text, keys, ...props }, ref) => {
+>(({ children, type, icon, text, keys, className, ...props }, ref) => {
     return (
         <DropdownMenuItem
             ref={ref}
             className={cn(
-                "btn btn-sm btn-ghost font-normal text-left justify-start rounded-md pl-1.5 hover:outline-none aria-disabled:btn-disabled aria-disabled:!bg-opacity-0",
+                "btn btn-sm btn-ghost font-normal text-left justify-start rounded-md pl-1.5 hover:outline-none aria-disabled:btn-disabled aria-disabled:!bg-opacity-0 focus-visible:-outline-offset-2 outline-base-content/40",
                 { "hover:bg-error hover:text-error-content": type == "danger" },
+                className,
             )}
             {...props}
         >
