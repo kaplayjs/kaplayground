@@ -103,7 +103,7 @@ export const ProjectStatus = () => {
             {(!demoKey || hasUnsavedChanges) && (
                 <>
                     <button
-                        className="btn btn-xs btn-ghost uppercase font-semibold tracking-wider bg-base-50 rounded-xl"
+                        className="btn btn-xs btn-ghost uppercase font-semibold tracking-wider bg-base-50 rounded-xl max-lg:ml-1"
                         type="button"
                         onClick={() =>
                             document.querySelector<HTMLDialogElement>(
@@ -151,7 +151,7 @@ export const ProjectStatus = () => {
             <button
                 id="project-save-button"
                 className={cn(
-                    "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full focus-visible:-outline-offset-2",
+                    "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full focus-visible:-outline-offset-2 first:px-1.5 first:-mr-1.5 first:rounded-bl-xl",
                     {
                         "hover:bg-transparent cursor-default": isSaved(),
                     },

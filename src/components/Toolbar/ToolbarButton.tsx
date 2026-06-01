@@ -25,7 +25,7 @@ export const ToolbarButton = forwardRef<Ref, Props>(
         return (
             <button
                 className={cn(
-                    "btn btn-xs btn-ghost px-2 rounded-sm items-center justify-center h-full group-last:rounded-br-lg focus-visible:-outline-offset-2",
+                    "btn btn-xs btn-ghost px-2 rounded-sm items-center justify-center h-full group-last:rounded-br-xl focus-visible:-outline-offset-2",
                     className,
                 )}
                 data-tooltip-id="global"

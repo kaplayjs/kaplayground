@@ -5,6 +5,7 @@ export default {
     content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
     plugins: [
         require("@tailwindcss/container-queries"),
+        require("@tailwindcss/typography"),
         require("daisyui"),
     ],
     theme: {
@@ -27,9 +28,9 @@ export default {
             },
             animation: {
                 "fade-in":
-                    "fade-in 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                    "fade-in var(--tw-animation-duration, 150ms) cubic-bezier(0.4, 0, 0.2, 1) forwards",
                 "scale-in":
-                    "scale-in 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                    "scale-in var(--tw-animation-duration, 150ms) cubic-bezier(0.4, 0, 0.2, 1) forwards",
             },
             keyframes: {
                 "fade-in": {

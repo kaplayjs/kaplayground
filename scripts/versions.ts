@@ -33,4 +33,4 @@ export const generateVersions = async () => {
     console.log("Generated kaplayVersions.json");
 };
 
-generateVersions();
+await generateVersions();

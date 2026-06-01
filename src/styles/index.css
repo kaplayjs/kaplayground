@@ -26,6 +26,18 @@ html, body, #root {
     background-color: #9bc26633;
 }
 
+@property --alpha-0 {
+  syntax: "<number>";
+  initial-value: 0;
+  inherits: false;
+}
+
+@property --alpha-1 {
+  syntax: "<number>";
+  initial-value: 1;
+  inherits: false;
+}
+
 @layer utilities {
     .bg-base-50 {
         @apply bg-[rgb(50,56,68)];

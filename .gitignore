@@ -27,6 +27,7 @@ pnpm-debug.log*
 public/kaboom.js
 public/kaboom.js.map
 lib.d.ts
+vite.config.ts.timestamp-*
 
 # Neutralino.JS
 bin/
@@ -36,3 +37,4 @@ neutralinojs.log
 src/data/exampleList.json
 src/data/kaplayVersions.json
 src/data/publicAssets.json
+src/data/kaplayChangelog.html

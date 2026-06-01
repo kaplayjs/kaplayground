@@ -79,6 +79,8 @@ export const generatePublicAssets = async (
 export const generateExamples = async (examplesPath = defaultExamplesPath) => {
     let exampleCount = 0;
 
+    console.log("Generating examples...");
+
     const examples = fs.readdirSync(examplesPath).map((file) => {
         if (!file.endsWith(".js")) return null;
 

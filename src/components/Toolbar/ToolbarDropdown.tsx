@@ -41,7 +41,7 @@ export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
             <DropdownMenu.Portal container={portalContainer}>
                 <DropdownMenu.Content
                     className={cn(
-                        "rounded-btn p-1 bg-base-100 flex flex-col shadow-xl mt-px z-50",
+                        "group-dropdown rounded-btn p-1 bg-base-100 flex flex-col shadow-xl mt-px z-50",
                         contentClass,
                     )}
                     ref={contentRef}
