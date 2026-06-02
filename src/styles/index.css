@@ -94,6 +94,10 @@ html, body, #root {
 #monaco-editor-wrapper .monaco-editor {
     @apply rounded-xl outline-none;
 
+    .quick-input-widget {
+        @apply ml-0 w-auto;
+    }
+
     .quick-input-widget .monaco-inputbox.synthetic-focus {
         @apply !border-none rounded-md;
     }

@@ -245,8 +245,8 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
-                    fontSize: 16,
-                    lineHeight: 25,
+                    fontSize: window.innerWidth < 900 ? 14 : 16,
+                    lineHeight: window.innerWidth < 900 ? 22 : 25,
                     tabSize: 4,
                     insertSpaces: true,
                     trimAutoWhitespace: true,
@@ -269,6 +269,7 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                     wordWrap: getConfig().wordWrap ? "on" : "off",
                     smoothScrolling: true,
                     fixedOverflowWidgets: true,
+                    automaticLayout: true,
                 }}
             />
 
