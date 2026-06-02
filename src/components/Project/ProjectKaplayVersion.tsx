@@ -21,10 +21,19 @@ import { ScrollArea } from "../UI/ScrollArea";
 
 const overrideIds: Record<string, string> = {
     "4000.0.0-alpha.26.1": "4000.0.0-alpha.26",
+    ...Object.fromEntries(
+        Array.from(
+            { length: 18 },
+            (_, i) => [`4000.0.0-alpha.${i + 1}`, "4000.0.0-alpha.19"],
+        ),
+    ),
 };
-const overrideIdsReverse = Object.fromEntries(
-    Object.entries(overrideIds).map(a => a.reverse()),
-);
+const overrideIdsReverse = Object.entries(overrideIds).reduce<
+    Record<string, string[]>
+>((acc, [key, value]) => {
+    (acc[value] ??= []).push(key);
+    return acc;
+}, {});
 
 type ProjectKaplayVersionProps = {
     value?: string;
@@ -54,6 +63,7 @@ export const ProjectKaplayVersion = (
     const setProject = useProject((s) => s.setProject);
     const run = useEditor((s) => s.run);
     const [showChangelog, setShowChangelog] = useState(false);
+    const [noChangeloEntry, setNoChangelogEntry] = useState(false);
     const changelogRef = useRef<HTMLDivElement>(null);
 
     const master = kaplayVersions.includes("master") ? "master" : null;
@@ -108,15 +118,19 @@ export const ProjectKaplayVersion = (
 
                 const target = overrideIdsReverse[v] || v;
                 setSelected(prevSelected => {
-                    if (!v || [v, target].includes(prevSelected)) {
+                    if (!v || [v, ...target].includes(prevSelected)) {
                         return prevSelected;
                     }
 
-                    document.querySelector(`[data-version="${v}"]`)
-                        ?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "center",
-                        });
+                    const entry = document.querySelector(
+                        `[role="listitem"][data-version="${v}"]`,
+                    );
+                    entry?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+
+                    setNoChangelogEntry(!entry);
 
                     return v;
                 });
@@ -169,7 +183,7 @@ export const ProjectKaplayVersion = (
             contentEl.style.overflow = "";
             contentEl.style.width = "";
             contentEl.style.height = "";
-            contentEl.style.minWidth = "max-content";
+            contentEl.style.minWidth = "0";
             (contentEl.firstElementChild as HTMLElement)!.style.minWidth = "";
             requestAnimationFrame(() => {
                 contentEl.classList.toggle("is-animating", false);
@@ -230,6 +244,8 @@ export const ProjectKaplayVersion = (
         const entryEl = changelogEl?.querySelector(
             `[data-version="${(overrideIds[version] || version)}"]`,
         ) as HTMLElement;
+
+        setNoChangelogEntry(!entryEl);
         if (!changelogEl || !entryEl) return;
 
         entryEl.style.position = "relative";
@@ -521,10 +537,21 @@ export const ProjectKaplayVersion = (
                                 dangerouslySetInnerHTML={{ __html: changelog }}
                             />
 
-                            <div
-                                className="sticky -mb-2 -bottom-2 left-0 right-0 h-8 bg-gradient-to-t from-base-200 to-base-200/0"
-                                aria-hidden="true"
-                            />
+                            <div className="sticky -mb-2 -bottom-2 left-0 right-0">
+                                <div
+                                    className="h-8 bg-gradient-to-t from-base-200 to-base-200/0"
+                                    aria-hidden="true"
+                                />
+
+                                <div className="absolute -left-4 bottom-0 -right-4 overflow-hidden shadow-[0_-1rem_4rem_1.5rem] shadow-base-200 has-[[aria-hidden=true]]:opacity-0 transition-opacity">
+                                    <div
+                                        className="px-4 py-2.5 bg-neutral font-medium text-sm text-warning-subtle rounded-md border-t border-base-200 aria-hidden:translate-y-full transition-transform"
+                                        aria-hidden={!noChangeloEntry}
+                                    >
+                                        No changelog for this version
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

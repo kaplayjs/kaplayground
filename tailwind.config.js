@@ -21,6 +21,8 @@ export default {
                 "base-highlight":
                     "color-mix(in oklch, oklch(var(--bc)) 30%, oklch(var(--b1)))",
                 "subheadings": "color-mix(in oklch, currentColor 55%, white)",
+                "warning-subtle":
+                    "color-mix(in oklch, oklch(var(--wa)) 60%, white)",
             },
             backgroundPosition: {
                 "select-xs":

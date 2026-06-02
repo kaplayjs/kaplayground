@@ -49,7 +49,7 @@ export const WorkspaceProject: FC<Props> = (props) => {
                     "--allotment-filetree": `${allotmentSizes[0]}px`,
                 } as CSSProperties}
             >
-                <header className="h-9 flex">
+                <header className="h-9 flex shrink-0">
                     <Toolbar />
                 </header>
 
