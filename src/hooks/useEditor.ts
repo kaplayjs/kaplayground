@@ -153,6 +153,12 @@ export const useEditor = create<EditorStore>((set, get) => ({
 
         editor.setModel(currentFileModel);
 
+        // Workaround to refresh TS diagnostics decorations
+        monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: false,
+            noSyntaxValidation: false,
+        });
+
         // Load new view state
         const viewState = viewStates[newCurrentFile];
 
