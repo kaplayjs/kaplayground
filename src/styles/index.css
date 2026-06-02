@@ -139,7 +139,8 @@ html, body, #root {
     }
 }
 /* find widget tooltips bug */
-body:has(.monaco-editor .find-widget.visible) .context-view.monaco-component {
+body:has(.monaco-editor .find-widget.visible) .context-view.monaco-component,
+body:has(.monaco-editor .findOptionsWidget[style*="block"]) .context-view.monaco-component {
     position: fixed !important;
     translate: var(--allotment-filetree, 0px) 2.25rem;
     pointer-events: none;
