@@ -141,7 +141,7 @@ html, body, #root {
 /* find widget tooltips bug */
 body:has(.monaco-editor .find-widget.visible) .context-view.monaco-component {
     position: fixed !important;
-    translate: 0 2.25rem;
+    translate: var(--allotment-filetree, 0px) 2.25rem;
     pointer-events: none;
 }
 

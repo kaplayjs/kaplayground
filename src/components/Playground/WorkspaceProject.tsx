@@ -1,5 +1,6 @@
 import { Allotment, LayoutPriority } from "allotment";
-import type { FC } from "react";
+import { type CSSProperties, type FC, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { MonacoEditor } from "../../features/Editor/components/MonacoEditor.tsx";
 import useConsolePane from "../../hooks/useConsolePane";
 import { allotmentStorage } from "../../util/allotmentStorage";
@@ -21,6 +22,15 @@ export const WorkspaceProject: FC<Props> = (props) => {
 
     const { consoleVisible, consoleMinSize, consoleSize } = useConsolePane();
 
+    const [allotmentSizes, setAllotmentSizes] = useState(
+        getAllotmentSize("editor"),
+    );
+
+    const handleMainAllotmentChange = useDebouncedCallback((e: number[]) => {
+        setAllotmentSize("editor", e);
+        setAllotmentSizes(e);
+    }, 1000);
+
     const handleDragStart = () =>
         document.documentElement.classList.toggle("select-none", true);
     const handleDragEnd = () =>
@@ -35,6 +45,9 @@ export const WorkspaceProject: FC<Props> = (props) => {
                         "hidden": props.editorIsLoading,
                     },
                 )}
+                style={{
+                    "--allotment-filetree": `${allotmentSizes[0]}px`,
+                } as CSSProperties}
             >
                 <header className="h-9 flex">
                     <Toolbar />
@@ -44,7 +57,7 @@ export const WorkspaceProject: FC<Props> = (props) => {
                     <Allotment
                         vertical={props.isPortrait}
                         defaultSizes={getAllotmentSize("editor", [0.5, 2, 2])}
-                        onChange={e => setAllotmentSize("editor", e)}
+                        onChange={handleMainAllotmentChange}
                         onDragStart={handleDragStart}
                         onDragEnd={handleDragEnd}
                         className="p-px pt-0"
