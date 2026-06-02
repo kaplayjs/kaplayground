@@ -262,7 +262,7 @@ export const ProjectKaplayVersion = (
     const Option = ({ value, ...props }: { value: string }) => (
         <ToolbarDropdownButton
             className={cn(
-                "h-7 min-h-7 grow [&[aria-selected=true]:not(:hover)]:bg-base-content/30 aria-selected:text-white aria-selected:focus-visible:outline-none",
+                "h-7 min-h-7 grow [&[aria-selected=true]]:bg-base-content/30 aria-selected:text-white aria-selected:focus-visible:outline-none",
                 {
                     "[&:not(:hover)]:bg-base-content/10": value !== selected
                         && value === defaultValue(),
@@ -462,18 +462,18 @@ export const ProjectKaplayVersion = (
                         {showChangelog && (
                             <div
                                 className={cn(
-                                    "grid grid-rows-[0fr] min-h-0 shrink-0 -mr-[calc(0.25rem-1px)] mt-auto overflow-hidden group-[-dropdown.is-animating]:grid-rows-[0fr] group-[-dropdown.is-animating:not(.is-animating-in):not(.is-animating-out)]:hidden transition-[grid-template-rows]",
+                                    "grid grid-rows-[0fr] min-h-0 shrink-0 -mr-[calc(0.25rem-1px)] mt-auto opacity-0 overflow-hidden group-[-dropdown.is-animating]:grid-rows-[0fr] group-[-dropdown.is-animating:not(.is-animating-in):not(.is-animating-out)]:hidden transition-[opacity,grid-template-rows]",
                                     {
-                                        "grid-rows-[1fr]":
+                                        "grid-rows-[1fr] group-[-dropdown:not(.is-animating)]:opacity-100":
                                             selected !== defaultValue(),
                                     },
                                 )}
                             >
                                 <div
                                     className={cn(
-                                        "flex justify-between gap-2 p-2 bg-base-300 rounded-md overflow-hidden opacity-1 transition-[opacity,transform]",
+                                        "flex justify-between gap-2 p-2 bg-base-300 rounded-md overflow-hidden transition-transform",
                                         {
-                                            "opacity-0 translate-y-full":
+                                            "translate-y-full":
                                                 selected === defaultValue(),
                                         },
                                     )}
