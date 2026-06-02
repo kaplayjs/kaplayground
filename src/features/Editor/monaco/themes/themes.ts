@@ -72,7 +72,8 @@ export const themes = {
 
             "editor.background": "#242933",
             "editor.foreground": "#b2ccd6",
-            "editor.selectionBackground": "#465061",
+            "editor.selectionBackground": "#465061e6",
+            'editor.inactiveSelectionBackground': "#4650614d",
             "editor.lineHighlightBackground": "#2b313b",
             "editor.lineHighlightBorder": "#00000000",
 
