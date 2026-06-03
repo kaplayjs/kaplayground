@@ -95,11 +95,16 @@ html, body, #root {
     @apply rounded-xl outline-none;
 
     .quick-input-widget {
-        @apply ml-0 w-auto;
+        @apply -mt-px ml-0 pt-0 w-auto;
     }
-
     .quick-input-widget .monaco-inputbox.synthetic-focus {
         @apply !border-none rounded-md;
+    }
+    .quick-input-widget .monaco-inputbox > .ibwrapper > .input {
+        @apply !bg-base-200/50 outline-1 outline-offset-0 rounded-md;
+    }
+    .quick-input-header {
+        padding-top: 6px;
     }
 
     .quick-input-widget .monaco-highlighted-label .highlight {
