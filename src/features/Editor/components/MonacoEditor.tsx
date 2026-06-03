@@ -270,6 +270,11 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                     smoothScrolling: true,
                     fixedOverflowWidgets: true,
                     automaticLayout: true,
+                    stickyScroll: {
+                        enabled: true,
+                        defaultModel: "indentationModel",
+                        maxLineCount: window.innerHeight <= 900 ? 2 : 4,
+                    },
                 }}
             />
 
