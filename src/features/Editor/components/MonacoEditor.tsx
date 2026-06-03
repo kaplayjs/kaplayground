@@ -245,8 +245,8 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
-                    fontSize: window.innerWidth < 900 ? 14 : 16,
-                    lineHeight: window.innerWidth < 900 ? 22 : 25,
+                    fontSize: window.innerWidth <= 900 || window.innerHeight <= 900 ? 14 : 16,
+                    lineHeight: window.innerWidth <= 900 || window.innerHeight <= 900 ? 22 : 25,
                     tabSize: 4,
                     insertSpaces: true,
                     trimAutoWhitespace: true,
