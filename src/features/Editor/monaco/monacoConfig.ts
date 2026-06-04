@@ -3,6 +3,7 @@ import docTs from "../../../../lib.d.ts?raw";
 import { useEditor } from "../../../hooks/useEditor.ts";
 import { DATA_URL_REGEX } from "../../../util/regex.ts";
 import { useProject } from "../../Projects/stores/useProject.ts";
+import { ColorProvider } from "./completion/ColorProvider";
 import { CompletionAddProvider } from "./completion/CompletionAddProvider.ts";
 import { ImportPathCompletionProvider } from "./completion/ImportPathCompletionProvider";
 import { KSnippetsProvider } from "./completion/KSnippets.ts";
@@ -120,6 +121,9 @@ export const configMonaco = (monaco: Monaco) => {
         "javascript",
         new ImportPathCompletionProvider(),
     );
+
+    // Colors transform and color-picker
+    monaco.languages.registerColorProvider("javascript", new ColorProvider());
 
     // Themes
     monaco.editor.defineTheme("Spiker", themes.Spiker);

@@ -152,6 +152,74 @@ html, body, #root {
         background-position: center;
     }
 
+    .monaco-resizable-hover,
+    .monaco-hover {
+        @apply rounded-md;
+    }
+
+    .colorpicker-color-decoration {
+        margin-left: 0;
+        border: none;
+        border-radius: 4px;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    .monaco-hover .hover-row:focus {
+        outline: none;
+    }
+
+    .monaco-hover:has(.colorpicker-widget) {
+        @apply bg-base-200 shadow-xl !w-min;
+    }
+
+    .monaco-hover-content:has(.colorpicker-widget) {
+        &,
+        .monaco-tokenized-source {
+            @apply !text-sm break-words;
+        }
+        .mtk10 {
+            @apply break-all;
+        }
+    }
+
+    .colorpicker-widget {
+        --inset-shadow: rgba(255, 255, 255, 0.15);
+        --radius: calc(0.375rem - 2px);
+        margin-right: -2px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:only-child {
+            margin-bottom: -2px;
+        }
+
+        .colorpicker-header {
+            @apply font-mono text-xs m-2 mb-0 overflow-hidden;
+            border-radius: var(--radius);
+
+            > * {
+                border: 1px solid var(--inset-shadow);
+                border-radius: var(--radius);
+            }
+
+            .picked-color { @apply border-r-0 rounded-r-none; }
+            .original-color { @apply border-l-0 rounded-l-none w-8; }
+            .codicon { @apply text-xs; }
+        }
+
+        .opacity-strip {
+            display: none !important;
+        }
+
+        .saturation-box,
+        .hue-strip,
+        .hue-strip .slider {
+            border-radius: var(--radius);
+        }
+    }
+
     .overflow-guard {
         @apply relative rounded-xl z-0;
     }
