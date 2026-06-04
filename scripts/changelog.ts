@@ -19,44 +19,56 @@ export const generateChangelog = async () => {
         .process(file)).toString();
 
     let result = content.slice(content.indexOf("<h2"));
-    result = result.replace(
-        "[unreleased]",
-        "[master] <span>- unreleased</span>",
-    );
-    result = transformVersionHeadings(result);
-    result = transformPRUrls(result);
+    result = Object.values(htmlTransforms).reduce((r, fn) => fn(r), result);
 
     writeFileSync(distPath, result);
     console.log("Generated kaplayChangelog.html");
 };
 
-function transformVersionHeadings(html: string) {
-    const overrideIds: Record<string, string> = {};
+const htmlTransforms = {
+    transformUnreleasedMaster(html: string) {
+        return html.replace(
+            "[unreleased]",
+            "[master] <span>- unreleased</span>",
+        );
+    },
 
-    return html.replace(
-        /<h2>\s*\[(.*?)\](.*?)<\/h2>/gis,
-        (_, title, rest) => {
-            const titleParsed = title.trim();
-            const restParsed = rest.trim();
-            let id = titleParsed;
-            if (overrideIds[id]) id = overrideIds[id];
-            id = id.replaceAll(".", "-");
+    transformVersionHeadings(html: string) {
+        const overrideIds: Record<string, string> = {};
 
-            return `<h2 id="${id}" data-version="${titleParsed}">${titleParsed}${
-                restParsed ? ` <span>${restParsed}</span>` : ""
-            }</h2>`.trim();
-        },
-    );
-}
+        return html.replace(
+            /<h2>\s*\[(.*?)\](.*?)<\/h2>/gis,
+            (_, title, rest) => {
+                const titleParsed = title.trim();
+                const restParsed = rest.trim();
+                let id = titleParsed;
+                if (overrideIds[id]) id = overrideIds[id];
+                id = id.replaceAll(".", "-");
 
-function transformPRUrls(html: string) {
-    return html.replace(
-        /\(#(\d*)\)/gis,
-        (txt, pr) => {
-            return `<a href="https://github.com/kaplayjs/kaplay/pull/${pr.trim()}" target="_blank">${txt}</a>`
-                .trim();
-        },
-    );
-}
+                return `<h2 id="${id}" data-version="${titleParsed}">${titleParsed}${
+                    restParsed ? ` <span>${restParsed}</span>` : ""
+                }</h2>`.trim();
+            },
+        );
+    },
+
+    transformPRUrls(html: string) {
+        return html.replace(
+            /\(#(\d*)\)/gis,
+            (txt, pr) => {
+                return `<a href="https://github.com/kaplayjs/kaplay/pull/${pr.trim()}" target="_blank"><small>${txt}</small></a>`;
+            },
+        );
+    },
+
+    transformAtHandles(html: string) {
+        return html.replace(
+            /-\s*@[^,\s]+(?:\s*,\s*@[^,\s]+)*/gis,
+            (txt) => {
+                return `<small>${txt}</small>`;
+            },
+        );
+    },
+};
 
 generateChangelog();
