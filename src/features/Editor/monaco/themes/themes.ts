@@ -71,9 +71,9 @@ export const themes = {
             "widget.border": "#b2ccd615",
 
             "editor.background": "#242933",
-            "editor.foreground": "#b2ccd6",
+            "editor.foreground": "#7f848e",
             "editor.selectionBackground": "#465061e6",
-            'editor.inactiveSelectionBackground': "#4650614d",
+            "editor.inactiveSelectionBackground": "#4650614d",
             "editor.lineHighlightBackground": "#2b313b",
             "editor.lineHighlightBorder": "#00000000",
 
@@ -84,7 +84,8 @@ export const themes = {
             "editor.findMatchHighlightBackground": "#b2ccd620",
             "editor.findMatchBorder": "#b2ccd615",
 
-            "editorStickyScroll.shadow": "#0000001A",
+            "editorStickyScroll.shadow": "#0000001f",
+            "editorStickyScroll.border": "#ffffff05",
             "editorStickyScrollHover.background": "#2b313b",
 
             "editorCursor.foreground": "#b5d982",

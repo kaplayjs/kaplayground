@@ -129,6 +129,16 @@ html, body, #root {
         outline-offset: 1px;
     }
 
+    .sticky-widget {
+        padding-right: 14px;
+        box-shadow: var(--vscode-editorStickyScroll-shadow) 0 5px 5px -2px;
+
+        &,
+        .sticky-line-number-inner {
+            @apply box-content;
+        }
+    }
+
     .monaco-glyph-margin-preview-image {
         background-size: 20px;
         background-repeat: no-repeat;
