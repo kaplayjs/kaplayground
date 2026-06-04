@@ -97,18 +97,25 @@ html, body, #root {
     .quick-input-widget {
         @apply -mt-px ml-0 pt-0 w-auto;
     }
+    .quick-input-header {
+        padding-top: 6px;
+    }
     .quick-input-widget .monaco-inputbox.synthetic-focus {
         @apply !border-none rounded-md;
     }
     .quick-input-widget .monaco-inputbox > .ibwrapper > .input {
         @apply !bg-base-200/50 outline-1 outline-offset-0 rounded-md;
     }
-    .quick-input-header {
-        padding-top: 6px;
+    .quick-input-inline-action-bar:has(ul:empty) {
+        margin: 0;
     }
 
     .quick-input-widget .monaco-highlighted-label .highlight {
         color: oklch(var(--p));
+    }
+
+    .find-widget .monaco-inputbox.synthetic-focus {
+        outline: 1px solid var(--vscode-focusBorder);
     }
 
     .find-widget .button:not(.disabled):hover,
