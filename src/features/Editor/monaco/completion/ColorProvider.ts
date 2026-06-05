@@ -1,9 +1,19 @@
 import { type editor, type IRange, languages, Range } from "monaco-editor";
+import { CSS_COLOR_MAP } from "../../../../../kaplay/src/constants/colorMap";
 
-export const HEX_REGEX = /"#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})"/g;
+export const HEX_REGEX =
+    /"#?([0-9a-fA-F]{6}|[0-9a-fA-F]{3})"|0x([0-9a-fA-F]{6}|[0-9a-fA-F]{3})/g;
 export const RGB_REGEX =
     /rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/g;
 export const ARR_REGEX = /\[\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\]/g;
+export const TXT_REGEX = new RegExp(
+    `"(i:${
+        Object.keys(CSS_COLOR_MAP).join(`|`)
+    })"|RED|GREEN|BLUE|YELLOW|MAGENTA|CYAN|BLACK|WHITE`,
+    "g",
+);
+export const CMP_REGEX =
+    /(?:color\s*\()\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:\))/g;
 
 export class ColorProvider implements languages.DocumentColorProvider {
     provideDocumentColors(model: editor.ITextModel) {
@@ -12,15 +22,21 @@ export class ColorProvider implements languages.DocumentColorProvider {
 
         const parse = (
             regex: RegExp,
-            parser: (m: string[]) => languages.IColor,
+            parser: (
+                m: string[],
+            ) => languages.IColor & {
+                rangeOffset?: { start?: number; end?: number };
+            },
         ) => {
             let match;
             while ((match = regex.exec(text)) !== null) {
-                const start = model.getPositionAt(match.index);
-                const end = model.getPositionAt(match.index + match[0].length);
+                let start = model.getPositionAt(match.index);
+                let end = model.getPositionAt(match.index + match[0].length);
 
                 const color = parser(match);
                 if (!color) continue;
+
+                const rangeOffset = color?.rangeOffset;
 
                 const offset = model.getOffsetAt(start);
                 const isForOpacities = /opacities:\s*$/.test(
@@ -31,9 +47,9 @@ export class ColorProvider implements languages.DocumentColorProvider {
                 matches.push({
                     range: new Range(
                         start.lineNumber,
-                        start.column,
+                        start.column + (rangeOffset?.start ?? 0),
                         end.lineNumber,
-                        end.column,
+                        end.column + (rangeOffset?.end ?? 0),
                     ),
                     color,
                 });
@@ -41,7 +57,7 @@ export class ColorProvider implements languages.DocumentColorProvider {
         };
 
         parse(HEX_REGEX, (m) => {
-            let hex = m[1].replace(/^#/, "");
+            let hex = (m[1] ?? m[2]).replace(/^#/, "");
 
             if (hex.length === 3) {
                 hex = hex
@@ -67,11 +83,37 @@ export class ColorProvider implements languages.DocumentColorProvider {
             };
         });
 
+        parse(CMP_REGEX, (m) => {
+            return {
+                red: Number(m[1]) / 255,
+                green: Number(m[2]) / 255,
+                blue: Number(m[3]) / 255,
+                alpha: 1,
+                rangeOffset: {
+                    start: 6,
+                    end: -1,
+                },
+            };
+        });
+
         parse(ARR_REGEX, (m) => {
             return {
                 red: Number(m[1]) / 255,
                 green: Number(m[2]) / 255,
                 blue: Number(m[3]) / 255,
+                alpha: 1,
+            };
+        });
+
+        parse(TXT_REGEX, (m) => {
+            let hex = CSS_COLOR_MAP[
+                (m[1] || m[0]).toLowerCase() as keyof typeof CSS_COLOR_MAP
+            ].replace(/^#/, "");
+
+            return {
+                red: parseInt(hex.slice(0, 2), 16) / 255,
+                green: parseInt(hex.slice(2, 4), 16) / 255,
+                blue: parseInt(hex.slice(4, 6), 16) / 255,
                 alpha: 1,
             };
         });
@@ -89,13 +131,23 @@ export class ColorProvider implements languages.DocumentColorProvider {
         const g = Math.round(color.green * 255);
         const b = Math.round(color.blue * 255);
 
-        const hex = `#${
+        let hex = `${
             [r, g, b]
                 .map(v => v.toString(16).padStart(2, "0"))
                 .join("")
         }`;
-        const rgb = `rgb(${r}, ${g}, ${b})`;
-        const arr = `[${r}, ${g}, ${b}]`;
+        hex = !model.getValueInRange(colorInfo.range).match(/^0x/)
+            ? `#${hex}`
+            : `0x${hex}`;
+
+        let arr = `${r}, ${g}, ${b}`;
+        const rgb = `rgb(${arr})`;
+
+        if (
+            !model.getValueInRange(colorInfo.range).match(/^\s*(\d{1,3})\s*,/)
+        ) {
+            arr = `[${arr}]`;
+        }
 
         const range = expantToQuotedRange(model, colorInfo.range);
         const isQuoted = (() => {
@@ -119,7 +171,7 @@ export class ColorProvider implements languages.DocumentColorProvider {
                 label: hex,
                 textEdit: {
                     range,
-                    text: isQuoted ? hex : `"${hex}"`,
+                    text: isQuoted || hex.startsWith("0x") ? hex : `"${hex}"`,
                 },
             },
             {
