@@ -177,9 +177,6 @@ html, body, #root {
         .monaco-tokenized-source {
             @apply !text-sm break-words;
         }
-        .mtk10 {
-            @apply break-all;
-        }
     }
 
     .colorpicker-widget {
@@ -207,6 +204,10 @@ html, body, #root {
             .picked-color { @apply border-r-0 rounded-r-none; }
             .original-color { @apply border-l-0 rounded-l-none w-8; }
             .codicon { @apply text-xs; }
+        }
+
+        .saturation-box {
+            @apply w-full;
         }
 
         .opacity-strip {
