@@ -219,6 +219,20 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 forceMoveMarkers: true,
             }]);
         });
+
+        // Workaround fix for a bug where color picker wouldn't hide until editing or moving around a lot
+        editor.onDidBlurEditorText(() => {
+            requestAnimationFrame(() => {
+                const el = document.activeElement as HTMLElement;
+                if (!el?.classList.contains("colorpicker-widget")) return;
+
+                const d = editor.onDidFocusEditorText(() => {
+                    const widget = el.closest("[monaco-visible-content-widget]") as HTMLElement;
+                    if (widget) widget.style.display = "none";
+                    d.dispose();
+                });
+            })
+        });
     };
 
     useEffect(() => {
