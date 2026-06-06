@@ -6,18 +6,11 @@ import { parse } from "comment-parser";
 import fs from "fs";
 import mime from "mime-types";
 import path from "path";
-import type { Packument } from "query-registry";
 import examplesData from "../kaplay/examples/examples.json" with {
     type: "json",
 };
 
-// @ts-ignore
-async function getPackageInfo(name: string): Promise<Packument> {
-    const endpoint = `https://registry.npmjs.org/${name}`;
-    const res = await fetch(endpoint);
-    const data = await res.json();
-    return data as Packument;
-}
+const args = process.argv.slice(2);
 
 const defaultExamplesPath = path.join(
     import.meta.dirname,
@@ -27,6 +20,7 @@ const defaultExamplesPath = path.join(
 );
 
 const distPath = path.join(import.meta.dirname, "..", "src", "data");
+const distExamplesFilename = "exampleList.json";
 
 export const generatePublicAssets = async (
     examplesPath = defaultExamplesPath,
@@ -76,12 +70,37 @@ export const generatePublicAssets = async (
     console.log("Generated publicAssets.json");
 };
 
-export const generateExamples = async (examplesPath = defaultExamplesPath) => {
+export const generateExamples = async (
+    forceRegenerate = args.includes("--regenerate"),
+    examplesPath = defaultExamplesPath,
+) => {
+    let exampleFiles = fs.readdirSync(examplesPath).filter((file: string) =>
+        file.endsWith(".js")
+    );
+    let skipGeneration = false;
+
+    if (!forceRegenerate) {
+        try {
+            const existingExamples = fs.readFileSync(
+                path.join(distPath, distExamplesFilename),
+                "utf-8",
+            );
+            skipGeneration = exampleFiles.length
+                === JSON.parse(existingExamples ?? []).length;
+        } catch {}
+
+        if (skipGeneration) {
+            console.log(
+                `Generated examples (${exampleFiles.length}), no new found for ${distExamplesFilename}, to force update run with (--) --regenerate`,
+            );
+            return;
+        }
+    }
+
+    console.log(`Generating ${exampleFiles.length} examples...`);
+
     let exampleCount = 0;
-
-    const examples = fs.readdirSync(examplesPath).map((file) => {
-        if (!file.endsWith(".js")) return null;
-
+    const examples = exampleFiles.map((file) => {
         const filePath = path.join(examplesPath, file);
         const code = fs.readFileSync(filePath, "utf-8");
         const name = file.replace(".js", "");
@@ -136,7 +155,7 @@ export const generateExamples = async (examplesPath = defaultExamplesPath) => {
 
     // Write a JSON file with the examples
     fs.writeFileSync(
-        path.join(distPath, "exampleList.json"),
+        path.join(distPath, distExamplesFilename),
         JSON.stringify(examples.filter(Boolean), null, 4),
     );
 

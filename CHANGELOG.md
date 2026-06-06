@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.3] - 2026-06-06
+
+### Added
+
+- Added a new Project KAPLAY Version dropdown with a toggleable changelog browser - @imaginarny
+- The code editor now has a new color picker that supports switching between `#hex`, `rgb()`, and `[r, g, b]` color formats - @imaginarny
+- The code editor now keeps the starting lines of nested/scoped code sticky at the top while scrolling - @imaginarny
+
+### Changed
+
+- Now its possible to change the KAPLAY Version in the Project Preferences as well - @imaginarny
+- Refined small design details in responsive layout including editor font size - @imaginarny
+
+### Fixed
+
+- Prevented app lockout when trying to load nonexistent project on page load, showing a modal with more details instead - @imaginarny
+- Fixed various issues introduced after the code editor dependencies got updated - @imaginarny
+  - Quick command palette aligned partially off-screen
+  - Initial key input being ignored after selecting code backwards
+  - Stale or missing TS code line decorations when changing projects/files
+  - Intrusively placed tooltips in the Find widgets overlapping buttons
+  - Malformed text ending when pasting via drag and drop
+  - Colors and active states of inputs and widgets
+
 ## [2.5.2] - 2026-02-23
 
 ### Added

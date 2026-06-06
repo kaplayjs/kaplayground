@@ -39,7 +39,7 @@ export const WorkspaceExample: FC<Props> = (props) => {
                 "hidden": props.editorIsLoading,
             })}
         >
-            <header className="h-9 flex flex-col">
+            <header className="h-9 flex flex-col shrink-0">
                 {isWidescreen ? <Toolbar /> : <ToolbarToolsMenu />}
             </header>
 

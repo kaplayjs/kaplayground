@@ -200,6 +200,41 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
         for (const file of useProject.getState().project.files.values()) {
             loadFileInModel(file);
         }
+
+        // #4386 pasting bug treating plaintext as a snippet with escaped string adding '$0' at the end
+        editor.getContainerDomNode().addEventListener("drop", e => {
+            e.preventDefault();
+            const data = e.dataTransfer?.getData("text/plain");
+            if (!data) return;
+
+            const position = editor.getTargetAtClientPoint(
+                e.clientX,
+                e.clientY,
+            );
+            if (!position?.range) return;
+
+            editor.executeEdits("drop", [{
+                range: position.range,
+                text: data,
+                forceMoveMarkers: true,
+            }]);
+        });
+
+        // Workaround fix for a bug where color picker wouldn't hide until editing or moving around a lot
+        editor.onDidBlurEditorText(() => {
+            requestAnimationFrame(() => {
+                const el = document.activeElement as HTMLElement;
+                if (!el?.classList.contains("colorpicker-widget")) return;
+
+                const d = editor.onDidFocusEditorText(() => {
+                    const widget = el.closest(
+                        "[monaco-visible-content-widget]",
+                    ) as HTMLElement;
+                    if (widget) widget.style.display = "none";
+                    d.dispose();
+                });
+            });
+        });
     };
 
     useEffect(() => {
@@ -226,8 +261,14 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
-                    fontSize: 16,
-                    lineHeight: 25,
+                    fontSize:
+                        window.innerWidth <= 900 || window.innerHeight <= 900
+                            ? 14
+                            : 16,
+                    lineHeight:
+                        window.innerWidth <= 900 || window.innerHeight <= 900
+                            ? 22
+                            : 25,
                     tabSize: 4,
                     insertSpaces: true,
                     trimAutoWhitespace: true,
@@ -250,6 +291,12 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                     wordWrap: getConfig().wordWrap ? "on" : "off",
                     smoothScrolling: true,
                     fixedOverflowWidgets: true,
+                    automaticLayout: true,
+                    stickyScroll: {
+                        enabled: true,
+                        defaultModel: "indentationModel",
+                        maxLineCount: window.innerHeight <= 900 ? 2 : 4,
+                    },
                 }}
             />
 

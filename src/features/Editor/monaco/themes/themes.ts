@@ -47,7 +47,7 @@ export const themes = {
             },
         ],
         colors: {
-            "focusBorder": "#abdd64",
+            "focusBorder": "#b2ccd633",
             "background": "#242933",
             "foreground": "#b2ccd6",
             "disabledForeground": "#b2ccd640",
@@ -71,13 +71,22 @@ export const themes = {
             "widget.border": "#b2ccd615",
 
             "editor.background": "#242933",
-            "editor.foreground": "#b2ccd6",
-            "editor.selectionBackground": "#465061",
+            "editor.foreground": "#7f848e",
+            "editor.selectionBackground": "#465061e6",
+            "editor.inactiveSelectionBackground": "#4650614d",
             "editor.lineHighlightBackground": "#2b313b",
             "editor.lineHighlightBorder": "#00000000",
+
+            "editor.wordHighlightBackground": "#46506199",
+            "editor.wordHighlightStrongBackground": "#9bc26633",
+
             "editor.findMatchBackground": "#b2ccd620",
             "editor.findMatchHighlightBackground": "#b2ccd620",
             "editor.findMatchBorder": "#b2ccd615",
+
+            "editorStickyScroll.shadow": "#0000001f",
+            "editorStickyScroll.border": "#ffffff05",
+            "editorStickyScrollHover.background": "#2b313b",
 
             "editorCursor.foreground": "#b5d982",
             "editorLineNumber.foreground": "#55626c",
@@ -93,6 +102,7 @@ export const themes = {
 
             "editorOverviewRuler.findMatchForeground": "#b2ccd633",
 
+            "scrollbar.shadow": "#0000001A",
             "scrollbarSlider.background": "#b2ccd633",
             "scrollbarSlider.hoverBackground": "#b2ccd64d",
             "scrollbarSlider.activeBackground": "#b2ccd680",

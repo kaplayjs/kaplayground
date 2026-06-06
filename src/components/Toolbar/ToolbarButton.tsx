@@ -25,7 +25,7 @@ export const ToolbarButton = forwardRef<Ref, Props>(
         return (
             <button
                 className={cn(
-                    "btn btn-xs btn-ghost px-2 rounded-sm items-center justify-center h-full group-last:rounded-br-lg",
+                    "btn btn-xs btn-ghost px-2 rounded-sm items-center justify-center h-full group-last:rounded-br-xl focus-visible:-outline-offset-2",
                     className,
                 )}
                 data-tooltip-id="global"
@@ -37,7 +37,13 @@ export const ToolbarButton = forwardRef<Ref, Props>(
                 ref={ref}
                 {...props}
             >
-                {text && <span className="hidden xl:block">{text}</span>}
+                {text && (
+                    <span
+                        className={cn({ "hidden xl:block": icon !== "down" })}
+                    >
+                        {text}
+                    </span>
+                )}
 
                 {icon.startsWith("data:image")
                     ? (

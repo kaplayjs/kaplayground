@@ -4,15 +4,13 @@ import { validateProjectName } from "../../features/Projects/application/validat
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor.ts";
 import { cn } from "../../util/cn.ts";
+import { ProjectKaplayVersion } from "../Project/ProjectKaplayVersion";
 import { ToolbarSeparator } from "./ToolbarSeparator";
 
 export const ProjectStatus = () => {
     const saveNewProject = useProject((s) => s.saveNewProject);
     const projectMode = useProject((s) => s.project.mode);
-    const kaplayVersion = useProject((s) => s.project.kaplayVersion);
     const setProject = useProject((s) => s.setProject);
-    const run = useEditor((s) => s.run);
-    const kaplayVersions = useEditor((s) => s.runtime.kaplayVersions);
     const projectName = useProject((s) => s.project.name);
     const projectKey = useProject((s) => s.projectKey);
     const demoKey = useProject((s) => s.demoKey);
@@ -105,7 +103,7 @@ export const ProjectStatus = () => {
             {(!demoKey || hasUnsavedChanges) && (
                 <>
                     <button
-                        className="btn btn-xs btn-ghost uppercase font-semibold tracking-wider bg-base-50 rounded-xl"
+                        className="btn btn-xs btn-ghost uppercase font-semibold tracking-wider bg-base-50 rounded-xl max-lg:ml-1"
                         type="button"
                         onClick={() =>
                             document.querySelector<HTMLDialogElement>(
@@ -153,7 +151,7 @@ export const ProjectStatus = () => {
             <button
                 id="project-save-button"
                 className={cn(
-                    "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full",
+                    "btn btn-xs btn-ghost px-px rounded-sm items-center justify-center h-full focus-visible:-outline-offset-2 first:px-1.5 first:-mr-1.5 first:rounded-bl-xl",
                     {
                         "hover:bg-transparent cursor-default": isSaved(),
                     },
@@ -176,23 +174,7 @@ export const ProjectStatus = () => {
 
             <ToolbarSeparator className="-ml-2 -mr-0.5" />
 
-            <select
-                className="select select-xs"
-                onChange={(e) => {
-                    const target = e.target as HTMLSelectElement;
-
-                    setProject({
-                        kaplayVersion: target.value,
-                    });
-
-                    run();
-                }}
-                value={kaplayVersion}
-            >
-                {kaplayVersions.map((v, i) => (
-                    <option value={v} key={i}>{v}</option>
-                ))}
-            </select>
+            <ProjectKaplayVersion />
         </div>
     );
 };

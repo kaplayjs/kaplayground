@@ -75,7 +75,7 @@ export const TagsFilter: FC<Props> = (
         <div className={cn("relative flex justify-between gap-1", className)}>
             <Tooltip
                 id="projects-browser-tags-tooltip"
-                className="!top-auto !bottom-full mb-[19px] ml-1 !py-2.5 !bg-neutral"
+                className="!top-auto !bottom-full mb-[19px] ml-1 !py-0.5 !bg-neutral"
                 opacity={1}
             />
 

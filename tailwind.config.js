@@ -5,6 +5,7 @@ export default {
     content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
     plugins: [
         require("@tailwindcss/container-queries"),
+        require("@tailwindcss/typography"),
         require("daisyui"),
     ],
     theme: {
@@ -19,15 +20,19 @@ export default {
             colors: {
                 "base-highlight":
                     "color-mix(in oklch, oklch(var(--bc)) 30%, oklch(var(--b1)))",
+                "subheadings": "color-mix(in oklch, currentColor 55%, white)",
+                "warning-subtle":
+                    "color-mix(in oklch, oklch(var(--wa)) 60%, white)",
             },
             backgroundPosition: {
-                "select-xs": "right 12px center, right 8px center",
+                "select-xs":
+                    "calc(100% - 6px) calc(1px + 50%), calc(100% - 6px) calc(1px + 50%)",
             },
             animation: {
                 "fade-in":
-                    "fade-in 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                    "fade-in var(--tw-animation-duration, 150ms) cubic-bezier(0.4, 0, 0.2, 1) forwards",
                 "scale-in":
-                    "scale-in 150ms cubic-bezier(0.4, 0, 0.2, 1) forwards",
+                    "scale-in var(--tw-animation-duration, 150ms) cubic-bezier(0.4, 0, 0.2, 1) forwards",
             },
             keyframes: {
                 "fade-in": {

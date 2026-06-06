@@ -1,5 +1,6 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import type { ComponentProps, FC, PropsWithChildren } from "react";
+import type { ComponentProps, FC, LegacyRef, PropsWithChildren } from "react";
+import { cn } from "../../util/cn";
 import { ToolbarButton } from "./ToolbarButton";
 
 type ToolbarDropwdownProps =
@@ -7,10 +8,27 @@ type ToolbarDropwdownProps =
     & {
         open?: boolean;
         setOpen?: (v: boolean) => void;
+        loop?: boolean;
+        portalContainer?: HTMLElement;
+        align?: "center" | "end" | "start";
+        contentClass?: string;
+        alignOffset?: number;
+        contentRef?: LegacyRef<HTMLDivElement> | undefined;
     };
 
 export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
-    { children, open, setOpen, ...toolbarButtonProps },
+    {
+        children,
+        contentRef,
+        open,
+        setOpen,
+        portalContainer,
+        loop,
+        align = "end",
+        alignOffset,
+        contentClass,
+        ...toolbarButtonProps
+    },
 ) => {
     return (
         <DropdownMenu.Root open={open} onOpenChange={setOpen}>
@@ -20,11 +38,17 @@ export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
                     {...toolbarButtonProps}
                 />
             </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
+            <DropdownMenu.Portal container={portalContainer}>
                 <DropdownMenu.Content
-                    className="rounded-btn p-1 bg-base-100 flex flex-col shadow-xl mt-px"
-                    align="end"
+                    className={cn(
+                        "group-dropdown rounded-btn p-1 bg-base-100 flex flex-col shadow-xl mt-px z-50",
+                        contentClass,
+                    )}
+                    ref={contentRef}
+                    align={align}
+                    alignOffset={alignOffset}
                     onCloseAutoFocus={(e) => e.preventDefault()}
+                    loop={loop}
                 >
                     {children}
                 </DropdownMenu.Content>

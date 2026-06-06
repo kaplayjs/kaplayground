@@ -14,6 +14,7 @@ import {
     BuildModeModern,
 } from "./BuildModes/BuildModesInstructions";
 import { ProjectFavicon } from "./ProjectFavicon";
+import { ProjectKaplayVersion } from "./ProjectKaplayVersion";
 
 const buildOptions = {
     esbuild: "Modern (ESBuild)",
@@ -26,6 +27,7 @@ const ProjectPreferences = () => {
     const projectMode = useProject((s) => s.project.mode);
     const projectFavicon = useProject((s) => s.project.favicon);
     const projectBuildMode = useProject((s) => s.project.buildMode);
+    const projectKaplayVersion = useProject((s) => s.project.kaplayVersion);
     const setProject = useProject((s) => s.setProject);
     const getProject = useProject((s) => s.getProject);
     const saveProject = useProject((s) => s.saveProject);
@@ -37,6 +39,7 @@ const ProjectPreferences = () => {
         name: projectName,
         favicon: projectFavicon,
         buildMode: projectBuildMode,
+        kaplayVersion: projectKaplayVersion,
         mode: projectMode,
     });
 
@@ -46,6 +49,7 @@ const ProjectPreferences = () => {
                 name: projectName,
                 favicon: projectFavicon,
                 buildMode: projectBuildMode,
+                kaplayVersion: projectKaplayVersion,
                 mode: projectMode,
             }
             : openedProject
@@ -53,6 +57,7 @@ const ProjectPreferences = () => {
         projectName,
         projectFavicon,
         projectBuildMode,
+        projectKaplayVersion,
         projectMode,
         editedKey,
         openedProject,
@@ -66,6 +71,13 @@ const ProjectPreferences = () => {
 
     const [name, setName] = useState<string>(editedProject.name || "");
     useEffect(() => setName(editedProject.name || ""), [editedProject.name]);
+
+    const [kaplayVersion, setKaplayVersion] = useState<string>(
+        editedProject.kaplayVersion || "",
+    );
+    useEffect(() => setKaplayVersion(editedProject.kaplayVersion || ""), [
+        editedProject.kaplayVersion,
+    ]);
 
     const [buildMode, setBuildMode] = useState<ProjectBuildMode>(
         editedProject.buildMode ?? "legacy",
@@ -135,15 +147,18 @@ const ProjectPreferences = () => {
                     setOpenedProject(pj);
                     setName(pj.name ?? "");
                     setBuildMode(pj.buildMode ?? "legacy");
+                    setKaplayVersion(pj.kaplayVersion);
                 }
             } else {
                 setOpenedProject({
                     name: projectName,
                     favicon: projectFavicon,
                     buildMode: projectBuildMode,
+                    kaplayVersion: projectKaplayVersion,
                     mode: projectMode,
                 });
                 setName(projectName ?? "");
+                setKaplayVersion(projectKaplayVersion);
                 setBuildMode(projectBuildMode ?? "legacy");
             }
 
@@ -159,6 +174,7 @@ const ProjectPreferences = () => {
         projectName,
         projectFavicon,
         projectBuildMode,
+        projectKaplayVersion,
         projectMode,
     ]);
 
@@ -170,6 +186,10 @@ const ProjectPreferences = () => {
         if (name !== editedProject.name) projectData.name = name;
         if (buildMode !== editedProject.buildMode) {
             projectData.buildMode = buildMode as ProjectBuildMode;
+            shouldRerun = true;
+        }
+        if (kaplayVersion !== editedProject.kaplayVersion) {
+            projectData.kaplayVersion = kaplayVersion;
             shouldRerun = true;
         }
         if (
@@ -200,6 +220,7 @@ const ProjectPreferences = () => {
         setErrors({});
         setName(editedProject.name ?? "");
         setBuildMode(editedProject.buildMode ?? "legacy");
+        setKaplayVersion(editedProject.kaplayVersion!);
 
         setTimeout(() => {
             (formRef.current!).querySelectorAll("[name]").forEach(el => {
@@ -239,49 +260,72 @@ const ProjectPreferences = () => {
                                 defaultValue={editedProject.favicon}
                             />
 
-                            <label className="label gap-2 pl-3 pr-2 bg-base-200 rounded-xl border border-base-content/10">
-                                <span className="flex flex-col gap-1">
-                                    <span className="label-text font-medium cursor-pointer [.label:has([data-tooltip-content])_&]:text-error transition-colors">
-                                        Name
+                            <div className="bg-base-200 rounded-xl border border-base-content/10 divide-y divide-[inherit]">
+                                <label className="label gap-2 px-2 flex-wrap">
+                                    <span className="flex flex-col gap-1 grow pl-1">
+                                        <span className="label-text font-medium cursor-pointer [.label:has([data-tooltip-content])_&]:text-error transition-colors">
+                                            Name
+                                        </span>
                                     </span>
-                                </span>
 
-                                <input
-                                    name="name"
-                                    className="input input-bordered input-sm w-full max-w-60 placeholder:text-base-content/45 data-[tooltip-content]:border-error data-[tooltip-content]:focus-visible:outline-error"
-                                    value={name}
-                                    placeholder={editedProject.name}
-                                    onChange={handleNameChange}
-                                    onBlur={() => {
-                                        if (!name) {
-                                            setName(
-                                                editedProject.name ?? "",
-                                            );
-                                        }
-                                    }}
-                                    onKeyDownCapture={e => {
-                                        if (e.key != "Escape") return;
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setName(editedProject.name ?? "");
-                                        resetError("name");
-                                        (e.target as HTMLInputElement).blur();
-                                    }}
-                                    data-tooltip-id="project-preferences-tooltips"
-                                    data-tooltip-content={errors?.name}
-                                    data-tooltip-hidden={!errors?.name}
-                                    data-tooltip-variant="error"
-                                    data-tooltip-place="bottom-end"
-                                />
-                            </label>
+                                    <input
+                                        name="name"
+                                        className="input input-bordered input-sm grow 2sm:grow-0 w-full 2sm:max-w-60 placeholder:text-base-content/45 data-[tooltip-content]:border-error data-[tooltip-content]:focus-visible:outline-error"
+                                        value={name}
+                                        placeholder={editedProject.name}
+                                        onChange={handleNameChange}
+                                        onBlur={() => {
+                                            if (!name) {
+                                                setName(
+                                                    editedProject.name ?? "",
+                                                );
+                                            }
+                                        }}
+                                        onKeyDownCapture={e => {
+                                            if (e.key != "Escape") return;
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setName(editedProject.name ?? "");
+                                            resetError("name");
+                                            (e.target as HTMLInputElement)
+                                                .blur();
+                                        }}
+                                        data-tooltip-id="project-preferences-tooltips"
+                                        data-tooltip-content={errors?.name}
+                                        data-tooltip-hidden={!errors?.name}
+                                        data-tooltip-variant="error"
+                                        data-tooltip-place="bottom-end"
+                                    />
+                                </label>
+
+                                <div className="label gap-2 px-2 flex-wrap">
+                                    <label className="flex flex-col gap-1 grow pl-1">
+                                        <span className="label-text font-medium cursor-pointer [.label:has([data-tooltip-content])_&]:text-error transition-colors">
+                                            KAPLAY Version
+                                        </span>
+                                    </label>
+
+                                    <ProjectKaplayVersion
+                                        value={kaplayVersion}
+                                        onSelect={setKaplayVersion}
+                                        portalContainer={document
+                                            .getElementById(
+                                                "project-preferences",
+                                            )}
+                                        className="grow 2sm:grow-0 h-8 py-0 px-3 max-w-full text-sm border border-base-content/15"
+                                        contentClass="bg-base-50 border border-base-content/5 shadow-2xl"
+                                        align="center"
+                                    />
+                                </div>
+                            </div>
                         </div>
 
                         {editedProject.mode == "pj" && (
                             <>
                                 <div className="divider mt-1.5 mb-0 first:hidden">
                                 </div>
-                                <div className="label gap-2">
-                                    <span className="flex flex-col gap-1">
+                                <div className="label gap-2 flex-wrap">
+                                    <span className="flex flex-col gap-1 grow basis-40">
                                         <label
                                             className="label-text font-medium cursor-pointer"
                                             htmlFor="build-mode"
@@ -326,7 +370,7 @@ const ProjectPreferences = () => {
 
                 <Tooltip
                     id="project-preferences-tooltips"
-                    className="text-xs !px-3 !py-2"
+                    className="text-xs !py-0.5"
                     isOpen={true}
                 />
             </Dialog>
