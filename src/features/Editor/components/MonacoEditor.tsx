@@ -227,11 +227,13 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 if (!el?.classList.contains("colorpicker-widget")) return;
 
                 const d = editor.onDidFocusEditorText(() => {
-                    const widget = el.closest("[monaco-visible-content-widget]") as HTMLElement;
+                    const widget = el.closest(
+                        "[monaco-visible-content-widget]",
+                    ) as HTMLElement;
                     if (widget) widget.style.display = "none";
                     d.dispose();
                 });
-            })
+            });
         });
     };
 
@@ -259,8 +261,14 @@ export const MonacoEditor: FC<MonacoEditorProps> = (props) => {
                 language="javascript"
                 options={{
                     fontFamily: "\"DM Mono\", monospace",
-                    fontSize: window.innerWidth <= 900 || window.innerHeight <= 900 ? 14 : 16,
-                    lineHeight: window.innerWidth <= 900 || window.innerHeight <= 900 ? 22 : 25,
+                    fontSize:
+                        window.innerWidth <= 900 || window.innerHeight <= 900
+                            ? 14
+                            : 16,
+                    lineHeight:
+                        window.innerWidth <= 900 || window.innerHeight <= 900
+                            ? 22
+                            : 25,
                     tabSize: 4,
                     insertSpaces: true,
                     trimAutoWhitespace: true,
