@@ -84,5 +84,16 @@
     "vite-plugin-custom-env": "^1.0.3",
     "vite-plugin-static-copy": "^2.3.1",
     "wrangler": "^4.90.0"
-  }
+  },
+  "allowScripts": {
+    "bufferutil@4.1.0": true,
+    "dprint@0.49.1": true,
+    "es5-ext@0.10.64": true,
+    "esbuild@0.21.5": true,
+    "esbuild@0.28.1": true,
+    "sharp@0.35.2": true,
+    "utf-8-validate@5.0.10": true,
+    "workerd@1.20260811.1": true
+  },
+  "strict-allow-scripts": true
 }
