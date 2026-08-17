@@ -1,3 +1,4 @@
 [submodule "kaplay"]
 	path = kaplay
-	url = https://github.com/marklovers/kaplay
+	url = https://github.com/kaplayjs/kaplay
+	branch = migrate-npm
