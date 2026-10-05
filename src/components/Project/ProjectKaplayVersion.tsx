@@ -180,24 +180,25 @@ export const ProjectKaplayVersion = (
                 }
                 setShowChangelog(false);
             }
-            contentEl.style.overflow = "";
-            contentEl.style.width = "";
-            contentEl.style.height = "";
-            contentEl.style.minWidth = "0";
-            (contentEl.firstElementChild as HTMLElement)!.style.minWidth = "";
             requestAnimationFrame(() => {
+                contentEl.style.overflow = "";
+                contentEl.style.width = "";
+                contentEl.style.height = "";
+                contentEl.style.minWidth = "0";
+                (contentEl.firstElementChild as HTMLElement)!.style.minWidth =
+                    "";
                 contentEl.classList.toggle("is-animating", false);
                 contentEl.classList.toggle("is-animating-in", false);
                 contentEl.classList.toggle("is-animating-out", false);
             });
         };
 
-        if (window.innerWidth < 640) {
+        if (window.innerWidth < 900) {
             return onEnd();
         }
 
+        contentEl.classList.toggle("is-animating", true);
         requestAnimationFrame(() => {
-            contentEl.classList.toggle("is-animating", true);
             contentEl.classList.toggle("is-animating-in", show);
             const to = contentEl.getBoundingClientRect();
             if (changelogRef.current) changelogRef.current.style.display = "";
@@ -335,7 +336,7 @@ export const ProjectKaplayVersion = (
                             { "max-sm:hidden": showChangelog },
                         )}
                     >
-                        <div className="flex flex-col min-w-0 min-h-0 p-2 overflow-hidden overflow-y-auto">
+                        <div className="flex flex-col min-w-0 min-h-0 p-2 overflow-hidden overflow-y-auto group-[-dropdown.is-animating]:overflow-y-hidden scrollbar-thin">
                             <DropdownMenuItem asChild={true}>
                                 <button
                                     className={cn(
@@ -533,7 +534,7 @@ export const ProjectKaplayVersion = (
                             </DropdownMenuItem>
 
                             <div
-                                className="prose prose-sm max-w-none prose-h1:text-lg prose-h1:text-subheadings prose-h1: prose-h2:text-base prose-h2:text-subheadings prose-h2:pb-1.5 prose-h2:border-b prose-h2:border-base-content/10 prose-h3:text-sm prose-h3:mt-3 prose-ul:ps-4 prose-li:ps-0.5 prose-code:px-1.5 prose-code:rounded-md prose-hr:my-6 prose-h2:sticky prose-h2:top-0 prose-h2:bg-base-200 prose-h2:shadow-[0_-0.75rem_0.25rem_0.25rem_oklch(var(--b2))] [&_h2_span]:font-medium [&_h2_span]:text-sm [&_h2_span]:text-base-content/80 [&_pre]:scrollbar-thin"
+                                className="prose prose-sm max-w-none prose-h1:text-lg prose-h1:text-subheadings prose-h1: prose-h2:text-base prose-h2:text-subheadings prose-h2:pb-1.5 prose-h2:border-b prose-h2:border-base-content/10 prose-h3:text-sm prose-h3:mt-3 prose-ul:ps-4 prose-li:ps-0.5 prose-code:px-1.5 prose-code:rounded-md prose-hr:my-6 prose-h2:sticky prose-h2:top-0 prose-h2:bg-base-200 prose-h2:shadow-[0_-0.75rem_0.25rem_0.25rem_oklch(var(--b2))] [&_h2_span]:font-medium [&_h2_span]:text-sm [&_h2_span]:text-base-content/80 [&_pre]:scrollbar-thin [overflow-anchor:none]"
                                 dangerouslySetInnerHTML={{ __html: changelog }}
                             />
 

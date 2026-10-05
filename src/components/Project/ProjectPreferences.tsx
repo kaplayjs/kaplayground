@@ -313,7 +313,7 @@ const ProjectPreferences = () => {
                                                 "project-preferences",
                                             )}
                                         className="grow 2sm:grow-0 h-8 py-0 px-3 max-w-full text-sm border border-base-content/15"
-                                        contentClass="bg-base-50 border border-base-content/5 shadow-2xl"
+                                        contentClass="lg:absolute lg:w-max lg:-translate-x-1/2 bg-base-50 border border-base-content/5 shadow-2xl"
                                         align="center"
                                     />
                                 </div>
