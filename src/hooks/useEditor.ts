@@ -89,6 +89,7 @@ export interface EditorStore {
     setEditorValue: (value: string) => void;
     updateEditorLastSavedValue: (value?: string) => void;
     updateHasUnsavedChanges: () => void;
+    setHasUnsavedChanges: (bool: boolean) => void;
     updateAndRun: () => void;
     focusGame: () => void;
 }
@@ -427,6 +428,17 @@ export const useEditor = create<EditorStore>((set, get) => ({
                 ...state.runtime,
                 hasUnsavedChanges: get().getRuntime().editorLastSavedValue
                     != editor.getValue(),
+            },
+        }));
+    },
+    setHasUnsavedChanges(bool: boolean) {
+        const editor = get().runtime.editor;
+        if (!editor) return;
+
+        set((state) => ({
+            runtime: {
+                ...state.runtime,
+                hasUnsavedChanges: bool,
             },
         }));
     },

@@ -9,6 +9,7 @@ import {
 } from "../../features/Projects/services/projectActions";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
+import { confirmNavigate } from "../../util/confirmNavigate";
 import { downloadBlob } from "../../util/download";
 import { KDropdownMenuSeparator } from "../UI/KDropdown/KDropdownSeparator";
 import { ToolbarDropdown } from "./ToolbarDropdown";
@@ -16,6 +17,9 @@ import { ToolbarDropdownButton } from "./ToolbarDropdownButton";
 
 export const ToolbarProjectDropdown: FC = () => {
     const showNotification = useEditor((state) => state.showNotification);
+    const setHasUnsavedChanges = useEditor((state) =>
+        state.setHasUnsavedChanges
+    );
     const createNewProject = useProject((state) => state.createNewProject);
     const unserializeProject = useProject((state) => state.unserializeProject);
     const projectKey = useProject((state) => state.projectKey);
@@ -24,9 +28,11 @@ export const ToolbarProjectDropdown: FC = () => {
     const [open, setOpen] = useState<boolean>(false);
     const preventCloseRef = useRef(false);
 
-    const handleImport = () => {
+    const handleImport = async () => {
         if (!newFileInput.current) return;
         preventCloseRef.current = true;
+
+        await confirmNavigate();
 
         const handleFocus = () => {
             window.removeEventListener("focus", handleFocus);
@@ -65,6 +71,8 @@ export const ToolbarProjectDropdown: FC = () => {
         reader.onload = async (e) => {
             const project = unserializeProject(e.target?.result as string);
             await createNewProject(project.mode, project);
+            showNotification(`Imported project '${project.name}'`);
+            setHasUnsavedChanges(true);
         };
 
         reader.readAsText(file);
@@ -73,11 +81,11 @@ export const ToolbarProjectDropdown: FC = () => {
     };
 
     const handleNewProject = () => {
-        createNewProject("pj");
+        confirmNavigate(() => createNewProject("pj"));
     };
 
     const handleNewExample = () => {
-        createNewProject("ex");
+        confirmNavigate(() => createNewProject("ex"));
     };
 
     return (

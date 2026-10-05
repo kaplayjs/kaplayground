@@ -12,7 +12,7 @@ export const validateProjectName = async (
 
     key ||= projectKey;
 
-    if (!usedNames || lastCheckActiveProject != key) {
+    if (key === null || !usedNames || lastCheckActiveProject != key) {
         usedNames = (await getSavedProjects())
             .filter(p => p.id !== key)
             .map(p => p.name);

@@ -83,6 +83,11 @@ export interface ProjectSlice {
      */
     saveNewProject(): string;
     /**
+     * Save current project as a new project in idb suffixed if name already existing (eg. "name (2)")
+     * @returns Newly created project id
+     */
+    saveNewProjectSuffixed(): Promise<void>;
+    /**
      * Current project edited state
      */
     projectWasEdited: boolean;
@@ -485,6 +490,18 @@ export const createProjectSlice: StateCreator<
         }));
 
         return id;
+    },
+
+    async saveNewProjectSuffixed() {
+        let num = 1;
+        let name = this.project.name;
+
+        while (!(await validateProjectName(name))[0]) {
+            name = `${this.project.name} (${++num})`;
+        }
+        if (num > 1) this.setProject({ name });
+
+        this.saveNewProject();
     },
 
     generateId(createdAt) {

@@ -2,6 +2,7 @@ import { assets } from "@kaplayjs/crew";
 import type { FC } from "react";
 import type { ProjectMode } from "../../features/Projects/models/ProjectMode";
 import { useProject } from "../../features/Projects/stores/useProject";
+import { confirmNavigate } from "../../util/confirmNavigate";
 
 type Props = {
     mode: ProjectMode;
@@ -18,13 +19,15 @@ export const ProjectCreate: FC<Props> = ({ mode, tooltipContent }) => {
 
         if (!dialog?.open) return;
 
-        if (mode === "pj") {
-            createNewProject("pj");
-        } else {
-            createNewProject("ex");
-        }
+        confirmNavigate(() => {
+            if (mode === "pj") {
+                createNewProject("pj");
+            } else {
+                createNewProject("ex");
+            }
 
-        dialog?.close();
+            dialog?.close();
+        });
     };
 
     return (

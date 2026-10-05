@@ -9,10 +9,10 @@ export type unsavedChangesConfirm = {
 };
 
 export const confirmNavigate = async (
-    to: () => void,
+    to?: () => void,
     { title, content, options }: unsavedChangesConfirm = {},
 ) => {
-    if (!useEditor.getState().getRuntime().hasUnsavedChanges) return to();
+    if (!useEditor.getState().getRuntime().hasUnsavedChanges) return to?.();
 
     if (
         await confirm(
@@ -33,7 +33,9 @@ export const confirmNavigate = async (
                 dismissText: "Discard and continue",
             },
         )
-    ) useProject.getState().saveNewProject();
+    ) await useProject.getState().saveNewProjectSuffixed();
+
+    useEditor.getState().setHasUnsavedChanges(false);
 
     to?.();
 };
