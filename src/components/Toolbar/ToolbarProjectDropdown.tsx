@@ -22,11 +22,19 @@ export const ToolbarProjectDropdown: FC = () => {
     const newFileInput = useRef<HTMLInputElement>(null);
     const importButton = useRef<HTMLDivElement>(null);
     const [open, setOpen] = useState<boolean>(false);
+    const preventCloseRef = useRef(false);
 
     const handleImport = () => {
-        if (newFileInput.current) {
-            newFileInput.current.click();
-        }
+        if (!newFileInput.current) return;
+        preventCloseRef.current = true;
+
+        const handleFocus = () => {
+            window.removeEventListener("focus", handleFocus);
+            preventCloseRef.current = false;
+        };
+        window.addEventListener("focus", handleFocus);
+
+        newFileInput.current.click();
     };
 
     const handleExport = async () => await exportProject();
@@ -60,6 +68,7 @@ export const ToolbarProjectDropdown: FC = () => {
         };
 
         reader.readAsText(file);
+        preventCloseRef.current = false;
         setOpen(false);
     };
 
@@ -78,6 +87,7 @@ export const ToolbarProjectDropdown: FC = () => {
             tip="Project Options"
             open={open}
             setOpen={setOpen}
+            preventClose={preventCloseRef}
         >
             <ToolbarDropdownButton
                 onClick={() => openProjectPreferences()}

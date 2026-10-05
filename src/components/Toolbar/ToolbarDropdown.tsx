@@ -1,5 +1,11 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import type { ComponentProps, FC, LegacyRef, PropsWithChildren } from "react";
+import {
+    type ComponentProps,
+    type FC,
+    type LegacyRef,
+    type MutableRefObject,
+    type PropsWithChildren,
+} from "react";
 import { cn } from "../../util/cn";
 import { ToolbarButton } from "./ToolbarButton";
 
@@ -14,6 +20,7 @@ type ToolbarDropwdownProps =
         contentClass?: string;
         alignOffset?: number;
         contentRef?: LegacyRef<HTMLDivElement> | undefined;
+        preventClose?: MutableRefObject<boolean>;
     };
 
 export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
@@ -27,11 +34,18 @@ export const ToolbarDropdown: FC<ToolbarDropwdownProps> = (
         align = "end",
         alignOffset,
         contentClass,
+        preventClose,
         ...toolbarButtonProps
     },
 ) => {
     return (
-        <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+        <DropdownMenu.Root
+            open={open}
+            onOpenChange={open => {
+                if (!open && preventClose?.current) return;
+                setOpen?.(open);
+            }}
+        >
             <DropdownMenu.Trigger asChild>
                 <ToolbarButton
                     tabIndex={0}
