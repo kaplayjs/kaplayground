@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { fileSize } from "../../util/fileSize";
 
@@ -27,6 +27,25 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
         const getProject = useProject((s) => s.getProject);
         const [size, setSize] = useState<string>("Calculating..");
 
+        (async () => {
+            const pj = await getProject(project.key);
+
+            const file = project.type === "Example"
+                ? fileSize(
+                    new TextEncoder().encode(
+                        pj.files.get("main.js")?.value || "",
+                    ).length,
+                )
+                : "";
+            const total = fileSize(
+                new TextEncoder().encode(
+                    serializeProject(pj) || "",
+                ).length,
+            );
+
+            setSize((file ? `${file} / ` : "") + total);
+        })();
+
         const tags = useMemo(
             () =>
                 project.tags?.filter(t =>
@@ -35,25 +54,12 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
             [project?.tags],
         );
 
-        const calcSize = useCallback(
-            async () =>
-                setSize(fileSize(
-                    new TextEncoder().encode(
-                        serializeProject(await getProject(project.key)) || "",
-                    ).length,
-                )),
-            [project.key],
-        );
-        useEffect(() => {
-            calcSize();
-        }, [calcSize, project.key]);
-
-        const showBuildMode = project.type == "Project" && project.buildMode;
+        const showBuildMode = project.type === "Project" && project.buildMode;
 
         const ProjectSize = () => (
             <div className="flex flex-col gap-0.5 flex-1 only:contents">
                 <h3 className="flex-1 font-medium text-white">
-                    Project Size
+                    {project.type === "Example" ? "File / " : ""}Project Size
                 </h3>
                 <div className="flex-1">{size}</div>
             </div>

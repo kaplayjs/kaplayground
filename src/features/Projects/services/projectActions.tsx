@@ -5,6 +5,7 @@ import { db } from "../../../db/client/db";
 import { confirm } from "../../../util/confirm";
 import { downloadBlob } from "../../../util/download";
 import { openDialog } from "../../../util/openDialog";
+import { buildProject as build } from "../application/buildProject";
 import { useProject } from "../stores/useProject";
 
 type ToastOptions = {
@@ -41,6 +42,7 @@ export async function openProjectDetails(
         "Project Details",
         <ProjectDetails
             project={await useProject.getState().getProjectMetadata(key)}
+            key={key}
         />,
         {
             type: "neutral",
@@ -77,6 +79,37 @@ export async function exportProject(
 
     downloadBlob(blob, `${name.trim()}.kaplay`);
     toast("Downloading exported project...", {
+        ...(options?.toastContainerId
+            && { containerId: options?.toastContainerId }),
+    });
+}
+
+export async function buildProject(
+    key: string | null = useProject.getState().projectKey,
+    options?: ToastOptions,
+) {
+    const project = key
+        ? await useProject.getState().getProject(key)
+        : useProject.getState().project;
+    const projectCode = await build();
+
+    if (!projectCode) {
+        toast("Failed to export project as HTML", {
+            type: "error",
+            ...(options?.toastContainerId
+                && { containerId: options?.toastContainerId }),
+        });
+        return;
+    }
+
+    const blob = new Blob([projectCode], {
+        type: "text/html",
+    });
+    const fileName = ((!key && useProject.getState().demoKey) || project.name)
+        .trim();
+
+    downloadBlob(blob, `${fileName}.html`);
+    toast("Downloading HTML5 game...", {
         ...(options?.toastContainerId
             && { containerId: options?.toastContainerId }),
     });

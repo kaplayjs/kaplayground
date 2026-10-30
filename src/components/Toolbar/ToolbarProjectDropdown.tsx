@@ -1,7 +1,7 @@
 import { assets } from "@kaplayjs/crew";
 import { type FC, useRef, useState } from "react";
-import { buildProject } from "../../features/Projects/application/buildProject";
 import {
+    buildProject,
     confirmAndDeleteProject,
     exportProject,
     openProjectDetails,
@@ -10,7 +10,6 @@ import {
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 import { confirmNavigate } from "../../util/confirmNavigate";
-import { downloadBlob } from "../../util/download";
 import { KDropdownMenuSeparator } from "../UI/KDropdown/KDropdownSeparator";
 import { ToolbarDropdown } from "./ToolbarDropdown";
 import { ToolbarDropdownButton } from "./ToolbarDropdownButton";
@@ -45,22 +44,7 @@ export const ToolbarProjectDropdown: FC = () => {
 
     const handleExport = async () => await exportProject();
 
-    const handleHTMLBuild = async () => {
-        const { project } = useProject.getState();
-        const projectCode = await buildProject();
-
-        if (!projectCode) {
-            showNotification("Failed to export project as HTML");
-            return;
-        }
-
-        const blob = new Blob([projectCode], {
-            type: "text/html",
-        });
-
-        downloadBlob(blob, `${project.name.trim()}.html`);
-        showNotification("Downloading HTML5 game...");
-    };
+    const handleHTMLBuild = async () => await buildProject();
 
     const handleProjectUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];

@@ -3,6 +3,7 @@ import { Tooltip } from "react-tooltip";
 import { validateProjectName } from "../../features/Projects/application/validateProjectName";
 import { Project } from "../../features/Projects/models/Project";
 import { ProjectBuildMode } from "../../features/Projects/models/ProjectBuildMode";
+import { openProjectDetails } from "../../features/Projects/services/projectActions";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { useEditor } from "../../hooks/useEditor";
 import { confirm } from "../../util/confirm";
@@ -245,9 +246,33 @@ const ProjectPreferences = () => {
                 saveDisabled={Object.keys(errors).length > 0}
             >
                 <div className="flex flex-col -mx-1 [&>*]:px-1">
-                    <h2 className="text-2xl text-white font-bold px-1 pb-3">
-                        Project Preferences
-                    </h2>
+                    <div className="flex justify-between items-baseline gap-2 px-1 pb-2.5">
+                        <h2 className="text-xl sm:text-2xl text-white font-bold">
+                            Project Preferences
+                        </h2>
+
+                        <button
+                            className="btn btn-sm btn-ghost bg-base-content/5 pl-1.5 pr-2 py-1.5 sm:py-2 h-auto min-h-0 gap-1.5 font-medium"
+                            onClick={() =>
+                                openProjectDetails(editedKey ?? projectKey)}
+                        >
+                            <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 16v-4" />
+                                <path d="M12 8h.01" />
+                            </svg>
+                            Details
+                        </button>
+                    </div>
 
                     <form
                         ref={formRef}
