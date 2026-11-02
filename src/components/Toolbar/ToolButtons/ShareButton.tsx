@@ -88,7 +88,6 @@ export const ShareButton = () => {
                 </>,
                 {
                     type: "neutral",
-                    dismissText: "",
                 },
             );
         }

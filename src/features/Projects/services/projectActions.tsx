@@ -32,17 +32,18 @@ export function openProjectPreferences(key?: string, lazy: boolean = false) {
 export async function openProjectDetails(
     key: string | null = useProject.getState().projectKey,
 ) {
-    if (!key) {
-        throw new Error(
-            `Project doesn't exist: ${key}`,
-        );
-    }
+    const metadata = await useProject.getState().getProjectMetadata(key);
 
     confirm(
         "Project Details",
         <ProjectDetails
-            project={await useProject.getState().getProjectMetadata(key)}
+            project={{
+                ...metadata,
+                demoKey: !key ? useProject.getState().demoKey : null,
+                isShared: !key ? useProject.getState().isShared : false,
+            }}
             key={key}
+            refreshKey={metadata.updatedAt}
         />,
         {
             type: "neutral",

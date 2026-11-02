@@ -34,6 +34,14 @@ export interface ProjectSlice {
      */
     setDemoKey: (key: string | null) => void;
     /**
+     * If opened a shared example
+     */
+    isShared: boolean;
+    /**
+     * Set if opened a shared example
+     */
+    setIsShared: (isShared: boolean) => void;
+    /**
      * Current project
      */
     project: Project;
@@ -49,6 +57,7 @@ export interface ProjectSlice {
      * @param mode - Project mode, example or project
      * @param replace - Optional project to replace in creation
      * @param demoName - Optional demo name to load as a demo
+     * @param isShared - Optional, set if opened a shared example
      */
     createNewProject(
         mode: ProjectMode,
@@ -62,7 +71,7 @@ export interface ProjectSlice {
      * @param id - Project id
      * @returns Project <Example> object with metadata
      */
-    getProjectMetadata(id: string): Promise<Example>;
+    getProjectMetadata(id?: string | null): Promise<Example>;
     /**
      * Create and load new project from passed code
      *
@@ -223,6 +232,12 @@ export const createProjectSlice: StateCreator<
             demoKey: key,
         }));
     },
+    isShared: false,
+    setIsShared(isShared) {
+        set(() => ({
+            isShared: isShared,
+        }));
+    },
     setProject: (project) => {
         set(() => ({
             project: {
@@ -260,13 +275,14 @@ export const createProjectSlice: StateCreator<
         }));
     },
     async getProjectMetadata(key) {
-        const project = key == get().projectKey
+        const project = !key || key == get().projectKey
             ? get().project
             : await get().getProject(key);
         const metadata = {
-            key: key,
+            key: key ?? "",
             name: project.name,
-            formattedName: project.name,
+            formattedName: (!key && (project.updatedAt === project.createdAt)
+                && get().demoKey) || project.name,
             type: project.mode == "pj" ? "Project" : "Example",
             category: "KAPLAY",
             code: "",
@@ -394,6 +410,7 @@ export const createProjectSlice: StateCreator<
             },
             projectKey: null,
             demoKey: demoName ?? null,
+            isShared: !!isShared,
         });
 
         const url = new URL(window.location.href);
@@ -471,6 +488,7 @@ export const createProjectSlice: StateCreator<
 
         get().setProjectKey(id);
         get().setDemoKey(null);
+        get().setIsShared(false);
         window.history.replaceState(
             {},
             "",
@@ -628,7 +646,7 @@ export const createProjectSlice: StateCreator<
         }));
 
         if (get().projectKey === id) {
-            set(() => ({ projectKey: null, demoKey: null }));
+            set(() => ({ projectKey: null, demoKey: null, isShared: false }));
         }
 
         if (useConfig.getState().config?.lastOpenedProject === id) {

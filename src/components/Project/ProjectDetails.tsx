@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useState } from "react";
 import { useProject } from "../../features/Projects/stores/useProject";
 import { fileSize } from "../../util/fileSize";
 
@@ -12,7 +12,10 @@ type ProjectDetailsProps = {
         updatedAt: string;
         buildMode?: string;
         version: string;
+        demoKey?: string | null;
+        isShared?: boolean;
     };
+    refreshKey: string | number;
 };
 
 const Tag = ({ name }: { name: string }) => (
@@ -22,29 +25,39 @@ const Tag = ({ name }: { name: string }) => (
 );
 
 export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
-    ({ project, ...props }, ref) => {
+    ({ project, refreshKey, ...props }, ref) => {
         const serializeProject = useProject((s) => s.serializeProject);
         const getProject = useProject((s) => s.getProject);
         const [size, setSize] = useState<string>("Calculating..");
 
-        (async () => {
-            const pj = await getProject(project.key);
+        useEffect(() => {
+            let cancelled = false;
+            (async () => {
+                const pj = await (project.key
+                    ? getProject(project.key)
+                    : useProject.getState().project);
 
-            const file = project.type === "Example"
-                ? fileSize(
+                const file = project.type === "Example"
+                    ? fileSize(
+                        new TextEncoder().encode(
+                            pj.files.get("main.js")?.value || "",
+                        ).length,
+                    )
+                    : "";
+                const total = fileSize(
                     new TextEncoder().encode(
-                        pj.files.get("main.js")?.value || "",
+                        serializeProject(pj) || "",
                     ).length,
-                )
-                : "";
-            const total = fileSize(
-                new TextEncoder().encode(
-                    serializeProject(pj) || "",
-                ).length,
-            );
+                );
+                if (!cancelled) {
+                    setSize((file ? `${file} / ` : "") + total);
+                }
+            })();
 
-            setSize((file ? `${file} / ` : "") + total);
-        })();
+            return () => {
+                cancelled = true;
+            };
+        }, [refreshKey]);
 
         const tags = useMemo(
             () =>
@@ -85,25 +98,31 @@ export const ProjectDetails = forwardRef<HTMLDivElement, ProjectDetailsProps>(
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-x-4 gap-y-1.5">
-                    <div className="flex flex-col gap-0.5 flex-1">
-                        <h3 className="font-medium text-white">Last Updated</h3>
-                        <div>
-                            {project.updatedAt
-                                ? new Date(project.updatedAt).toLocaleString()
-                                : "Unknown"}
+                {(!project?.demoKey && !project?.isShared) && (
+                    <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                        <div className="flex flex-col gap-0.5 flex-1">
+                            <h3 className="font-medium text-white">
+                                Last Updated
+                            </h3>
+                            <div>
+                                {project.updatedAt
+                                    ? new Date(project.updatedAt)
+                                        .toLocaleString()
+                                    : "Unknown"}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="flex flex-col gap-0.5 flex-1">
-                        <h3 className="font-medium text-white">Created</h3>
-                        <div>
-                            {project.createdAt
-                                ? new Date(project.createdAt).toLocaleString()
-                                : "Unknown"}
+                        <div className="flex flex-col gap-0.5 flex-1">
+                            <h3 className="font-medium text-white">Created</h3>
+                            <div>
+                                {project.createdAt
+                                    ? new Date(project.createdAt)
+                                        .toLocaleString()
+                                    : "Unknown"}
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
 
                 <div className="flex flex-wrap gap-x-4 gap-y-1.5">
                     <div className="flex flex-col gap-0.5 flex-1 only:contents">

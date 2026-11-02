@@ -95,7 +95,6 @@ export const ToolbarProjectDropdown: FC = () => {
 
             <ToolbarDropdownButton
                 onClick={() => openProjectDetails()}
-                disabled={projectKey == null}
             >
                 Details
             </ToolbarDropdownButton>
