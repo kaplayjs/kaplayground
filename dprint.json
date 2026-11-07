@@ -1,20 +1,19 @@
 {
   "indentWidth": 4,
   "lineWidth": 80,
-  "typescript": {
-  },
+  "newLineKind": "lf",
+  "typescript": {},
   "json": {
     "indentWidth": 2
   },
-  "markdown": {
-  },
+  "markdown": {},
   "excludes": [
     "**/node_modules",
     "**/*-lock.json",
-    "**/kaplay"
+    "**/kaplay",
+    "**/.github/"
   ],
-  "markup": {
-  },
+  "markup": {},
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.90.4.wasm",
     "https://plugins.dprint.dev/json-0.19.2.wasm",
