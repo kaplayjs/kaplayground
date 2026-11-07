@@ -1,0 +1,10 @@
+{
+	"name": "KAPLAYGROUND",
+	"icons": [
+		{
+			"src": "pg_512x512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	]
+}
