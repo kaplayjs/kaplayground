@@ -5,6 +5,7 @@ import "./styles/index.css";
 import "./styles/toast.css";
 import "@fontsource-variable/outfit";
 import "@fontsource/dm-mono";
+import "./hooks/useInstallPrompt";
 import { Route, Routes } from "react-router-dom";
 
 export const App = () => {
