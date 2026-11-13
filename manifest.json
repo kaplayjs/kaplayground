@@ -1,0 +1,16 @@
+{
+  "name": "KAPLAYGROUND",
+  "description": "A playground for making JavaScript games",
+  "icons": [
+    {
+      "src": "pg_512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2a303c",
+  "theme_color": "#1a1d23"
+}

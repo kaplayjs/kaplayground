@@ -1,6 +1,7 @@
 {
   "indentWidth": 4,
   "lineWidth": 80,
+  "newLineKind": "lf",
   "typescript": {
   },
   "json": {
@@ -11,7 +12,8 @@
   "excludes": [
     "**/node_modules",
     "**/*-lock.json",
-    "**/kaplay"
+    "**/kaplay",
+    "**/.github/"
   ],
   "markup": {
   },
